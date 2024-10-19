@@ -1,31 +1,34 @@
-# DataCat structure
+# How to organize folders and projects
 
-### DataCat projects:
-
-- DataCatServer
-  + API
-  + Yaml Parser
-  + Lexer
-  + IDbProvider
-  + DBAbstractions
-  + AlertConfigurator
- 
-- DataCatUI
-
-- DataCatCollector
-  + Filters
-  + Optimazers
-  + Streaming to DataCatServer
-  
-- DataCatDB
-    + DataCatDb.Prometheus
-    + DataHawk
- 
-- DataCatArhiver
-  + Arhive
- 
-- DataCatCLI
-
-- DataCatClients
-  + DataCatClient.Py
-  + DataCatClient.Csharp
+```
+├── src
+|  ├── DataCat.Server
+|  |   ├── DataCat.Api
+|  |   ├── DataCat.QL (Lexer, Parser)
+|  |   ├── DataCat.DbClient
+|  |   └── DataCat.AlertConfigurator
+|  |       └── DataCat.AlertConfigurator.Telegram
+|  |
+|  ├── DataCat.Collector
+|  |  ├── DataCat.Collector.Api
+|  |  └── DataCat.Collector.Core
+|  |
+|  ├── DataCat.Adapter
+|  |   ├── DataCat.Adapter.DataHawk
+|  |   └── DataCat.Adapter.PosgreSQL
+|  |
+|  ├── DataCat.UI
+|  |
+|  ├── DataCat.CLI
+|  |
+|  ├── DataCat.Clients
+|  |   ├── DataCat.Client.Py
+|  |   └── DataCat.Client.Csharp
+|  |
+|  ├── DataCat.Archiver
+|  |
+|  └── DataCat.Coordinator
+|
+├── docs
+└── cicd
+```
