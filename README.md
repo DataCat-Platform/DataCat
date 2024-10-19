@@ -1,5 +1,6 @@
 # How to organize folders and projects
 
+```
 ├── src
 |  ├── DataCat.Server
 |  |   ├── DataCat.Api
@@ -30,3 +31,4 @@
 |
 ├── docs
 └── cicd
+```
