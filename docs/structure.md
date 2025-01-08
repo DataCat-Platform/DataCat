@@ -1,34 +1,38 @@
 # How to organize folders and projects
 
 ```
-├── src
-|  ├── DataCat.Server
-|  |   ├── DataCat.Api
-|  |   ├── DataCat.QL (Lexer, Parser)
-|  |   ├── DataCat.DbClient
-|  |   └── DataCat.AlertConfigurator
-|  |       └── DataCat.AlertConfigurator.Telegram
-|  |
-|  ├── DataCat.Collector
-|  |  ├── DataCat.Collector.Api
-|  |  └── DataCat.Collector.Core
-|  |
-|  ├── DataCat.Adapter
-|  |   ├── DataCat.Adapter.DataHawk
-|  |   └── DataCat.Adapter.PosgreSQL
-|  |
-|  ├── DataCat.UI
-|  |
-|  ├── DataCat.CLI
-|  |
-|  ├── DataCat.Clients
-|  |   ├── DataCat.Client.Py
-|  |   └── DataCat.Client.Csharp
-|  |
-|  ├── DataCat.Archiver
-|  |
-|  └── DataCat.Coordinator
-|
-├── docs
-└── cicd
+├── api/
+│   ├── ptorobuf/
+│   └── openapi/
+│
+├── backend/
+│   ├── csharp/                 # C# components
+│   ├── python/                 # Python components
+│   ├── cpp/                    # C++ components
+│   └── go/                     # Go components
+│
+├── frontend/                   # UI
+│
+├── docs/                       # Documentation
+│   ├── api/
+│   ├── architecture.md
+│   └── structure.md
+│
+├── scripts/                    # DevOps scripts
+│   ├── build/                  # build scripts
+│   ├── deploy/                 # deploy scripts
+│   └── testing/                # testing scripts
+│
+├── tests/
+│   ├── unit/                   # Unit tests
+│   ├── integration/            # Integration tests
+│   └── e2e/                    # E2E tests
+│
+├── deploy/
+│   ├── docker/
+│   └── k8s/
+│
+├── .gitignore
+├── LICENSE
+└── README.md
 ```

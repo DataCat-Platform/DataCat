@@ -1,0 +1,51 @@
+
+# .NET
+**/bin/
+**/obj/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Byte-compiled / optimized / compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.env.*
+*.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Django / Flask local settings
+*.sqlite3
+*.log
+
+# Pytest cache
+.pytest_cache/
+.tox/
+
+# Static files (e.g., Django collectstatic)
+staticfiles/
+media/
+
+# Packaging
+*.egg-info/
+dist/
+build/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# Other temporary files
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
