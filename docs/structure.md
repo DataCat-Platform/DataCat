@@ -2,7 +2,7 @@
 
 ```
 ├── api/
-│   ├── ptorobuf/
+│   ├── protobuf/
 │   └── openapi/
 │
 ├── backend/
