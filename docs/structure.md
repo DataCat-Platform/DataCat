@@ -5,11 +5,11 @@
 │   ├── protobuf/
 │   └── openapi/
 │
-├── backend/
-│   ├── csharp/                 # C# components
-│   ├── python/                 # Python components
-│   ├── cpp/                    # C++ components
-│   └── go/                     # Go components
+├── components/
+│   ├── collectors/
+│   ├── metrics/
+│   ├── ...
+│   └── ...
 │
 ├── frontend/                   # UI
 │
@@ -28,9 +28,15 @@
 │   ├── integration/            # Integration tests
 │   └── e2e/                    # E2E tests
 │
+├── tests/
+│
 ├── deploy/
 │   ├── docker/
 │   └── k8s/
+│
+├── clients/
+│   ├── python/
+│   └── csharp/
 │
 ├── .gitignore
 ├── LICENSE
