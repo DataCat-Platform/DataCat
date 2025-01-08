@@ -1,6 +1,10 @@
 namespace DataCat.Server.Api.Controllers;
 
-public class FilterController
+public sealed class FilterController : ApiControllerBase
 {
-    
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok("QUERY IS OK");
+    }
 }

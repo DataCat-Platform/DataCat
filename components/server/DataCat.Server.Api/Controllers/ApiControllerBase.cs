@@ -1,6 +1,8 @@
 namespace DataCat.Server.Api.Controllers;
 
-public class ApiControllerBase
+[ApiController]
+[Route("api/[controller]")]
+public abstract class ApiControllerBase : ControllerBase
 {
     
 }
