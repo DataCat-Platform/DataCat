@@ -1,0 +1,13 @@
+<p-menubar [model]="mainItems">
+  <ng-template #end>
+    <p-button (click)="op.toggle($event)" icon="pi pi-cog" label="Settings" severity="secondary"/>
+    <p-popover #op [style]="{'--p-popover-arrow-offset': '90%'}">
+      <div class="flex flex-col gap-4 w-[10rem]">
+        <div *ngFor="let item of settingsItems[0].items" class="flex items-center gap-4">
+          <i [class]="item.icon"></i>
+          <span>{{ item.label }}</span>
+        </div>
+      </div>
+    </p-popover>
+  </ng-template>
+</p-menubar>
