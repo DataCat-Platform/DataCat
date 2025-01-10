@@ -3,7 +3,7 @@ import { MenuItem } from "primeng/api";
 import { Menubar } from "primeng/menubar";
 import { Popover } from "primeng/popover";
 import { Button } from "primeng/button";
-import { JsonPipe, NgForOf } from "@angular/common";
+import { NgForOf } from "@angular/common";
 
 @Component({
   selector: 'app-header',
@@ -12,8 +12,7 @@ import { JsonPipe, NgForOf } from "@angular/common";
     Menubar,
     Popover,
     Button,
-    NgForOf,
-    JsonPipe
+    NgForOf
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
