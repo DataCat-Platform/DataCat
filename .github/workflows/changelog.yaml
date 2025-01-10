@@ -32,4 +32,4 @@ jobs:
         git config --global datacat-platform@gmail.com 'github-actions@github.com'
         git add CHANGELOG.md
         git commit -m "update CHANGELOG.md"
-        git push https://github.com/${{ github.repository }}.git HEAD:main  
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
