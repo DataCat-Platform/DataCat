@@ -28,8 +28,8 @@ jobs:
      
     - name: Commit Changelog
       run: |  
-        git config --global DataCat-bot 'github-actions'
-        git config --global datacat-platform@gmail.com 'github-actions@github.com'
+        git config --global user.name 'DataCat-bot'
+        git config --global user.email 'datacat-platform@gmail.com'
         git add CHANGELOG.md
         git commit -m "update CHANGELOG.md"
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
