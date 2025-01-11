@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - *(datacat_server, datacat_ui)* Init server and ui app
 - *(datacat_server, datacat_ui)* Add start ui page
+- *(api)* Add .proto file to describe custom metrics passing protocol
 
 ### 🚜 Refactor
 
