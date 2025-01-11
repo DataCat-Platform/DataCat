@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package datacat;
+
+import "google/protobuf/timestamp.proto";
+
+message KeyValue {
+    string key = 1;
+    string value = 2;
+}
+
+message Metric {
+    oneof series {
+        Counter counter = 1;
+        Gauge gauge = 2;
+        Histogram histogram = 3;
+    }
+    google.protobuf.Timestamp timestamp = 4;
+    repeated KeyValue tags = 5;
+}
+
