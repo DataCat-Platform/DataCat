@@ -1,9 +1,15 @@
 namespace DataCat.Server.Domain.Models.Enums;
 
-public enum DataSourceType
+public abstract class DataSourceType(string name, int value)
+    : SmartEnum<DataSourceType, int>(name, value)
 {
-    None = 0,
-    DataCat = 1,
-    PostgreSQL = 2,
-    SQLLite = 3    
+    public static readonly DataSourceType DataCat = new DataCatDataSource();
+    public static readonly DataSourceType PostgreSQL = new PostgreSQLDataSource();
+    public static readonly DataSourceType SQLLite = new SQLLiteDataSource();
+
+    private sealed class DataCatDataSource() : DataSourceType("DataCat", 1);
+    
+    private sealed class PostgreSQLDataSource() : DataSourceType("PostgreSQL", 2);
+    
+    private sealed class SQLLiteDataSource() : DataSourceType("SQLLite", 3);
 }

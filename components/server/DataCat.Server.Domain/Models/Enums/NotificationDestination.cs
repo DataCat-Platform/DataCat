@@ -1,8 +1,12 @@
 namespace DataCat.Server.Domain.Models.Enums;
 
-public enum NotificationDestination
+public abstract class NotificationDestination(string name, int value)
+    : SmartEnum<NotificationDestination, int>(name, value)
 {
-    None = 0,
-    Telegram = 1,
-    Email = 2,
+    public static readonly NotificationDestination Telegram = new TelegramNotification();
+    public static readonly NotificationDestination Email = new EmailNotification();
+
+    private sealed class TelegramNotification() : NotificationDestination("Telegram", 1);
+    
+    private sealed class EmailNotification() : NotificationDestination("Email", 2);
 }

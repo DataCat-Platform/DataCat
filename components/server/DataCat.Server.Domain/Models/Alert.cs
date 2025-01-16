@@ -2,16 +2,55 @@ namespace DataCat.Server.Domain.Models;
 
 public class Alert
 {
-    public Guid Id { get; set; }
+    private Alert(
+        Guid id,
+        string name,
+        Query query,
+        string condition,
+        NotificationChannel notificationChannel)
+    {
+        Id = id;
+        Name = name;
+        Query = query;
+        Condition = condition;
+        NotificationChannel = notificationChannel;
+    }
     
-    public required string Name { get; set; }
+    public Guid Id { get; private set; }
     
-    public required Query Query { get; set; }
+    public string Name { get; private set; }
+    
+    public Query Query { get; private set; }
 
     /// <summary>
     /// For example, avg(x) > 90
     /// </summary>
-    public required string Condition { get; set; }
+    public string Condition { get; private set; }
     
-    public required NotificationChannel NotificationChannel { get; set; }
+    public NotificationChannel NotificationChannel { get; private set; }
+
+    public Result<Alert> Create(
+        Guid id, 
+        string name, 
+        Query? query, 
+        string? condition, 
+        NotificationChannel? notificationChannel)
+    {
+        if (condition is null)
+        {
+            return Result.Fail<Alert>("condition cannot be null");
+        }
+
+        if (notificationChannel is null)
+        {
+            return Result.Fail<Alert>("notificationChannel cannot be null");
+        }
+
+        if (query is null)
+        {
+            return Result.Fail<Alert>("query cannot be null");
+        }
+        
+        return Result.Success(new Alert(id, name, query, condition, notificationChannel));
+    }
 }
