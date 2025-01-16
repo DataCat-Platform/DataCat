@@ -8,3 +8,4 @@ public sealed class QueryController : ApiControllerBase
         return Ok("QUERY IS OK");
     }
 }
+

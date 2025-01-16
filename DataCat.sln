@@ -4,6 +4,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataCat.Server", "DataCat.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.Api", "components\server\DataCat.Server.Api\DataCat.Server.Api.csproj", "{1621F9FE-91B0-4532-BF6B-E1BFDE263D71}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataCat.Client", "DataCat.Client", "{10F7D54B-4471-48AB-BBA6-E800EFBEE9B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.OpenTelemetry.Exporter.Example", "clients\csharp\DataCat.OpenTelemetry.Exporter.Example\DataCat.OpenTelemetry.Exporter.Example.csproj", "{DE3E2669-7274-42CE-A280-F068E556374E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.OpenTelemetry.Exporter", "clients\csharp\DataCat.OpenTelemetry.Exporter\DataCat.OpenTelemetry.Exporter.csproj", "{EDCEFCA4-0BE2-486C-B541-CA6587E16D3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.Application", "components\server\DataCat.Server.Application\DataCat.Server.Application.csproj", "{BE5D00BC-D9DD-480C-ABF2-B52BAFE3DEFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.Domain", "components\server\DataCat.Server.Domain\DataCat.Server.Domain.csproj", "{8076B3D0-246F-44BF-8EE2-1A4716FD3326}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.HttpModels", "components\server\DataCat.Server.HttpModels\DataCat.Server.HttpModels.csproj", "{1731D151-BBED-4A96-BF55-B168C275628B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -11,11 +23,36 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1621F9FE-91B0-4532-BF6B-E1BFDE263D71} = {3D1FD537-C3CC-4E8A-A6E5-BEE6212A680A}
+		{DE3E2669-7274-42CE-A280-F068E556374E} = {10F7D54B-4471-48AB-BBA6-E800EFBEE9B7}
+		{EDCEFCA4-0BE2-486C-B541-CA6587E16D3A} = {10F7D54B-4471-48AB-BBA6-E800EFBEE9B7}
+		{BE5D00BC-D9DD-480C-ABF2-B52BAFE3DEFE} = {3D1FD537-C3CC-4E8A-A6E5-BEE6212A680A}
+		{8076B3D0-246F-44BF-8EE2-1A4716FD3326} = {3D1FD537-C3CC-4E8A-A6E5-BEE6212A680A}
+		{1731D151-BBED-4A96-BF55-B168C275628B} = {3D1FD537-C3CC-4E8A-A6E5-BEE6212A680A}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1621F9FE-91B0-4532-BF6B-E1BFDE263D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1621F9FE-91B0-4532-BF6B-E1BFDE263D71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1621F9FE-91B0-4532-BF6B-E1BFDE263D71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1621F9FE-91B0-4532-BF6B-E1BFDE263D71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE3E2669-7274-42CE-A280-F068E556374E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE3E2669-7274-42CE-A280-F068E556374E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE3E2669-7274-42CE-A280-F068E556374E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE3E2669-7274-42CE-A280-F068E556374E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDCEFCA4-0BE2-486C-B541-CA6587E16D3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDCEFCA4-0BE2-486C-B541-CA6587E16D3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDCEFCA4-0BE2-486C-B541-CA6587E16D3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDCEFCA4-0BE2-486C-B541-CA6587E16D3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE5D00BC-D9DD-480C-ABF2-B52BAFE3DEFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE5D00BC-D9DD-480C-ABF2-B52BAFE3DEFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE5D00BC-D9DD-480C-ABF2-B52BAFE3DEFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE5D00BC-D9DD-480C-ABF2-B52BAFE3DEFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8076B3D0-246F-44BF-8EE2-1A4716FD3326}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8076B3D0-246F-44BF-8EE2-1A4716FD3326}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8076B3D0-246F-44BF-8EE2-1A4716FD3326}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8076B3D0-246F-44BF-8EE2-1A4716FD3326}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1731D151-BBED-4A96-BF55-B168C275628B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1731D151-BBED-4A96-BF55-B168C275628B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1731D151-BBED-4A96-BF55-B168C275628B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1731D151-BBED-4A96-BF55-B168C275628B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
