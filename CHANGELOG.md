@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - *(datacat_server, datacat_ui)* Add start ui page
 - *(api)* Add .proto file to describe custom metrics passing protocol
 - *(api)* Add support for Counter, Gauge, and Histogram metrics
+- *(datacat-exporter)* Implement otel metrics and export it into datacat server
 
 ### 🚜 Refactor
 
