@@ -1,4 +1,4 @@
-namespace DataCat.Server.Domain.Models;
+namespace DataCat.Server.Domain.Core;
 
 public class Alert
 {
@@ -29,28 +29,36 @@ public class Alert
     
     public NotificationChannel NotificationChannel { get; private set; }
 
-    public Result<Alert> Create(
+    public static Result<Alert> Create(
         Guid id, 
         string name, 
         Query? query, 
         string? condition, 
         NotificationChannel? notificationChannel)
     {
+        var validationList = new List<Result<Alert>>();
+
+        #region Validation
+
         if (condition is null)
         {
-            return Result.Fail<Alert>("condition cannot be null");
+            validationList.Add(Result.Fail<Alert>(BaseError.FieldIsNull(nameof(condition))));
         }
 
         if (notificationChannel is null)
         {
-            return Result.Fail<Alert>("notificationChannel cannot be null");
+            validationList.Add(Result.Fail<Alert>(BaseError.FieldIsNull(nameof(notificationChannel))));
         }
 
         if (query is null)
         {
-            return Result.Fail<Alert>("query cannot be null");
+            validationList.Add(Result.Fail<Alert>(BaseError.FieldIsNull(nameof(query))));
         }
+
+        #endregion
         
-        return Result.Success(new Alert(id, name, query, condition, notificationChannel));
+        return validationList.Count != 0 
+            ? validationList.FoldResults()! 
+            : Result.Success(new Alert(id, name, query!, condition!, notificationChannel!));
     }
 }

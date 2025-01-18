@@ -1,4 +1,4 @@
-namespace DataCat.Server.Domain.Models;
+namespace DataCat.Server.Domain.Core;
 
 public class NotificationChannel
 {
@@ -17,16 +17,24 @@ public class NotificationChannel
 
     public static Result<NotificationChannel> Create(Guid id, NotificationDestination? destination, string? address)
     {
+        var validationList = new List<Result<NotificationChannel>>();
+
+        #region Validation
+
         if (destination is null)
         {
-            return Result.Fail<NotificationChannel>("Destination cannot be null");
+            validationList.Add(Result.Fail<NotificationChannel>(BaseError.FieldIsNull(nameof(destination))));
         }
 
         if (string.IsNullOrWhiteSpace(address))
         {
-            return Result.Fail<NotificationChannel>("Address cannot be null or empty");
+            validationList.Add(Result.Fail<NotificationChannel>(BaseError.FieldIsNull(nameof(address))));
         }
 
-        return Result.Success(new NotificationChannel(id, destination, address));
+        #endregion
+
+        return validationList.Count != 0 
+            ? validationList.FoldResults()!
+            : Result.Success(new NotificationChannel(id, destination!, address!));
     }
 }

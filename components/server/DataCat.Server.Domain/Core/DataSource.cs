@@ -1,4 +1,4 @@
-namespace DataCat.Server.Domain.Models;
+namespace DataCat.Server.Domain.Core;
 
 public class DataSource
 {
@@ -20,21 +20,29 @@ public class DataSource
 
     public static Result<DataSource> Create(Guid id, string name, DataSourceType? dataSourceType, string? connectionString)
     {
+        var validationList = new List<Result<DataSource>>();
+
+        #region Validation
+
         if (string.IsNullOrWhiteSpace(name))
         {
-            return Result.Fail<DataSource>("Name cannot be null or empty");
+            validationList.Add(Result.Fail<DataSource>(BaseError.FieldIsNull(nameof(name))));
         }
 
         if (string.IsNullOrWhiteSpace(connectionString))
         {
-            return Result.Fail<DataSource>("ConnectionString cannot be null or empty");
+            validationList.Add(Result.Fail<DataSource>(BaseError.FieldIsNull(nameof(connectionString))));
         }
 
         if (dataSourceType is null)
         {
-            return Result.Fail<DataSource>("DataSourceType cannot be null");
+            validationList.Add(Result.Fail<DataSource>(BaseError.FieldIsNull(nameof(dataSourceType))));
         }
 
-        return Result.Success(new DataSource(id, name, dataSourceType, connectionString));
+        #endregion
+
+        return validationList.Count != 0 
+            ? validationList.FoldResults()! 
+            : Result.Success(new DataSource(id, name, dataSourceType!, connectionString!));
     }
 }

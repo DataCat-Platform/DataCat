@@ -1,4 +1,4 @@
-namespace DataCat.Server.Domain.Models;
+namespace DataCat.Server.Domain.Core;
 
 public class Panel
 {
@@ -38,31 +38,39 @@ public class Panel
         DataCatLayout? dataCatLayout,
         Dashboard? parentDashboard)
     {
+        var validationList = new List<Result<Panel>>();
+
+        #region Validation
+
         if (string.IsNullOrWhiteSpace(title))
         {
-            return Result.Fail<Panel>("Title cannot be null or empty");
+            validationList.Add(Result.Fail<Panel>(BaseError.FieldIsNull(nameof(title))));
         }
 
         if (panelType is null)
         {
-            return Result.Fail<Panel>("PanelType cannot be null");
+            validationList.Add(Result.Fail<Panel>(BaseError.FieldIsNull(nameof(panelType))));
         }
 
         if (query is null)
         {
-            return Result.Fail<Panel>("Query cannot be null");
+            validationList.Add(Result.Fail<Panel>(BaseError.FieldIsNull(nameof(query))));
         }
 
         if (dataCatLayout is null)
         {
-            return Result.Fail<Panel>("DataCatLayout cannot be null");
+            validationList.Add(Result.Fail<Panel>(BaseError.FieldIsNull(nameof(dataCatLayout))));
         }
 
         if (parentDashboard is null)
         {
-            return Result.Fail<Panel>("ParentDashboard cannot be null");
+            validationList.Add(Result.Fail<Panel>(BaseError.FieldIsNull(nameof(parentDashboard))));
         }
 
-        return Result.Success(new Panel(id, title, panelType, query, dataCatLayout, parentDashboard));
+        #endregion
+
+        return validationList.Count != 0 
+            ? validationList.FoldResults()! 
+            : Result.Success(new Panel(id, title, panelType!, query!, dataCatLayout!, parentDashboard!));
     }
 }

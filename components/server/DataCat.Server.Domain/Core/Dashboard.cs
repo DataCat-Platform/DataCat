@@ -1,4 +1,4 @@
-namespace DataCat.Server.Domain.Models;
+namespace DataCat.Server.Domain.Core;
 
 public class Dashboard
 {
@@ -48,32 +48,35 @@ public class Dashboard
         DateTime createdAt,
         DateTime updatedAt)
     {
+        var validationList = new List<Result<Dashboard>>();
+
+        #region Validation
+
         if (string.IsNullOrWhiteSpace(name))
         {
-            return Result.Fail<Dashboard>("Name cannot be null or empty");
-        }
-
-        if (string.IsNullOrWhiteSpace(description))
-        {
-            return Result.Fail<Dashboard>("Description cannot be null or empty");
+            validationList.Add(Result.Fail<Dashboard>(BaseError.FieldIsNull(nameof(name))));
         }
 
         if (owner is null)
         {
-            return Result.Fail<Dashboard>("Owner cannot be null");
+            validationList.Add(Result.Fail<Dashboard>(BaseError.FieldIsNull(nameof(owner))));
         }
 
-        panels ??= Enumerable.Empty<Panel>();
-        sharedWith ??= Enumerable.Empty<User>();
+        #endregion
 
-        return Result.Success(new Dashboard(
-            id,
-            name,
-            description,
-            panels,
-            owner,
-            sharedWith,
-            createdAt,
-            updatedAt));
+        panels ??= Array.Empty<Panel>();
+        sharedWith ??= Array.Empty<User>();
+
+        return validationList.Count != 0
+            ? validationList.FoldResults()!
+            : Result.Success(new Dashboard(
+                id,
+                name,
+                description,
+                panels,
+                owner!,
+                sharedWith,
+                createdAt,
+                updatedAt));
     }
 }

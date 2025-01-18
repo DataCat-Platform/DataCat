@@ -1,4 +1,4 @@
-﻿namespace DataCat.Server.Domain.ResultFlow;
+﻿namespace DataCat.Server.Domain.Common.ResultFlow;
 
 public class ErrorInfo
 {

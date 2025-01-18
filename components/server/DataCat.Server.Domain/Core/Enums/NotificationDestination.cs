@@ -1,4 +1,4 @@
-namespace DataCat.Server.Domain.Models.Enums;
+namespace DataCat.Server.Domain.Core.Enums;
 
 public abstract class NotificationDestination(string name, int value)
     : SmartEnum<NotificationDestination, int>(name, value)

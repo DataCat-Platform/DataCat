@@ -1,4 +1,4 @@
-namespace DataCat.Server.Domain.Models.Enums;
+namespace DataCat.Server.Domain.Core.Enums;
 
 public abstract class PanelType(string name, int value)
     : SmartEnum<PanelType, int>(name, value)

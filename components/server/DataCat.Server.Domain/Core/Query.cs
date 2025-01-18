@@ -1,4 +1,4 @@
-namespace DataCat.Server.Domain.Models;
+namespace DataCat.Server.Domain.Core;
 
 public class Query
 {
@@ -20,21 +20,29 @@ public class Query
 
     public static Result<Query> Create(Guid id, DataSource? dataSource, string? rawQuery, TimeRange? timeRange)
     {
+        var validationList = new List<Result<Query>>();
+
+        #region Validation
+
         if (dataSource is null)
         {
-            return Result.Fail<Query>("DataSource cannot be null");
+            validationList.Add(Result.Fail<Query>("DataSource cannot be null"));
         }
 
         if (string.IsNullOrWhiteSpace(rawQuery))
         {
-            return Result.Fail<Query>("RawQuery cannot be null or empty");
+            validationList.Add(Result.Fail<Query>("RawQuery cannot be null or empty"));
         }
 
         if (timeRange is null)
         {
-            return Result.Fail<Query>("TimeRange cannot be null");
+            validationList.Add(Result.Fail<Query>("TimeRange cannot be null"));
         }
 
-        return Result.Success(new Query(id, dataSource, rawQuery, timeRange));
+        #endregion
+
+        return validationList.Count != 0 
+            ? validationList.FoldResults()! 
+            : Result.Success(new Query(id, dataSource!, rawQuery!, timeRange!));
     }
 }

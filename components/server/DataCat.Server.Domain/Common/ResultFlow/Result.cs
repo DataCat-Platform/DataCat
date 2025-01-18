@@ -1,27 +1,48 @@
-﻿namespace DataCat.Server.Domain.ResultFlow;
+﻿namespace DataCat.Server.Domain.Common.ResultFlow;
 
 public class Result
 {
     public Result()
     {
-        Error = null;
+        Errors = null;
     }
 
     public Result(ErrorInfo error)
     {
-        Error = error;
+        Errors = [error];
     }
 
     public Result(Exception ex)
     {
-        Error = new ErrorInfo(ex);
+        Errors = [new ErrorInfo(ex)];
     }
 
-    public ErrorInfo Error { get; protected set; }
+    public List<ErrorInfo>? Errors { get; protected set; }
 
-    public bool IsFailure => Error != null;
+    public bool IsFailure => Errors != null;
 
     public bool IsSuccess => !IsFailure;
+    
+    public Result Append(string message)
+    {
+        Errors ??= [];   
+        Errors.Add(new ErrorInfo(message));
+        return this;
+    }
+    
+    public Result Append(Exception ex)
+    {
+        Errors ??= [];   
+        Errors.Add(new ErrorInfo(ex));
+        return this;
+    }
+    
+    public Result Append(Exception ex, string message)
+    {
+        Errors ??= [];   
+        Errors.Add(new ErrorInfo(ex, message));
+        return this;
+    }
 
     public static Result Success() => new Result();
 
@@ -42,22 +63,4 @@ public class Result
     public static Result<T> Fail<T>(Exception ex) => new Result<T>(new ErrorInfo(ex));
 
     public static Result<T> Fail<T>(Exception ex, string message) => new Result<T>(new ErrorInfo(ex, message));
-
-    public static Result Combine(params Result[] results)
-    {
-        foreach (Result result in results)
-        {
-            if (result == null)
-            {
-                return Fail("Result is null");
-            }
-
-            if (result.IsFailure)
-            {
-                return result;
-            }
-        }
-
-        return Success();
-    }
 }

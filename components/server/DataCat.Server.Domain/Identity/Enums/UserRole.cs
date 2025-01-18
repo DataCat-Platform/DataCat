@@ -1,4 +1,4 @@
-namespace DataCat.Server.Domain.Models.Enums;
+namespace DataCat.Server.Domain.Identity.Enums;
 
 public abstract class UserRole(string name, int value)
     : SmartEnum<UserRole, int>(name, value)
@@ -9,7 +9,7 @@ public abstract class UserRole(string name, int value)
 
     private sealed class AdminUserRole() : UserRole("Admin", 1);
 
-    private sealed class ViewerUserRole() : UserRole("Viewer", 3);
+    private sealed class ViewerUserRole() : UserRole("Viewer", 2);
 
-    private sealed class EditorUserRole() : UserRole("Editor", 4);
+    private sealed class EditorUserRole() : UserRole("Editor", 3);
 }

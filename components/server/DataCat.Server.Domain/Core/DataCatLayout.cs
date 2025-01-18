@@ -1,4 +1,4 @@
-namespace DataCat.Server.Domain.Models;
+namespace DataCat.Server.Domain.Core;
 
 public class DataCatLayout
 {
@@ -20,16 +20,24 @@ public class DataCatLayout
 
     public static Result<DataCatLayout> Create(int x, int y, int width, int height)
     {
+        var validationList = new List<Result<DataCatLayout>>();
+
+        #region Validation
+
         if (width <= 0)
         {
-            return Result.Fail<DataCatLayout>("Width must be greater than 0");
+            validationList.Add(Result.Fail<DataCatLayout>(AlertError.NegativeWidth));
         }
 
         if (height <= 0)
         {
-            return Result.Fail<DataCatLayout>("Height must be greater than 0");
+            validationList.Add(Result.Fail<DataCatLayout>(AlertError.NegativeHeight));
         }
 
-        return Result.Success(new DataCatLayout(x, y, width, height));
+        #endregion
+
+        return validationList.Count != 0 
+            ? validationList.FoldResults()! 
+            : Result.Success(new DataCatLayout(x, y, width, height));
     }
 }
