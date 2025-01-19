@@ -3,7 +3,7 @@ namespace DataCat.Server.Domain.Plugins;
 public class Plugin
 {
     private Plugin(
-        string pluginHash,
+        Guid pluginId,
         string name,
         string version,
         string description,
@@ -14,7 +14,7 @@ public class Plugin
         DateTime updatedAt,
         DateTime? lastLoadedAt)
     {
-        PluginHash = pluginHash;
+        PluginId = pluginId;
         Name = name;
         Version = version;
         Description = description;
@@ -26,7 +26,7 @@ public class Plugin
         LastLoadedAt = lastLoadedAt;
     }
 
-    public string PluginHash { get; private set; }
+    public Guid PluginId { get; private set; }
 
     public string Name { get; private set; }
 
@@ -47,7 +47,7 @@ public class Plugin
     public DateTime? LastLoadedAt { get; private set; }
 
     public static Result<Plugin> Create(
-        string pluginHash,
+        Guid pluginId,
         string name,
         string version,
         string description,
@@ -79,7 +79,7 @@ public class Plugin
         }
 
         return Result.Success(new Plugin(
-            pluginHash,
+            pluginId,
             name,
             version,
             description,

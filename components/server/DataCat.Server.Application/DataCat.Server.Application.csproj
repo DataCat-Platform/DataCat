@@ -6,4 +6,21 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DataCat.Server.Domain\DataCat.Server.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Commands\Plugin\EnableOrDisable\" />
+      <Folder Include="Commands\Plugin\Remove\" />
+      <Folder Include="Commands\Plugin\Update\" />
+      <Folder Include="Queries\Plugin\GetStatus\" />
+      <Folder Include="Queries\Plugin\Get\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="11.11.0" />
+      <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    </ItemGroup>
+
 </Project>

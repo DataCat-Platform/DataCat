@@ -3,9 +3,12 @@ namespace DataCat.Server.Api.Controllers;
 public sealed class PluginController : ApiControllerBase
 {
     [HttpPost("add")]
-    public IActionResult AddPlugin([FromBody] string config) // PluginConfig
+    public async Task<IActionResult> AddPlugin([FromForm] AddPluginRequest request)
     {
-        return Ok("Plugin added successfully");
+        var response = await SendAsync(request.ToCommand());
+        return response.IsFailure 
+            ? BadRequest(response) 
+            : Ok(response);
     }
     
     [HttpDelete("remove/{pluginId}")]

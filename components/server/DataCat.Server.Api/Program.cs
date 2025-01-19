@@ -1,12 +1,14 @@
-using Scalar.AspNetCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Logging.ClearProviders();
+var configuration = builder.Configuration;
 
-builder.Services.AddControllers();
 builder.Services.AddGrpc();
+builder.Services
+    .AddCustomMiddlewares()
+    .AddApiSetup()
+    .AddApplicationServices()
+    .AddServerLogging(configuration);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -31,6 +33,10 @@ app.UseSwagger(options =>
 });
 app.MapScalarApiReference();
 app.UseSwaggerUI();
+
+app
+    .UseLoggingRequests()
+    .UseExceptionHandling();
 
 app.MapGrpcService<ReceiveMetricService>();
 app.MapControllers();
