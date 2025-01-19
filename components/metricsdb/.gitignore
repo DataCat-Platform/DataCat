@@ -1,0 +1,40 @@
+/build
+/build_*
+/obj-x86_64-linux-gnu/
+
+# logs
+*.log
+*.debuglog
+*.stderr
+*.stdout
+
+# Build files
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+CTestTestfile.cmake
+*.a
+*.o
+*.so
+*.dll
+*.lib
+*.dylib
+cmake-build-*
+
+*.bin
+*.mrk
+*.mrk2
+*.mrk3
+
+# Microsoft Visual Studio Code
+.vscode
+
+# Protobuf
+*.pb.cpp
+*.pb.h
+
+# clangd cache
+/.cache
+
+/compile_commands.json
