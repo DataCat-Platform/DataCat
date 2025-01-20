@@ -37,4 +37,32 @@ public static class DependencyInjectionExtensions
 
         return services;
     }
+    
+    public static IServiceCollection AddMigrationSetup(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        _ = bool.TryParse(configuration["ApplyMigrations"], out var applyMigrations);
+        if (!applyMigrations)
+        {
+            return services;    
+        }
+        
+        switch (configuration["DataSourceType"])
+        {
+            case "sqlserver":
+                break;
+            case "postgres":
+                services.Configure<MigrationOptions>(configuration.GetSection("MigrationOptions"));
+                services.AddSingleton<MigrationOptions>(sp => sp.GetRequiredService<IOptions<MigrationOptions>>().Value);
+                services.AddSingleton<IMigrationRunnerFactory, PostgresRunnerFactory>(sp =>
+                {
+                    var options = sp.GetRequiredService<MigrationOptions>();
+                    return new PostgresRunnerFactory(options);
+                });
+                break;
+        }
+
+        return services;
+    }
 }

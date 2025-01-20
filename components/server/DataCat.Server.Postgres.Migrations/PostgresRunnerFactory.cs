@@ -1,9 +1,9 @@
 namespace DataCat.Server.Postgres.Migrations;
 
-public class PostgresRunnerFactory : IMigrationRunnerFactory
+public class PostgresRunnerFactory(MigrationOptions options) : IMigrationRunnerFactory
 {
-    public IMigrationRunner CreateMigrationRunner(DataSource dataSource)
+    public IDataCatMigrationRunner CreateMigrationRunner()
     {
-        throw new NotImplementedException();
+        return new PostgresMigrationRunner(options);        
     }
 }

@@ -10,4 +10,10 @@
       <ProjectReference Include="..\DataCat.Server.Persistence\DataCat.Server.Persistence.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="FluentMigrator.Runner" Version="6.2.0" />
+      <PackageReference Include="FluentMigrator.Runner.Postgres" Version="6.2.0" />
+      <PackageReference Include="Npgsql" Version="8.0.6" />
+    </ItemGroup>
+
 </Project>

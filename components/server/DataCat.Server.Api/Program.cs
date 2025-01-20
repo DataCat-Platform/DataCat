@@ -8,7 +8,8 @@ builder.Services
     .AddCustomMiddlewares()
     .AddApiSetup()
     .AddApplicationServices()
-    .AddServerLogging(configuration);
+    .AddServerLogging(configuration)
+    .AddMigrationSetup(configuration);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -26,6 +27,11 @@ builder.WebHost.ConfigureKestrel(options =>
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
 var app = builder.Build();
+
+if (bool.TryParse(app.Configuration["ApplyMigrations"], out var applyMigrations) && applyMigrations)
+{
+    await app.ApplyMigrations();
+}
 
 app.UseSwagger(options =>
 {
