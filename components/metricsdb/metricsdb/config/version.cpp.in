@@ -1,0 +1,10 @@
+#include <config/version.h>
+
+namespace DB
+{
+
+const unsigned VERSION_MAJOR = @PROJECT_VERSION_MAJOR@;
+const unsigned VERSION_MINOR = @PROJECT_VERSION_MINOR@;
+const unsigned VERSION_PATCH = @PROJECT_VERSION_PATCH@;
+
+}
