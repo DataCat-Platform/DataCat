@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(mdb)
 
-# This set helps in avoiding errors absl errors.
+# This set helps in avoiding absl errors.
 # See this issue: https://github.com/protocolbuffers/protobuf/issues/12185
 set(ABSL_ENABLE_INSTALL ON)
 
