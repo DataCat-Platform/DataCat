@@ -11,14 +11,14 @@ Supported metric types are `Counter`, `Gauge`, and `Histogram`, as described in 
 To build project using Cmake first make a directory to store build files:
 
 ```bash
-mkdir build
-cd build
+mkdir cmake/build/
+cd cmake/build/
 ```
 
 Then call `cmake`:
 
 ```bash
-cmake ..
+cmake ../..
 cmake --build .
 ```
 
