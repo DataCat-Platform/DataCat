@@ -22,9 +22,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.DI", "compon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.Infrastructure", "components\server\DataCat.Server.Infrastructure\DataCat.Server.Infrastructure.csproj", "{B81250CE-9451-4808-BD40-F7199785B879}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.Persistence", "components\server\DataCat.Server.Persistence\DataCat.Server.Persistence.csproj", "{96224FA2-4EAF-4235-9569-F674429BF67C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.Postgres", "components\server\DataCat.Server.Postgres\DataCat.Server.Postgres.csproj", "{87D5EF7A-B454-4B6C-8DF4-689904C3522E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.Postgres.Migrations", "components\server\DataCat.Server.Postgres.Migrations\DataCat.Server.Postgres.Migrations.csproj", "{87D5EF7A-B454-4B6C-8DF4-689904C3522E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".uploads", ".uploads", "{34B4DD78-47D1-4D93-9CF7-7F3F15AD8B01}"
+	ProjectSection(SolutionItems) = preProject
+		components\server\DataCat.Server.Api\bin\Debug\net8.0\uploads\c30eae6d-1510-49b0-9c0d-e8cc7e66b173 = components\server\DataCat.Server.Api\bin\Debug\net8.0\uploads\c30eae6d-1510-49b0-9c0d-e8cc7e66b173
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,8 +44,8 @@ Global
 		{5703895D-A27E-4381-B167-9E5F2F3337B9} = {3D1FD537-C3CC-4E8A-A6E5-BEE6212A680A}
 		{B6CB2888-16AB-4899-9422-872F890C08FB} = {3D1FD537-C3CC-4E8A-A6E5-BEE6212A680A}
 		{B81250CE-9451-4808-BD40-F7199785B879} = {3D1FD537-C3CC-4E8A-A6E5-BEE6212A680A}
-		{96224FA2-4EAF-4235-9569-F674429BF67C} = {3D1FD537-C3CC-4E8A-A6E5-BEE6212A680A}
 		{87D5EF7A-B454-4B6C-8DF4-689904C3522E} = {3D1FD537-C3CC-4E8A-A6E5-BEE6212A680A}
+		{34B4DD78-47D1-4D93-9CF7-7F3F15AD8B01} = {3D1FD537-C3CC-4E8A-A6E5-BEE6212A680A}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1621F9FE-91B0-4532-BF6B-E1BFDE263D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -81,10 +84,6 @@ Global
 		{B81250CE-9451-4808-BD40-F7199785B879}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B81250CE-9451-4808-BD40-F7199785B879}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B81250CE-9451-4808-BD40-F7199785B879}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96224FA2-4EAF-4235-9569-F674429BF67C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96224FA2-4EAF-4235-9569-F674429BF67C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96224FA2-4EAF-4235-9569-F674429BF67C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96224FA2-4EAF-4235-9569-F674429BF67C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{87D5EF7A-B454-4B6C-8DF4-689904C3522E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{87D5EF7A-B454-4B6C-8DF4-689904C3522E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87D5EF7A-B454-4B6C-8DF4-689904C3522E}.Release|Any CPU.ActiveCfg = Release|Any CPU

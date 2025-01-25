@@ -7,7 +7,7 @@ builder.Services.AddGrpc();
 builder.Services
     .AddCustomMiddlewares()
     .AddApiSetup()
-    .AddApplicationServices()
+    .AddApplicationServices(configuration)
     .AddServerLogging(configuration)
     .AddMigrationSetup(configuration);
 

@@ -7,11 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Repositories\Core\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\DataCat.Server.Application\DataCat.Server.Application.csproj" />
+      <ProjectReference Include="..\DataCat.Server.PDK\DataCat.Server.PDK.csproj" />
     </ItemGroup>
 
 </Project>

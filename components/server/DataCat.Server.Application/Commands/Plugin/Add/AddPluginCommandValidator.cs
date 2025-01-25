@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.Plugin.Add;
 
-public class AddPluginCommandValidator : AbstractValidator<AddPluginCommand>
+public sealed class AddPluginCommandValidator : AbstractValidator<AddPluginCommand>
 {
     public AddPluginCommandValidator()
     {

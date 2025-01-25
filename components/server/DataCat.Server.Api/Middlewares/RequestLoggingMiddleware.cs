@@ -6,12 +6,12 @@ public class RequestLoggingMiddleware(ILogger<RequestLoggingMiddleware> logger) 
     
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        // if (ByPassRequestLogging
-        //     .Any(x => context.Request.Path.Value?.Contains(x, StringComparison.InvariantCultureIgnoreCase) ?? false))
-        // {
-        //     await next(context);
-        //     return;
-        // }
+        if (ByPassRequestLogging
+            .Any(x => context.Request.Path.Value?.Contains(x, StringComparison.InvariantCultureIgnoreCase) ?? false))
+        {
+            await next(context);
+            return;
+        }
         
         logger.LogInformation("Request to the endpoint: {@RequestPath}",
             context.Request.Path.Value);

@@ -1,8 +1,10 @@
+using DataCat.Server.Domain.Plugins;
+
 namespace DataCat.Server.Api.Mappings;
 
 public static class PluginMappingExtensions
 {
-    public static AddPluginCommand ToCommand(this AddPluginRequest request)
+    public static AddPluginCommand ToAddCommand(this AddPluginRequest request)
     {
         return new AddPluginCommand
         {
@@ -12,6 +14,29 @@ public static class PluginMappingExtensions
             Description = request.Description,
             Author = request.Author,
             Settings = request.Settings
+        };
+    }
+    
+    public static UpdatePluginCommand ToUpdateCommand(this UpdatePluginRequest request, string pluginId)
+    {
+        return new UpdatePluginCommand
+        {
+            PluginId = pluginId,
+            Description = request.Description,
+            Settings = request.Settings
+        };
+    }
+
+    public static FullPluginResponse ToResponse(this PluginEntity plugin)
+    {
+        return new FullPluginResponse()
+        {
+            PluginId = plugin.PluginId.ToString(),
+            Name = plugin.Name,
+            Description = plugin.Description,
+            Settings = plugin.Settings,
+            Author = plugin.Author,
+            Version = plugin.Version,
         };
     }
 }

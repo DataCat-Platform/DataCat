@@ -20,4 +20,15 @@ public abstract class ApiControllerBase : ControllerBase
     {
         await Mediator.Send(request, token);
     }
+
+    protected static ProblemDetails CreateProblemDetails(object? detail)
+    {
+        return new ProblemDetails
+        {
+            Status = StatusCodes.Status400BadRequest,
+            Title = "Server logic error",
+            Detail = "There was an error processing the request",
+            Extensions = { ["errors"] = detail }
+        };
+    }
 }

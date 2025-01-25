@@ -11,6 +11,11 @@ public class Result
     {
         Errors = [error];
     }
+    
+    public Result(List<ErrorInfo> errors)
+    {
+        Errors = errors;
+    }
 
     public Result(Exception ex)
     {
@@ -57,6 +62,8 @@ public class Result
     public static Result<T> Success<T>(T value) => new Result<T>(value);
 
     public static Result<T> Fail<T>(ErrorInfo error) => new Result<T>(error);
+    
+    public static Result<T> Fail<T>(List<ErrorInfo> errors) => new Result<T>(errors);
 
     public static Result<T> Fail<T>(string message) => new Result<T>(new ErrorInfo(message));
 

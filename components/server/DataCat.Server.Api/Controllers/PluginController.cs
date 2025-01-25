@@ -1,51 +1,94 @@
+using DataCat.Server.Application.Commands.Plugin.ToggleStatus;
+
 namespace DataCat.Server.Api.Controllers;
 
 public sealed class PluginController : ApiControllerBase
 {
     [HttpPost("add")]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddPlugin([FromForm] AddPluginRequest request)
     {
-        var response = await SendAsync(request.ToCommand());
+        var response = await SendAsync(request.ToAddCommand());
         return response.IsFailure 
-            ? BadRequest(response) 
-            : Ok(response);
+            ? BadRequest(CreateProblemDetails(response.Errors)) 
+            : Ok(response.Value);
     }
     
     [HttpDelete("remove/{pluginId}")]
-    public IActionResult RemovePlugin(string pluginId)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> RemovePlugin([FromRoute] string pluginId)
     {
-        return Ok("Plugin removed successfully");
+        var command = new RemovePluginCommand(pluginId);
+        var response = await SendAsync(command);
+        return response.IsFailure 
+            ? BadRequest(CreateProblemDetails(response.Errors))
+            : Ok();
     }
     
     [HttpGet("list")]
-    public IActionResult GetPlugins()
+    [ProducesResponseType(typeof(FullPluginResponse[]), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetPlugins()
     {
-        // plugin info object
-        return Ok(new List<string>());
+        var query = new GetAllPluginsQuery();
+        var response = await SendAsync(query);
+        if (response.IsFailure)
+            return BadRequest(CreateProblemDetails(response.Errors));
+
+        var pluginsResponse = response.Value.Select(x => x.ToResponse());
+        return Ok(pluginsResponse);
     }
     
-    [HttpGet("status/{pluginId}")]
-    public IActionResult GetPluginStatus(string pluginId)
+    [HttpGet("{pluginId}")]
+    [ProducesResponseType(typeof(FullPluginResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetPlugin(string pluginId)
     {
-        // new PluginStatus()
-        return Ok();
+        var query = new GetPluginQuery(pluginId);
+        var response = await SendAsync(query);
+        
+        if (response.IsFailure)
+            return BadRequest(CreateProblemDetails(response.Errors));
+
+        var pluginResponse = response.Value.ToResponse();
+        return Ok(pluginResponse);
     }
     
     [HttpPut("update/{pluginId}")]
-    public IActionResult UpdatePluginConfig(string pluginId, [FromBody] string config) // PluginConfig
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdatePluginConfig([FromRoute] string pluginId, [FromBody] UpdatePluginRequest request)
     {
-        return Ok("Plugin config updated successfully");
+        var query = request.ToUpdateCommand(pluginId);
+        var response = await SendAsync(query);
+        return response.IsFailure 
+            ? BadRequest(CreateProblemDetails(response.Errors))
+            : Ok();
     }
     
     [HttpPost("enable/{pluginId}")]
-    public IActionResult EnablePlugin(string pluginId)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> EnablePlugin([FromRoute] string pluginId)
     {
-        return Ok("Plugin enabled successfully");
+        var command = new ToggleStatusCommand() { PluginId = pluginId, ToggleStatus = ToggleStatus.Active };
+        var response = await SendAsync(command);
+        return response.IsFailure 
+            ? BadRequest(CreateProblemDetails(response.Errors))
+            : Ok();
     }
     
     [HttpPost("disable/{pluginId}")]
-    public IActionResult DisablePlugin(string pluginId)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DisablePlugin([FromRoute] string pluginId)
     {
-        return Ok("Plugin disabled successfully");
+        var command = new ToggleStatusCommand() { PluginId = pluginId, ToggleStatus = ToggleStatus.InActive };
+        var response = await SendAsync(command);
+        return response.IsFailure 
+            ? BadRequest(CreateProblemDetails(response.Errors))
+            : Ok();
     }
 }

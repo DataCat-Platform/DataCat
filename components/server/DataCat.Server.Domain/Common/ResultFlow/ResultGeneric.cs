@@ -15,6 +15,12 @@ public class Result<T> : Result
         Value = default!;
         Errors = [error];
     }
+    
+    public Result(List<ErrorInfo> errors)
+    {
+        Value = default!;
+        Errors = errors;
+    }
 
     public Result(Exception ex)
     {
