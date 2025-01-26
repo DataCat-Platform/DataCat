@@ -7,15 +7,13 @@ public class Panel
         string title,
         PanelType panelType,
         Query query,
-        DataCatLayout dataCatLayout,
-        Dashboard parentDashboard)
+        DataCatLayout dataCatLayout)
     {
         Id = id;
         Title = title;
         PanelType = panelType;
         Query = query;
         DataCatLayout = dataCatLayout;
-        ParentDashboard = parentDashboard;
     }
 
     public Guid Id { get; private set; }
@@ -28,15 +26,12 @@ public class Panel
 
     public DataCatLayout DataCatLayout { get; private set; }
 
-    public Dashboard ParentDashboard { get; private set; }
-
     public static Result<Panel> Create(
         Guid id,
         string title,
         PanelType? panelType,
         Query? query,
-        DataCatLayout? dataCatLayout,
-        Dashboard? parentDashboard)
+        DataCatLayout? dataCatLayout)
     {
         var validationList = new List<Result<Panel>>();
 
@@ -62,15 +57,10 @@ public class Panel
             validationList.Add(Result.Fail<Panel>(BaseError.FieldIsNull(nameof(dataCatLayout))));
         }
 
-        if (parentDashboard is null)
-        {
-            validationList.Add(Result.Fail<Panel>(BaseError.FieldIsNull(nameof(parentDashboard))));
-        }
-
         #endregion
 
         return validationList.Count != 0 
             ? validationList.FoldResults()! 
-            : Result.Success(new Panel(id, title, panelType!, query!, dataCatLayout!, parentDashboard!));
+            : Result.Success(new Panel(id, title, panelType!, query!, dataCatLayout!));
     }
 }

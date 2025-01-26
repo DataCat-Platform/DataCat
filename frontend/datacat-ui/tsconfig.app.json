@@ -3,8 +3,10 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "moduleResolution": "node"
   },
   "files": [
     "src/main.ts"

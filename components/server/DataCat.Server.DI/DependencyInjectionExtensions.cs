@@ -1,6 +1,3 @@
-using System.Text.Json;
-using DataCat.Server.Application.Behaviors.TransactionScope;
-
 namespace DataCat.Server.DI;
 
 public static class DependencyInjectionExtensions
@@ -15,7 +12,10 @@ public static class DependencyInjectionExtensions
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 options.JsonSerializerOptions.Converters.Add(
                     new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, false));
-            });;
+            });
+
+        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+        
         return services;
     }
 
@@ -69,6 +69,28 @@ public static class DependencyInjectionExtensions
         
         PluginLoader.LoadDatabasePlugin(services, configuration["DataSourceType"]!, configuration);
 
+        return services;
+    }
+
+    public static IServiceCollection AddRealTimeCommunication(
+        this IServiceCollection services,
+        IConfiguration _)
+    {
+        services.AddSignalR(options =>
+        {
+            options.EnableDetailedErrors = true;
+            options.ClientTimeoutInterval = TimeSpan.FromMinutes(5);
+        });
+        
+        services.AddCors(corsOptions =>
+        {
+            corsOptions.AddPolicy("frontend",x =>
+                x.WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+        });
+        
         return services;
     }
 }

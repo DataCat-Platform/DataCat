@@ -3,7 +3,7 @@ import { MenuItem } from "primeng/api";
 import { Menubar } from "primeng/menubar";
 import { Popover } from "primeng/popover";
 import { Button } from "primeng/button";
-import { NgForOf } from "@angular/common";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -12,7 +12,7 @@ import { NgForOf } from "@angular/common";
     Menubar,
     Popover,
     Button,
-    NgForOf
+    RouterLink
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -25,11 +25,13 @@ export class HeaderComponent implements OnInit {
     this.mainItems = [
       {
         label: 'Home',
-        icon: 'pi pi-home'
+        icon: 'pi pi-home',
+        routerLink: '/',
       },
       {
         label: 'Dashboards',
-        icon: 'pi pi-chart-bar'
+        icon: 'pi pi-chart-bar',
+        routerLink: '/dashboards',
       },
       {
         label: 'Monitoring',
@@ -37,15 +39,18 @@ export class HeaderComponent implements OnInit {
         items: [
           {
             label: 'Metrics',
-            icon: 'pi pi-heart-fill'
+            icon: 'pi pi-heart-fill',
+            routerLink: '/metrics',
           },
           {
             label: 'Logs',
-            icon: 'pi pi-file'
+            icon: 'pi pi-file',
+            routerLink: '/logs',
           },
           {
             label: 'Traces',
-            icon: 'pi pi-search'
+            icon: 'pi pi-search',
+            routerLink: '/traces',
           }
         ]
       },
@@ -54,12 +59,14 @@ export class HeaderComponent implements OnInit {
         icon: 'pi pi-bell',
         items: [
           {
-            label: 'Alert Configuration',
-            icon: 'pi pi-cog'
+            label: 'Alerts',
+            icon: 'pi pi-cog',
+            routerLink: '/alerts',
           },
           {
             label: 'Active Alerts',
-            icon: 'pi pi-exclamation-triangle'
+            icon: 'pi pi-exclamation-triangle',
+            routerLink: '/active-alerts',
           }
         ]
       },
@@ -69,11 +76,13 @@ export class HeaderComponent implements OnInit {
         items: [
           {
             label: 'Collector Configuration',
-            icon: 'pi pi-sliders-h'
+            icon: 'pi pi-sliders-h',
+            routerLink: '/collector-configuration',
           },
           {
             label: 'Server Settings',
-            icon: 'pi pi-server'
+            icon: 'pi pi-server',
+            routerLink: '/server-settings',
           }
         ]
       }
@@ -86,15 +95,18 @@ export class HeaderComponent implements OnInit {
         items: [
           {
             label: 'Configuration',
-            icon: 'pi pi-bars'
+            icon: 'pi pi-bars',
+            routerLink: '/settings/configuration',
           },
           {
             label: 'UI',
-            icon: 'pi pi-map'
+            icon: 'pi pi-map',
+            routerLink: '/settings/ui',
           },
           {
             label: 'GitHub',
-            icon: 'pi pi-github'
+            icon: 'pi pi-github',
+            routerLink: 'https://github.com/DataCat-Platform/DataCat',
           }
         ]
       }

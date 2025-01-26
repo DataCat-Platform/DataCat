@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Commands.Plugin.ToggleStatus;
-
 namespace DataCat.Server.Api.Controllers;
 
 public sealed class PluginController : ApiControllerBase
@@ -27,12 +25,15 @@ public sealed class PluginController : ApiControllerBase
             : Ok();
     }
     
-    [HttpGet("list")]
+    [HttpGet("search")]
     [ProducesResponseType(typeof(FullPluginResponse[]), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetPlugins()
+    public async Task<IActionResult> GetPlugins(
+        [FromQuery] string? filter = null, 
+        [FromQuery] int page = 1, 
+        [FromQuery] int pageSize = 10)
     {
-        var query = new GetAllPluginsQuery();
+        var query = new SearchPluginsQuery(page, pageSize, filter);
         var response = await SendAsync(query);
         if (response.IsFailure)
             return BadRequest(CreateProblemDetails(response.Errors));
@@ -41,12 +42,12 @@ public sealed class PluginController : ApiControllerBase
         return Ok(pluginsResponse);
     }
     
-    [HttpGet("{pluginId}")]
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(FullPluginResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetPlugin(string pluginId)
+    public async Task<IActionResult> GetPlugin(Guid id)
     {
-        var query = new GetPluginQuery(pluginId);
+        var query = new GetPluginQuery(id);
         var response = await SendAsync(query);
         
         if (response.IsFailure)

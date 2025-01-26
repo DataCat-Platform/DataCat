@@ -1,5 +1,3 @@
-using System.Text.RegularExpressions;
-
 namespace DataCat.Server.Application.Utils;
 
 public static partial class StringExtensions  
@@ -12,9 +10,9 @@ public static partial class StringExtensions
         return startUnderscores + SnackCaseRegex().Replace(input, "$1_$2").ToLower();
     }
 
-    [GeneratedRegex(@"([a-z0-9])([A-Z])")]
+    [GeneratedRegex("([a-z0-9])([A-Z])")]
     private static partial Regex SnackCaseRegex();
     
-    [GeneratedRegex(@"^_+")]
+    [GeneratedRegex("^_+")]
     private static partial Regex StartUnderscoreRegex();
 }

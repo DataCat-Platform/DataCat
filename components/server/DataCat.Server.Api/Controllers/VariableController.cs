@@ -5,7 +5,7 @@ public sealed class VariableController : ApiControllerBase
     [HttpGet]
     public IActionResult GetVariables()
     {
-        // var variables = _variableService.GetAll(); // Получаем список всех переменных через сервис
+        // var variables = _variableService.Search(); // Получаем список всех переменных через сервис
         // return Ok(variables);
         return Ok();
     }
@@ -13,7 +13,7 @@ public sealed class VariableController : ApiControllerBase
     [HttpGet("{id}")]
     public IActionResult GetVariable(int id)
     {
-        // var variable = _variableService.GetById(id); // Получаем переменную по ID через сервис
+        // var variable = _variableService.Search(id); // Получаем переменную по ID через сервис
         // if (variable == null)
         // {
         //     return NotFound(); // Если переменная не найдена, возвращаем 404
@@ -43,7 +43,7 @@ public sealed class VariableController : ApiControllerBase
         //     return BadRequest("Data is invalid.");
         // }
         //
-        // var existingVariable = _variableService.GetById(id);
+        // var existingVariable = _variableService.Search(id);
         // if (existingVariable == null)
         // {
         //     return NotFound(); // Если переменная не найдена, возвращаем 404
@@ -57,7 +57,7 @@ public sealed class VariableController : ApiControllerBase
     [HttpDelete("{id}")]
     public IActionResult DeleteVariable(int id)
     {
-        // var variable = _variableService.GetById(id);
+        // var variable = _variableService.Search(id);
         // if (variable == null)
         // {
         //     return NotFound(); // Если переменная не найдена, возвращаем 404

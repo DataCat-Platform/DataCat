@@ -6,11 +6,9 @@ public sealed record GetPluginQueryHandler(
 {
     public async Task<Result<PluginEntity>> Handle(GetPluginQuery request, CancellationToken token)
     {
-        var id = Guid.Parse(request.PluginId);
-        
-        var entity = await pluginRepository.GetByIdAsync(id, token);
+        var entity = await pluginRepository.GetByIdAsync(request.PluginId, token);
         return entity is null 
-            ? Result.Fail<PluginEntity>(PluginError.NotFound(id.ToString())) 
+            ? Result.Fail<PluginEntity>(PluginError.NotFound(request.PluginId.ToString())) 
             : Result<PluginEntity>.Success(entity);
     }
 }
