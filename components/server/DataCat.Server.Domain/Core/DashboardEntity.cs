@@ -6,7 +6,7 @@ public class DashboardEntity
         Guid id,
         string name,
         string description,
-        IEnumerable<Panel> panels,
+        IEnumerable<PanelEntity> panels,
         UserEntity owner,
         IEnumerable<UserEntity> sharedWith,
         DateTime createdAt,
@@ -28,7 +28,7 @@ public class DashboardEntity
 
     public string Description { get; private set; }
 
-    public IEnumerable<Panel> Panels { get; private set; }
+    public IEnumerable<PanelEntity> Panels { get; private set; }
 
     public UserEntity Owner { get; private set; }
 
@@ -37,12 +37,12 @@ public class DashboardEntity
     public DateTime CreatedAt { get; private set; }
 
     public DateTime UpdatedAt { get; private set; }
-
+    
     public static Result<DashboardEntity> Create(
         Guid id,
         string name,
         string description,
-        IEnumerable<Panel>? panels,
+        IEnumerable<PanelEntity>? panels,
         UserEntity? owner,
         IEnumerable<UserEntity>? sharedWith,
         DateTime createdAt,
@@ -64,7 +64,7 @@ public class DashboardEntity
 
         #endregion
 
-        panels ??= Array.Empty<Panel>();
+        panels ??= Array.Empty<PanelEntity>();
         sharedWith ??= Array.Empty<UserEntity>();
 
         return validationList.Count != 0

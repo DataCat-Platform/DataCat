@@ -2,7 +2,7 @@ namespace DataCat.Server.Postgres.Snapshots;
 
 public class PluginSnapshot
 {
-    public const string PluginTable = "plugin";
+    public const string PluginTable = "plugins";
     
     public required string PluginId { get; init; }
     public required string Name { get; init; }

@@ -6,6 +6,10 @@ public static class Public
     public static string UserTable { get; } = UserSnapshot.UserTable.ToSnakeCase();
     public static string DataSourceTable { get; } = DataSourceSnapshot.DataSourceTable.ToSnakeCase();
     public static string DataSourceTypeTable { get; } = DataSourceTypeSnapshot.DataSourceTypeTable.ToSnakeCase();
+    public static string DashboardTable { get; } = DashboardSnapshot.DashboardTable.ToSnakeCase();
+    public static string PanelTable { get; } = PanelSnapshot.PanelTable.ToSnakeCase();
+    public static string PanelTypeTable { get; } = PanelTypeSnapshot.PanelTypeTable.ToSnakeCase();
+    public static string DashboardUserLinkTable { get; } = ManyToManyRelationShips.DashboardUserLinkTable.ToSnakeCase();
 
     public static class Plugins
     {
@@ -40,5 +44,35 @@ public static class Public
     {
         public static string Id { get; } = nameof(DataSourceTypeSnapshot.Id).ToSnakeCase();
         public static string Source { get; } = nameof(DataSourceTypeSnapshot.Source).ToSnakeCase();
+    }
+    
+    public static class Dashboards
+    {
+        public static string DashboardId { get; } = nameof(DashboardSnapshot.DashboardId).ToSnakeCase();
+        public static string Name { get; } = nameof(DashboardSnapshot.Name).ToSnakeCase();
+        public static string Description { get; } = nameof(DashboardSnapshot.Description).ToSnakeCase();
+        public static string OwnerId { get; } = DashboardSnapshot.OwnerId.ToSnakeCase();
+        public static string CreatedAt { get; } = nameof(DashboardSnapshot.CreatedAt).ToSnakeCase();
+        public static string UpdatedAt { get; } = nameof(DashboardSnapshot.UpdatedAt).ToSnakeCase();
+    }
+
+    public static class Panels
+    {
+        public static string PanelId { get; } = nameof(PanelSnapshot.PanelId).ToSnakeCase();
+        public static string Title { get; } = nameof(PanelSnapshot.Title).ToSnakeCase();
+        public static string PanelType { get; } = nameof(PanelSnapshot.PanelType).ToSnakeCase();
+        public static string RawQuery { get; } = nameof(PanelSnapshot.Query.RawQuery).ToSnakeCase();
+        public static string DataSource { get; } = PanelSnapshot.DataSourceId.ToSnakeCase();
+        public static string X { get; } = nameof(PanelSnapshot.X).ToSnakeCase();
+        public static string Y { get; } = nameof(PanelSnapshot.Y).ToSnakeCase();
+        public static string Width { get; } = nameof(PanelSnapshot.Width).ToSnakeCase();
+        public static string Height { get; } = nameof(PanelSnapshot.Height).ToSnakeCase();
+        public static string ParentDashboardId { get; } = nameof(PanelSnapshot.ParentDashboardId).ToSnakeCase();
+    }
+
+    public static class PanelTypes
+    {
+        public static string Id { get; } = nameof(PanelTypeSnapshot.Id).ToSnakeCase();
+        public static string Type { get; } = nameof(PanelTypeSnapshot.Type).ToSnakeCase();
     }
 }

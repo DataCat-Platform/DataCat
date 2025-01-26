@@ -1,6 +1,6 @@
-namespace DataCat.Server.Domain.Core;
+namespace DataCat.Server.Domain.Core.ValueObjects;
 
-public class TimeRange
+public class TimeRange : ValueObject
 {
     private TimeRange(DateTime from, DateTime to)
     {
@@ -38,5 +38,11 @@ public class TimeRange
         return validationList.Count != 0 
             ? validationList.FoldResults()! 
             : Result.Success(new TimeRange(from!.Value, to!.Value));
+    }
+
+    protected override IEnumerable<object> GetAtomicValues()
+    {
+        yield return From;
+        yield return To;
     }
 }
