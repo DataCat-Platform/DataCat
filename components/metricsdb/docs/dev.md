@@ -18,4 +18,4 @@ If you are using Visual Studio Code for development, try this recommended extens
 
 If you plan to update `.clangd`, `.cland-format` files, the information below might be useful:
 
-- [https://clang.llvm.org/docs/ClangFormatStyleOptions.html]( "clang-format style options")
+- [clangd-format style options](https://clang.llvm.org/docs/ClangFormatStyleOptions.html)
