@@ -2,7 +2,7 @@ namespace DataCat.Server.Postgres.Snapshots;
 
 public class QuerySnapshot
 {
-    public required string RawQuery { get; init; }
+    public required string PanelRawQuery { get; init; }
     public required DataSourceSnapshot DataSource { get; init; }        
 }
 
@@ -12,8 +12,8 @@ public static class QueryEntitySnapshotMapper
     {
         return new QuerySnapshot
         {
-            RawQuery = query.RawQuery,
-            DataSource = query.DataSource.Save(),
+            PanelRawQuery = query.RawQuery,
+            DataSource = query.DataSourceEntity.Save(),
         };
     }
 
@@ -21,8 +21,8 @@ public static class QueryEntitySnapshotMapper
     {
         var result = QueryEntity.Create(
             snapshot.DataSource.RestoreFromSnapshot(),
-            snapshot.RawQuery);
+            snapshot.PanelRawQuery);
 
-        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSource));
+        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSourceEntity));
     }
 }

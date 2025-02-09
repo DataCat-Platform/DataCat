@@ -3,53 +3,76 @@ namespace DataCat.Server.Postgres.Snapshots;
 public class PanelSnapshot
 {
     public const string PanelTable = "panels";
-    public const string DataSourceId = "data_source_id";
+    public const string PanelDataSourceId = "panel_data_source_id";
     
     public required string PanelId { get; init; }
-    public required string Title { get; init; }
+    public required string PanelTitle { get; init; }
     public required int PanelType { get; init; }
     public required QuerySnapshot Query { get; init; }
-    public required int X { get; init; }
-    public required int Y { get; init; }
-    public required int Width { get; init; }
-    public required int Height { get; init; }
-    public required string ParentDashboardId { get; init; }
+    public required int PanelX { get; init; }
+    public required int PanelY { get; init; }
+    public required int PanelWidth { get; init; }
+    public required int PanelHeight { get; init; }
+    public required string PanelParentDashboardId { get; init; }
 }
 
 public static class PanelEntitySnapshotMapper
 {
+    public static PanelSnapshot ReadPanel(this DbDataReader reader)
+    {
+        var rawQuery = reader.GetString(reader.GetOrdinal(Public.Panels.PanelRawQuery));
+        var dataSource = reader.GetString(reader.GetOrdinal(Public.Panels.PanelDataSource));
+        
+        return new PanelSnapshot
+        {
+            PanelId = reader.GetString(reader.GetOrdinal(Public.Panels.PanelId)),
+            PanelTitle = reader.GetString(reader.GetOrdinal(Public.Panels.PanelTitle)),
+            PanelType = reader.GetInt32(reader.GetOrdinal(Public.Panels.PanelType)),
+            Query = new QuerySnapshot
+            {
+                PanelRawQuery = reader.GetString(reader.GetOrdinal(Public.Panels.PanelRawQuery)),
+                DataSource = null
+            },
+            PanelX = reader.GetInt32(reader.GetOrdinal(Public.Panels.PanelX)),
+            PanelY = reader.GetInt32(reader.GetOrdinal(Public.Panels.PanelY)),
+            PanelWidth = reader.GetInt32(reader.GetOrdinal(Public.Panels.PanelWidth)),
+            PanelHeight = reader.GetInt32(reader.GetOrdinal(Public.Panels.PanelHeight)),
+            PanelParentDashboardId = reader.GetString(reader.GetOrdinal(Public.Panels.PanelParentDashboardId))
+        };
+    }
+    
     public static PanelSnapshot Save(this PanelEntity panelEntity)
     {
         return new PanelSnapshot
         {
             PanelId = panelEntity.Id.ToString(),
-            Title = panelEntity.Title,
+            PanelTitle = panelEntity.Title,
             PanelType = panelEntity.PanelType.Value,
             Query = panelEntity.QueryEntity.Save(),
-            X = panelEntity.DataCatLayout.X,
-            Y = panelEntity.DataCatLayout.Y,
-            Width = panelEntity.DataCatLayout.Width,
-            Height = panelEntity.DataCatLayout.Height,
-            ParentDashboardId = panelEntity.ParentDashboardId.ToString()
+            PanelX = panelEntity.DataCatLayout.X,
+            PanelY = panelEntity.DataCatLayout.Y,
+            PanelWidth = panelEntity.DataCatLayout.Width,
+            PanelHeight = panelEntity.DataCatLayout.Height,
+            PanelParentDashboardId = panelEntity.ParentDashboardId.ToString()
         };
     }
 
     public static PanelEntity RestoreFromSnapshot(this PanelSnapshot snapshot)
     {
         var layout = DataCatLayout.Create(
-            snapshot.X, snapshot.Y, snapshot.Width, snapshot.Height);
+            snapshot.PanelX, snapshot.PanelY, snapshot.PanelWidth, snapshot.PanelHeight);
 
         if (layout.IsFailure)
-            throw new DatabaseMappingException(typeof(DataSource));
+            throw new DatabaseMappingException(typeof(DataSourceEntity));
         
         var result = PanelEntity.Create(
             Guid.Parse(snapshot.PanelId),
-            snapshot.Title,
+            snapshot.PanelTitle,
             PanelType.FromValue(snapshot.PanelType),
             snapshot.Query.RestoreFromSnapshot(),
             layout.Value,
-            Guid.Parse(snapshot.ParentDashboardId));
+            Guid.Parse(snapshot.PanelParentDashboardId));
 
-        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSource));
+        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSourceEntity));
     }
 }

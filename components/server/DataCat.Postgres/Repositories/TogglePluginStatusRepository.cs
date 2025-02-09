@@ -11,8 +11,8 @@ public sealed class TogglePluginStatusRepository(
             $"""
              UPDATE {Public.PluginTable} 
              SET 
-                 {Public.Plugins.IsEnabled} = @IsEnabled,
-                 {Public.Plugins.UpdatedAt} = @UpdatedAt
+                 {Public.Plugins.PluginIsEnabled} = @PluginIsEnabled,
+                 {Public.Plugins.PluginUpdatedAt} = @PluginUpdatedAt
              WHERE {Public.Plugins.PluginId} = @PluginId
              """;
         

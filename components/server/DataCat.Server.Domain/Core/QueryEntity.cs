@@ -2,19 +2,19 @@ namespace DataCat.Server.Domain.Core;
 
 public class QueryEntity
 {
-    private QueryEntity(DataSource dataSource, string rawQuery)
+    private QueryEntity(DataSourceEntity dataSourceEntity, string rawQuery)
     {
-        DataSource = dataSource;
+        DataSourceEntity = dataSourceEntity;
         RawQuery = rawQuery;
     }
 
     public Guid Id { get; private set; }
 
-    public DataSource DataSource { get; private set; }
+    public DataSourceEntity DataSourceEntity { get; private set; }
 
     public string RawQuery { get; private set; }
 
-    public static Result<QueryEntity> Create(DataSource? dataSource, string? rawQuery)
+    public static Result<QueryEntity> Create(DataSourceEntity? dataSource, string? rawQuery)
     {
         var validationList = new List<Result<QueryEntity>>();
 
@@ -22,7 +22,7 @@ public class QueryEntity
 
         if (dataSource is null)
         {
-            validationList.Add(Result.Fail<QueryEntity>("DataSource cannot be null"));
+            validationList.Add(Result.Fail<QueryEntity>("DataSourceEntity cannot be null"));
         }
 
         if (string.IsNullOrWhiteSpace(rawQuery))

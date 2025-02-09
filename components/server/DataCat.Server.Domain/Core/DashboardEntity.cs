@@ -5,7 +5,7 @@ public class DashboardEntity
     private DashboardEntity(
         Guid id,
         string name,
-        string description,
+        string? description,
         IEnumerable<PanelEntity> panels,
         UserEntity owner,
         IEnumerable<UserEntity> sharedWith,
@@ -26,7 +26,7 @@ public class DashboardEntity
 
     public string Name { get; private set; }
 
-    public string Description { get; private set; }
+    public string? Description { get; private set; }
 
     public IEnumerable<PanelEntity> Panels { get; private set; }
 
@@ -41,7 +41,7 @@ public class DashboardEntity
     public static Result<DashboardEntity> Create(
         Guid id,
         string name,
-        string description,
+        string? description,
         IEnumerable<PanelEntity>? panels,
         UserEntity? owner,
         IEnumerable<UserEntity>? sharedWith,

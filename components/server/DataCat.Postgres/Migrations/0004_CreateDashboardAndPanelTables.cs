@@ -3,50 +3,53 @@ namespace DataCat.Server.Postgres.Migrations;
 [Migration(4)]
 public class CreateDashboardAndPanelTables : Migration 
 {
+    public static string UpSql = null!;
+    public static string DownSql = null!;
+
+    static CreateDashboardAndPanelTables()
+    {
+        UpSql = @$"
+            --- create dashboard table
+            CREATE TABLE {Public.DashboardTable} (
+                {Public.Dashboards.DashboardId} TEXT PRIMARY KEY,
+                {Public.Dashboards.DashboardName} TEXT NOT NULL,
+                {Public.Dashboards.DashboardDescription} TEXT NOT NULL,
+                {Public.Dashboards.DashboardOwnerId} TEXT NOT NULL,
+                {Public.Dashboards.DashboardCreatedAt} TIMESTAMP NOT NULL,
+                {Public.Dashboards.DashboardUpdatedAt} TIMESTAMP NOT NULL
+            );
+
+            --- create panel table
+            CREATE TABLE {Public.PanelTable} (
+                {Public.Panels.PanelId} TEXT PRIMARY KEY,
+                {Public.Panels.PanelTitle} TEXT NOT NULL,
+                {Public.Panels.PanelType} INT NOT NULL,
+                {Public.Panels.PanelRawQuery} TEXT NOT NULL,
+                {Public.Panels.PanelDataSource} TEXT NOT NULL,
+                {Public.Panels.PanelX} INT NOT NULL,
+                {Public.Panels.PanelY} INT NOT NULL,
+                {Public.Panels.PanelWidth} INT NOT NULL,
+                {Public.Panels.PanelHeight} INT NOT NULL,
+                {Public.Panels.PanelParentDashboardId} TEXT NOT NULL,
+                FOREIGN KEY ({Public.Panels.PanelParentDashboardId}) REFERENCES {Public.DashboardTable}({Public.Dashboards.DashboardId}) 
+                    ON DELETE CASCADE,
+                FOREIGN KEY ({Public.Panels.PanelDataSource}) REFERENCES {Public.DataSourceTable}({Public.DataSources.DataSourceId})
+            );
+        ";
+        
+        DownSql = @$"
+            DROP TABLE IF EXISTS {Public.PanelTable};
+            DROP TABLE IF EXISTS {Public.DashboardTable};
+        ";
+    }
+    
     public override void Up()
     {
-        Execute.Sql(@$"
-        --- create panel types table
-        CREATE TABLE {Public.PanelTypeTable} (
-            {Public.PanelTypes.Id} INT PRIMARY KEY,
-            {Public.PanelTypes.Type} TEXT NOT NULL
-        );
-
-        --- create dashboard table
-        CREATE TABLE {Public.DashboardTable} (
-            {Public.Dashboards.DashboardId} TEXT PRIMARY KEY,
-            {Public.Dashboards.Name} TEXT NOT NULL,
-            {Public.Dashboards.Description} TEXT NOT NULL,
-            {Public.Dashboards.OwnerId} TEXT NOT NULL,
-            {Public.Dashboards.CreatedAt} TIMESTAMP NOT NULL,
-            {Public.Dashboards.UpdatedAt} TIMESTAMP NOT NULL
-        );
-
-        --- create panel table
-        CREATE TABLE {Public.PanelTable} (
-            {Public.Panels.PanelId} TEXT PRIMARY KEY,
-            {Public.Panels.Title} TEXT NOT NULL,
-            {Public.Panels.PanelType} INT NOT NULL,
-            {Public.Panels.RawQuery} TEXT NOT NULL,
-            {Public.Panels.DataSource} TEXT NOT NULL,
-            {Public.Panels.X} INT NOT NULL,
-            {Public.Panels.Y} INT NOT NULL,
-            {Public.Panels.Width} INT NOT NULL,
-            {Public.Panels.Height} INT NOT NULL,
-            {Public.Panels.ParentDashboardId} TEXT NOT NULL,
-            FOREIGN KEY ({Public.Panels.PanelType}) REFERENCES {Public.PanelTypeTable}({Public.PanelTypes.Id}),
-            FOREIGN KEY ({Public.Panels.ParentDashboardId}) REFERENCES {Public.DashboardTable}({Public.Dashboards.DashboardId}),
-            FOREIGN KEY ({Public.Panels.DataSource}) REFERENCES {Public.DataSourceTable}({Public.DataSources.DataSourceId})
-        );
-    ");
+        Execute.Sql(UpSql);
     }
 
     public override void Down()
     {
-        Execute.Sql(@$"
-            DROP TABLE IF EXISTS {Public.PanelTable};
-            DROP TABLE IF EXISTS {Public.PanelTypeTable};
-            DROP TABLE IF EXISTS {Public.DashboardTable};
-        ");
+        Execute.Sql(DownSql);
     }
 }

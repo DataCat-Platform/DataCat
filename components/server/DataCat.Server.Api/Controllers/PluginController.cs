@@ -8,9 +8,7 @@ public sealed class PluginController : ApiControllerBase
     public async Task<IActionResult> AddPlugin([FromForm] AddPluginRequest request)
     {
         var response = await SendAsync(request.ToAddCommand());
-        return response.IsFailure 
-            ? BadRequest(CreateProblemDetails(response.Errors)) 
-            : Ok(response.Value);
+        return HandleCustomResponse(response);
     }
     
     [HttpDelete("remove/{pluginId}")]
@@ -20,9 +18,7 @@ public sealed class PluginController : ApiControllerBase
     {
         var command = new RemovePluginCommand(pluginId);
         var response = await SendAsync(command);
-        return response.IsFailure 
-            ? BadRequest(CreateProblemDetails(response.Errors))
-            : Ok();
+        return HandleCustomResponse(response);
     }
     
     [HttpGet("search")]
@@ -35,11 +31,8 @@ public sealed class PluginController : ApiControllerBase
     {
         var query = new SearchPluginsQuery(page, pageSize, filter);
         var response = await SendAsync(query);
-        if (response.IsFailure)
-            return BadRequest(CreateProblemDetails(response.Errors));
-
-        var pluginsResponse = response.Value.Select(x => x.ToResponse());
-        return Ok(pluginsResponse);
+        return HandleCustomResponse(response,
+            map: result => result.Value.Select(x => x.ToResponse()));
     }
     
     [HttpGet("{id:guid}")]
@@ -49,12 +42,8 @@ public sealed class PluginController : ApiControllerBase
     {
         var query = new GetPluginQuery(id);
         var response = await SendAsync(query);
-        
-        if (response.IsFailure)
-            return BadRequest(CreateProblemDetails(response.Errors));
-
-        var pluginResponse = response.Value.ToResponse();
-        return Ok(pluginResponse);
+        return HandleCustomResponse(response,
+            map: result => result.Value.ToResponse());
     }
     
     [HttpPut("update/{pluginId}")]
@@ -64,9 +53,7 @@ public sealed class PluginController : ApiControllerBase
     {
         var query = request.ToUpdateCommand(pluginId);
         var response = await SendAsync(query);
-        return response.IsFailure 
-            ? BadRequest(CreateProblemDetails(response.Errors))
-            : Ok();
+        return HandleCustomResponse(response);
     }
     
     [HttpPost("enable/{pluginId}")]
@@ -74,11 +61,9 @@ public sealed class PluginController : ApiControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> EnablePlugin([FromRoute] string pluginId)
     {
-        var command = new ToggleStatusCommand() { PluginId = pluginId, ToggleStatus = ToggleStatus.Active };
+        var command = new ToggleStatusCommand { PluginId = pluginId, ToggleStatus = ToggleStatus.Active };
         var response = await SendAsync(command);
-        return response.IsFailure 
-            ? BadRequest(CreateProblemDetails(response.Errors))
-            : Ok();
+        return HandleCustomResponse(response);
     }
     
     [HttpPost("disable/{pluginId}")]
@@ -86,10 +71,8 @@ public sealed class PluginController : ApiControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DisablePlugin([FromRoute] string pluginId)
     {
-        var command = new ToggleStatusCommand() { PluginId = pluginId, ToggleStatus = ToggleStatus.InActive };
+        var command = new ToggleStatusCommand { PluginId = pluginId, ToggleStatus = ToggleStatus.InActive };
         var response = await SendAsync(command);
-        return response.IsFailure 
-            ? BadRequest(CreateProblemDetails(response.Errors))
-            : Ok();
+        return HandleCustomResponse(response);
     }
 }

@@ -4,4 +4,4 @@ public sealed record SearchDashboardsQuery(
     int Page, 
     int PageSize, 
     string? Filter)
-    : IRequest<Result<IEnumerable<DashboardEntity>>>, ISearchQuery;
+    : IRequest<Result<List<DashboardEntity>>>, ISearchQuery;

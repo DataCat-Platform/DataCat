@@ -7,8 +7,4 @@ public interface ISearchQuery : IPaginationQuery
 
 public sealed class SearchQueryValidator : AbstractValidator<ISearchQuery>
 {
-    public SearchQueryValidator()
-    {
-        RuleFor(x => x.Filter).NotNull().NotEmpty();
-    }
 }

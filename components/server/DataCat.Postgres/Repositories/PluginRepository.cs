@@ -16,7 +16,11 @@ public sealed class PluginRepository(
         return pluginSnapshot?.RestoreFromSnapshot();
     }
 
-    public async Task<IEnumerable<PluginEntity>> SearchAsync(string? filter = null, int page = 1, int pageSize = 1, CancellationToken token = default)
+    public async IAsyncEnumerable<PluginEntity> SearchAsync(
+        string? filter = null, 
+        int page = 1, 
+        int pageSize = 1, 
+        [EnumeratorCancellation] CancellationToken token = default)
     {
         var connection = await Factory.CreateConnectionAsync(token);
         var offset = (page - 1) * pageSize;
@@ -24,13 +28,18 @@ public sealed class PluginRepository(
 
         if (!string.IsNullOrEmpty(filter))
         {
-            sql += $"WHERE {Public.Plugins.Name} LIKE @Filter ";
+            sql += $"WHERE {Public.Plugins.PluginName} LIKE @Filter ";
         }
 
         sql += "LIMIT @PageSize OFFSET @Offset";
-
-        var result = await connection.QueryAsync<PluginSnapshot>(sql, new { Filter = $"%{filter}%", PageSize = pageSize, Offset = offset });
-        return result.Select(PluginEntitySnapshotMapper.RestoreFromSnapshot);
+        
+        await using var reader = await connection.ExecuteReaderAsync(sql, new { Filter = $"{filter}%", PageSize = pageSize, Offset = offset });
+        
+        while (await reader.ReadAsync(token))
+        {
+            var snapshot = reader.ReadPlugin();
+            yield return snapshot.RestoreFromSnapshot();
+        }
     }
 
     public async Task AddAsync(PluginEntity entity, CancellationToken token)
@@ -39,18 +48,18 @@ public sealed class PluginRepository(
 
         var sql = 
             $"""
-             INSERT INTO plugin (
+             INSERT INTO {Public.PluginTable} (
                  {Public.Plugins.PluginId},
-                 {Public.Plugins.Name},
-                 {Public.Plugins.Version},
-                 {Public.Plugins.Description},
-                 {Public.Plugins.Author},
-                 {Public.Plugins.IsEnabled},
-                 {Public.Plugins.Settings},
-                 {Public.Plugins.CreatedAt},
-                 {Public.Plugins.UpdatedAt}
+                 {Public.Plugins.PluginName},
+                 {Public.Plugins.PluginVersion},
+                 {Public.Plugins.PluginDescription},
+                 {Public.Plugins.PluginAuthor},
+                 {Public.Plugins.PluginIsEnabled},
+                 {Public.Plugins.PluginSettings},
+                 {Public.Plugins.PluginCreatedAt},
+                 {Public.Plugins.PluginUpdatedAt}
              )
-             VALUES (@PluginId, @Name, @Version, @Description, @Author, @IsEnabled, @Settings, @CreatedAt, @UpdatedAt)
+             VALUES (@PluginId, @PluginName, @PluginVersion, @PluginDescription, @PluginAuthor, @PluginIsEnabled, @PluginSettings, @PluginCreatedAt, @PluginUpdatedAt)
              """;
         
         var command = new CommandDefinition(sql, pluginSnapshot);
@@ -67,13 +76,13 @@ public sealed class PluginRepository(
             $"""
              UPDATE {Public.PluginTable} 
              SET 
-                 {Public.Plugins.Name} = @Name, 
-                 {Public.Plugins.Version} = @Version, 
-                 {Public.Plugins.Description} = @Description, 
-                 {Public.Plugins.Author} = @Author, 
-                 {Public.Plugins.IsEnabled} = @IsEnabled, 
-                 {Public.Plugins.Settings} = @Settings, 
-                 {Public.Plugins.UpdatedAt} = @UpdatedAt
+                 {Public.Plugins.PluginName} = @PluginName, 
+                 {Public.Plugins.PluginVersion} = @PluginVersion, 
+                 {Public.Plugins.PluginDescription} = @PluginDescription, 
+                 {Public.Plugins.PluginAuthor} = @PluginAuthor, 
+                 {Public.Plugins.PluginIsEnabled} = @PluginIsEnabled, 
+                 {Public.Plugins.PluginSettings} = @PluginSettings, 
+                 {Public.Plugins.PluginUpdatedAt} = @PluginUpdatedAt
              WHERE {Public.Plugins.PluginId} = @PluginId
              """;
         

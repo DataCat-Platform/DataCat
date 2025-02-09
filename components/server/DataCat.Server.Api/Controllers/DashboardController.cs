@@ -12,11 +12,8 @@ public sealed class DashboardController : ApiControllerBase
     {
         var query = new SearchDashboardsQuery(page, pageSize, filter);
         var response = await SendAsync(query);
-        if (response.IsFailure)
-            return BadRequest(CreateProblemDetails(response.Errors));
-
-        var pluginsResponse = response.Value.Select(x => x.ToResponse());
-        return Ok(pluginsResponse);
+        return HandleCustomResponse(response,
+            map: result => result.Value.Select(x => x.ToResponse()));
     }
 
     [HttpGet("{id:guid}")]
@@ -26,11 +23,7 @@ public sealed class DashboardController : ApiControllerBase
     {
         var query = new GetDashboardQuery(id);
         var response = await SendAsync(query);
-        
-        if (response.IsFailure)
-            return BadRequest(CreateProblemDetails(response.Errors));
-
-        var pluginResponse = response.Value.ToResponse();
-        return Ok(pluginResponse);
+        return HandleCustomResponse(response,
+            map: result => result.Value.ToResponse());
     }
 }
