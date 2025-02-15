@@ -3,7 +3,7 @@ name: Generate Changelog
 on:
   push:
     branches:
-      - main
+      - dev
 
 permissions:
   contents: write
@@ -32,4 +32,4 @@ jobs:
         git config --global user.email 'datacat-platform@gmail.com'
         git add CHANGELOG.md
         git commit -m "update CHANGELOG.md"
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:dev

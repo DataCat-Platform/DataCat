@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package datacat;
+
+option csharp_namespace = "DataCat.Export.Metrics.V1";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+// Request to send a batch of metrics.
+message SendMetricsRequest {
+    repeated Metric metrics = 1;
+}
+
+// Service definition for sending metrics.
+service DataCatMetricExporter {
+    // Sends a batch of metrics.
+    rpc SendMetrics(SendMetricsRequest) returns (google.protobuf.Empty);
+}
+
+// Tag is a key-value pair used to annotate a metric.
+message Tag {
+    string key = 1;
+    string value = 2;
+}
+
+// Metric is a sequence of data points of some type.
+// The type MUST be either Counter, Gauge or Histogram.
+// Metric MAY be annotated with tags, which are key-value pairs.
+message Metric {
+    oneof data_points {
+        CounterDataPoints counter = 1;
+        GaugeDataPoints gauge = 2;
+        HistogramDataPoints histogram = 3;
+    }
+    repeated Tag tags = 5;
+}
+
+// A Counter data point. It contains an unsigned integer
+// value and a timestamp.
+message CounterDataPoint {
+    int64 value = 1;
+    google.protobuf.Timestamp timestamp = 2;
+}
+
+// A sequence of Counter data points which belong to
+// the same metric. Value of Counter data points can
+// only monotonically increase or be reset to zero.
+message CounterDataPoints {
+    repeated CounterDataPoint data_points = 1;
+}
+
+// A Gauge data point. It contains a floating-point
+// value and a timestamp.
+message GaugeDataPoint {
+    double value = 1;
+    google.protobuf.Timestamp timestamp = 2;
+}
+
+// A sequence of Gauge data points which belong to
+// the same metric. Value of Gauge data points can
+// arbitrary go up and down, as opposed to Counter.
+message GaugeDataPoints {
+    repeated GaugeDataPoint data_points = 1;
+}
+
+// A Histogram data point. It contains a summary
+// info about population of values.
+message HistogramDataPoint {
+    // Number of values in the population.
+    int64 count = 1;
+
+    // Time interval.
+    google.protobuf.Timestamp start_timestamp = 2;
+    google.protobuf.Timestamp end_timestamp = 3;
+
+    // Sum, min and max of values in the population.
+    double sum = 4;
+    double min = 5;
+    double max = 6;
+}
+
+// A sequence of Histogram data points which belong to
+// the same metric.
+message HistogramDataPoints {
+    repeated HistogramDataPoint data_points = 1;
+}
