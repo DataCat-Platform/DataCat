@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 - *(datacat-server)* Improve domain models
 - *(datacat-server)* Add migration configuring
 - *(datacat-server)* Complete plugin architecture, add database plugin, create plugin scheme
+- *(datacat-server)* Create scheme for key domain models
+- *(datacat-server)* Add main sql queries for entities
 
 ### 🚜 Refactor
 
