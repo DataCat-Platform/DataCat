@@ -10,7 +10,8 @@
       <ProjectReference Include="..\DataCat.Server.Application\DataCat.Server.Application.csproj" />
       <ProjectReference Include="..\DataCat.Server.Domain\DataCat.Server.Domain.csproj" />
       <ProjectReference Include="..\DataCat.Server.Infrastructure\DataCat.Server.Infrastructure.csproj" />
-      <ProjectReference Include="..\DataCat.Server.Postgres\DataCat.Server.Postgres.csproj" />
+      <ProjectReference Include="..\DataCat.Postgres\DataCat.Postgres.csproj" />
+      <ProjectReference Include="..\DataCat.Server.Metrics\DataCat.Server.Metrics.csproj" />
     </ItemGroup>
 
     <ItemGroup>

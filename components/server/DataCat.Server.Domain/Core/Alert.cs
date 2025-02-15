@@ -5,13 +5,13 @@ public class Alert
     private Alert(
         Guid id,
         string name,
-        Query query,
+        QueryEntity queryEntity,
         string condition,
         NotificationChannel notificationChannel)
     {
         Id = id;
         Name = name;
-        Query = query;
+        QueryEntity = queryEntity;
         Condition = condition;
         NotificationChannel = notificationChannel;
     }
@@ -20,7 +20,7 @@ public class Alert
     
     public string Name { get; private set; }
     
-    public Query Query { get; private set; }
+    public QueryEntity QueryEntity { get; private set; }
 
     /// <summary>
     /// For example, avg(x) > 90
@@ -32,7 +32,7 @@ public class Alert
     public static Result<Alert> Create(
         Guid id, 
         string name, 
-        Query? query, 
+        QueryEntity? query, 
         string? condition, 
         NotificationChannel? notificationChannel)
     {

@@ -8,7 +8,7 @@ public static class PluginLoader
 
         var assemblyFile = provider switch
         {
-            "postgres" => Path.Combine(pluginDirectory, "DataCat.Server.Postgres.dll"),
+            "postgres" => Path.Combine(pluginDirectory, "DataCat.Postgres.dll"),
             _ => throw new Exception("Unsupported database provider")
         };
 
@@ -18,7 +18,7 @@ public static class PluginLoader
         var assembly = Assembly.LoadFrom(assemblyFile);
 
         var pluginType = assembly.GetTypes()
-            .FirstOrDefault(t => typeof(IDatabasePlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+            .FirstOrDefault(t => typeof(IDatabasePlugin).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false });
 
         if (pluginType == null)
             throw new Exception($"No implementation of {nameof(IDatabasePlugin)} found in {assemblyFile}");

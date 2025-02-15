@@ -21,7 +21,35 @@ public abstract class ApiControllerBase : ControllerBase
         await Mediator.Send(request, token);
     }
 
-    protected static ProblemDetails CreateProblemDetails(object? detail)
+    protected IActionResult HandleCustomResponse<T, U>(Result<T> result, Func<Result<T>, U> map)
+    {
+        if (result.IsFailure)
+        {
+            var problemDetails = CreateProblemDetails(result.Errors); 
+            return BadRequest(problemDetails);
+        }
+        
+        var mapped = map(result);
+        return Ok(mapped);
+    }
+    
+    protected IActionResult HandleCustomResponse<T>(Result<T> result)
+    {
+        if (!result.IsFailure) 
+            return Ok(result.Value);
+        var problemDetails = CreateProblemDetails(result.Errors); 
+        return BadRequest(problemDetails);
+    }
+    
+    protected IActionResult HandleCustomResponse(Result result)
+    {
+        if (!result.IsFailure) 
+            return Ok();
+        var problemDetails = CreateProblemDetails(result.Errors); 
+        return BadRequest(problemDetails);
+    }
+
+    private static ProblemDetails CreateProblemDetails(object? detail)
     {
         return new ProblemDetails
         {

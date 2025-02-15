@@ -2,15 +2,15 @@ namespace DataCat.Server.HttpModels.Responses.Plugin;
 
 public class FullPluginResponse
 {
-    public string? PluginId { get; set; }
+    public required Guid PluginId { get; init; }
     
-    public string? Name { get; set; }
+    public required string Name { get; init; }
 
-    public string? Version { get; set; }
+    public required string? Version { get; init; }
 
-    public string? Description { get; set; }
+    public string? Description { get; init; }
 
-    public string? Author { get; set; }
+    public required string Author { get; init; }
 
-    public string? Settings { get; set; }
+    public string? Settings { get; init; }
 }

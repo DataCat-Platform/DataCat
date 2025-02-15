@@ -9,7 +9,8 @@ builder.Services
     .AddApiSetup()
     .AddApplicationServices(configuration)
     .AddServerLogging(configuration)
-    .AddMigrationSetup(configuration);
+    .AddMigrationSetup(configuration)
+    .AddRealTimeCommunication(configuration);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -24,8 +25,6 @@ builder.WebHost.ConfigureKestrel(options =>
     });
 });
 
-builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-
 var app = builder.Build();
 
 if (bool.TryParse(app.Configuration["ApplyMigrations"], out var applyMigrations) && applyMigrations)
@@ -33,18 +32,32 @@ if (bool.TryParse(app.Configuration["ApplyMigrations"], out var applyMigrations)
     await app.ApplyMigrations();
 }
 
-app.UseSwagger(options =>
+app.UseStaticFiles();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    options.RouteTemplate = "/openapi/{documentName}.json";
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DataCat API");
+    c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
 });
-app.MapScalarApiReference();
-app.UseSwaggerUI();
 
-app
-    .UseLoggingRequests()
-    .UseExceptionHandling();
+app.UseRouting();
+app.UseLoggingRequests();
+app.UseExceptionHandling();
 
+app.MapHub<MetricsHub>("/datacat-metrics");
 app.MapGrpcService<ReceiveMetricService>();
 app.MapControllers();
+
+app.UseEndpoints(_ => { });
+
+#if DEBUG
+    app.UseCors("frontend");
+    app.UseSpa(cfg =>
+    {
+        cfg.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+    });
+#else
+    app.UseSpa(cfg => cfg.Options.SourcePath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"));
+#endif
 
 app.Run();

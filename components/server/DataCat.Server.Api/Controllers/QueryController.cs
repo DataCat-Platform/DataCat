@@ -4,5 +4,3 @@ public sealed class QueryController : ApiControllerBase
 {
     
 }
-
-

@@ -52,6 +52,8 @@ public class Result
     public static Result Success() => new Result();
 
     public static Result Fail(ErrorInfo error) => new Result(error);
+    
+    public static Result Fail(List<ErrorInfo> errors) => new Result(errors);
 
     public static Result Fail(string message) => new Result(new ErrorInfo(message));
 

@@ -2,7 +2,7 @@ namespace DataCat.Server.Api.Middlewares;
 
 public class RequestLoggingMiddleware(ILogger<RequestLoggingMiddleware> logger) : IMiddleware
 {
-    private readonly List<string> ByPassRequestLogging = ["scalar", "swagger"];
+    private readonly List<string> ByPassRequestLogging = [".js", ".angular", "scalar", "swagger", "favicon.ico", ".map", ".css", ".woff", ".mjs", "@vite"];
     
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
