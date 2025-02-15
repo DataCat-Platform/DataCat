@@ -1,2 +1,3 @@
 BasedOnStyle: WebKit
 Language: Cpp
+ColumnLimit: 80

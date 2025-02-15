@@ -1,6 +1,21 @@
-target_sources(mdb PUBLIC main.cpp)
+add_executable(mdb main.cpp)
 
-add_subdirectory("config")
-add_subdirectory("server")
+add_subdirectory("Config")
+add_subdirectory("Server")
+add_subdirectory("QueryParsing")
 
-target_link_libraries(mdb metricsdb_config metricsdb_server)
+target_link_libraries(
+  mdb
+  mdb_config
+  mdb_server
+  mdb_lexer
+  mdb_parser
+)
+
+target_include_directories(mdb PUBLIC "${PROJECT_SOURCE_DIR}")
+
+set_target_properties(
+  mdb
+  PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+)

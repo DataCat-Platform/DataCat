@@ -1,7 +1,6 @@
-#include <config/version.h>
+#include <metricsdb/config/version.h>
 
-namespace DB
-{
+namespace DB {
 
 const unsigned VERSION_MAJOR = @PROJECT_VERSION_MAJOR@;
 const unsigned VERSION_MINOR = @PROJECT_VERSION_MINOR@;

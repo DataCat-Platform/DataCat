@@ -1,7 +1,6 @@
 #pragma once
 
-namespace DB
-{
+namespace DB {
 
 extern const unsigned VERSION_MAJOR;
 extern const unsigned VERSION_MINOR;

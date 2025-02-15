@@ -10,8 +10,12 @@ FetchContent_Declare(
 set(FETCHCONTENT_QUIET OFF)
 FetchContent_MakeAvailable(gRPC)
 
-get_filename_component(proto_file "../../api/proto/metrics/v1/metrics.proto" ABSOLUTE)
+get_filename_component(proto_file "../../../../api/proto/metrics/v1/metrics.proto" ABSOLUTE)
 get_filename_component(proto_file_dir "${proto_file}" DIRECTORY)
+
+if (NOT EXISTS "${proto_file}")
+  message(FATAL_ERROR "The proto file \"${proto_file}\" does not exist.")
+endif()
 
 set(
   output_headers_and_sources
@@ -34,6 +38,6 @@ add_custom_command(
   DEPENDS "${proto_file}"
 )
 
-add_library(metrics_proto ${output_headers_and_sources})
+add_library(mdb_proto ${output_headers_and_sources})
 include_directories("${PROJECT_BINARY_DIR}")
-target_link_libraries(metrics_proto absl::check grpc++_reflection grpc++ libprotobuf)
+target_link_libraries(mdb_proto absl::check grpc++_reflection grpc++ libprotobuf)

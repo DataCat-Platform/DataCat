@@ -1,11 +1,8 @@
 #pragma once
 
+namespace DB {
 
-namespace DB
-{
-
-class Server
-{
+class Server {
 public:
     void run();
 };

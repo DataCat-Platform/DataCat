@@ -14,6 +14,10 @@ If you are using Visual Studio Code for development, try this recommended extens
 - CMake
 - CMake Tools
 
+# Bizon
+
+If you plan to change parser grammar, see [Bizon manual](https://www.gnu.org/software/bison/manual/bison.html).
+
 # Clangd
 
 If you plan to update `.clangd`, `.cland-format` files, the information below might be useful:
