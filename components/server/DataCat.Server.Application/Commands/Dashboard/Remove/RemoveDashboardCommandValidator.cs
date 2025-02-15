@@ -4,12 +4,12 @@ public sealed class RemoveDataSourceValidator : AbstractValidator<RemoveDashboar
 {
     public RemoveDataSourceValidator()
     {
-        RuleFor(x => x.DataSourceId).NotEmpty()
+        RuleFor(x => x.DashboardId).NotEmpty()
             .Custom((input, context) =>
             {
                 if (!Guid.TryParse(input, out _))
                 {
-                    context.AddFailure("Plugin Id must be a Guid");
+                    context.AddFailure("Dashboard Id must be a Guid");
                 }
             });
     }

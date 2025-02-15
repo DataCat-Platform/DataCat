@@ -14,7 +14,7 @@ public static class PluginMappings
             Settings = request.Settings
         };
     }
-    
+
     public static UpdatePluginCommand ToUpdateCommand(this UpdatePluginRequest request, string pluginId)
     {
         return new UpdatePluginCommand
@@ -27,14 +27,14 @@ public static class PluginMappings
 
     public static FullPluginResponse ToResponse(this PluginEntity plugin)
     {
-        return new FullPluginResponse()
+        return new FullPluginResponse
         {
             PluginId = plugin.PluginId,
             Name = plugin.Name,
             Description = plugin.Description,
             Settings = plugin.Settings,
             Author = plugin.Author,
-            Version = plugin.Version,
+            Version = plugin.Version
         };
     }
 }

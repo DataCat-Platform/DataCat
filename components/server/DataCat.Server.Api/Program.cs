@@ -32,9 +32,12 @@ if (bool.TryParse(app.Configuration["ApplyMigrations"], out var applyMigrations)
     await app.ApplyMigrations();
 }
 
-app.UseSwagger(options =>
+app.UseStaticFiles();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    options.RouteTemplate = "/openapi/{documentName}.json";
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DataCat API");
+    c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
 });
 
 app.UseRouting();
@@ -45,7 +48,6 @@ app.MapHub<MetricsHub>("/datacat-metrics");
 app.MapGrpcService<ReceiveMetricService>();
 app.MapControllers();
 
-app.MapScalarApiReference("/scalar");
 app.UseEndpoints(_ => { });
 
 #if DEBUG
@@ -55,7 +57,6 @@ app.UseEndpoints(_ => { });
         cfg.UseProxyToSpaDevelopmentServer("http://localhost:4200");
     });
 #else
-    app.UseStaticFiles();
     app.UseSpa(cfg => cfg.Options.SourcePath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp"));
 #endif
 

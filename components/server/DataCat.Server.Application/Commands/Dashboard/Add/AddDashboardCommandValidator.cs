@@ -11,7 +11,7 @@ public sealed class AddDashboardCommandValidator : AbstractValidator<AddDashboar
             {
                 if (!Guid.TryParse(input, out _))
                 {
-                    context.AddFailure("Plugin Id must be a Guid");
+                    context.AddFailure("User Id must be a Guid");
                 }
             });
     }

@@ -17,8 +17,8 @@ public class DatabaseAssemblyScanner : IDatabaseAssemblyScanner
 
         foreach (var type in migrationTypes)
         {
-            var upSqlField = type.GetField("UpSql", BindingFlags.Public | BindingFlags.Static);
-            var downSqlField = type.GetField("DownSql", BindingFlags.Public | BindingFlags.Static);
+            var upSqlField = type.GetField(nameof(CreatePluginTable.UpSql), BindingFlags.Public | BindingFlags.Static);
+            var downSqlField = type.GetField(nameof(CreatePluginTable.DownSql), BindingFlags.Public | BindingFlags.Static);
 
             var upSql = upSqlField?.GetValue(null)?.ToString() ?? "";
             var downSql = downSqlField?.GetValue(null)?.ToString() ?? "";
@@ -31,5 +31,18 @@ public class DatabaseAssemblyScanner : IDatabaseAssemblyScanner
         cache = result;
 
         return result;
+    }
+
+    public List<string[]> GetSqlQueries()
+    {
+        var fields = typeof(Sql)
+            .GetFields(BindingFlags.Public | BindingFlags.Static)
+            .Where(f => f.FieldType == typeof(string))
+            .Select(f => f.GetValue(null)?.ToString() ?? string.Empty)
+            .ToList();
+
+        var sqlQueries = fields.Select(x => x.Split("\n")).ToList();
+
+        return sqlQueries;
     }
 }

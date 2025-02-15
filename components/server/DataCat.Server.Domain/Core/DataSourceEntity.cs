@@ -18,7 +18,7 @@ public class DataSourceEntity
 
     public string ConnectionString { get; private set; }
 
-    public void ChangeConnnectionString(string connectionString)
+    public void ChangeConnectionString(string connectionString)
     {
         ConnectionString = connectionString;
     }

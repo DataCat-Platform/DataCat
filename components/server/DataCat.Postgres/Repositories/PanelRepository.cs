@@ -6,18 +6,26 @@ public class PanelRepository(
 {
     public async Task<PanelEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
-        var sql = $"SELECT * FROM {Public.PanelTable} WHERE {Public.Panels.PanelId} = @PanelId";
-        var parameters = new { PanelId = id };
+        var sql = $@"
+            SELECT * 
+            FROM {Public.PanelTable} p
+                LEFT JOIN {Public.DataSourceTable} ds ON ds.{Public.DataSources.DataSourceId} = p.{Public.Panels.PanelDataSourceId}
+            WHERE {Public.Panels.PanelId} = @PanelId";
+        var parameters = new { PanelId = id.ToString() };
 
         var connection = await Factory.CreateConnectionAsync(token);
-        var result = await connection.QuerySingleOrDefaultAsync<PanelSnapshot>(sql, parameters);
+        var result = await connection.QueryAsync<PanelSnapshot, DataSourceSnapshot, PanelSnapshot>(
+            sql, 
+            map: MapFunctions.MapPanel(),
+            splitOn: $"{Public.DataSources.DataSourceId}",
+            param: parameters);
 
-        return result?.RestoreFromSnapshot();
+        return result.FirstOrDefault()?.RestoreFromSnapshot();
     }
 
     public async IAsyncEnumerable<PanelEntity> SearchAsync(
         string? filter = null, 
-        int page = 1, 
+        int page = 0, 
         int pageSize = 10, 
         [EnumeratorCancellation] CancellationToken token = default)
     {
@@ -53,7 +61,7 @@ public class PanelRepository(
                {Public.Panels.PanelTitle},
                {Public.Panels.PanelType},
                {Public.Panels.PanelRawQuery},
-               {Public.Panels.PanelDataSource},
+               {Public.Panels.PanelDataSourceId},
                {Public.Panels.PanelX},
                {Public.Panels.PanelY},
                {Public.Panels.PanelWidth},
@@ -65,7 +73,7 @@ public class PanelRepository(
                @PanelTitle,
                @PanelType,
                @PanelRawQuery,
-               @PanelDataSource,
+               @PanelDataSourceId,
                @PanelX,
                @PanelY,
                @PanelWidth,
@@ -88,12 +96,11 @@ public class PanelRepository(
                {Public.Panels.PanelTitle} = @PanelTitle,
                {Public.Panels.PanelType} = @PanelType,
                {Public.Panels.PanelRawQuery} = @PanelRawQuery,
-               {Public.Panels.PanelDataSource} = @PanelDataSource,
+               {Public.Panels.PanelDataSourceId} = @PanelDataSourceId,
                {Public.Panels.PanelX} = @PanelX,
                {Public.Panels.PanelY} = @PanelY,
                {Public.Panels.PanelWidth} = @PanelWidth,
-               {Public.Panels.PanelHeight} = @PanelHeight,
-               {Public.Panels.PanelParentDashboardId} = @PanelParentDashboardId
+               {Public.Panels.PanelHeight} = @PanelHeight
            WHERE {Public.Panels.PanelId} = @PanelId
            """;
 
@@ -108,7 +115,7 @@ public class PanelRepository(
            WHERE {Public.Panels.PanelId} = @PanelId
            """;
 
-        var parameters = new { PanelId = id };
+        var parameters = new { PanelId = id.ToString() };
 
         var connection = await Factory.CreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, parameters);

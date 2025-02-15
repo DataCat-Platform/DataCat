@@ -1,6 +1,6 @@
 namespace DataCat.Server.Domain.Core;
 
-public class DataCatLayout
+public sealed record DataCatLayout
 {
     private DataCatLayout(int x, int y, int width, int height)
     {

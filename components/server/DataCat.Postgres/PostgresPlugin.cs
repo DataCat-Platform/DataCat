@@ -5,8 +5,10 @@ public sealed class PostgresPlugin : IDatabasePlugin
     public void RegisterRepositories(IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped(typeof(IDefaultRepository<DashboardEntity, Guid>), typeof(DashboardRepository));
+        services.AddScoped<IDashboardAccessRepository, DashboardAccessRepository>();
         services.AddScoped(typeof(IDefaultRepository<PluginEntity, Guid>), typeof(PluginRepository));
         services.AddScoped(typeof(IDefaultRepository<DataSourceEntity, Guid>), typeof(DataSourceRepository));
+        services.AddScoped(typeof(IDefaultRepository<PanelEntity, Guid>), typeof(PanelRepository));
         services.AddScoped(typeof(IDefaultRepository<UserEntity, Guid>), typeof(UserRepository));
 
         services.AddScoped<ITogglePluginStatusRepository, TogglePluginStatusRepository>();

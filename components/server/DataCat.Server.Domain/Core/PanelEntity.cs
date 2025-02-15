@@ -1,6 +1,6 @@
 namespace DataCat.Server.Domain.Core;
 
-public class PanelEntity
+public sealed record PanelEntity
 {
     private PanelEntity(
         Guid id,
@@ -27,8 +27,22 @@ public class PanelEntity
     public QueryEntity QueryEntity { get; private set; }
 
     public DataCatLayout DataCatLayout { get; private set; }
+    
     public Guid ParentDashboardId { get; private set; }
 
+    public void UpdateTitle(string title) => Title = title;
+    
+    public void UpdatePanelType(PanelType panelType, QueryEntity queryEntity)
+    {
+        PanelType = panelType;
+        QueryEntity = queryEntity;
+    }
+
+    public void UpdateLayout(DataCatLayout dataCatLayout)
+    {
+        DataCatLayout = dataCatLayout;
+    }
+    
     public static Result<PanelEntity> Create(
         Guid id,
         string title,

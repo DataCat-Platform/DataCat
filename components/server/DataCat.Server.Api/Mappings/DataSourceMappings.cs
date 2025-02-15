@@ -11,21 +11,21 @@ public static class DataSourceMappings
             Type = request.Type
         };
     }
-    
-    public static UpdateDataSourceCommand ToUpdateCommand(this UpdateDataSource request, string dataSourceId)
+
+    public static UpdateConnStringDataSourceCommand ToUpdateCommand(this UpdateDataSource request, string dataSourceId)
     {
-        return new UpdateDataSourceCommand
+        return new UpdateConnStringDataSourceCommand
         {
             DataSourceId = dataSourceId,
-            ConnectionString = request.ConnectionString,
+            ConnectionString = request.ConnectionString
         };
     }
 
     public static DataSourceResponse ToResponse(this DataSourceEntity dataSource)
     {
-        return new DataSourceResponse()
+        return new DataSourceResponse
         {
-            Id = dataSource.Id.ToString(),
+            Id = dataSource.Id,
             Name = dataSource.Name,
             ConnectionString = dataSource.ConnectionString,
             Type = dataSource.DataSourceType.Name

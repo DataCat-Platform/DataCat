@@ -1,5 +1,3 @@
-using DataCat.Server.HttpModels.Responses.Meta;
-
 namespace DataCat.Server.Api.Controllers;
 
 public class MetaController(IDatabaseAssemblyScanner databaseAssemblyScanner) : ApiControllerBase
@@ -14,5 +12,12 @@ public class MetaController(IDatabaseAssemblyScanner databaseAssemblyScanner) : 
             UpSql = x.UpSql,
             DownSql = x.DownSql,
         }));
+    }
+    
+    [HttpGet("sql-queries")]
+    public IActionResult GetSqlQueries()
+    {
+        var result = databaseAssemblyScanner.GetSqlQueries(); 
+        return Ok(result);
     }
 }

@@ -53,8 +53,8 @@ public static class Public
         public static string PanelId { get; } = nameof(PanelSnapshot.PanelId).ToSnakeCase();
         public static string PanelTitle { get; } = nameof(PanelSnapshot.PanelTitle).ToSnakeCase();
         public static string PanelType { get; } = nameof(PanelSnapshot.PanelType).ToSnakeCase();
-        public static string PanelRawQuery { get; } = nameof(PanelSnapshot.Query.PanelRawQuery).ToSnakeCase();
-        public static string PanelDataSource { get; } = PanelSnapshot.PanelDataSourceId.ToSnakeCase();
+        public static string PanelRawQuery { get; } = nameof(PanelSnapshot.PanelRawQuery).ToSnakeCase();
+        public static string PanelDataSourceId { get; } = PanelSnapshot.Panel_DataSourceId.ToSnakeCase();
         public static string PanelX { get; } = nameof(PanelSnapshot.PanelX).ToSnakeCase();
         public static string PanelY { get; } = nameof(PanelSnapshot.PanelY).ToSnakeCase();
         public static string PanelWidth { get; } = nameof(PanelSnapshot.PanelWidth).ToSnakeCase();

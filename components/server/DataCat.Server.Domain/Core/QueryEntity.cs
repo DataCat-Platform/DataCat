@@ -1,14 +1,12 @@
 namespace DataCat.Server.Domain.Core;
 
-public class QueryEntity
+public sealed record QueryEntity
 {
     private QueryEntity(DataSourceEntity dataSourceEntity, string rawQuery)
     {
         DataSourceEntity = dataSourceEntity;
         RawQuery = rawQuery;
     }
-
-    public Guid Id { get; private set; }
 
     public DataSourceEntity DataSourceEntity { get; private set; }
 

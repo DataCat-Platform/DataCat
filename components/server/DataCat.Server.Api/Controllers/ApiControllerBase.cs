@@ -49,7 +49,7 @@ public abstract class ApiControllerBase : ControllerBase
         return BadRequest(problemDetails);
     }
 
-    protected static ProblemDetails CreateProblemDetails(object? detail)
+    private static ProblemDetails CreateProblemDetails(object? detail)
     {
         return new ProblemDetails
         {

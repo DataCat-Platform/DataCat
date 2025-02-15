@@ -1,17 +1,17 @@
-namespace DataCat.Server.Application.Commands.Dashboard.Update;
+namespace DataCat.Server.Application.Commands.Dashboard.UpdateName;
 
 public sealed class UpdateDashboardCommandValidator : AbstractValidator<UpdateDashboardCommand>
 {
     public UpdateDashboardCommandValidator()
     {
         RuleLevelCascadeMode = CascadeMode.Continue;
-        RuleFor(x => x.ConnectionString).NotEmpty();
-        RuleFor(x => x.DataSourceId).NotEmpty()
+        RuleFor(x => x.Name).NotEmpty();
+        RuleFor(x => x.DashboardId).NotEmpty()
             .Custom((input, context) =>
             {
                 if (!Guid.TryParse(input, out _))
                 {
-                    context.AddFailure("Plugin Id must be a Guid");
+                    context.AddFailure("Dashboard Id must be a Guid");
                 }
             });
     }

@@ -38,6 +38,10 @@ public class DashboardEntity
 
     public DateTime UpdatedAt { get; private set; }
     
+    public void ChangeName(string name) => Name = name;
+    
+    public void ChangeDescription(string? description) => Description = description;
+    
     public static Result<DashboardEntity> Create(
         Guid id,
         string name,

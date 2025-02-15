@@ -17,6 +17,10 @@ public class UserEntity
     public string Email { get; private set; }
 
     public UserRole Role { get; private set; }
+    
+    public void UpdateEmail(string email) => Email = email;
+    public void UpdateUsername(string username) => Username = username;
+    public void UpdateRole(UserRole role) => Role = role;
 
     public static Result<UserEntity> Create(Guid id, string username, string email, UserRole? role)
     {

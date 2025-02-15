@@ -25,7 +25,7 @@ public class CreateDashboardAndPanelTables : Migration
                 {Public.Panels.PanelTitle} TEXT NOT NULL,
                 {Public.Panels.PanelType} INT NOT NULL,
                 {Public.Panels.PanelRawQuery} TEXT NOT NULL,
-                {Public.Panels.PanelDataSource} TEXT NOT NULL,
+                {Public.Panels.PanelDataSourceId} TEXT NOT NULL,
                 {Public.Panels.PanelX} INT NOT NULL,
                 {Public.Panels.PanelY} INT NOT NULL,
                 {Public.Panels.PanelWidth} INT NOT NULL,
@@ -33,7 +33,7 @@ public class CreateDashboardAndPanelTables : Migration
                 {Public.Panels.PanelParentDashboardId} TEXT NOT NULL,
                 FOREIGN KEY ({Public.Panels.PanelParentDashboardId}) REFERENCES {Public.DashboardTable}({Public.Dashboards.DashboardId}) 
                     ON DELETE CASCADE,
-                FOREIGN KEY ({Public.Panels.PanelDataSource}) REFERENCES {Public.DataSourceTable}({Public.DataSources.DataSourceId})
+                FOREIGN KEY ({Public.Panels.PanelDataSourceId}) REFERENCES {Public.DataSourceTable}({Public.DataSources.DataSourceId})
             );
         ";
         

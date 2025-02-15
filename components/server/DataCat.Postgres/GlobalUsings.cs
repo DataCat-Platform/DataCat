@@ -19,6 +19,7 @@ global using DataCat.Server.Infrastructure.Migrations;
 global using DataCat.Server.PDK;
 global using DataCat.Server.Postgres.Factories;
 global using DataCat.Server.Postgres.Meta;
+global using DataCat.Server.Postgres.Migrations;
 global using DataCat.Server.Postgres.Repositories;
 global using DataCat.Server.Postgres.Runners;
 global using DataCat.Server.Postgres.Procedures;

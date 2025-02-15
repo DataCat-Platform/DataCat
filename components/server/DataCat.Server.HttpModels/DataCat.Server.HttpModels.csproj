@@ -10,8 +10,4 @@
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Requests\Dashboard\" />
-    </ItemGroup>
-
 </Project>

@@ -1,10 +1,10 @@
-namespace DataCat.Server.Application.Commands.DataSource.Update;
+namespace DataCat.Server.Application.Commands.DataSource.UpdateConnectiongString;
 
-public sealed class UpdateDataSourceCommandHandler(
+public sealed class UpdateConnStringDataSourceCommandHandler(
     IDefaultRepository<DataSourceEntity, Guid> dataSourceRepository)
-    : IRequestHandler<UpdateDataSourceCommand, Result>
+    : IRequestHandler<UpdateConnStringDataSourceCommand, Result>
 {
-    public async Task<Result> Handle(UpdateDataSourceCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateConnStringDataSourceCommand request, CancellationToken cancellationToken)
     {
         var id = Guid.Parse(request.DataSourceId);
         
@@ -12,7 +12,7 @@ public sealed class UpdateDataSourceCommandHandler(
         if (dataSource is null)
             return Result.Fail(DataSourceError.NotFound(id.ToString()));
         
-        dataSource.ChangeConnnectionString(request.ConnectionString);
+        dataSource.ChangeConnectionString(request.ConnectionString);
         await dataSourceRepository.UpdateAsync(dataSource, cancellationToken);
         
         return Result.Success();

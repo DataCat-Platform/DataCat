@@ -9,6 +9,7 @@ public class DashboardSnapshot
     public required string DashboardName { get; set; }
     public required string? DashboardDescription { get; set; }
     public required UserSnapshot Owner { get; set; }
+    public string OwnerId => Owner.UserId;
     public required IList<PanelSnapshot> Panels { get; set; }
     public required IList<UserSnapshot> SharedWith { get; set; }
     public required DateTime DashboardCreatedAt { get; set; }
@@ -25,8 +26,8 @@ public static class DashboardEntitySnapshotMapper
             DashboardName = dashboard.Name,
             DashboardDescription = dashboard.Description,
             Owner = dashboard.Owner.Save(),
-            Panels = [], // panels does not update with dashboards
-            SharedWith = [], // sharedWith does not update with dashboards
+            Panels = dashboard.Panels.Select(x => x.Save()).ToArray(),
+            SharedWith = dashboard.SharedWith.Select(x => x.Save()).ToArray(),
             DashboardCreatedAt = dashboard.CreatedAt,
             DashboardUpdatedAt = dashboard.UpdatedAt
         };
@@ -38,9 +39,9 @@ public static class DashboardEntitySnapshotMapper
             Guid.Parse(snapshot.DashboardId),
             snapshot.DashboardName,
             snapshot.DashboardDescription,
-            snapshot.Panels.Select(x => x.RestoreFromSnapshot()),
+            snapshot.Panels?.Select(x => x.RestoreFromSnapshot())?.ToList(),
             snapshot.Owner.RestoreFromSnapshot(),
-            snapshot.SharedWith.Select(x => x.RestoreFromSnapshot()),
+            snapshot.SharedWith?.Select(x => x.RestoreFromSnapshot())?.ToList(),
             snapshot.DashboardCreatedAt,
             snapshot.DashboardUpdatedAt
         );

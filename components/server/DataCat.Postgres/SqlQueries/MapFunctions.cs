@@ -2,9 +2,9 @@ namespace DataCat.Server.Postgres.SqlQueries;
 
 public static class MapFunctions
 {
-    public static Func<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DashboardSnapshot> MapDashboard(
+    public static Func<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DashboardSnapshot> MapDashboard(
         Dictionary<string, DashboardSnapshot> dashboardDictionary)
-        => (dashboard, userOwner, panel, sharedUser) =>
+        => (dashboard, userOwner, panel, sharedUser, dataSource) =>
         {
             if (!dashboardDictionary.TryGetValue(dashboard.DashboardId, out var existingDashboard))
             {
@@ -17,6 +17,7 @@ public static class MapFunctions
 
             if (panel is not null && existingDashboard.Panels.All(p => p.PanelId != panel.PanelId))
             {
+                panel.PanelDataSource = dataSource;
                 existingDashboard.Panels.Add(panel);
             }
 
@@ -27,5 +28,11 @@ public static class MapFunctions
 
             return existingDashboard;
         };
-
+    
+    public static Func<PanelSnapshot, DataSourceSnapshot, PanelSnapshot> MapPanel()
+        => (panel, dataSource) =>
+        {
+            panel.PanelDataSource = dataSource;
+            return panel;
+        };
 }

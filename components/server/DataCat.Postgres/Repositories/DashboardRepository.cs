@@ -8,16 +8,14 @@ public sealed class DashboardRepository(
     {
         var parameters = new { DashboardId = id.ToString() };
         var connection = await Factory.CreateConnectionAsync(token);
-
-        var sql = Sql.FindDashboardBody;
-        sql += $" WHERE {Public.Dashboards.DashboardId} = @DashboardId";
+        var sql = Sql.FindDashboard;
         
         var dashboardDictionary = new Dictionary<string, DashboardSnapshot>();
         await connection
-            .QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DashboardSnapshot>(
+            .QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DashboardSnapshot>(
                 sql,
                 map: MapFunctions.MapDashboard(dashboardDictionary),
-                splitOn: $"{Public.Users.UserId}, {Public.Panels.PanelId}, {Public.Users.UserId}",
+                splitOn: $"{Public.Users.UserId}, {Public.Panels.PanelId}, {Public.Users.UserId}, {Public.DataSources.DataSourceId}",
                 param: parameters);
 
         var dashboardSnapshot = dashboardDictionary.FirstOrDefault().Value;
@@ -26,23 +24,22 @@ public sealed class DashboardRepository(
 
     public async IAsyncEnumerable<DashboardEntity> SearchAsync(
         string? filter = null, 
-        int page = 1, 
+        int page = 1,
         int pageSize = 10, 
         [EnumeratorCancellation] CancellationToken token = default)
     {
-        var parameters = new { Name = filter };
+        var offset = (page - 1) * pageSize;
+        var parameters = new { Name = $"{filter}%", Page = offset, PageSize = pageSize };
         var connection = await Factory.CreateConnectionAsync(token);
-
-        var sql = Sql.FindDashboardBody;
-        sql += $" WHERE {Public.Dashboards.DashboardName} = @Name";
+        var sql = Sql.SearchDashboards;
         
         var dashboardDictionary = new Dictionary<string, DashboardSnapshot>();
         
         await connection
-                .QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DashboardSnapshot>(
+                .QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DashboardSnapshot>(
                     sql,
                     map: MapFunctions.MapDashboard(dashboardDictionary),
-                    splitOn: $"{Public.Users.UserId}, {Public.Panels.PanelId}, {Public.Users.UserId}",
+                    splitOn: $"{Public.Users.UserId}, {Public.Panels.PanelId}, {Public.Users.UserId}, {Public.DataSources.DataSourceId}",
                     param: parameters);
 
         foreach (var dashboard in dashboardDictionary.Values)
@@ -66,9 +63,9 @@ public sealed class DashboardRepository(
                 (@DashboardId, 
                  @DashboardName, 
                  @DashboardDescription, 
-                 @Owner, 
+                 @OwnerId, 
                  @DashboardCreatedAt, 
-                 @DashboardUpdatedAt)
+                 @DashboardUpdatedAt);
             """;
 
         var connection = await Factory.CreateConnectionAsync(token);
