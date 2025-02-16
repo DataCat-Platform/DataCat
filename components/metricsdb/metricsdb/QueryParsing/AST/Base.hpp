@@ -9,7 +9,7 @@ using ASTPtr = std::shared_ptr<Base>;
 
 class Base {
 public:
-    void dumpTree();
+    virtual std::string dumpTree() { return "[...]"; }
 };
 
 }

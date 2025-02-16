@@ -8,8 +8,8 @@ target_link_libraries(
   mdb
   mdb_config
   mdb_server
-  mdb_lexer
   mdb_parser
+  mdb_lexer
 )
 
 target_include_directories(mdb PUBLIC "${PROJECT_SOURCE_DIR}")

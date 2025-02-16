@@ -4,6 +4,20 @@
 
 namespace DB::QueryParsing::AST {
 
-class SelectQuery : Base { };
+class SelectQuery : public Base {
+public:
+    SelectQuery(ASTPtr expression)
+        : expression(expression)
+    {
+    }
+
+    static ASTPtr Create(ASTPtr expression)
+    {
+        return std::make_shared<SelectQuery>(expression);
+    }
+
+private:
+    ASTPtr expression;
+};
 
 }

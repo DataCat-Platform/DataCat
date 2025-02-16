@@ -3,88 +3,113 @@
 
 %header
 
-%code requires {
-    #include <metricsdb/QueryParsing/Lexer/Lexer.hpp>
-    #include <metricsdb/QueryParsing/AST/Base.hpp>
-    #include <metricsdb/QueryParsing/AST/Tag.hpp>
-    #include <metricsdb/QueryParsing/AST/MetricSelector.hpp>
-    #include <metricsdb/QueryParsing/AST/SelectQuery.hpp>
-    #include <string>
-    #include <vector>
+%code top {
+#include <metricsdb/QueryParsing/Lexer/Lexer.hpp>
+#define yylex lexer.lex
+}
 
-    #define yylex lexer.lex
+%code requires {
+#include <string>
+#include <vector>
+#include <metricsdb/QueryParsing/Parser/Result.hpp>
+#include <metricsdb/QueryParsing/AST/Base.hpp>
+#include <metricsdb/QueryParsing/AST/TagSelector.hpp>
+#include <metricsdb/QueryParsing/AST/MetricSelector.hpp>
+#include <metricsdb/QueryParsing/AST/SelectQuery.hpp>
+
+namespace DB::QueryParsing {
+    class Lexer;
+}
+
 }
 
 %skeleton "lalr1.cc"
-/* %locations */
+%locations
 
 
 %define api.value.type variant
 %define api.namespace {DB::QueryParsing}
 %define api.parser.class {Parser}
-/* %define api.header.include {<metricsdb/QueryParsing/Parser/Parser.hpp>} */
 
-%parse-param {Lexer& lexer} {AST::Query& result}
+%parse-param {Lexer& lexer} {Result& result}
 
-%token <std::string> NAME
+%token <std::string> IDENTIFIER
 %token <std::string> STRING
 %token <double> NUMBER
-%token FORWARD                  "|>"
-%token OPENING_PARENTHESIS      '('
-%token CLOSING_PARENTHESIS      ')'
-%token OPENING_SQUARE_BRACKET   '['
-%token CLOSING_SQUARE_BRACKET   ']'
-%token OPENING_CURVY_BRACE      '{'
-%token CLOSING_CURVY_BRACE      '}'
+%token EQUAL                    '='
+%token FORWARD_OPERATOR         "|>"
+%token OPEN_PARENTHESIS         '('
+%token CLOSE_PARENTHESIS        ')'
+%token OPEN_SQUARE_BRACKET      '['
+%token CLOSE_SQUARE_BRACKET     ']'
+%token OPEN_BRACE               '{'
+%token CLOSE_BRACE              '}'
 %token PLUS                     '+'
 %token MINUS                    '-'
-%token MULTIPLY                 '*'
-%token DIVIDE                   '/'
+%token ASTERISK                 '*'
+%token SLASH                    '/'
 %token COLON                    ':'
+%token DOT                      '.'
+%token END
+%token ERROR
 
-%type <AST::Base> expr
-%type <AST::Tag> tag
-%type <std::vector<AST::Tag>> tags
-%type <AST::Query> query
-%type <AST::MetricSelector> metric_selector
+%type <Result> select_query
+%type <AST::ASTPtr> expr
+%type <AST::ASTPtr> metric_selector
+%type <AST::ASTPtr> tag_selector
+%type <std::vector<AST::ASTPtr>> tag_selectors
+
+%type <std::string> name
+%type <std::string> dot_separated_name
 
 %left '+' '-'
 %left '*' '/'
 %precedence NEG
 
-%start query
+%start select_query
 
 %%
-query:
-    %empty                  { result = AST::SelectQuery(); }
-    | expr                  { result = AST::SelectQuery(); }
+select_query:
+    expr { result.setAST($1); }
     ;
 
 expr:
-    metric_selector         { $$ = $1; }
-    | expr[l] '+' expr[r]   { $$ = AST::Base(); }
-    | expr[l] '-' expr[r]   { $$ = AST::Base(); }
-    | expr[l] '*' expr[r]   { $$ = AST::Base(); }
-    | expr[l] '/' expr[r]   { $$ = AST::Base(); }
-    | '-' expr[e] %prec NEG { $$ = AST::Base(); }
-    | '(' expr[e] ')'       { $$ = AST::Base(); }
+    metric_selector { $$ = $1; }
+    /* | expr '+' expr { $$ = AST::FunctionCall::Create($1, $3, AST::BinaryOperator::OperatorType::PLUS); }
+    | expr '-' expr { $$ = AST::BinaryOperator($1, $3, ); }
+    | expr '*' expr { $$ = AST::BinaryOperator($1, $3, ); }
+    | expr '/' expr { $$ = AST::BinaryOperator($1, $3, ); }
+    | '-' expr %prec NEG { $$ = AST::Base(); }
+    | '(' expr ')'       { $$ = AST::Base(); }
+    | expr "|>"  */
     ;
 
 metric_selector:
-    STRING '{' tags '}'     { $$ = AST::MetricSelector(); }
+    name '{' tag_selectors '}' { $$ = AST::MetricSelector::Create($1, $3); }
     ;
 
-tags:
-    %empty                  { $$ = std::vector<AST::Tag>(); }
-    | tags[t] tag[h]        { $$ = $t; $$.push_back($h); }
+tag_selectors:
+    %empty                       { $$ = std::vector<AST::ASTPtr>(); }
+    | tag_selectors tag_selector { $$ = $1; $$.push_back($2); }
     ;
 
-tag:
-    STRING[key] ':' STRING[value] { $$ = AST::Tag{$key, $value}; }
+tag_selector:
+    name '=' name { $$ = AST::TagSelector::Create($1, $3); }
     ;
+
+name:
+    STRING               { $$ = $1; }
+    | dot_separated_name { $$ = $1; }
+    ;
+
+dot_separated_name:
+    IDENTIFIER                          { $$ = $1; }
+    | dot_separated_name '.' IDENTIFIER { $$ = $1; $$ += $3; }
+    ;
+
 %%
 
-/* void DB::Parser::error(const location_type& loc, const std::string& err)
+void DB::QueryParsing::Parser::error(const location_type& location, const std::string& errorMessage)
 {
-    message = err;
-} */
+    result.setErrorMessage(errorMessage + " @" + std::to_string(location.begin.column) + "..." + std::to_string(location.end.column) + "\n");
+}

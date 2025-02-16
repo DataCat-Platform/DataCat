@@ -5,12 +5,14 @@
 namespace DB::QueryParsing {
 
 class Lexer {
-    using ValueType = Parser::value_type;
+    using ValueType = Parser::value_type*;
+    using LocationType = Parser::location_type*;
+    using TokenType = Parser::token_type;
 
 public:
-    Lexer();
+    Lexer(const char* p, const char* pe);
 
-    void lex(ValueType value);
+    TokenType lex(ValueType value, LocationType location);
 
 private:
     /*
@@ -34,6 +36,7 @@ private:
     int act;
     const char* ts;
     const char* te;
+    const char* s;
 };
 
 }
