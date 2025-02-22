@@ -36,7 +36,7 @@ public static class DashboardMappings
     
     public static OverviewDashboardResponse ToFullResponse(this DashboardEntity dashboard)
     {
-        return new OverviewDashboardResponse()
+        return new OverviewDashboardResponse
         {
             DashboardId = dashboard.Id,
             Name = dashboard.Name,

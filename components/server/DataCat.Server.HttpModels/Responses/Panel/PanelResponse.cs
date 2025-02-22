@@ -20,14 +20,3 @@ public class PanelResponse
     
     public required Guid DashboardId { get; init; }
 }
-
-public class PanelQueryResponse
-{
-    public required string Query { get; init; }
-
-    public required string DataSourceName { get; init; }
-
-    public required string DataSourceType { get; init; }
-
-    public required string ConnectionString { get; init; }
-}

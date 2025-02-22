@@ -8,7 +8,7 @@ public static class PluginLoader
 
         var assemblyFile = provider switch
         {
-            "postgres" => Path.Combine(pluginDirectory, "DataCat.Postgres.dll"),
+            "postgres" => Path.Combine(pluginDirectory, "DataCat.Storage.Postgres.dll"),
             _ => throw new Exception("Unsupported database provider")
         };
 
