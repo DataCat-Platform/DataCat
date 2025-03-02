@@ -7,7 +7,8 @@ public sealed class AlertSnapshot
     public const string Alert_NotificationChannelId = "alert_notification_channel_id";
     
     public required string AlertId { get; init; }
-    public required string AlertDescription { get; init; }
+    public required string? AlertDescription { get; init; }
+    public required int AlertStatus { get; init; }
     public required string AlertRawQuery { get; init; }
     public required DataSourceSnapshot AlertDataSource { get; set; }
     public string AlertDataSourceId => AlertDataSource.DataSourceId;
@@ -23,6 +24,7 @@ public static class AlertSnapshotExtensions
         {
             AlertId = reader.GetString(reader.GetOrdinal(Public.Alerts.AlertId)),
             AlertDescription = reader.GetString(reader.GetOrdinal(Public.Alerts.AlertDescription)),
+            AlertStatus = reader.GetInt32(reader.GetOrdinal(Public.Alerts.AlertStatus)),
             AlertRawQuery = reader.GetString(reader.GetOrdinal(Public.Alerts.AlertRawQuery)),
             AlertDataSource = new DataSourceSnapshot
             {
@@ -46,6 +48,7 @@ public static class AlertSnapshotExtensions
         {
             AlertId = alert.Id.ToString(),
             AlertDescription = alert.Description,
+            AlertStatus = alert.Status.Value,
             AlertRawQuery = alert.QueryEntity.RawQuery,
             AlertDataSource = alert.QueryEntity.DataSourceEntity.Save(),
             AlertNotificationChannel = alert.NotificationChannelEntity.Save()
@@ -58,6 +61,7 @@ public static class AlertSnapshotExtensions
             Guid.Parse(snapshot.AlertId),
             snapshot.AlertDescription,
             QueryEntity.Create(snapshot.AlertDataSource.RestoreFromSnapshot(), snapshot.AlertRawQuery).Value,
+            AlertStatus.FromValue(snapshot.AlertStatus),
             snapshot.AlertNotificationChannel.RestoreFromSnapshot()
         );
 

@@ -24,6 +24,7 @@ public sealed class AddAlertCommandHandler(
             Guid.NewGuid(),
             request.Description,
             queryResult.Value,
+            AlertStatus.InActive,
             notificationChannel);
         if (alertResult.IsFailure)
             return Result.Fail<Guid>(alertResult.Errors!);

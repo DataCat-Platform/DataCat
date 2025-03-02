@@ -1,4 +1,4 @@
-namespace DataCat.Server.Application.Behaviors.Validation;
+namespace DataCat.Server.Application.Behaviors;
 
 public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>

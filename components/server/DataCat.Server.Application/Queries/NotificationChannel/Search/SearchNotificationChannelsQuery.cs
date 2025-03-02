@@ -4,4 +4,4 @@ public sealed record SearchNotificationChannelsQuery(
     int Page, 
     int PageSize, 
     string? Filter)
-    : IRequest<Result<List<NotificationChannelEntity>>>, ISearchQuery;
+    : IRequest<Result<List<NotificationChannelEntity>>>, ISearchQuery, IAuthorizedQuery;

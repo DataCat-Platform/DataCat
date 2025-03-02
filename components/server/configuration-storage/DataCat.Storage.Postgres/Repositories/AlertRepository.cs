@@ -76,6 +76,7 @@ public sealed class AlertRepository(
            UPDATE {Public.AlertTable}
            SET 
                {Public.Alerts.AlertDescription}           = @AlertDescription,
+               {Public.Alerts.AlertStatus}           = @AlertStatus,
                {Public.Alerts.AlertRawQuery}              = @AlertRawQuery,
                {Public.Alerts.AlertDataSourceId}          = @AlertDataSourceId,
                {Public.Alerts.AlertNotificationChannelId} = @AlertNotificationChannelId

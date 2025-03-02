@@ -5,6 +5,4 @@ public interface ISearchQuery : IPaginationQuery
     string? Filter { get; }
 }
 
-public sealed class SearchQueryValidator : AbstractValidator<ISearchQuery>
-{
-}
+public sealed class SearchQueryValidator : AbstractValidator<ISearchQuery>;

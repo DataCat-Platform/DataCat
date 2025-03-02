@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.Dashboard.UpdateName;
 
-public sealed record UpdateDashboardCommand : IRequest<Result>
+public sealed record UpdateDashboardCommand : IRequest<Result>, IAuthorizedCommand
 {
     public required string DashboardId { get; init; }
 

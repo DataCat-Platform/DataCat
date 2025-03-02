@@ -1,12 +1,12 @@
 // Global using directives
 
-global using System.Net;
 global using DataCat.Export.Metrics.V1;
 global using DataCat.Server.Api.Extensions;
 global using DataCat.Server.Api.Mappings;
 global using DataCat.Server.Api.Middlewares;
 global using DataCat.Server.Api.Services;
 global using DataCat.Server.Application.Assembly;
+global using DataCat.Server.Application.Auth;
 global using DataCat.Server.Application.Commands.Alert.Add;
 global using DataCat.Server.Application.Commands.Alert.Remove;
 global using DataCat.Server.Application.Commands.Alert.UpdateAlertQuery;
@@ -16,7 +16,6 @@ global using DataCat.Server.Application.Commands.Dashboard.Remove;
 global using DataCat.Server.Application.Commands.Dashboard.UpdateName;
 global using DataCat.Server.Application.Commands.DataSource.Add;
 global using DataCat.Server.Application.Commands.DataSource.Remove;
-global using DataCat.Server.Application.Commands.DataSource.UpdateConnectiongString;
 global using DataCat.Server.Application.Commands.NotificationChannel.Add;
 global using DataCat.Server.Application.Commands.NotificationChannel.Remove;
 global using DataCat.Server.Application.Commands.NotificationChannel.UpdateNotificationQuery;
@@ -44,6 +43,7 @@ global using DataCat.Server.Application.Queries.Plugin.Get;
 global using DataCat.Server.Application.Queries.Plugin.Search;
 global using DataCat.Server.Application.Queries.User.Get;
 global using DataCat.Server.Application.Queries.User.Search;
+global using DataCat.Server.Application.Security;
 global using DataCat.Server.Application.Validations;
 global using DataCat.Server.DI;
 global using DataCat.Server.Domain.Common.ResultFlow;
@@ -58,6 +58,7 @@ global using DataCat.Server.HttpModels.Requests.Identity;
 global using DataCat.Server.HttpModels.Requests.NotificationChannel;
 global using DataCat.Server.HttpModels.Requests.Panel;
 global using DataCat.Server.HttpModels.Requests.Plugin;
+global using DataCat.Server.HttpModels.Requests.Security;
 global using DataCat.Server.HttpModels.Responses.Alert;
 global using DataCat.Server.HttpModels.Responses.Dashboard;
 global using DataCat.Server.HttpModels.Responses.DataSource;

@@ -6,7 +6,8 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddSingleton<ExceptionHandlingMiddleware>()
-            .AddSingleton<RequestLoggingMiddleware>();
+            .AddSingleton<RequestLoggingMiddleware>()
+            .AddTransient<AuthorizationMiddleware>();
 
         return services;
     }

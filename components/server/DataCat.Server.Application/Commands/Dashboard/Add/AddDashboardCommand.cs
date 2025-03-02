@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.Dashboard.Add;
 
-public sealed record AddDashboardCommand : IRequest<Result<Guid>>
+public sealed record AddDashboardCommand : IRequest<Result<Guid>>, IAuthorizedCommand
 {
     public required string Name { get; init; }
 

@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Behaviors;
+
 namespace DataCat.Server.DI;
 
 public static class DependencyInjectionExtensions
@@ -24,7 +26,8 @@ public static class DependencyInjectionExtensions
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssemblyContaining<AddPluginCommandHandler>();
-
+            
+            config.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
             config.AddOpenBehavior(typeof(TransactionScopeBehavior<,>));
         });
@@ -69,6 +72,27 @@ public static class DependencyInjectionExtensions
         
         PluginLoader.LoadDatabasePlugin(services, configuration["DataSourceType"]!, configuration);
 
+        return services;
+    }
+    
+    public static IServiceCollection AddSecretsSetup(
+        this IServiceCollection services,
+        IConfiguration configuration) 
+    {
+        NullGuard.ThrowIfNullOrWhiteSpace(configuration["SecretsStorageType"]);
+        PluginLoader.LoadSecretStoragePlugin(services, configuration["SecretsStorageType"]!, configuration);
+        return services;
+    }
+
+    public static IServiceCollection AddAuthSetup(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        NullGuard.ThrowIfNullOrWhiteSpace(configuration["AuthType"]);
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.Configure<AuthMappingOptions>(configuration.GetSection("AuthMappingOptions"));
+        services.AddSingleton<AuthMappingOptions>(sp => sp.GetRequiredService<IOptions<AuthMappingOptions>>().Value);
+        PluginLoader.LoadAuthPlugin(services, configuration["AuthType"]!, configuration);
         return services;
     }
 

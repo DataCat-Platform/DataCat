@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Commands.User.UpdateInfo;
-
 namespace DataCat.Server.Application.Commands.User.UpdateRole;
 
 public sealed class UpdateUserRoleCommandValidator : AbstractValidator<UpdateUserInfoCommand>

@@ -18,6 +18,7 @@ public class CreateAlertAndNotificationChannelTable : Migration
             CREATE TABLE {Public.AlertTable} (
                 {Public.Alerts.AlertId} TEXT PRIMARY KEY,
                 {Public.Alerts.AlertDescription} TEXT NOT NULL,
+                {Public.Alerts.AlertStatus} INT NOT NULL,
                 {Public.Alerts.AlertRawQuery} TEXT NOT NULL,
                 {Public.Alerts.AlertDataSourceId} TEXT NOT NULL,
                 {Public.Alerts.AlertNotificationChannelId} TEXT NOT NULL,

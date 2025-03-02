@@ -68,6 +68,7 @@ public static class Public
     {
         public static string AlertId { get; } = nameof(AlertSnapshot.AlertId).ToSnakeCase();
         public static string AlertDescription { get; } = nameof(AlertSnapshot.AlertDescription).ToSnakeCase();
+        public static string AlertStatus { get; } = nameof(AlertSnapshot.AlertStatus).ToSnakeCase();
         public static string AlertRawQuery { get; } = nameof(AlertSnapshot.AlertRawQuery).ToSnakeCase();
         public static string AlertDataSourceId { get; } = AlertSnapshot.Alert_DataSourceId.ToSnakeCase();
         public static string AlertNotificationChannelId { get; } = AlertSnapshot.Alert_NotificationChannelId.ToSnakeCase();

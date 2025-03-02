@@ -1,4 +1,4 @@
-namespace DataCat.Server.Application.Commands.DataSource.UpdateConnectiongString;
+namespace DataCat.Server.Application.Commands.DataSource.UpdateConnectionString;
 
 public sealed class UpdateConnStringDataSourceCommandValidator : AbstractValidator<UpdateConnStringDataSourceCommand>
 {

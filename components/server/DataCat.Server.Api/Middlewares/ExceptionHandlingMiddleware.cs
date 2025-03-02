@@ -1,6 +1,8 @@
+using System.Security.Authentication;
+
 namespace DataCat.Server.Api.Middlewares;
 
-public class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger)
+public sealed class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger)
     : AbstractExceptionHandlerMiddleware(logger)
 {
     protected override (int statusCode, ProblemDetails problemDetails) GetSpecificResponse(Exception exception)
@@ -52,9 +54,23 @@ public class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> lo
                     }
                 };
                 break;
+            case AuthenticationException authenticationException:
+                statusCode = StatusCodes.Status401Unauthorized;
+                problemDetails = new ProblemDetails
+                {
+                    Status = statusCode,
+                    Type = "AuthenticationFailure",
+                    Title = "Authentication failed",
+                    Detail = authenticationException.Message,
+                    Extensions =
+                    {
+                        ["errors"] = authenticationException.Message
+                    }
+                };
+                break;
             default:
                 statusCode = StatusCodes.Status500InternalServerError;
-                problemDetails = new ProblemDetails()
+                problemDetails = new ProblemDetails
                 {
                     Status = StatusCodes.Status500InternalServerError,
                     Type = "ServerError",

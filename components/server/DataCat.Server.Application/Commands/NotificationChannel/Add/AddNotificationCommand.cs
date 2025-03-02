@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.NotificationChannel.Add;
 
-public sealed record AddNotificationCommand : IRequest<Result<Guid>>
+public sealed record AddNotificationCommand : IRequest<Result<Guid>>, IAdminRequest
 {
     public required int DestinationType { get; init; }
     

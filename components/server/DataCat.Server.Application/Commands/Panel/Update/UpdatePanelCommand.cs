@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.Panel.Update;
 
-public sealed record UpdatePanelCommand : IRequest<Result>
+public sealed record UpdatePanelCommand : IRequest<Result>, IAuthorizedCommand
 {
     public required string PanelId { get; init; }
     

@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.DataSource.UpdateConnectionString;
+
 namespace DataCat.Server.Api.Mappings;
 
 public static class DataSourceMappings

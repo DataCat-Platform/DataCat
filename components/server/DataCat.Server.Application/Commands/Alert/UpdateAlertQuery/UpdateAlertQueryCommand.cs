@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.Alert.UpdateAlertQuery;
 
-public sealed record UpdateAlertQueryCommand : IRequest<Result>
+public sealed record UpdateAlertQueryCommand : IRequest<Result>, IAuthorizedCommand
 {
     public required string AlertId { get; init; }
     

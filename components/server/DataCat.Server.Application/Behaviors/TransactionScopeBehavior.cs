@@ -1,4 +1,6 @@
-namespace DataCat.Server.Application.Behaviors.TransactionScope;
+namespace DataCat.Server.Application.Behaviors;
+
+public interface ITransactionScopeRequest;
 
 public sealed class TransactionScopeBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>

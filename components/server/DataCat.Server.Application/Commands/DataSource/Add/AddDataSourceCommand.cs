@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.DataSource.Add;
 
-public sealed record AddDataSourceCommand : IRequest<Result<Guid>>
+public sealed record AddDataSourceCommand : IRequest<Result<Guid>>, IAdminRequest
 {
     public required string Name { get; init; }
 
