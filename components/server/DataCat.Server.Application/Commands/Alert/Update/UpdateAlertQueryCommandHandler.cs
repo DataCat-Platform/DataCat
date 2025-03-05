@@ -1,4 +1,4 @@
-namespace DataCat.Server.Application.Commands.Alert.UpdateAlertQuery;
+namespace DataCat.Server.Application.Commands.Alert.Update;
 
 public sealed class UpdateAlertQueryCommandHandler(
     IDefaultRepository<AlertEntity, Guid> alertRepository,

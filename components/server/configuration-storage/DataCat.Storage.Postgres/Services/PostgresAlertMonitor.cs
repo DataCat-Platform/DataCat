@@ -2,12 +2,7 @@ namespace DataCat.Storage.Postgres.Services;
 
 public class PostgresAlertMonitor : IAlertMonitor
 {
-    public Task ConsumeAlertsAsync(CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<AlertEntity>> GetActiveAlertsAsync(CancellationToken token = default)
+    public Task<IEnumerable<AlertEntity>> GetActiveAlertsAsync(int top = 5, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }

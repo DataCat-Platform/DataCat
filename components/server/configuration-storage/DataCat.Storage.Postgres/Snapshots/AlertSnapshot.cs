@@ -14,6 +14,10 @@ public sealed class AlertSnapshot
     public string AlertDataSourceId => AlertDataSource.DataSourceId;
     public required NotificationChannelSnapshot AlertNotificationChannel { get; set; }
     public string AlertNotificationChannelId => AlertNotificationChannel.NotificationChannelId;
+    public required DateTime AlertPreviousExecution { get; init; }
+    public required DateTime AlertNextExecution { get; init; }
+    public required long AlertWaitTimeBeforeAlertingInTicks { get; init; }
+    public required long AlertRepeatIntervalInTicks { get; init; }
 }
 
 public static class AlertSnapshotExtensions
@@ -38,7 +42,11 @@ public static class AlertSnapshotExtensions
                 NotificationChannelId = reader.GetString(reader.GetOrdinal(Public.NotificationChannels.NotificationChannelId)),
                 NotificationDestination = reader.GetInt32(reader.GetOrdinal(Public.NotificationChannels.NotificationDestination)),
                 NotificationSettings = reader.GetString(reader.GetOrdinal(Public.NotificationChannels.NotificationSettings)),
-            }
+            },
+            AlertPreviousExecution = reader.GetDateTime(reader.GetOrdinal(Public.Alerts.AlertPreviousExecution)),
+            AlertNextExecution = reader.GetDateTime(reader.GetOrdinal(Public.Alerts.AlertNextExecution)),
+            AlertRepeatIntervalInTicks = reader.GetInt64(reader.GetOrdinal(Public.Alerts.AlertRepeatIntervalInTicks)),  
+            AlertWaitTimeBeforeAlertingInTicks = reader.GetInt64(reader.GetOrdinal(Public.Alerts.AlertWaitTimeBeforeAlertingInTicks))
         };
     }
     
@@ -51,7 +59,11 @@ public static class AlertSnapshotExtensions
             AlertStatus = alert.Status.Value,
             AlertRawQuery = alert.QueryEntity.RawQuery,
             AlertDataSource = alert.QueryEntity.DataSourceEntity.Save(),
-            AlertNotificationChannel = alert.NotificationChannelEntity.Save()
+            AlertNotificationChannel = alert.NotificationChannelEntity.Save(),
+            AlertPreviousExecution = alert.PreviousExecution.DateTime,
+            AlertNextExecution = alert.NextExecution.DateTime,
+            AlertRepeatIntervalInTicks = alert.RepeatInterval.Ticks,
+            AlertWaitTimeBeforeAlertingInTicks = alert.WaitTimeBeforeAlerting.Ticks
         };
     }
 
@@ -62,7 +74,11 @@ public static class AlertSnapshotExtensions
             snapshot.AlertDescription,
             QueryEntity.Create(snapshot.AlertDataSource.RestoreFromSnapshot(), snapshot.AlertRawQuery).Value,
             AlertStatus.FromValue(snapshot.AlertStatus),
-            snapshot.AlertNotificationChannel.RestoreFromSnapshot()
+            snapshot.AlertNotificationChannel.RestoreFromSnapshot(),
+            snapshot.AlertPreviousExecution,
+            snapshot.AlertNextExecution,
+            TimeSpan.FromTicks(snapshot.AlertWaitTimeBeforeAlertingInTicks),
+            TimeSpan.FromTicks(snapshot.AlertRepeatIntervalInTicks)
         );
 
         return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(AlertEntity));

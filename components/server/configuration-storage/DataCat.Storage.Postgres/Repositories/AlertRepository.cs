@@ -53,15 +53,25 @@ public sealed class AlertRepository(
                {Public.Alerts.AlertId},
                {Public.Alerts.AlertDescription},
                {Public.Alerts.AlertRawQuery},
+               {Public.Alerts.AlertStatus},
                {Public.Alerts.AlertDataSourceId},
-               {Public.Alerts.AlertNotificationChannelId}
+               {Public.Alerts.AlertNotificationChannelId},
+               {Public.Alerts.AlertPreviousExecution},
+               {Public.Alerts.AlertNextExecution},
+               {Public.Alerts.AlertRepeatIntervalInTicks},
+               {Public.Alerts.AlertWaitTimeBeforeAlertingInTicks}
            )
            VALUES (
                @AlertId,
                @AlertDescription,
                @AlertRawQuery,
+               @AlertStatus,
                @AlertDataSourceId,
-               @AlertNotificationChannelId
+               @AlertNotificationChannelId,
+               @AlertPreviousExecution,
+               @AlertNextExecution,
+               @AlertRepeatIntervalInTicks,
+               @AlertWaitTimeBeforeAlertingInTicks
            )";
 
         var connection = await Factory.CreateConnectionAsync(token);
@@ -75,12 +85,17 @@ public sealed class AlertRepository(
         var sql = $@"
            UPDATE {Public.AlertTable}
            SET 
-               {Public.Alerts.AlertDescription}           = @AlertDescription,
-               {Public.Alerts.AlertStatus}           = @AlertStatus,
-               {Public.Alerts.AlertRawQuery}              = @AlertRawQuery,
-               {Public.Alerts.AlertDataSourceId}          = @AlertDataSourceId,
-               {Public.Alerts.AlertNotificationChannelId} = @AlertNotificationChannelId
-           WHERE {Public.Alerts.AlertId} = @AlertId";
+               {Public.Alerts.AlertDescription}                    = @AlertDescription,
+               {Public.Alerts.AlertStatus}                         = @AlertStatus,
+               {Public.Alerts.AlertRawQuery}                       = @AlertRawQuery,
+               {Public.Alerts.AlertDataSourceId}                   = @AlertDataSourceId,
+               {Public.Alerts.AlertNotificationChannelId}          = @AlertNotificationChannelId,
+               {Public.Alerts.AlertPreviousExecution}              = @AlertPreviousExecution,
+               {Public.Alerts.AlertNextExecution}                  = @AlertNextExecution,
+               {Public.Alerts.AlertRepeatIntervalInTicks}          = @AlertRepeatIntervalInTicks, 
+               {Public.Alerts.AlertWaitTimeBeforeAlertingInTicks}  = @AlertWaitTimeBeforeAlertingInTicks
+           WHERE {Public.Alerts.AlertId} = @AlertId
+           ";
 
         var connection = await Factory.CreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, alertSnapshot);

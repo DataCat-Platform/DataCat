@@ -22,6 +22,10 @@ public class CreateAlertAndNotificationChannelTable : Migration
                 {Public.Alerts.AlertRawQuery} TEXT NOT NULL,
                 {Public.Alerts.AlertDataSourceId} TEXT NOT NULL,
                 {Public.Alerts.AlertNotificationChannelId} TEXT NOT NULL,
+                {Public.Alerts.AlertPreviousExecution} TIMESTAMP NOT NULL,
+                {Public.Alerts.AlertNextExecution} TIMESTAMP NOT NULL,
+                {Public.Alerts.AlertWaitTimeBeforeAlertingInTicks} BIGINT NOT NULL,
+                {Public.Alerts.AlertRepeatIntervalInTicks} BIGINT NOT NULL,
                 FOREIGN KEY ({Public.Alerts.AlertDataSourceId}) REFERENCES {Public.DataSourceTable}({Public.DataSources.DataSourceId})
                     ON DELETE CASCADE,
                 FOREIGN KEY ({Public.Alerts.AlertNotificationChannelId}) REFERENCES {Public.NotificationTable}({Public.NotificationChannels.NotificationChannelId})
@@ -30,8 +34,8 @@ public class CreateAlertAndNotificationChannelTable : Migration
         ";
         
         DownSql = @$"
-            DROP FUNCTION IF EXISTS {Public.NotificationTable};
-            DROP FUNCTION IF EXISTS {Public.AlertTable};
+            DROP TABLE IF EXISTS {Public.NotificationTable};
+            DROP TABLE IF EXISTS {Public.AlertTable};
         ";
     }
     

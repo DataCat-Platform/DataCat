@@ -1,4 +1,4 @@
-namespace DataCat.Server.Application.Commands.Alert.MuteAlert;
+namespace DataCat.Server.Application.Commands.Alert.Mute;
 
 public sealed class MuteAlertCommandValidator : AbstractValidator<MuteAlertCommand>
 {
@@ -13,6 +13,6 @@ public sealed class MuteAlertCommandValidator : AbstractValidator<MuteAlertComma
                     context.AddFailure("Alert Id must be a Guid");
                 }
             });
-
+        RuleFor(x => x.NextExecutionTime).GreaterThan(TimeSpan.Zero);
     }
 }

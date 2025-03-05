@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.Alert.Update;
+
 namespace DataCat.Server.Api.Mappings;
 
 public static class AlertMappings
@@ -9,7 +11,9 @@ public static class AlertMappings
             Description = request.Description,
             RawQuery = request.RawQuery,
             DataSourceId = request.DataSourceId,
-            NotificationChannelId = request.NotificationChannelId
+            NotificationChannelId = request.NotificationChannelId,
+            WaitTimeBeforeAlerting = request.WaitTimeBeforeAlerting,
+            RepeatInterval = request.RepeatInterval
         };
     }
 
@@ -32,8 +36,13 @@ public static class AlertMappings
             Id = alert.Id,
             Description = alert.Description,
             RawQuery = alert.QueryEntity.RawQuery,
+            Status = alert.Status.Name,
             DataSource = alert.QueryEntity.DataSourceEntity.ToResponse(),
-            NotificationChannel = alert.NotificationChannelEntity.ToResponse()
+            NotificationChannel = alert.NotificationChannelEntity.ToResponse(),
+            WaitTimeBeforeAlerting = alert.WaitTimeBeforeAlerting,
+            RepeatInterval = alert.RepeatInterval,
+            PreviousExecutionTime = alert.PreviousExecution.DateTime,
+            NextExecutionTime = alert.NextExecution.DateTime,
         };
     }
 }

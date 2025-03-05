@@ -25,7 +25,12 @@ public sealed class AddAlertCommandHandler(
             request.Description,
             queryResult.Value,
             AlertStatus.InActive,
-            notificationChannel);
+            notificationChannel,
+            previousExecution: DateTimeUtc.Init(),
+            nextExecution: DateTime.UtcNow.Add(request.RepeatInterval),
+            request.WaitTimeBeforeAlerting,
+            request.RepeatInterval);
+        
         if (alertResult.IsFailure)
             return Result.Fail<Guid>(alertResult.Errors!);
         

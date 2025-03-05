@@ -25,8 +25,6 @@ public sealed class PostgresPlugin : IDatabasePlugin
 
         services.AddSingleton<IDatabaseAssemblyScanner, DatabaseAssemblyScanner>();
 
-        services.AddHostedService<PostgresAlertWorker>();
-
         services.AddSingleton<IAlertMonitor, PostgresAlertMonitor>();
         services.AddSingleton<INotificationService, NotificationService>(); // TODO: Change to normal impl
         return services;

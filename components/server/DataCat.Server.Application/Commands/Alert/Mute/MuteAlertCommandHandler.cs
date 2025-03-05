@@ -1,4 +1,4 @@
-namespace DataCat.Server.Application.Commands.Alert.MuteAlert;
+namespace DataCat.Server.Application.Commands.Alert.Mute;
 
 public sealed class MuteAlertCommandHandler(
     IDefaultRepository<AlertEntity, Guid> alertRepository)
@@ -9,8 +9,9 @@ public sealed class MuteAlertCommandHandler(
         var alert = await alertRepository.GetByIdAsync(Guid.Parse(request.Id), cancellationToken);
         if (alert is null)
             return Result.Fail(AlertError.NotFound(request.Id));
-        
-        alert.MuteAlert();
+
+        var nextExecutionAt = DateTime.Now.Add(request.NextExecutionTime);
+        alert.MuteAlert(nextExecutionAt);
         await alertRepository.UpdateAsync(alert, cancellationToken);
         return Result.Success();
     }

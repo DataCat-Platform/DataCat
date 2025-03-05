@@ -43,7 +43,7 @@ public class CreateProcedure_AddDashboard : Migration
             $$ LANGUAGE plpgsql;
         ";
         
-        DownSql = @$"DROP FUNCTION IF EXISTS {DashboardProcedures.AddDashboard}(TEXT, TEXT, TEXT, TEXT);";
+        DownSql = @$"DROP PROCEDURE IF EXISTS {DashboardProcedures.AddDashboard}(TEXT, TEXT, TEXT, TEXT);";
     }
     
     public override void Up()

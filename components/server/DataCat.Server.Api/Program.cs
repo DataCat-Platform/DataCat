@@ -5,7 +5,6 @@ var configuration = builder.Configuration;
 
 builder.Services.AddGrpc();
 builder.Services
-    .AddCustomMiddlewares()
     .AddApiSetup()
     .AddApplicationServices(configuration)
     .AddServerLogging(configuration)
@@ -13,6 +12,10 @@ builder.Services
     .AddSecretsSetup(configuration)
     .AddAuthSetup(configuration)
     .AddRealTimeCommunication(configuration);
+
+builder.Services
+    .AddCustomMiddlewares()
+    .AddApiBackgroundWorkers();
 
 builder.WebHost.ConfigureKestrel(options =>
 {

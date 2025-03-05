@@ -11,8 +11,4 @@
       <ProjectReference Include="..\DataCat.Server.PDK\DataCat.Server.PDK.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Security\" />
-    </ItemGroup>
-
 </Project>

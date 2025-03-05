@@ -28,7 +28,6 @@ global using DataCat.Storage.Postgres.Schemes;
 global using DataCat.Storage.Postgres.Services;
 global using DataCat.Storage.Postgres.Snapshots;
 global using DataCat.Storage.Postgres.SqlQueries;
-global using DataCat.Storage.Postgres.Workers;
 global using FluentMigrator;
 global using FluentMigrator.Runner;
 global using Microsoft.Extensions.Configuration;

@@ -1,4 +1,4 @@
-namespace DataCat.Server.Application.Commands.Alert.UpdateAlertQuery;
+namespace DataCat.Server.Application.Commands.Alert.Update;
 
 public sealed record UpdateAlertQueryCommand : IRequest<Result>, IAuthorizedCommand
 {

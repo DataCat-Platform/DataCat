@@ -59,4 +59,16 @@ public class AlertController : ApiControllerBase
         var response = await SendAsync(command);
         return HandleCustomResponse(response);
     }
+    
+    [HttpPost("mute/{alertId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> MuteAlert(
+        [FromRoute] string alertId,
+        [FromQuery] TimeSpan nextExecutionTime)
+    {
+        var command = new MuteAlertCommand(alertId, nextExecutionTime);
+        var response = await SendAsync(command);
+        return HandleCustomResponse(response);
+    }
 }

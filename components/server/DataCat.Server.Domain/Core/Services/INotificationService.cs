@@ -9,6 +9,7 @@ public class NotificationService : INotificationService
 {
     public Task SendNotificationAsync(AlertEntity alertEntity, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        Console.WriteLine("SendNotificationAsync");
+        return Task.CompletedTask; 
     }
 }

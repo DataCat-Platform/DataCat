@@ -16,6 +16,7 @@ global using DataCat.Server.Application.Commands.Plugin.Remove;
 global using DataCat.Server.Application.Commands.User.UpdateInfo;
 global using DataCat.Server.Application.Queries.Common;
 global using DataCat.Server.Application.Validations;
+global using DataCat.Server.Domain.Common;
 global using DataCat.Server.Domain.Common.ResultFlow;
 global using DataCat.Server.Domain.Core;
 global using DataCat.Server.Domain.Core.Enums;

@@ -72,6 +72,10 @@ public static class Public
         public static string AlertRawQuery { get; } = nameof(AlertSnapshot.AlertRawQuery).ToSnakeCase();
         public static string AlertDataSourceId { get; } = AlertSnapshot.Alert_DataSourceId.ToSnakeCase();
         public static string AlertNotificationChannelId { get; } = AlertSnapshot.Alert_NotificationChannelId.ToSnakeCase();
+        public static string AlertPreviousExecution { get; } = nameof(AlertSnapshot.AlertPreviousExecution).ToSnakeCase();
+        public static string AlertNextExecution { get; } = nameof(AlertSnapshot.AlertNextExecution).ToSnakeCase();
+        public static string AlertWaitTimeBeforeAlertingInTicks { get; } = nameof(AlertSnapshot.AlertWaitTimeBeforeAlertingInTicks).ToSnakeCase();
+        public static string AlertRepeatIntervalInTicks { get; } = nameof(AlertSnapshot.AlertRepeatIntervalInTicks).ToSnakeCase();
     }
 
     public static class NotificationChannels
