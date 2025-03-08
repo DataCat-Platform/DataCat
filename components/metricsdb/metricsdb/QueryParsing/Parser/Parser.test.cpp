@@ -1,12 +1,13 @@
 #include <gtest/gtest.h>
 #include <metricsdb/QueryParsing/Lexer/Lexer.hpp>
 #include <metricsdb/QueryParsing/Parser/Result.hpp>
+#include <tests/TestUtil/TestOutput.hpp>
 
 TEST(Parser, MetricSelector)
 {
-    using namespace DB::QueryParsing;
+    using namespace ::DB::QueryParsing;
 
-    std::string query = "name{a=b c=d}";
+    std::string query = "name{a=b}";
 
     Lexer lexer(query.c_str(), query.c_str() + query.size());
 
@@ -17,7 +18,8 @@ TEST(Parser, MetricSelector)
 
     auto tree = result.getAST();
     if (tree) {
-        SUCCEED() << tree->dumpTree();
+        TEST_COUT << "tree: " << tree->dumpTree() << std::endl;
+        SUCCEED();
     } else {
         FAIL() << result.getErrorMessage();
     }

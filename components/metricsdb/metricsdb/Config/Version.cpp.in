@@ -1,6 +1,6 @@
 #include <metricsdb/Config/Version.hpp>
 
-namespace DB {
+namespace DataCat::DB {
 
 const unsigned VERSION_MAJOR = @PROJECT_VERSION_MAJOR@;
 const unsigned VERSION_MINOR = @PROJECT_VERSION_MINOR@;

@@ -1,14 +1,9 @@
-#include <iostream>
-#include <metricsdb/Config/Version.hpp>
-#include <metricsdb/Server/Server.hpp>
+#include <metricsdb/Runner/DatabaseRunner.hpp>
 
 int main(int argc, char** argv)
 {
-    std::cout << "DataCat Metrics Database [v." << DB::VERSION_MAJOR << '.'
-              << DB::VERSION_MINOR << '.' << DB::VERSION_PATCH
-              << "]\nCopyright (C) 2025 DataCat\n"
-              << std::endl;
+    using DataCat::DB::DatabaseRunner;
 
-    DB::Server server;
-    server.run();
+    DatabaseRunner runner;
+    runner.run(argc, argv);
 }

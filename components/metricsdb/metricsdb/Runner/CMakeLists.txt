@@ -1,0 +1,14 @@
+add_library(mdb_runner
+  STATIC
+    DatabaseRunner.cpp
+    DatabaseRunner.hpp
+)
+target_include_directories(mdb_runner
+  PUBLIC
+    "${PROJECT_SOURCE_DIR}"
+)
+target_link_libraries(mdb_runner
+  mdb_config
+  mdb_server
+  mdb_core
+)

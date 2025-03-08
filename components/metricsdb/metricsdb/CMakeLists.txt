@@ -1,21 +1,23 @@
-add_executable(mdb main.cpp)
-
-add_subdirectory("Config")
-add_subdirectory("Server")
-add_subdirectory("QueryParsing")
-
-target_link_libraries(
-  mdb
-  mdb_config
-  mdb_server
-  mdb_parser
-  mdb_lexer
+add_executable(mdb
+  main.cpp
+)
+target_include_directories(mdb
+  PUBLIC
+    "${PROJECT_SOURCE_DIR}"
+)
+set_target_properties(mdb
+  PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
 )
 
-target_include_directories(mdb PUBLIC "${PROJECT_SOURCE_DIR}")
+add_subdirectory("Config") # mdb_config
+add_subdirectory("Runner") # mdb_runner
+add_subdirectory("Server") # mdb_server
+add_subdirectory("Core")   # mdb_core
+# add_subdirectory("QueryParsing")
+# add_subdirectory("Storage")
+# add_subdirectory("Writers")
 
-set_target_properties(
-  mdb
-  PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+target_link_libraries(mdb
+  mdb_runner
 )

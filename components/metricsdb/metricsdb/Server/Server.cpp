@@ -5,7 +5,9 @@
 #include <metrics.grpc.pb.h>
 #include <metrics.pb.h>
 
-namespace DB {
+#include <metricsdb/Logging/Macros.hpp>
+
+namespace DataCat::DB {
 
 namespace {
 
@@ -20,27 +22,29 @@ namespace {
         Status SendMetrics(ServerContext* context,
             const SendMetricsRequest* request, Empty* response) override
         {
-            std::cout << "Received." << std::endl;
+            // DATACAT_LOG_INFO << "Receive " << request->GetCachedSize()
+            //                  << "B of metrics" << std::endl;
 
-            auto metrics = request->metrics();
-            for (auto& metric : metrics) {
-                auto tags = metric.tags();
+            // auto metrics = request->metrics();
+            // for (auto& metric : metrics) {
+            //     auto tags = metric.tags();
 
-                switch (metric.data_points_case()) {
-                case Metric::DATA_POINTS_NOT_SET: {
-                }
-                case Metric::kGauge: {
-                }
-                case Metric::kCounter: {
-                }
-                case Metric::kHistogram: {
-                }
-                }
+            //     switch (metric.data_points_case()) {
+            //     case Metric::DATA_POINTS_NOT_SET: {
+            //     }
+            //     case Metric::kGauge: {
+            //     }
+            //     case Metric::kCounter: {
+            //     }
+            //     case Metric::kHistogram: {
+            //     }
+            //     }
 
-                for (auto& tag : tags) {
-                    std::cout << tag.key() << ": " << tag.value() << std::endl;
-                }
-            }
+            //     for (auto& tag : tags) {
+            //         std::cout << tag.key() << ": " << tag.value() <<
+            //         std::endl;
+            //     }
+            // }
 
             return grpc::Status::OK;
         }
@@ -48,19 +52,31 @@ namespace {
 
 }
 
-void Server::run()
+Server::Server(Database& db)
+    : db(db)
 {
-    std::string address = "0.0.0.0:8000";
+}
+
+void Server::run(const std::string& host, const std::string& port)
+{
+    DATACAT_LOG_INFO << "Starting gRPC server" << std::endl;
+
+    std::string address = host + ":" + port;
     MetricsServiceImpl service;
 
     grpc::ServerBuilder builder;
     builder.AddListeningPort(address, grpc::InsecureServerCredentials());
     builder.RegisterService(&service);
-    auto server = builder.BuildAndStart();
+    server = builder.BuildAndStart();
 
-    std::cout << "Server listening on: " << address << std::endl;
+    DATACAT_LOG_INFO << "gRPC server listening on: " << address << std::endl;
+}
 
-    server->Wait();
+void Server::wait()
+{
+    if (server) {
+        server->Wait();
+    }
 }
 
 }

@@ -5,5 +5,5 @@
 Each expression in CatQL can produce either of the following data types: `Number`, `String`, `TimeSpan` or `TimeSeries`.
 
 ```pgsql
-metric{method=GET}[-5m:1m]
+request{id=1,method=GET}[5m:1m]
 ```

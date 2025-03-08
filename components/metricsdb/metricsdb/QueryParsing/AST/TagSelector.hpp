@@ -21,7 +21,7 @@ public:
     const std::string& getValue() { return value; }
     const std::string& getKey() { return key; }
 
-    static ASTPtr Create(const std::string& key, const std::string& value)
+    static ASTPtr create(const std::string& key, const std::string& value)
     {
         return std::make_shared<TagSelector>(key, value);
     }

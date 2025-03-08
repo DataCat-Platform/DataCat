@@ -27,20 +27,20 @@ namespace DB::QueryParsing {
             fbreak;
         };
 
-        '|>' => { token = Parser::token::FORWARD_OPERATOR; fbreak; };
-        '.' => { token = Parser::token::DOT; fbreak; };
-        ':' => { token = Parser::token::COLON; fbreak; };
-        '+' => { token = Parser::token::PLUS; fbreak; };
-        '-' => { token = Parser::token::MINUS; fbreak; };
-        '*' => { token = Parser::token::ASTERISK; fbreak; };
-        '/' => { token = Parser::token::SLASH; fbreak; };
-        '(' => { token = Parser::token::OPEN_PARENTHESIS; fbreak; };
-        ')' => { token = Parser::token::CLOSE_PARENTHESIS; fbreak; };
-        '{' => { token = Parser::token::OPEN_BRACE; fbreak; };
-        '}' => { token = Parser::token::CLOSE_BRACE; fbreak; };
-        '[' => { token = Parser::token::OPEN_SQUARE_BRACKET; fbreak; };
-        ']' => { token = Parser::token::CLOSE_SQUARE_BRACKET; fbreak; };
-        '=' => { token = Parser::token::EQUAL; fbreak; };
+        '|>'    => { token = Parser::token::FORWARD_OPERATOR; fbreak; };
+        '.'     => { token = Parser::token::DOT; fbreak; };
+        ':'     => { token = Parser::token::COLON; fbreak; };
+        '+'     => { token = Parser::token::PLUS; fbreak; };
+        '-'     => { token = Parser::token::MINUS; fbreak; };
+        '*'     => { token = Parser::token::ASTERISK; fbreak; };
+        '/'     => { token = Parser::token::SLASH; fbreak; };
+        '('     => { token = Parser::token::OPEN_PARENTHESIS; fbreak; };
+        ')'     => { token = Parser::token::CLOSE_PARENTHESIS; fbreak; };
+        '{'     => { token = Parser::token::OPEN_BRACE; fbreak; };
+        '}'     => { token = Parser::token::CLOSE_BRACE; fbreak; };
+        '['     => { token = Parser::token::OPEN_SQUARE_BRACKET; fbreak; };
+        ']'     => { token = Parser::token::CLOSE_SQUARE_BRACKET; fbreak; };
+        '='     => { token = Parser::token::EQUAL; fbreak; };
 
         space;
     *|;

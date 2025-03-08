@@ -21,6 +21,7 @@ CTestTestfile.cmake
 *.lib
 *.dylib
 cmake-build-*
+/cmake/build
 
 *.bin
 *.mrk

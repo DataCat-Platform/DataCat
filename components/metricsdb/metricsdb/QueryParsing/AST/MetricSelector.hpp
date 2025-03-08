@@ -15,10 +15,20 @@ public:
         : metricName(std::move(metricName))
         , tagSelectors(std::move(tagSelectors)) {};
 
-    static ASTPtr Create(
+    static ASTPtr create(
         std::string metricName, std::vector<ASTPtr> tagSelectors)
     {
         return std::make_shared<MetricSelector>(metricName, tagSelectors);
+    }
+
+    std::string dumpTree() override
+    {
+        std::string dump = "METRIC[" + metricName + "{";
+        for (auto& tagSelector : tagSelectors) {
+            dump += tagSelector->dumpTree();
+        }
+        dump += "}]";
+        return dump;
     }
 
 private:

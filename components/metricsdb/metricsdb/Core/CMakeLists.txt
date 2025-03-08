@@ -1,0 +1,12 @@
+add_library(mdb_core
+  STATIC
+    Database.cpp
+    Database.hpp
+)
+target_include_directories(mdb_core
+  PUBLIC
+    "${PROJECT_SOURCE_DIR}"
+)
+target_link_libraries(mdb_core
+  mdb_proto
+)

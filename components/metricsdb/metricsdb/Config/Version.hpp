@@ -1,6 +1,6 @@
 #pragma once
 
-namespace DB {
+namespace DataCat::DB {
 
 extern const unsigned VERSION_MAJOR;
 extern const unsigned VERSION_MINOR;

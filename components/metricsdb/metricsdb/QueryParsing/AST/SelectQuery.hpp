@@ -11,7 +11,7 @@ public:
     {
     }
 
-    static ASTPtr Create(ASTPtr expression)
+    static ASTPtr create(ASTPtr expression)
     {
         return std::make_shared<SelectQuery>(expression);
     }
