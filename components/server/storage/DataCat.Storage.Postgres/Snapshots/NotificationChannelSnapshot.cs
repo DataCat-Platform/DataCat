@@ -26,17 +26,19 @@ public static class NotificationChannelSnapshotExtensions
         return new NotificationChannelSnapshot
         {
             NotificationChannelId = notification.Id.ToString(),
-            NotificationDestination = notification.Destination.Value,
-            NotificationSettings = notification.Settings
+            NotificationDestination = notification.NotificationOption.NotificationDestination.Value,
+            NotificationSettings = notification.NotificationOption.Settings
         };
     }
 
-    public static NotificationChannelEntity RestoreFromSnapshot(this NotificationChannelSnapshot snapshot)
+    public static NotificationChannelEntity RestoreFromSnapshot(this NotificationChannelSnapshot snapshot, NotificationChannelManager notificationChannelManager)
     {
+        var destination = NotificationDestination.FromValue(snapshot.NotificationDestination);
+        
         var result = NotificationChannelEntity.Create(
             Guid.Parse(snapshot.NotificationChannelId),
-            NotificationDestination.FromValue(snapshot.NotificationDestination),
-            snapshot.NotificationSettings
+            destination,
+            notificationChannelManager.GetNotificationChannelFactory(destination).Create(snapshot.NotificationSettings).Value
         );
 
         return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(NotificationChannelEntity));

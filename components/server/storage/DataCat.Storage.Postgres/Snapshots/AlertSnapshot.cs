@@ -67,14 +67,14 @@ public static class AlertSnapshotExtensions
         };
     }
 
-    public static AlertEntity RestoreFromSnapshot(this AlertSnapshot snapshot)
+    public static AlertEntity RestoreFromSnapshot(this AlertSnapshot snapshot, NotificationChannelManager notificationChannelManager)
     {
         var result = AlertEntity.Create(
             Guid.Parse(snapshot.AlertId),
             snapshot.AlertDescription,
             QueryEntity.Create(snapshot.AlertDataSource.RestoreFromSnapshot(), snapshot.AlertRawQuery).Value,
             AlertStatus.FromValue(snapshot.AlertStatus),
-            snapshot.AlertNotificationChannel.RestoreFromSnapshot(),
+            snapshot.AlertNotificationChannel.RestoreFromSnapshot(notificationChannelManager),
             snapshot.AlertPreviousExecution,
             snapshot.AlertNextExecution,
             TimeSpan.FromTicks(snapshot.AlertWaitTimeBeforeAlertingInTicks),

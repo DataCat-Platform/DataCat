@@ -7,6 +7,7 @@ global using System.Reflection;
 global using System.Runtime.CompilerServices;
 global using System.Threading.Channels;
 global using Dapper;
+global using DataCat.Server.Application.Alerts;
 global using DataCat.Server.Application.Assembly;
 global using DataCat.Server.Application.Factories;
 global using DataCat.Server.Application.Metrics;

@@ -2,7 +2,8 @@ namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class AlertRepository(
     UnitOfWork unitOfWork,
-    IDbConnectionFactory<NpgsqlConnection> Factory)
+    IDbConnectionFactory<NpgsqlConnection> Factory,
+    NotificationChannelManager notificationChannelManager)
     : IDefaultRepository<AlertEntity, Guid>
 {
     public async Task<AlertEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
@@ -23,7 +24,7 @@ public sealed class AlertRepository(
             param: parameters,
             transaction: unitOfWork.Transaction);
 
-        return result.FirstOrDefault()?.RestoreFromSnapshot();
+        return result.FirstOrDefault()?.RestoreFromSnapshot(notificationChannelManager);
     }
 
     public async IAsyncEnumerable<AlertEntity> SearchAsync(
@@ -51,7 +52,7 @@ public sealed class AlertRepository(
         
         foreach (var alert in result)
         {
-            yield return alert.RestoreFromSnapshot();
+            yield return alert.RestoreFromSnapshot(notificationChannelManager);
         }
     }
 

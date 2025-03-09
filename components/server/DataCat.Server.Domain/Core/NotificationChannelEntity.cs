@@ -2,26 +2,24 @@ namespace DataCat.Server.Domain.Core;
 
 public class NotificationChannelEntity
 {
-    private NotificationChannelEntity(Guid id, NotificationDestination destination, string settings)
+    private NotificationChannelEntity(
+        Guid id, 
+        BaseNotificationOption notificationOption)
     {
         Id = id;
-        Destination = destination;
-        Settings = settings;
+        NotificationOption = notificationOption;
     }
 
     public Guid Id { get; private set; }
 
-    public NotificationDestination Destination { get; private set; }
+    public BaseNotificationOption NotificationOption { get; private set; }
 
-    public string Settings { get; private set; }
-
-    public void ChangeConfiguration(NotificationDestination destination, string settings)
+    public void ChangeConfiguration(BaseNotificationOption settings)
     {
-        Destination = destination;
-        Settings = settings;
+        NotificationOption = settings;
     }
 
-    public static Result<NotificationChannelEntity> Create(Guid id, NotificationDestination? destination, string? settings)
+    public static Result<NotificationChannelEntity> Create(Guid id, NotificationDestination? destination, BaseNotificationOption? settings)
     {
         var validationList = new List<Result<NotificationChannelEntity>>();
 
@@ -32,7 +30,7 @@ public class NotificationChannelEntity
             validationList.Add(Result.Fail<NotificationChannelEntity>(BaseError.FieldIsNull(nameof(destination))));
         }
 
-        if (string.IsNullOrWhiteSpace(settings))
+        if (settings is null)
         {
             validationList.Add(Result.Fail<NotificationChannelEntity>(BaseError.FieldIsNull(nameof(settings))));
         }
@@ -41,6 +39,6 @@ public class NotificationChannelEntity
 
         return validationList.Count != 0 
             ? validationList.FoldResults()!
-            : Result.Success(new NotificationChannelEntity(id, destination!, settings!));
+            : Result.Success(new NotificationChannelEntity(id, settings!));
     }
 }

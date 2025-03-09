@@ -44,6 +44,7 @@ public sealed class AlertNotifier(
                 {
                     alert.SetFire();
                     await notificationService.SendNotificationAsync(alert, stoppingToken);
+                    logger.LogWarning("[{Job}] Alert: {Alert} is fired", nameof(AlertNotifier), alert.Id);
                 }
                 else
                 {

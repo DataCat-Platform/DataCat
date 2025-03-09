@@ -26,8 +26,8 @@ public static class NotificationChannelMappings
         return new NotificationChannelResponse
         {
             Id = alert.Id,
-            Destination = alert.Destination.Name,
-            Settings = alert.Settings
+            Destination = alert.NotificationOption.NotificationDestination.Name,
+            Settings = alert.NotificationOption.Settings
         };
     }
 }

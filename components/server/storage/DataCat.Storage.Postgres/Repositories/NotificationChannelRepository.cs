@@ -2,7 +2,8 @@ namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class NotificationChannelRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
-    UnitOfWork unitOfWork)
+    UnitOfWork unitOfWork,
+    NotificationChannelManager NotificationChannelManager)
     : IDefaultRepository<NotificationChannelEntity, Guid>
 {
     public async Task<NotificationChannelEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
@@ -17,7 +18,7 @@ public sealed class NotificationChannelRepository(
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         var result = await connection.QueryFirstOrDefaultAsync<NotificationChannelSnapshot>(sql, parameters, transaction: unitOfWork.Transaction);
 
-        return result?.RestoreFromSnapshot();
+        return result?.RestoreFromSnapshot(NotificationChannelManager);
     }
 
     public async IAsyncEnumerable<NotificationChannelEntity> SearchAsync(
@@ -43,7 +44,7 @@ public sealed class NotificationChannelRepository(
         while (await reader.ReadAsync(token))
         {
             var snapshot = reader.ReadNotificationChannel();
-            yield return snapshot.RestoreFromSnapshot();
+            yield return snapshot.RestoreFromSnapshot(NotificationChannelManager);
         }
     }
 

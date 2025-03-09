@@ -2,7 +2,8 @@ namespace DataCat.Storage.Postgres.Services;
 
 public class PostgresAlertMonitorService(
     IDbConnectionFactory<NpgsqlConnection> Factory,
-    UnitOfWork unitOfWork)
+    UnitOfWork unitOfWork,
+    NotificationChannelManager notificationChannelManager)
     : IAlertMonitorService
 {
     public async Task<IEnumerable<AlertEntity>> GetAlertsToCheckAsync(int limit = 5, CancellationToken token = default)
@@ -60,7 +61,7 @@ public class PostgresAlertMonitorService(
                 param: parameters,
                 transaction: unitOfWork.Transaction);
 
-        return alertsToCheck.Select(x => x.RestoreFromSnapshot());
+        return alertsToCheck.Select(x => x.RestoreFromSnapshot(notificationChannelManager));
     }
 
     public async Task<IEnumerable<AlertEntity>> GetTriggeredAlertsAsync(int limit = 5, CancellationToken token = default)
@@ -119,6 +120,6 @@ public class PostgresAlertMonitorService(
                 param: parameters,
                 transaction: unitOfWork.Transaction);
 
-        return firedAlerts.Select(x => x.RestoreFromSnapshot());
+        return firedAlerts.Select(x => x.RestoreFromSnapshot(notificationChannelManager));
     }
 }

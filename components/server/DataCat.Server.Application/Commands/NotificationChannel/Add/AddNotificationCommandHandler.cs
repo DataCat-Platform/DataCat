@@ -1,7 +1,8 @@
 namespace DataCat.Server.Application.Commands.NotificationChannel.Add;
 
 public sealed class AddNotificationCommandHandler(
-    IDefaultRepository<NotificationChannelEntity, Guid> notificationChannelRepository)
+    IDefaultRepository<NotificationChannelEntity, Guid> notificationChannelRepository,
+    NotificationChannelManager notificationChannelManager)
     : IRequestHandler<AddNotificationCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(AddNotificationCommand request, CancellationToken cancellationToken)
@@ -10,10 +11,16 @@ public sealed class AddNotificationCommandHandler(
         if (destinationType is null)
             return Result.Fail<Guid>(NotificationChannelError.DestinationNotSupported);
 
+        var factory = notificationChannelManager.GetNotificationChannelFactory(destinationType);
+        var settingsResult = factory.Create(request.Settings);
+        if (settingsResult.IsFailure)
+            return Result.Fail<Guid>(settingsResult.Errors!);
+
         var notificationResult = NotificationChannelEntity.Create(
             Guid.NewGuid(),
             destinationType,
-            request.Settings);
+            settingsResult.Value);
+        
         if (notificationResult.IsFailure)
             return Result.Fail<Guid>(notificationResult.Errors!);
         
