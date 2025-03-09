@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Behaviors;
-
 namespace DataCat.Server.DI;
 
 public static class DependencyInjectionExtensions
@@ -29,7 +27,6 @@ public static class DependencyInjectionExtensions
             
             config.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
-            config.AddOpenBehavior(typeof(TransactionScopeBehavior<,>));
         });
 
         services.AddValidatorsFromAssembly(ApplicationAssembly.Assembly, includeInternalTypes: true);
@@ -37,6 +34,10 @@ public static class DependencyInjectionExtensions
         services.Configure<PluginStoreOptions>(configuration.GetSection("PluginStoreOptions"));
         services.AddSingleton<PluginStoreOptions>(sp => sp.GetRequiredService<IOptions<PluginStoreOptions>>().Value);
         services.AddSingleton<IPluginStorage, DiskPluginStorage>();
+        services.AddSingleton<DataSourceManager>();
+        
+        services.AddSingleton<INotificationService, NotificationService>(); // TODO: Change to normal impl
+        services.AddSingleton<IMetricClient, DataCatDbClient>(); // TODO: Register in another module
 
         return services;
     }

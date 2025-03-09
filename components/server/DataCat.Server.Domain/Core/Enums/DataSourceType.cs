@@ -12,4 +12,5 @@ public abstract class DataSourceType(string name, int value)
     private sealed class PostgreSQLDataSource() : DataSourceType("PostgreSQL", 2);
     
     private sealed class SQLLiteDataSource() : DataSourceType("SQLLite", 3);
+    public static implicit operator string(DataSourceType type) => type.Name;
 }

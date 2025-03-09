@@ -11,10 +11,4 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
-
-    public static IServiceCollection AddApiBackgroundWorkers(this IServiceCollection services)
-    {
-        services.AddHostedService<AlertWorker>();
-        return services;
-    }
 }

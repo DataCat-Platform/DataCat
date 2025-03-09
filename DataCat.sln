@@ -33,11 +33,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7670EE1F-5E0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{6810E2F4-F559-444A-A800-758C8A5BEC23}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{0AC01F62-BA5A-45BA-9E2A-AAF81A2BAB44}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "storage", "storage", "{0AC01F62-BA5A-45BA-9E2A-AAF81A2BAB44}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "alerts", "alerts", "{A1C8675C-1378-4525-9505-B07200A826D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Storage.Postgres", "components\server\configuration-storage\DataCat.Storage.Postgres\DataCat.Storage.Postgres.csproj", "{B0128F4C-E438-42E8-82ED-7D550FF7B4BB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Storage.Postgres", "components\server\storage\DataCat.Storage.Postgres\DataCat.Storage.Postgres.csproj", "{B0128F4C-E438-42E8-82ED-7D550FF7B4BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Notifications.Email", "components\server\notifications\DataCat.Notifications.Email\DataCat.Notifications.Email.csproj", "{8BEA1D96-D492-4625-87D3-FD92F67D91CE}"
 EndProject
@@ -50,6 +50,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "auth", "auth", "{339CA593-1D6F-4280-9C70-7985983A03C1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Auth.Keycloak", "components\server\auth\DataCat.Auth.Keycloak\DataCat.Auth.Keycloak.csproj", "{E8FAF974-E191-445E-9838-DBD5FC08731E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "metrics", "metrics", "{18883BEA-DF25-4871-9C81-5D974688D6DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Metrics.DataCatDb", "components\server\metrics\DataCat.Metrics.DataCatDb\DataCat.Metrics.DataCatDb.csproj", "{F7A1BDCC-8432-4FF4-8404-215A0DA2910F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +83,8 @@ Global
 		{29F60261-0048-4EF0-9291-536A610EFBF8} = {8E5B58CD-9069-427F-BD0F-26F5E797ED62}
 		{339CA593-1D6F-4280-9C70-7985983A03C1} = {6810E2F4-F559-444A-A800-758C8A5BEC23}
 		{E8FAF974-E191-445E-9838-DBD5FC08731E} = {339CA593-1D6F-4280-9C70-7985983A03C1}
+		{18883BEA-DF25-4871-9C81-5D974688D6DB} = {6810E2F4-F559-444A-A800-758C8A5BEC23}
+		{F7A1BDCC-8432-4FF4-8404-215A0DA2910F} = {18883BEA-DF25-4871-9C81-5D974688D6DB}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1621F9FE-91B0-4532-BF6B-E1BFDE263D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -141,5 +147,9 @@ Global
 		{E8FAF974-E191-445E-9838-DBD5FC08731E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8FAF974-E191-445E-9838-DBD5FC08731E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8FAF974-E191-445E-9838-DBD5FC08731E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7A1BDCC-8432-4FF4-8404-215A0DA2910F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7A1BDCC-8432-4FF4-8404-215A0DA2910F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7A1BDCC-8432-4FF4-8404-215A0DA2910F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7A1BDCC-8432-4FF4-8404-215A0DA2910F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

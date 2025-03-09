@@ -3,11 +3,15 @@
 global using System.Reflection;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
+global using DataCat.Metrics.DataCatDb;
 global using DataCat.Server.Application.Assembly;
 global using DataCat.Server.Application.Auth;
+global using DataCat.Server.Application.Behaviors;
 global using DataCat.Server.Application.Commands.Plugin.Add;
+global using DataCat.Server.Application.Metrics;
 global using DataCat.Server.Application.Security;
 global using DataCat.Server.Application.Utils;
+global using DataCat.Server.Domain.Core.Services;
 global using DataCat.Server.Domain.Plugins.Repos;
 global using DataCat.Server.Infrastructure.Migrations;
 global using DataCat.Server.Infrastructure.Options;

@@ -14,8 +14,7 @@ builder.Services
     .AddRealTimeCommunication(configuration);
 
 builder.Services
-    .AddCustomMiddlewares()
-    .AddApiBackgroundWorkers();
+    .AddCustomMiddlewares();
 
 builder.WebHost.ConfigureKestrel(options =>
 {

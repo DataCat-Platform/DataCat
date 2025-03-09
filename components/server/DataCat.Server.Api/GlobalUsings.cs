@@ -1,8 +1,9 @@
 // Global using directives
 
+global using System.Collections.Concurrent;
+global using System.Diagnostics;
 global using DataCat.Export.Metrics.V1;
 global using DataCat.Server.Api.Extensions;
-global using DataCat.Server.Api.Jobs;
 global using DataCat.Server.Api.Mappings;
 global using DataCat.Server.Api.Middlewares;
 global using DataCat.Server.Api.Services;
@@ -31,6 +32,8 @@ global using DataCat.Server.Application.Commands.User.Add;
 global using DataCat.Server.Application.Commands.User.Remove;
 global using DataCat.Server.Application.Commands.User.UpdateInfo;
 global using DataCat.Server.Application.Commands.User.UpdateRole;
+global using DataCat.Server.Application.Metrics;
+global using DataCat.Server.Application.Persistence;
 global using DataCat.Server.Application.Queries.Alert.Get;
 global using DataCat.Server.Application.Queries.Alert.Search;
 global using DataCat.Server.Application.Queries.Dashboard.Get;
@@ -49,6 +52,7 @@ global using DataCat.Server.Application.Validations;
 global using DataCat.Server.DI;
 global using DataCat.Server.Domain.Common.ResultFlow;
 global using DataCat.Server.Domain.Core;
+global using DataCat.Server.Domain.Core.Repositories;
 global using DataCat.Server.Domain.Core.Services;
 global using DataCat.Server.Domain.Identity;
 global using DataCat.Server.Domain.Plugins;
@@ -76,4 +80,5 @@ global using Grpc.Core;
 global using MediatR;
 global using Microsoft.AspNetCore.Mvc;
 global using Newtonsoft.Json;
+global using Npgsql;
 global using Scalar.AspNetCore;

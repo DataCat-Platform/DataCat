@@ -20,7 +20,6 @@
 
     <ItemGroup>
       <Folder Include="Commands\Common\" />
-      <Folder Include="Services\" />
     </ItemGroup>
 
 </Project>
