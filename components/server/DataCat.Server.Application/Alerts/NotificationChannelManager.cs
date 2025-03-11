@@ -1,8 +1,10 @@
 namespace DataCat.Server.Application.Alerts;
 
-public sealed class NotificationChannelManager(IEnumerable<INotificationOptionFactory> factories)
+public sealed class NotificationChannelManager(
+    IServiceProvider serviceProvider,
+    IEnumerable<INotificationOptionFactory> factories)
 {
-    private readonly Dictionary<string, INotificationOptionFactory> _notificationOptionFactoryCache = new();
+    private readonly ConcurrentDictionary<string, INotificationOptionFactory> _notificationOptionFactoryCache = new();
 
     public INotificationOptionFactory GetNotificationChannelFactory(NotificationDestination notificationDestination)
     {

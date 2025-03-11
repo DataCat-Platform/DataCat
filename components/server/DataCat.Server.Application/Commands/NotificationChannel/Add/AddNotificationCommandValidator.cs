@@ -5,7 +5,7 @@ public sealed class AddNotificationCommandValidator : AbstractValidator<AddNotif
     public AddNotificationCommandValidator()
     {
         RuleLevelCascadeMode = CascadeMode.Continue;
-        RuleFor(x => x.Settings).NotEmpty();
+        RuleFor(x => x.Settings).NotEmpty().NotNull();
         RuleFor(x => x.DestinationType).GreaterThan(0);
     }
 }

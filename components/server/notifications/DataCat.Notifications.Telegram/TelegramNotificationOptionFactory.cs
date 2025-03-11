@@ -8,7 +8,7 @@ public sealed class TelegramNotificationOptionFactory : INotificationOptionFacto
     {
         if (string.IsNullOrWhiteSpace(settings))
         {
-            throw new ArgumentNullException(nameof(settings));
+            return Result.Fail<BaseNotificationOption>(BaseError.FieldIsNull(settings));
         }
         
         try
@@ -28,7 +28,24 @@ public sealed class TelegramNotificationOptionFactory : INotificationOptionFacto
         }
         catch (JsonException)
         {
-            throw new InvalidOperationException("Invalid JSON format");
+            return Result.Fail<BaseNotificationOption>("Invalid JSON format");
         }
+    }
+
+    public async Task<Result<INotificationService>> CreateNotificationServiceAsync(
+        BaseNotificationOption notificationOption,
+        ISecretsProvider secretsProvider,
+        CancellationToken cancellationToken = default)
+    {
+        if (notificationOption is not TelegramNotificationOption telegramNotificationOption)
+        {
+            return Result.Fail<INotificationService>("Invalid notification option type");
+        }
+
+        var telegramToken = await secretsProvider.GetSecretAsync(telegramNotificationOption.TelegramTokenPath, cancellationToken);
+        telegramNotificationOption.TelegramToken = telegramToken;
+        
+        var telegramService = new TelegramNotificationService(telegramNotificationOption);
+        return Result.Success<INotificationService>(telegramService);
     }
 }

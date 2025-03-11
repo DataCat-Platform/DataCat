@@ -12,6 +12,7 @@ global using DataCat.Server.Application.Assembly;
 global using DataCat.Server.Application.Factories;
 global using DataCat.Server.Application.Metrics;
 global using DataCat.Server.Application.Persistence;
+global using DataCat.Server.Application.Security;
 global using DataCat.Server.Application.Utils;
 global using DataCat.Server.Domain.Common.ResultFlow;
 global using DataCat.Server.Domain.Core;

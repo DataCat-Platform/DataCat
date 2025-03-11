@@ -7,7 +7,8 @@ public sealed class AlertNotifier(
     IAlertMonitorService alertMonitorService,
     IDefaultRepository<AlertEntity, Guid> alertRepository,
     DataSourceManager dataSourceManager,
-    INotificationService notificationService,
+    NotificationChannelManager notificationChannelManager,
+    ISecretsProvider serviceProvider,
     UnitOfWork unitOfWork,
     ILogger<AlertNotifier> logger)
     : BaseBackgroundWorker(logger)
@@ -43,7 +44,28 @@ public sealed class AlertNotifier(
                 if (isTriggeredYet)
                 {
                     alert.SetFire();
-                    await notificationService.SendNotificationAsync(alert, stoppingToken);
+                    var notificationOptionFactory = notificationChannelManager.GetNotificationChannelFactory(alert.NotificationChannelEntity.NotificationOption.NotificationDestination);
+                    var optionResult =
+                        notificationOptionFactory.Create(alert.NotificationChannelEntity.NotificationOption.Settings);
+
+                    if (optionResult.IsFailure)
+                    {
+                        logger.LogError("[{Job}] {Alert} has errors during alerting. Error: {@Errors}", nameof(AlertNotifier), alert.Id, optionResult.Errors);
+                        await alertChannel.Writer.WriteAsync(alert, token);
+                        return;
+                    }
+
+                    var notificationServiceResult =
+                        await notificationOptionFactory.CreateNotificationServiceAsync(optionResult.Value, serviceProvider, cancellationToken: token);
+
+                    if (notificationServiceResult.IsFailure)
+                    {
+                        logger.LogError("[{Job}] {Alert} has errors during alerting. Errors: {@Errors}", nameof(AlertNotifier), alert.Id, optionResult.Errors);
+                        await alertChannel.Writer.WriteAsync(alert, token);
+                        return;
+                    }
+                        
+                    await notificationServiceResult.Value.SendNotificationAsync(alert, stoppingToken);
                     logger.LogWarning("[{Job}] Alert: {Alert} is fired", nameof(AlertNotifier), alert.Id);
                 }
                 else

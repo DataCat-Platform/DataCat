@@ -11,6 +11,7 @@ builder.Services
     .AddMigrationSetup(configuration)
     .AddSecretsSetup(configuration)
     .AddAuthSetup(configuration)
+    .AddNotificationsSetup(configuration)
     .AddRealTimeCommunication(configuration);
 
 builder.Services

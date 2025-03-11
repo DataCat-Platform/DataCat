@@ -36,7 +36,6 @@ public static class DependencyInjectionExtensions
         services.AddSingleton<IPluginStorage, DiskPluginStorage>();
         services.AddSingleton<DataSourceManager>();
         
-        services.AddSingleton<INotificationService, NotificationService>(); // TODO: Change to normal impl
         services.AddSingleton<IMetricClient, DataCatDbClient>(); // TODO: Register in another module
 
         return services;
@@ -94,6 +93,43 @@ public static class DependencyInjectionExtensions
         services.Configure<AuthMappingOptions>(configuration.GetSection("AuthMappingOptions"));
         services.AddSingleton<AuthMappingOptions>(sp => sp.GetRequiredService<IOptions<AuthMappingOptions>>().Value);
         PluginLoader.LoadAuthPlugin(services, configuration["AuthType"]!, configuration);
+        return services;
+    }
+
+    public static IServiceCollection AddNotificationsSetup(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddSingleton<NotificationChannelManager>();
+        
+        string[] assemblyFiles = ["DataCat.Notifications.Email.dll", "DataCat.Notifications.Telegram.dll"];
+        var pluginDirectory = AppContext.BaseDirectory;
+
+        foreach (var notificationAssemblyName in assemblyFiles)
+        {
+            var assemblyFile = Path.Combine(pluginDirectory, notificationAssemblyName);
+            
+            if (!File.Exists(assemblyFile))
+                throw new Exception($"Plugin assembly not found: {assemblyFile}");
+
+            var assembly = Assembly.LoadFrom(assemblyFile);
+            
+            var pluginType = assembly.GetTypes()
+                .FirstOrDefault(t => typeof(INotificationPlugin).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false });
+
+            if (pluginType == null)
+                throw new Exception($"No implementation of {nameof(INotificationPlugin)} found in {assemblyFile}");
+
+            if (Activator.CreateInstance(pluginType) is INotificationPlugin plugin)
+            {
+                plugin.RegisterNotificationDestinationLibrary(services, configuration);
+            }
+            else
+            {
+                throw new Exception($"Failed to create an instance of {pluginType.FullName}");
+            }
+        }
+
         return services;
     }
 

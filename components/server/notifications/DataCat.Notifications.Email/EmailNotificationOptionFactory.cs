@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Security;
+
 namespace DataCat.Notifications.Email;
 
 public sealed class EmailNotificationOptionFactory : INotificationOptionFactory
@@ -8,7 +10,7 @@ public sealed class EmailNotificationOptionFactory : INotificationOptionFactory
     {
         if (string.IsNullOrWhiteSpace(settings))
         {
-            throw new ArgumentNullException(nameof(settings));
+            return Result.Fail<BaseNotificationOption>(BaseError.FieldIsNull(settings));
         }
         
         try
@@ -32,7 +34,18 @@ public sealed class EmailNotificationOptionFactory : INotificationOptionFactory
         }
         catch (JsonException)
         {
-            throw new InvalidOperationException("Invalid JSON format");
+            return Result.Fail<BaseNotificationOption>("Invalid JSON format");
         }
+    }
+
+    public async Task<Result<INotificationService>> CreateNotificationServiceAsync(
+        BaseNotificationOption notificationOption, 
+        ISecretsProvider secretsProvider,
+        CancellationToken cancellationToken = default)
+    {
+        await Task.CompletedTask;
+        return notificationOption is not EmailNotificationOption emailNotificationOption 
+            ? Result.Fail<INotificationService>("Unknown notification option type") 
+            : Result.Success<INotificationService>(new EmailNotificationService(emailNotificationOption));
     }
 }

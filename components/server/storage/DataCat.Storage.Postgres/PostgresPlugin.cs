@@ -63,7 +63,7 @@ public sealed class PostgresPlugin : IDatabasePlugin
                 .WithIdentity("AlertNotifier-trigger")
                 .WithSimpleSchedule(action =>
                 {
-                    action.WithIntervalInSeconds(5).RepeatForever();
+                    action.WithIntervalInSeconds(20).RepeatForever();
                 })
             );
             #endregion

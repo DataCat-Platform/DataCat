@@ -10,10 +10,17 @@ public sealed record TelegramNotificationOption : BaseNotificationOption
         TelegramTokenPath = telegramTokenPath;
         ChatId = chatId;
     }
+
+    private string? _telegramToken;
+    public string TelegramToken
+    {
+        get => _telegramToken ?? throw new InvalidOperationException("TelegramToken is not set.");
+        set => _telegramToken = value ?? throw new ArgumentNullException(nameof(value), "TelegramToken cannot be null.");
+    }
     
     public string TelegramTokenPath { get; init; }
     public string ChatId { get; init; }
-
+    
     public static Result<BaseNotificationOption> Create(string telegramTokenPath, string chatId)
     {
         var validationList = new List<Result<BaseNotificationOption>>();

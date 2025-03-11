@@ -13,7 +13,7 @@ public sealed class UpdateNotificationCommandValidator : AbstractValidator<Updat
                     context.AddFailure("NotificationChannel Id must be a Guid");
                 }
             });
-        RuleFor(x => x.Settings).NotEmpty();
+        RuleFor(x => x.Settings).NotEmpty().NotNull();
         RuleFor(x => x.DestinationType).GreaterThan(0);
     }
 }
