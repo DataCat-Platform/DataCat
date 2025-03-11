@@ -5,12 +5,17 @@ var configuration = builder.Configuration;
 
 builder.Services.AddGrpc();
 builder.Services
-    .AddCustomMiddlewares()
     .AddApiSetup()
     .AddApplicationServices(configuration)
     .AddServerLogging(configuration)
     .AddMigrationSetup(configuration)
+    .AddSecretsSetup(configuration)
+    .AddAuthSetup(configuration)
+    .AddNotificationsSetup(configuration)
     .AddRealTimeCommunication(configuration);
+
+builder.Services
+    .AddCustomMiddlewares();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -41,8 +46,10 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseRouting();
+
 app.UseLoggingRequests();
 app.UseExceptionHandling();
+app.UseCustomAuth();
 
 app.MapHub<MetricsHub>("/datacat-metrics");
 app.MapGrpcService<ReceiveMetricService>();

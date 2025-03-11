@@ -1,6 +1,6 @@
 namespace DataCat.Server.Api.Controllers;
 
-public class PanelController : ApiControllerBase
+public sealed class PanelController : ApiControllerBase
 {
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(OverviewDashboardResponse), StatusCodes.Status200OK)]

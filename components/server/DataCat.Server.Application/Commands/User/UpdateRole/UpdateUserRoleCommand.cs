@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.User.UpdateRole;
 
-public sealed record UpdateUserRoleCommand : IRequest<Result>
+public sealed record UpdateUserRoleCommand : IRequest<Result>, IAuthorizedCommand
 {
     public required string UserId { get; init; }
     

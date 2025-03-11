@@ -7,10 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\metrics\DataCat.Metrics.DataCatDb\DataCat.Metrics.DataCatDb.csproj" />
+        
+      <ProjectReference Include="..\notifications\DataCat.Notifications.Email\DataCat.Notifications.Email.csproj" />
+      <ProjectReference Include="..\notifications\DataCat.Notifications.Telegram\DataCat.Notifications.Telegram.csproj" />
+        
+      <ProjectReference Include="..\storage\DataCat.Storage.Postgres\DataCat.Storage.Postgres.csproj" />
+        
       <ProjectReference Include="..\DataCat.Server.Application\DataCat.Server.Application.csproj" />
       <ProjectReference Include="..\DataCat.Server.Domain\DataCat.Server.Domain.csproj" />
       <ProjectReference Include="..\DataCat.Server.Infrastructure\DataCat.Server.Infrastructure.csproj" />
-      <ProjectReference Include="..\DataCat.Postgres\DataCat.Postgres.csproj" />
       <ProjectReference Include="..\DataCat.Server.Metrics\DataCat.Server.Metrics.csproj" />
     </ItemGroup>
 

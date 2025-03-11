@@ -1,6 +1,6 @@
 namespace DataCat.Server.Api.Controllers;
 
-public class MetaController(IDatabaseAssemblyScanner databaseAssemblyScanner) : ApiControllerBase
+public sealed class MetaController(IDatabaseAssemblyScanner databaseAssemblyScanner) : ApiControllerBase
 {
     [HttpGet("database-schema")]
     public IActionResult GetDatabaseSchema()

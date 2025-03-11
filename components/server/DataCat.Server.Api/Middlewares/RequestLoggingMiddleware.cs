@@ -1,6 +1,6 @@
 namespace DataCat.Server.Api.Middlewares;
 
-public class RequestLoggingMiddleware(ILogger<RequestLoggingMiddleware> logger) : IMiddleware
+public sealed class RequestLoggingMiddleware(ILogger<RequestLoggingMiddleware> logger) : IMiddleware
 {
     private readonly List<string> ByPassRequestLogging = [".js", ".angular", "scalar", "swagger", "favicon.ico", ".map", ".css", ".woff", ".mjs", "@vite"];
     

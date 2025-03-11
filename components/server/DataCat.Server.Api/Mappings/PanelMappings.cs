@@ -44,9 +44,13 @@ public static class PanelMappings
             Query = new PanelQueryResponse
             {
                 Query = panel.QueryEntity.RawQuery,
-                DataSourceName = panel.QueryEntity.DataSourceEntity.Name,
-                DataSourceType = panel.QueryEntity.DataSourceEntity.DataSourceType.Name,
-                ConnectionString = panel.QueryEntity.DataSourceEntity.ConnectionString
+                DataSource = new DataSourceResponse
+                {
+                    Id = panel.QueryEntity.DataSourceEntity.Id,
+                    Name = panel.QueryEntity.DataSourceEntity.Name,
+                    Type = panel.QueryEntity.DataSourceEntity.DataSourceType.Name,
+                    ConnectionString = panel.QueryEntity.DataSourceEntity.ConnectionString    
+                }
             },
             Height = panel.DataCatLayout.Height,
             Width = panel.DataCatLayout.Width,

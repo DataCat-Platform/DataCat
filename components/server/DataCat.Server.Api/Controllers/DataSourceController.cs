@@ -1,6 +1,6 @@
 namespace DataCat.Server.Api.Controllers;
 
-public class DataSourceController : ApiControllerBase
+public sealed class DataSourceController : ApiControllerBase
 {
     [HttpPost("add")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]

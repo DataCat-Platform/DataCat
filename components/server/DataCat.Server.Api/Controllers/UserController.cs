@@ -1,6 +1,6 @@
 namespace DataCat.Server.Api.Controllers;
 
-public class UserController : ApiControllerBase
+public sealed class UserController : ApiControllerBase
 {
     [HttpGet("search")]
     [ProducesResponseType(typeof(UserResponse[]), StatusCodes.Status200OK)]
