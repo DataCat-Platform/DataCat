@@ -1,7 +1,11 @@
 add_library(mdb_server
   STATIC
-    "Server.hpp"
-    "Server.cpp"
+    "WritersServer.hpp"
+    "WritersServer.cpp"
+    "ReadersServer.hpp"
+    "ReadersServer.cpp"
+    "ReaderRequestHandler.hpp"
+    "ReaderRequestHandler.cpp"
 )
 target_include_directories(mdb_server
   PUBLIC
@@ -11,6 +15,15 @@ target_include_directories(mdb_server
 include("${PROJECT_SOURCE_DIR}/cmake/grpc.cmake")
 
 target_link_libraries(mdb_server
-  grpc++
-  mdb_proto
+  PRIVATE
+    grpc++
+    mdb_proto
+)
+
+find_package(Poco REQUIRED Foundation Net)
+
+target_link_libraries(mdb_server
+  PUBLIC
+    Poco::Foundation
+    Poco::Net
 )
