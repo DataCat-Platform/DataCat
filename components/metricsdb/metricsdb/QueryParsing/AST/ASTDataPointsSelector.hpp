@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
 #include <metricsdb/QueryParsing/AST/ASTBase.hpp>
 #include <metricsdb/QueryParsing/AST/ASTTagMatcher.hpp>
 #include <metricsdb/QueryParsing/AST/TimeSpan.hpp>
@@ -19,6 +16,16 @@ public:
     ASTPtrs tagMatchers;
     TimeSpan timeSpan;
     int64_t pivot;
+
+    void dump(std::ostream& ostr) override
+    {
+        ostr << "DataPointsSelector(";
+        for (auto tagMatcher : tagMatchers) {
+            tagMatcher->dump(ostr);
+            ostr << ", ";
+        }
+        ostr << "[" << timeSpan.from << ":" << timeSpan.to << "], " << pivot << ")";
+    }
 };
 
 }

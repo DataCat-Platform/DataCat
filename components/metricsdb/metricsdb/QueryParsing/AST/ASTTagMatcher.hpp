@@ -19,9 +19,11 @@ public:
     {
     }
 
+    Kind kind;
     std::string key;
     std::string value;
-    Kind kind;
+
+    void dump(std::ostream& ostr) override { ostr << "TagMatcher(=, " << key << ", " << value << ")"; }
 };
 
 }

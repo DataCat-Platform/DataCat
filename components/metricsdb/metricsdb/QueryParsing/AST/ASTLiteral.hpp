@@ -2,40 +2,58 @@
 
 #include <string>
 
-#include <metricsdb/QueryParsing/AST/ASTBase.hpp>
+#include <metricsdb/QueryParsing/AST/ASTExpression.hpp>
 
 namespace DB::QueryParsing {
 
-class ASTLiteral : public ASTBase { };
+class ASTLiteral : public ASTExpression { };
 
-class ScalarLiteral : public ASTLiteral {
+class ASTIntegerLiteral : public ASTLiteral {
 public:
-    ScalarLiteral(double scalar)
-        : scalar(scalar)
+    ASTIntegerLiteral(int64_t value)
+        : value(value)
     {
     }
 
-    double scalar;
+    int64_t value;
+
+    void dump(std::ostream& ostr) override { ostr << "DurationLiteral(" << value << ")"; }
 };
 
-class StringLiteral : public ASTBase {
+class ASTFloatLiteral : public ASTLiteral {
 public:
-    StringLiteral(std::string string)
-        : string(string)
+    ASTFloatLiteral(double value)
+        : value(value)
     {
     }
 
-    std::string string;
+    double value;
+
+    void dump(std::ostream& ostr) override { ostr << "FloatLiteral(" << value << ")"; }
 };
 
-class DurationLiteral : public ASTBase {
+class ASTStringLiteral : public ASTLiteral {
 public:
-    DurationLiteral(int64_t milliseconds)
+    ASTStringLiteral(std::string value)
+        : value(value)
+    {
+    }
+
+    std::string value;
+
+    void dump(std::ostream& ostr) override { ostr << "StringLiteral(" << value << ")"; }
+};
+
+class ASTDurationLiteral : public ASTLiteral {
+public:
+    ASTDurationLiteral(int64_t milliseconds)
         : milliseconds(milliseconds)
     {
     }
 
     int64_t milliseconds;
+
+    void dump(std::ostream& ostr) override { ostr << "DurationLiteral(" << milliseconds << ")"; }
 };
 
 }

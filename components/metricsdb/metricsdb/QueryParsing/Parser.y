@@ -70,11 +70,10 @@ namespace DB::QueryParsing {
 %token ASTERISK                 "*"
 %token SLASH                    "/"
 %token COLON                    ":"
-%token DOT                      "."
 %token AT                       "@"
 
 // Special.
-%token END
+%token END 0
 %token ERROR
 
 
@@ -94,13 +93,13 @@ namespace DB::QueryParsing {
 %type <ASTPtr>      tag_matcher
 
 // Helpers.
-%type <ASTPtrs>                 function_call_arguments_list
-%type <ASTPtrs>                 tag_matchers_list
-%type <int64_t>                 opt_timestamp
-%type <TimeSpan>                opt_time_span
-%type <int64_t>                 opt_duration
-%type <std::string>             tag_key
-%type <std::string>             tag_value
+%type <ASTPtrs>     function_call_arguments_list
+%type <ASTPtrs>     tag_matchers_list
+%type <int64_t>     opt_timestamp
+%type <TimeSpan>    opt_time_span
+%type <int64_t>     opt_duration
+%type <std::string> tag_key
+%type <std::string> tag_value
 
 
 // Initial rule.
@@ -110,12 +109,20 @@ namespace DB::QueryParsing {
 // Grammar rules definitions.
 %%
 query:
-    expression { result.setAST($1); }
+    expression END { result.setAST($1); }
     ;
 
 expression:
     data_points_selector
         { $$ = $1; }
+    | INTEGER
+        { $$ = createAST<ASTIntegerLiteral>($1); }
+    | FLOAT
+        { $$ = createAST<ASTFloatLiteral>($1); }
+    | DURATION
+        { $$ = createAST<ASTDurationLiteral>($1); }
+    | STRING
+        { $$ = createAST<ASTStringLiteral>($1); }
     | "(" expression ")"
         { $$ = $2; }
     | expression "+" expression
@@ -134,7 +141,7 @@ expression:
 
 // Function call. Example: clamp 1 -1
 function:
-    IDENTIFIER "(" function_call_arguments_list ")" { $$ = createAST<ASTFunction>($1, $3); }
+    IDENTIFIER function_call_arguments_list { $$ = createAST<ASTFunction>($1, $2); }
     ;
 function_call_arguments_list:
     %empty                                      { $$ = std::vector<ASTPtr>(); }
@@ -170,12 +177,13 @@ tag_key:
     | IDENTIFIER    { $$ = $1; }
 tag_value:
     STRING          { $$ = $1; }
+    | INTEGER       { $$ = std::to_string($1); }
     | IDENTIFIER    { $$ = $1; }
 %%
 
 void DB::QueryParsing::Parser::error(const location_type& location, const std::string& errorMessage)
 {
     std::stringstream ss(errorMessage);
-    ss << " @ (" << location.begin.line << ", " << location.begin.column << ")";
+    ss << "Bad query: parsing failed at position (" << location.begin.line << "," << location.begin.column << ").";
     result.error(ss.str());
 }

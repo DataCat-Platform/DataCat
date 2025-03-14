@@ -14,6 +14,15 @@ public:
 
     ASTPtr expression;
     ASTPtr function;
+
+    void dump(std::ostream& ostr) override
+    {
+        ostr << "FunctionCall(";
+        expression->dump(ostr);
+        ostr << ", ";
+        function->dump(ostr);
+        ostr << ")";
+    }
 };
 
 }

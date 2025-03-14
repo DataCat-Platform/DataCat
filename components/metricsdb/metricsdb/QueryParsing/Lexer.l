@@ -26,7 +26,7 @@ namespace DB::QueryParsing {
             fbreak;
         };
 
-        alpha.alnum* => {
+        alpha.(alnum | '.' alnum)* => {
             token = Parser::token::IDENTIFIER;
             Parser::semantic_type identifier(std::string(ts, te));
             value->move<std::string>(identifier);
@@ -41,7 +41,6 @@ namespace DB::QueryParsing {
         };
 
         '|>'    => { token = Parser::token::FORWARD_OPERATOR; fbreak; };
-        '.'     => { token = Parser::token::DOT; fbreak; };
         ':'     => { token = Parser::token::COLON; fbreak; };
         '+'     => { token = Parser::token::PLUS; fbreak; };
         '-'     => { token = Parser::token::MINUS; fbreak; };
@@ -79,7 +78,6 @@ Parser::token_type Lexer::lex(ValueType value, LocationType location) {
     location->end.column = te - s;
 
     if (token == Parser::token::END && p != pe && te != pe) {
-        std::cerr << "Unexpected input: \"" << std::string(te, pe) << "\"" << std::endl;
         token = Parser::token::ERROR;
     }
 

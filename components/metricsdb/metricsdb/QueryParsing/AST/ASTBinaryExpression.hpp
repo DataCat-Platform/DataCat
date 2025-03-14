@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include <metricsdb/QueryParsing/AST/ASTBase.hpp>
 #include <metricsdb/QueryParsing/AST/ASTExpression.hpp>
 
@@ -24,6 +26,24 @@ public:
     Kind kind;
     ASTPtr left;
     ASTPtr right;
+
+    void dump(std::ostream& ostr) override
+    {
+        std::unordered_map<Kind, std::string> kindToStr = {
+            { Kind::ADDITION, "+" },
+            { Kind::SUBSTRACTION, "-" },
+            { Kind::DIVISION, "/" },
+            { Kind::MULTIPLICATION, "*" },
+        };
+
+        ostr << "BinaryExpression(";
+        ostr << kindToStr[kind];
+        ostr << ", ";
+        left->dump(ostr);
+        ostr << ", ";
+        right->dump(ostr);
+        ostr << ")";
+    }
 };
 
 }

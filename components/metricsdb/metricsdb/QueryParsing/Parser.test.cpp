@@ -1,32 +1,34 @@
+#include <sstream>
+
 #include <gtest/gtest.h>
+
+#include <metricsdb/QueryParsing/AST/ASTFunctionCall.hpp>
 #include <metricsdb/QueryParsing/Lexer.hpp>
+#include <metricsdb/QueryParsing/Parser.hpp>
 #include <metricsdb/QueryParsing/Result.hpp>
 
-TEST(Parser, MetricSelector)
+namespace DB::QueryParsing {
+
+TEST(Parser, Query)
 {
-    // using namespace ::DB::QueryParsing;
+    std::string query = "{x=1 x.y=\"v\"}\n"
+                        "|> exp\n"
+                        "|> clamp 1 2";
 
-    // std::string query = "name{a=b} @ 123242224";
+    Result result;
+    Lexer lexer(query.data(), query.data() + query.length());
+    Parser parser(lexer, result);
 
-    // ASTBase tree = ASTSelectQuery(ASTFunctionCall("clamp",
-    //     {
-    //         ASTLiteral(1),
-    //         ASTLiteral(-1),
-    //     },
-    //     ASTSelector(ASTTagMatcher("a", "b"))));
+    if (parser.parse()) {
+        FAIL() << result.getMessage();
+    }
 
-    // Lexer lexer(query.c_str(), query.c_str() + query.size());
+    auto tree = result.getAST().get();
 
-    // Result result;
-    // Parser parser(lexer, result);
+    std::stringstream ss;
+    tree->dump(ss);
 
-    // parser.parse();
+    FAIL() << ss.str();
+}
 
-    // auto tree = result.getAST();
-    // if (tree) {
-    //     TEST_COUT << "tree: " << tree->dumpTree() << std::endl;
-    //     SUCCEED();
-    // } else {
-    //     FAIL() << result.getErrorMessage();
-    // }
 }

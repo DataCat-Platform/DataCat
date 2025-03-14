@@ -34,5 +34,21 @@ public:
 
     Kind kind;
     ASTPtrs arguments;
+
+    void dump(std::ostream& ostr) override
+    {
+        std::unordered_map<Kind, std::string> kindToStr = {
+            { Kind::CLAMP, "clamp" },
+            { Kind::EXP, "exp" },
+            { Kind::SORT, "sort" },
+        };
+
+        ostr << "Function(" << kindToStr[kind];
+        for (auto arg : arguments) {
+            ostr << ", ";
+            arg->dump(ostr);
+        }
+        ostr << ")";
+    }
 };
 }
