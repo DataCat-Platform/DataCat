@@ -1,15 +1,15 @@
 #pragma once
 
-#include <metricsdb/QueryParsing/Parser/Parser.hpp>
+#include <metricsdb/QueryParsing/Parser.hpp>
 
 namespace DB::QueryParsing {
 
 class Lexer {
+public:
     using ValueType = Parser::value_type*;
     using LocationType = Parser::location_type*;
     using TokenType = Parser::token_type;
 
-public:
     Lexer(const char* p, const char* pe);
 
     TokenType lex(ValueType value, LocationType location);

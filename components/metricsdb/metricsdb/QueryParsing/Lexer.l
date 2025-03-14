@@ -1,4 +1,4 @@
-#include <metricsdb/QueryParsing/Lexer/Lexer.hpp>
+#include <metricsdb/QueryParsing/Lexer.hpp>
 #include <iostream>
 
 namespace DB::QueryParsing {
@@ -6,8 +6,21 @@ namespace DB::QueryParsing {
 %%{
     machine lexer;
     main := |*
+        digit+ 'ms' => {
+            token = Parser::token::DURATION;
+            Parser::semantic_type number(strtol(std::string(ts, te - 2).c_str(), nullptr, 10));
+            value->move<int64_t>(number);
+            fbreak;
+        };
+        digit+ ('s' | 'm' | 'h' | 'd' | 'w' | 'y') => {
+            token = Parser::token::DURATION;
+            Parser::semantic_type number(strtol(std::string(ts, te - 1).c_str(), nullptr, 10));
+            value->move<int64_t>(number);
+            fbreak;
+        };
+
         digit+ => {
-            token = Parser::token::NUMBER;
+            token = Parser::token::INTEGER;
             Parser::semantic_type number(strtol(std::string(ts, te).c_str(), nullptr, 10));
             value->move<int>(number);
             fbreak;
@@ -41,6 +54,7 @@ namespace DB::QueryParsing {
         '['     => { token = Parser::token::OPEN_SQUARE_BRACKET; fbreak; };
         ']'     => { token = Parser::token::CLOSE_SQUARE_BRACKET; fbreak; };
         '='     => { token = Parser::token::EQUAL; fbreak; };
+        '@'     => { token = Parser::token::AT; fbreak; };
 
         space;
     *|;

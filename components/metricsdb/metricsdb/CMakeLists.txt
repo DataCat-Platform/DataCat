@@ -10,11 +10,11 @@ set_target_properties(mdb
     RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
 )
 
-add_subdirectory("Config") # mdb_config
-add_subdirectory("Runner") # mdb_runner
-add_subdirectory("Server") # mdb_server
-add_subdirectory("Core")   # mdb_core
-# add_subdirectory("QueryParsing")
+add_subdirectory("Config")        # mdb_config
+add_subdirectory("Runner")        # mdb_runner
+add_subdirectory("Server")        # mdb_server
+add_subdirectory("Core")          # mdb_core
+add_subdirectory("QueryParsing")  # mdb_lexer, mdb_parser
 # add_subdirectory("Storage")
 # add_subdirectory("Writers")
 
