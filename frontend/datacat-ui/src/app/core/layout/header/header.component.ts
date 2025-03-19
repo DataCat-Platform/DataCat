@@ -1,23 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from "primeng/api";
-import { Menubar } from "primeng/menubar";
-import { Popover } from "primeng/popover";
 import { Button } from "primeng/button";
-import { RouterLink } from "@angular/router";
+import { Drawer } from "primeng/drawer";
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    Menubar,
-    Popover,
     Button,
-    RouterLink
+    Drawer
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit {
+  visible = false;
+
   mainItems: MenuItem[] = null!;
   settingsItems: MenuItem[] = null!;
 
