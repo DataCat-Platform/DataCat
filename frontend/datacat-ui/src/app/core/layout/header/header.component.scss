@@ -1,16 +1,1 @@
-/* Глобальные стили для тултипов */
-::ng-deep .p-tooltip {
-  font-size: 0.875rem !important;
-  padding: 0.5rem 0.75rem !important;
-}
 
-/* Стили для иконок в закрытом состоянии */
-::ng-deep .p-drawer:not(.p-drawer-visible) .p-button-label {
-  display: none !important;
-}
-
-/* Фикс позиционирования */
-::ng-deep .p-drawer-sidebar {
-  position: fixed !important;
-  height: 100vh !important;
-}
