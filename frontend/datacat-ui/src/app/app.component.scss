@@ -1,22 +1,9 @@
-/* Основной контент */
 .main-content {
-  transition: padding 0.3s ease-in-out; /* Плавный переход */
+  transition: padding 0.3s ease-in-out;
+  padding-left: 95px;
 }
 
-/* Сдвиг контента при открытии drawer */
+/* move content when open p-drawer */
 .main-content.shifted {
-  padding-left: 300px; /* Сдвигаем контент вправо */
-  overflow: auto; /* Включаем прокрутку, если контент не помещается */
-}
-
-/* Стили для drawer */
-.p-drawer {
-  width: 300px; /* Ширина drawer */
-  height: 100vh; /* Высота на весь экран */
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  background-color: white;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1); /* Тень для красоты */
+  padding-left: 315px;
 }

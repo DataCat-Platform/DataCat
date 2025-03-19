@@ -1,26 +1,73 @@
-<!--<p-menubar [model]="mainItems">-->
-<!--  <ng-template #end>-->
-<!--    <p-button (click)="op.toggle($event)" icon="pi pi-cog" label="Settings" severity="secondary"/>-->
-<!--    <p-popover #op [style]="{'&#45;&#45;p-popover-arrow-offset': '90%'}">-->
-<!--      <div class="flex flex-col gap-4 w-[10rem]">-->
-<!--        <ng-container *ngFor="let item of settingsItems[0].items">-->
-<!--          <div class="flex items-center gap-4">-->
-<!--            <i [class]="item.icon"></i>-->
-<!--            <span><a [routerLink]="item.routerLink">{{ item.label }}</a></span>-->
-<!--          </div>-->
-<!--        </ng-container>-->
-<!--      </div>-->
-<!--    </p-popover>-->
-<!--  </ng-template>-->
-<!--</p-menubar>-->
+<p-drawer
+  (change)="onVisibleChange(visible)"
+  [closable]="false"
+  [dismissible]="false"
+  [modal]="false"
+  [visible]="visible"
+  styleClass="!w-[300px]">
 
-<p-drawer [(visible)]="visible" [closable]="false">
-  <div>
-    <!-- Контент drawer -->
-    <p>Это содержимое drawer</p>
-    <p-button (click)="visible = false" label="Закрыть"></p-button>
-  </div>
+  <ng-template #header>
+    <div class="relative">
+      <div
+        (click)="onVisibleChange(false)"
+        class="pi pi-minus hover:text-primary hover:bg-gray-200 p-2 rounded-full transition-all duration-300"
+        style="font-size: 2rem; cursor: pointer; position: absolute; bottom: 40px; left: 215px;"
+      >
+      </div>
+    </div>
+
+    <img alt="DataCat Logo" class="block mx-auto" height="150" ngSrc="datacat.png" width="150"/>
+  </ng-template>
+
+  <ng-template #content>
+    <div class="card flex justify-center">
+      <p-panelmenu
+        [model]="mainItems"
+        [multiple]="true">
+      </p-panelmenu>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    footer ...
+  </ng-template>
 </p-drawer>
 
-вфывфывфы
+<p-drawer
+  (change)="onVisibleChange(visible)"
+  [closable]="false"
+  [dismissible]="false"
+  [modal]="false"
+  [visible]="!visible"
+  styleClass="!w-[80px]">
 
+  <ng-template #header>
+    <img (click)="onVisibleChange(true)" alt="DataCat Logo" class="block mx-auto"
+         height="60"
+         ngSrc="datacat.png"
+         style="cursor: pointer"
+         width="60"
+    />
+  </ng-template>
+
+  <ng-template #content>
+    <div class="flex flex-col">
+      <ul>
+        @for (item of subItems; track item.routerLink) {
+          @if (item.label != 'divider') {
+            <li
+              [pTooltip]="item.tooltip"
+              [routerLink]="item.routerLink"
+              [ngClass]="item.icon"
+              class="mb-4 hover:text-primary rounded  hover:scale-125 transition-all duration-300"
+              style="font-size: 2rem; cursor: pointer;">
+            </li>
+          } @else {
+            <p-divider></p-divider>
+          }
+        }
+      </ul>
+    </div>
+  </ng-template>
+
+</p-drawer>
