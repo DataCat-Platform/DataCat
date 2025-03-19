@@ -21,6 +21,8 @@ All notable changes to this project will be documented in this file.
 - *(datacat-server)* Add alerts and notification channels
 - *(datacat-server)* Implement secrets interface, auth interface
 - *(datacat-server)* Implement all alert logic for telegram
+- *(datacat-ui)* Add expanded drawer
+- *(datacat-ui)* Add dashboard-list page
 
 ### 🚜 Refactor
 
