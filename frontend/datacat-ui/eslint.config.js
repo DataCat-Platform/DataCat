@@ -31,6 +31,7 @@ module.exports = tseslint.config(
         },
       ],
       "@typescript-eslint/no-explicit-any": "off",
+      "@angular-eslint/template/click-events-have-key-events": "off"
     },
   },
   {

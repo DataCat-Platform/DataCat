@@ -1,13 +1,13 @@
 import { Routes } from "@angular/router";
-import { DashboardHomeComponent } from "./pages/dashboard-home/dashboard-home.component";
 import { CreateDashboardComponent } from "./pages/create-dashboard/create-dashboard.component";
 import { EditDashboardComponent } from "./pages/edit-dashboard/edit-dashboard.component";
 import { DashboardOverviewComponent } from "./pages/dashboard-overview/dashboard-overview.component";
+import { DashboardListComponent } from "./pages/dashboard-list/dashboard-list.component";
 
 const routes: Routes = [
   {
     path: '',
-    component: DashboardHomeComponent,
+    component: DashboardListComponent,
   },
   {
     path: 'create',

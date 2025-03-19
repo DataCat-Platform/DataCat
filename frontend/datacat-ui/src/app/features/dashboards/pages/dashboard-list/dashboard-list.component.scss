@@ -1,0 +1,15 @@
+/* Пример дополнительных SCSS-стилей, если нужно */
+
+/* Убираем прокрутку, если не нужно, либо стилизуем скроллбар */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #c0c0c0;
+  border-radius: 3px;
+}
