@@ -2,6 +2,7 @@ add_library(mdb_core
   STATIC
     Database.cpp
     Database.hpp
+    CommonTypes.hpp
 )
 target_include_directories(mdb_core
   PUBLIC

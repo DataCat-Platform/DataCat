@@ -4,7 +4,7 @@
 #include <metricsdb/QueryParsing/AST/ASTTagMatcher.hpp>
 #include <metricsdb/QueryParsing/AST/TimeSpan.hpp>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
 
 class ASTDataPointsSelector : public ASTBase {
 public:

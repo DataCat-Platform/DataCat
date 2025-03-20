@@ -1,7 +1,7 @@
 #include <metricsdb/QueryParsing/Lexer.hpp>
 #include <iostream>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
 
 %%{
     machine lexer;

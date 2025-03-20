@@ -1,8 +1,9 @@
 #pragma once
 
 #include <metricsdb/Storage/TimeSeries.hpp>
+#include <metricsdb/Core/Types.hpp>
 
-namespace DB::Storage {
+namespace DataCat::DB {
 
 class Block {
 public:
@@ -12,9 +13,11 @@ public:
     int getNumberOfSamples() const;
     int getNumberOfTimeSeries() const;
 
+    void flushToDisk();
+
 private:
-    int minTimestamp;
-    int maxTimestamp;
+    Time minTimestamp;
+    Time maxTimestamp;
 };
 
 }

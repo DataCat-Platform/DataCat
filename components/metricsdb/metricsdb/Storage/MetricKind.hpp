@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace DB {
+namespace DataCat::DB::Storage {
 
 enum class MetricKind : int8_t {
     Counter,

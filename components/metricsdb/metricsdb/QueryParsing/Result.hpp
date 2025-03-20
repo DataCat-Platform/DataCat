@@ -2,7 +2,7 @@
 
 #include <metricsdb/QueryParsing/AST/ASTBase.hpp>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
 
 class Result {
 public:

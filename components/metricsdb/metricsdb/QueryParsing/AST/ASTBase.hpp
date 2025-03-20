@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
 
 class ASTBase;
 using ASTPtr = std::shared_ptr<ASTBase>;

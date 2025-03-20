@@ -7,7 +7,7 @@
 #include <metricsdb/QueryParsing/Parser.hpp>
 #include <metricsdb/QueryParsing/Result.hpp>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
 
 TEST(Parser, Query)
 {

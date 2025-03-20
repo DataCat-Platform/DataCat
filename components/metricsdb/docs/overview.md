@@ -7,3 +7,7 @@ Each expression in CatQL can produce either of the following data types: `Number
 ```pgsql
 request{id=1,method=GET}[5m:1m]
 ```
+
+```
+{method=GET} |> topk 
+```

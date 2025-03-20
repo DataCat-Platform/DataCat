@@ -2,7 +2,7 @@
 
 #include <metricsdb/QueryParsing/Parser.hpp>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
 
 class Lexer {
 public:

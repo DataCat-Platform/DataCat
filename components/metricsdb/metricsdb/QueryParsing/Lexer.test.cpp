@@ -7,7 +7,7 @@
 #include <metricsdb/QueryParsing/Lexer.hpp>
 #include <metricsdb/QueryParsing/Parser.hpp>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
 
 namespace {
     struct Case {

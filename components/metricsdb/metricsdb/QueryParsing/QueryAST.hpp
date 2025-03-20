@@ -4,6 +4,8 @@
 
 namespace DataCat::DB::QueryParsing {
 
-class ASTExpression : public ASTBase { };
+struct QueryAST {
+    ASTPtr ast;
+};
 
 }

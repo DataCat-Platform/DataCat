@@ -4,7 +4,7 @@
 
 #include <metricsdb/QueryParsing/AST/ASTExpression.hpp>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
 
 class ASTLiteral : public ASTExpression { };
 

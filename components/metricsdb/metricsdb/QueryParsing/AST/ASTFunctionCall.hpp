@@ -2,7 +2,7 @@
 
 #include <metricsdb/QueryParsing/AST/ASTExpression.hpp>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
 
 class ASTFunctionCall : public ASTExpression {
 public:

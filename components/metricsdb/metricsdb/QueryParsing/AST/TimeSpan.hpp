@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
 
 struct TimeSpan {
     int64_t from;

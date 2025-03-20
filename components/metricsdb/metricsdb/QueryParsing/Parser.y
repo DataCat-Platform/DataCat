@@ -29,7 +29,7 @@
 #include <metricsdb/QueryParsing/AST/createAST.hpp>
 #include <metricsdb/QueryParsing/Result.hpp>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
     class Lexer;
 }
 }
@@ -40,7 +40,7 @@ namespace DB::QueryParsing {
 
 // Bison API values.
 %define api.value.type variant
-%define api.namespace {DB::QueryParsing}
+%define api.namespace {DataCat::DB::QueryParsing}
 %define api.parser.class {Parser}
 
 // Parameters accepted by the parser.

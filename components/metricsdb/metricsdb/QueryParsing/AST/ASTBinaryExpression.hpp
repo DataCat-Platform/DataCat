@@ -5,7 +5,7 @@
 #include <metricsdb/QueryParsing/AST/ASTBase.hpp>
 #include <metricsdb/QueryParsing/AST/ASTExpression.hpp>
 
-namespace DB::QueryParsing {
+namespace DataCat::DB::QueryParsing {
 
 class ASTBinaryExpression : public ASTExpression {
 public:
