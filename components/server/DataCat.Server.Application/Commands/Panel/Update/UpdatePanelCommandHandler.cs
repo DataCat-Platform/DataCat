@@ -1,13 +1,14 @@
 namespace DataCat.Server.Application.Commands.Panel.Update;
 
 public sealed class UpdatePanelCommandHandler(
-    IDefaultRepository<PanelEntity, Guid> panelRepository,
-    IDefaultRepository<DataSourceEntity, Guid> dataSourceRepository)
+    IRepository<PanelEntity, Guid> panelBaseRepository,
+    IPanelRepository panelRepository,
+    IRepository<DataSourceEntity, Guid> dataSourceRepository)
     : IRequestHandler<UpdatePanelCommand, Result>
 {
     public async Task<Result> Handle(UpdatePanelCommand request, CancellationToken cancellationToken)
     {
-        var panelResult = await GetEntityAsync(panelRepository, request.PanelId, PanelError.NotFound(request.PanelId));
+        var panelResult = await GetEntityAsync(panelBaseRepository, request.PanelId, PanelError.NotFound(request.PanelId));
         if (panelResult.IsFailure) 
             return panelResult;
 
@@ -38,7 +39,7 @@ public sealed class UpdatePanelCommandHandler(
     }
 
     private static async Task<Result<T>> GetEntityAsync<T>(
-        IDefaultRepository<T, Guid> repository,
+        IRepository<T, Guid> repository,
         string id,
         BaseError error)
         where T : class

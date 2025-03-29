@@ -3,8 +3,8 @@ namespace DataCat.Server.Postgres.Migrations;
 [Migration(6)]
 public class CreateProcedure_AddDashboard : Migration 
 {
-    public static string UpSql = null!;
-    public static string DownSql = null!;
+    public static readonly string UpSql = null!;
+    public static readonly string DownSql = null!;
 
     static CreateProcedure_AddDashboard()
     {
@@ -17,12 +17,12 @@ public class CreateProcedure_AddDashboard : Migration
             ) AS $$
             BEGIN
                 INSERT INTO {Public.DashboardTable} (
-                    {Public.Dashboards.DashboardId},
-                    {Public.Dashboards.DashboardName},
-                    {Public.Dashboards.DashboardDescription},
-                    {Public.Dashboards.DashboardOwnerId},
-                    {Public.Dashboards.DashboardCreatedAt},
-                    {Public.Dashboards.DashboardUpdatedAt}
+                    {Public.Dashboards.Id},
+                    {Public.Dashboards.Name},
+                    {Public.Dashboards.Description},
+                    {Public.Dashboards.OwnerId},
+                    {Public.Dashboards.CreatedAt},
+                    {Public.Dashboards.UpdatedAt}
                 ) VALUES (
                     p_dashboard_id,
                     p_dashboard_name,
@@ -33,8 +33,8 @@ public class CreateProcedure_AddDashboard : Migration
                 );
 
                 INSERT INTO {Public.DashboardUserLinkTable} (
-                    {Public.Dashboards.DashboardId},
-                    {Public.Users.UserId}
+                    {Public.Dashboards.Id},
+                    {Public.Users.Id}
                 ) VALUES (
                     p_dashboard_id,
                     p_dashboard_owner_id

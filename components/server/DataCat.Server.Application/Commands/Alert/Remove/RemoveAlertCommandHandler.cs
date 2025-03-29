@@ -1,7 +1,7 @@
 namespace DataCat.Server.Application.Commands.Alert.Remove;
 
 public sealed class RemoveAlertCommandHandler(
-    IDefaultRepository<AlertEntity, Guid> alertRepository)
+    IAlertRepository alertRepository)
     : IRequestHandler<RemoveAlertCommand, Result>
 {
     public async Task<Result> Handle(RemoveAlertCommand request, CancellationToken cancellationToken)

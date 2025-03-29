@@ -1,7 +1,7 @@
 namespace DataCat.Server.Application.Commands.NotificationChannel.Add;
 
 public sealed class AddNotificationCommandHandler(
-    IDefaultRepository<NotificationChannelEntity, Guid> notificationChannelRepository,
+    IRepository<NotificationChannelEntity, Guid> notificationChannelRepository,
     NotificationChannelManager notificationChannelManager)
     : IRequestHandler<AddNotificationCommand, Result<Guid>>
 {

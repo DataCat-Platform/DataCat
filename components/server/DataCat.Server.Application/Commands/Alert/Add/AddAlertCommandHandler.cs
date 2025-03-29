@@ -1,9 +1,9 @@
 namespace DataCat.Server.Application.Commands.Alert.Add;
 
 public sealed class AddAlertCommandHandler(
-    IDefaultRepository<AlertEntity, Guid> alertRepository,
-    IDefaultRepository<DataSourceEntity, Guid> dataSourceRepository,
-    IDefaultRepository<NotificationChannelEntity, Guid> notificationChannelRepository)
+    IRepository<AlertEntity, Guid> alertRepository,
+    IRepository<DataSourceEntity, Guid> dataSourceRepository,
+    IRepository<NotificationChannelEntity, Guid> notificationChannelRepository)
     : IRequestHandler<AddAlertCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(AddAlertCommand request, CancellationToken cancellationToken)

@@ -1,18 +1,31 @@
+using DataCat.Server.Domain.Common;
+
 namespace DataCat.Storage.Postgres;
 
 public sealed class PostgresPlugin : IDatabasePlugin
 {
     public IServiceCollection RegisterRepositories(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped(typeof(IDefaultRepository<DashboardEntity, Guid>), typeof(DashboardRepository));
-        services.AddScoped<IDashboardAccessRepository, DashboardAccessRepository>();
-        services.AddScoped(typeof(IDefaultRepository<PluginEntity, Guid>), typeof(PluginRepository));
-        services.AddScoped(typeof(IDefaultRepository<DataSourceEntity, Guid>), typeof(DataSourceRepository));
-        services.AddScoped(typeof(IDefaultRepository<PanelEntity, Guid>), typeof(PanelRepository));
-        services.AddScoped(typeof(IDefaultRepository<UserEntity, Guid>), typeof(UserRepository));
-        services.AddScoped(typeof(IDefaultRepository<AlertEntity, Guid>), typeof(AlertRepository));
-        services.AddScoped(typeof(IDefaultRepository<NotificationChannelEntity, Guid>), typeof(NotificationChannelRepository));
-        services.AddScoped<ITogglePluginStatusRepository, TogglePluginStatusRepository>();
+        services.AddScoped<IRepository<DashboardEntity, Guid>, DashboardRepository>();
+        services.AddScoped<IDashboardRepository, DashboardRepository>();
+        
+        services.AddScoped<IRepository<DataSourceEntity, Guid>, DataSourceRepository>();
+        services.AddScoped<IDataSourceRepository, DataSourceRepository>();
+
+        services.AddScoped<IRepository<PanelEntity, Guid>, PanelRepository>();
+        services.AddScoped<IPanelRepository, PanelRepository>();
+
+        services.AddScoped<IRepository<UserEntity, Guid>, UserRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        
+        services.AddScoped<IRepository<AlertEntity, Guid>, AlertRepository>();
+        services.AddScoped<IAlertRepository, AlertRepository>();
+
+        services.AddScoped<IRepository<NotificationChannelEntity, Guid>, NotificationChannelRepository>();
+        services.AddScoped<INotificationChannelRepository, NotificationChannelRepository>();
+        
+        services.AddScoped<IRepository<PluginEntity, Guid>, PluginRepository>();
+        services.AddScoped<IPluginRepository, PluginRepository>();
         
         services.AddScoped<UnitOfWork>();
         services.AddScoped<IUnitOfWork<NpgsqlTransaction>>(provider => provider.GetRequiredService<UnitOfWork>());

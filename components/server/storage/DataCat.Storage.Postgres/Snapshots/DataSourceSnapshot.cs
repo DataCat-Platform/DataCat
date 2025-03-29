@@ -2,45 +2,32 @@ namespace DataCat.Storage.Postgres.Snapshots;
 
 public sealed class DataSourceSnapshot
 {
-    public const string DataSourceTable = "data_sources";
-
-    public required string DataSourceId { get; init; }
-    public required string DataSourceName { get; init; }
-    public required int DataSourceType { get; init; }
-    public required string DataSourceConnectionString { get; init; }
+    public required string Id { get; init; }
+    public required string Name { get; init; }
+    public required int TypeId { get; init; }
+    public required string ConnectionString { get; init; }
 }
 
 public static class DataSourceEntitySnapshotMapper 
 {
-    public static DataSourceSnapshot ReadDataSource(this DbDataReader reader)
-    {
-        return new DataSourceSnapshot
-        {
-            DataSourceId = reader.GetString(reader.GetOrdinal(Public.DataSources.DataSourceId)),
-            DataSourceName = reader.GetString(reader.GetOrdinal(Public.DataSources.DataSourceName)),
-            DataSourceType = reader.GetInt32(reader.GetOrdinal(Public.DataSources.DataSourceType)),
-            DataSourceConnectionString = reader.GetString(reader.GetOrdinal(Public.DataSources.DataSourceConnectionString)),
-        };
-    }
-    
     public static DataSourceSnapshot Save(this DataSourceEntity dataSourceEntity)
     {
         return new DataSourceSnapshot
         {
-            DataSourceId = dataSourceEntity.Id.ToString(),
-            DataSourceName = dataSourceEntity.Name,
-            DataSourceType = dataSourceEntity.DataSourceType.Value,
-            DataSourceConnectionString = dataSourceEntity.ConnectionString
+            Id = dataSourceEntity.Id.ToString(),
+            Name = dataSourceEntity.Name,
+            TypeId = dataSourceEntity.DataSourceType.Value,
+            ConnectionString = dataSourceEntity.ConnectionString
         };
     }
 
     public static DataSourceEntity RestoreFromSnapshot(this DataSourceSnapshot snapshot)
     {
         var result = DataSourceEntity.Create(
-            Guid.Parse(snapshot.DataSourceId),
-            snapshot.DataSourceName,
-            DataSourceType.FromValue(snapshot.DataSourceType),
-            snapshot.DataSourceConnectionString);
+            Guid.Parse(snapshot.Id),
+            snapshot.Name,
+            DataSourceType.FromValue(snapshot.TypeId),
+            snapshot.ConnectionString);
 
         return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSourceEntity));
     }

@@ -35,14 +35,24 @@ public class DatabaseAssemblyScanner : IDatabaseAssemblyScanner
 
     public List<string[]> GetSqlQueries()
     {
-        var fields = typeof(Sql)
-            .GetFields(BindingFlags.Public | BindingFlags.Static)
-            .Where(f => f.FieldType == typeof(string))
-            .Select(f => f.GetValue(null)?.ToString() ?? string.Empty)
-            .ToList();
+        var sqlQueries = new List<string[]>();
 
-        var sqlQueries = fields.Select(x => x.Split("\n")).ToList();
+        sqlQueries.AddRange(GetSqlQueriesInternal(typeof(AlertSql)));
+        sqlQueries.AddRange(GetSqlQueriesInternal(typeof(DashboardSql)));
 
         return sqlQueries;
+    }
+
+    private static List<string[]> GetSqlQueriesInternal(Type type)
+    {
+        var values = new List<string[]>();
+        foreach (var nestedType in type.GetNestedTypes(BindingFlags.Public | BindingFlags.Static))
+        {
+            var constants = nestedType.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                .Where(f => f is { IsLiteral: true, IsInitOnly: false })
+                .Select(f => f.GetValue(null)?.ToString());
+            values.AddRange(constants.Select(x => x?.Split("\n")).ToList()!);
+        }
+        return values;
     }
 }

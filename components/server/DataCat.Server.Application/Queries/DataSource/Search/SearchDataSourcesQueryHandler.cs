@@ -1,14 +1,14 @@
 namespace DataCat.Server.Application.Queries.DataSource.Search;
 
 public class SearchDataSourcesQueryHandler(
-    IDefaultRepository<DataSourceEntity, Guid> dataSourceRepository)
-    : IRequestHandler<SearchDataSourcesQuery, Result<List<DataSourceEntity>>>
+    IDataSourceRepository dataSourceRepository)
+    : IRequestHandler<SearchDataSourcesQuery, Result<Page<SearchDataSourcesResponse>>>
 {
-    public async Task<Result<List<DataSourceEntity>>> Handle(SearchDataSourcesQuery request, CancellationToken token)
+    public async Task<Result<Page<SearchDataSourcesResponse>>> Handle(SearchDataSourcesQuery request, CancellationToken token)
     {
         var result = await dataSourceRepository
-            .SearchAsync(request.Filter, request.Page, request.PageSize, token)
-            .ToListAsync(cancellationToken: token);
-        return Result.Success(result);
+            .SearchAsync(request.Filter, request.Page, request.PageSize, token);
+        
+        return Result.Success(result.ToResponsePage(SearchDataSourcesResponse.ToResponse));
     }
 }

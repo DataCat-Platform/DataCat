@@ -1,7 +1,7 @@
 namespace DataCat.Server.Application.Commands.DataSource.Remove;
 
 public sealed class RemoveDataSourceCommandHandler(
-    IDefaultRepository<DataSourceEntity, Guid> dataSourceRepository)
+    IDataSourceRepository dataSourceRepository)
     : IRequestHandler<RemoveDataSourceCommand, Result>
 {
     public async Task<Result> Handle(RemoveDataSourceCommand request, CancellationToken token)

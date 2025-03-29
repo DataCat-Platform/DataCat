@@ -1,7 +1,7 @@
 namespace DataCat.Server.Application.Commands.DataSource.Add;
 
 public sealed class AddDataSourceCommandHandler(
-    IDefaultRepository<DataSourceEntity, Guid> dataSourceRepository)
+    IRepository<DataSourceEntity, Guid> dataSourceRepository)
     : IRequestHandler<AddDataSourceCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(AddDataSourceCommand request, CancellationToken cancellationToken)

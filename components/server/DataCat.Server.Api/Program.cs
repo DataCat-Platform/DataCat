@@ -1,3 +1,5 @@
+using DataCat.Server.Api;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
@@ -39,10 +41,24 @@ if (bool.TryParse(app.Configuration["ApplyMigrations"], out var applyMigrations)
 
 app.UseStaticFiles();
 app.UseSwagger();
-app.UseSwaggerUI(c =>
+// app.UseSwaggerUI(c =>
+// {
+//     c.SwaggerEndpoint("/swagger/v1/swagger.json", "DataCat API");
+//     c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
+// });
+
+app.UseSwaggerUI(options =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DataCat API");
-    c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
+    var descriptions = app.DescribeApiVersions();
+
+    foreach (var description in descriptions)
+    {
+        var url = $"/swagger/{description.GroupName}/swagger.json";
+        var name = description.GroupName.ToUpperInvariant();
+        options.SwaggerEndpoint(url, name);
+    }
+    
+    options.InjectStylesheet("/swagger-ui/SwaggerDark.css");
 });
 
 app.UseRouting();
@@ -53,7 +69,8 @@ app.UseCustomAuth();
 
 app.MapHub<MetricsHub>("/datacat-metrics");
 app.MapGrpcService<ReceiveMetricService>();
-app.MapControllers();
+
+app.MapApiEndpoints();
 
 app.UseEndpoints(_ => { });
 

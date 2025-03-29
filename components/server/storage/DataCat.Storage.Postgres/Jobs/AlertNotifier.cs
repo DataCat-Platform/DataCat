@@ -5,7 +5,7 @@ namespace DataCat.Storage.Postgres.Jobs;
 #endif
 public sealed class AlertNotifier(
     IAlertMonitorService alertMonitorService,
-    IDefaultRepository<AlertEntity, Guid> alertRepository,
+    IAlertRepository alertRepository,
     DataSourceManager dataSourceManager,
     NotificationChannelManager notificationChannelManager,
     ISecretsProvider serviceProvider,
