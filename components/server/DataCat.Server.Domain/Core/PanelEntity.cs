@@ -5,36 +5,36 @@ public sealed record PanelEntity
     private PanelEntity(
         Guid id,
         string title,
-        PanelType panelType,
+        PanelType type,
         QueryEntity queryEntity,
         DataCatLayout dataCatLayout,
-        Guid parentDashboardId)
+        Guid dashboardId)
     {
         Id = id;
         Title = title;
-        PanelType = panelType;
+        Type = type;
         QueryEntity = queryEntity;
         DataCatLayout = dataCatLayout;
-        ParentDashboardId = parentDashboardId;
+        DashboardId = dashboardId;
     }
 
     public Guid Id { get; private set; }
 
     public string Title { get; private set; }
 
-    public PanelType PanelType { get; private set; }
+    public PanelType Type { get; private set; }
 
     public QueryEntity QueryEntity { get; private set; }
 
     public DataCatLayout DataCatLayout { get; private set; }
     
-    public Guid ParentDashboardId { get; private set; }
+    public Guid DashboardId { get; private set; }
 
     public void UpdateTitle(string title) => Title = title;
     
     public void UpdatePanelType(PanelType panelType, QueryEntity queryEntity)
     {
-        PanelType = panelType;
+        Type = panelType;
         QueryEntity = queryEntity;
     }
 

@@ -8,43 +8,43 @@ public class PostgresAlertMonitorService(
 {
     public async Task<IEnumerable<AlertEntity>> GetAlertsToCheckAsync(int limit = 5, CancellationToken token = default)
     {
-        var parameters = new { Limit = limit };
-        var sql = @$"
-        SELECT 
-            a.{Public.Alerts.AlertId},
-            a.{Public.Alerts.AlertDescription},
-            a.{Public.Alerts.AlertStatus},
-            a.{Public.Alerts.AlertRawQuery},
-            a.{Public.Alerts.AlertDataSourceId},
-            a.{Public.Alerts.AlertNotificationChannelId},
-            a.{Public.Alerts.AlertPreviousExecution},
-            a.{Public.Alerts.AlertNextExecution},
-            a.{Public.Alerts.AlertWaitTimeBeforeAlertingInTicks},
-            a.{Public.Alerts.AlertRepeatIntervalInTicks},
-
-            ds.{Public.DataSources.DataSourceId},
-            ds.{Public.DataSources.DataSourceName},
-            ds.{Public.DataSources.DataSourceType},
-            ds.{Public.DataSources.DataSourceConnectionString},
-
-            nc.{Public.NotificationChannels.NotificationChannelId},
-            nc.{Public.NotificationChannels.NotificationSettings},
-            nc.{Public.NotificationChannels.NotificationDestination}
-        FROM
-            {Public.AlertTable} a
-        INNER JOIN
-            {Public.DataSourceTable} ds ON a.{Public.Alerts.AlertDataSourceId} = {Public.DataSources.DataSourceId}
-        INNER JOIN
-            {Public.NotificationTable} nc ON {Public.NotificationChannels.NotificationChannelId} = {Public.Alerts.AlertNotificationChannelId}
-        WHERE
-            a.{Public.Alerts.AlertStatus} = {AlertStatus.InActive.Value}
-            AND
-            a.{Public.Alerts.AlertNextExecution} < NOW()
-        ORDER BY
-            a.{Public.Alerts.AlertNextExecution}
-        LIMIT @Limit
-        FOR UPDATE SKIP LOCKED;
-        ";
+        var parameters = new { p_limit = limit };
+        var sql = $"""
+           SELECT 
+               a.{Public.Alerts.Id}                                          {nameof(AlertSnapshot.Id)},
+               a.{Public.Alerts.Description}                                 {nameof(AlertSnapshot.Description)},
+               a.{Public.Alerts.Status}                                      {nameof(AlertSnapshot.Status)},
+               a.{Public.Alerts.RawQuery}                                    {nameof(AlertSnapshot.RawQuery)},
+               a.{Public.Alerts.DataSourceId}                                {nameof(AlertSnapshot.DataSourceId)},
+               a.{Public.Alerts.NotificationChannelId}                       {nameof(AlertSnapshot.NotificationChannelId)},
+               a.{Public.Alerts.PreviousExecution}                           {nameof(AlertSnapshot.PreviousExecution)},
+               a.{Public.Alerts.NextExecution}                               {nameof(AlertSnapshot.NextExecution)},
+               a.{Public.Alerts.WaitTimeBeforeAlertingInTicks}               {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
+               a.{Public.Alerts.RepeatIntervalInTicks}                       {nameof(AlertSnapshot.RepeatIntervalInTicks)},
+   
+               ds.{Public.DataSources.Id}                                    {nameof(DataSourceSnapshot.Id)},
+               ds.{Public.DataSources.Name}                                  {nameof(DataSourceSnapshot.Name)},
+               ds.{Public.DataSources.TypeId}                                {nameof(DataSourceSnapshot.TypeId)},
+               ds.{Public.DataSources.ConnectionString}                      {nameof(DataSourceSnapshot.ConnectionString)},
+   
+               nc.{Public.NotificationChannels.Id}                           {nameof(NotificationChannelSnapshot.Id)},
+               nc.{Public.NotificationChannels.Settings}                     {nameof(NotificationChannelSnapshot.Settings)},
+               nc.{Public.NotificationChannels.DestinationId}                {nameof(NotificationChannelSnapshot.DestinationId)}
+           FROM
+               {Public.AlertTable} a
+           INNER JOIN
+               {Public.DataSourceTable} ds ON a.{Public.Alerts.DataSourceId} = {Public.DataSources.Id}
+           INNER JOIN
+               {Public.NotificationTable} nc ON {Public.NotificationChannels.Id} = {Public.Alerts.NotificationChannelId}
+           WHERE
+               a.{Public.Alerts.Status} = {AlertStatus.InActive.Value}
+               AND
+               a.{Public.Alerts.NextExecution} < NOW()
+           ORDER BY
+               a.{Public.Alerts.NextExecution}
+           LIMIT @p_limit
+           FOR UPDATE SKIP LOCKED;
+        """;
         
         var connection = await Factory.GetOrCreateConnectionAsync(token);
 
@@ -53,11 +53,11 @@ public class PostgresAlertMonitorService(
                 sql,
                 map: (alert, dataSource, notificationChannel) =>
                 {
-                    alert.AlertDataSource = dataSource;
-                    alert.AlertNotificationChannel = notificationChannel;
+                    alert.DataSource = dataSource;
+                    alert.NotificationChannel = notificationChannel;
                     return alert;
                 },
-                splitOn: $"{Public.DataSources.DataSourceId}, {Public.NotificationChannels.NotificationChannelId}",
+                splitOn: $"{nameof(DataSourceSnapshot.Id)}, {nameof(NotificationChannelSnapshot.Id)}",
                 param: parameters,
                 transaction: unitOfWork.Transaction);
 
@@ -66,44 +66,44 @@ public class PostgresAlertMonitorService(
 
     public async Task<IEnumerable<AlertEntity>> GetTriggeredAlertsAsync(int limit = 5, CancellationToken token = default)
     {
-        var parameters = new { Limit = limit };
+        var parameters = new { p_limit = limit };
         
-        var sql = @$"
-        SELECT 
-            a.{Public.Alerts.AlertId},
-            a.{Public.Alerts.AlertDescription},
-            a.{Public.Alerts.AlertStatus},
-            a.{Public.Alerts.AlertRawQuery},
-            a.{Public.Alerts.AlertDataSourceId},
-            a.{Public.Alerts.AlertNotificationChannelId},
-            a.{Public.Alerts.AlertPreviousExecution},
-            a.{Public.Alerts.AlertNextExecution},
-            a.{Public.Alerts.AlertWaitTimeBeforeAlertingInTicks},
-            a.{Public.Alerts.AlertRepeatIntervalInTicks},
-
-            ds.{Public.DataSources.DataSourceId},
-            ds.{Public.DataSources.DataSourceName},
-            ds.{Public.DataSources.DataSourceType},
-            ds.{Public.DataSources.DataSourceConnectionString},
-
-            nc.{Public.NotificationChannels.NotificationChannelId},
-            nc.{Public.NotificationChannels.NotificationSettings},
-            nc.{Public.NotificationChannels.NotificationDestination}
-        FROM
-            {Public.AlertTable} a
-        INNER JOIN
-            {Public.DataSourceTable} ds ON a.{Public.Alerts.AlertDataSourceId} = ds.{Public.DataSources.DataSourceId}
-        INNER JOIN
-            {Public.NotificationTable} nc ON nc.{Public.NotificationChannels.NotificationChannelId} = a.{Public.Alerts.AlertNotificationChannelId}
-        WHERE
-            a.{Public.Alerts.AlertStatus} IN ({AlertStatus.Warning.Value}, {AlertStatus.Fire.Value}, {AlertStatus.Muted.Value})
-            AND
-            a.{Public.Alerts.AlertNextExecution} < NOW()
-        ORDER BY
-            a.{Public.Alerts.AlertNextExecution}
-        LIMIT @Limit
-        FOR UPDATE SKIP LOCKED;
-        ";
+        var sql = $"""
+            SELECT 
+                a.{Public.Alerts.Id}                             {nameof(AlertSnapshot.Id)},
+                a.{Public.Alerts.Description}                    {nameof(AlertSnapshot.Description)},
+                a.{Public.Alerts.Status}                         {nameof(AlertSnapshot.Status)},
+                a.{Public.Alerts.RawQuery}                       {nameof(AlertSnapshot.RawQuery)},
+                a.{Public.Alerts.DataSourceId}                   {nameof(AlertSnapshot.DataSourceId)},
+                a.{Public.Alerts.NotificationChannelId}          {nameof(AlertSnapshot.NotificationChannelId)},
+                a.{Public.Alerts.PreviousExecution}              {nameof(AlertSnapshot.PreviousExecution)},
+                a.{Public.Alerts.NextExecution}                  {nameof(AlertSnapshot.NextExecution)},
+                a.{Public.Alerts.WaitTimeBeforeAlertingInTicks}  {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
+                a.{Public.Alerts.RepeatIntervalInTicks}          {nameof(AlertSnapshot.RepeatIntervalInTicks)},
+               
+                ds.{Public.DataSources.Id}                     {nameof(DataSourceSnapshot.Id)},
+                ds.{Public.DataSources.Name}                   {nameof(DataSourceSnapshot.Name)},
+                ds.{Public.DataSources.TypeId}                 {nameof(DataSourceSnapshot.TypeId)},
+                ds.{Public.DataSources.ConnectionString}       {nameof(DataSourceSnapshot.ConnectionString)},
+               
+                nc.{Public.NotificationChannels.Id}            {nameof(NotificationChannelSnapshot.Id)},
+                nc.{Public.NotificationChannels.Settings}      {nameof(NotificationChannelSnapshot.Settings)},
+                nc.{Public.NotificationChannels.DestinationId} {nameof(NotificationChannelSnapshot.DestinationId)}
+           FROM
+               {Public.AlertTable} a
+           INNER JOIN
+               {Public.DataSourceTable} ds ON a.{Public.Alerts.DataSourceId} = ds.{Public.DataSources.Id}
+           INNER JOIN
+               {Public.NotificationTable} nc ON nc.{Public.NotificationChannels.Id} = a.{Public.Alerts.NotificationChannelId}
+           WHERE
+               a.{Public.Alerts.Status} IN ({AlertStatus.Warning.Value}, {AlertStatus.Fire.Value}, {AlertStatus.Muted.Value})
+               AND
+               a.{Public.Alerts.NextExecution} < NOW()
+           ORDER BY
+               a.{Public.Alerts.NextExecution}
+           LIMIT @p_limit
+           FOR UPDATE SKIP LOCKED;
+        """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
 
@@ -112,11 +112,11 @@ public class PostgresAlertMonitorService(
                 sql,
                 map: (alert, dataSource, notificationChannel) =>
                 {
-                    alert.AlertDataSource = dataSource;
-                    alert.AlertNotificationChannel = notificationChannel;
+                    alert.DataSource = dataSource;
+                    alert.NotificationChannel = notificationChannel;
                     return alert;
                 },
-                splitOn: $"{Public.DataSources.DataSourceId}, {Public.NotificationChannels.NotificationChannelId}",
+                splitOn: $"{nameof(DataSourceSnapshot.Id)}, {nameof(NotificationChannelSnapshot.Id)}",
                 param: parameters,
                 transaction: unitOfWork.Transaction);
 

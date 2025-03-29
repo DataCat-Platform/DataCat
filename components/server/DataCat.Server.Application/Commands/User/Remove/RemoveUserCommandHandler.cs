@@ -1,7 +1,7 @@
 namespace DataCat.Server.Application.Commands.User.Remove;
 
 public sealed class RemoveUserCommandHandler(
-    IDefaultRepository<UserEntity, Guid> userRepository)
+    IUserRepository userRepository)
     : IRequestHandler<RemoveUserCommand, Result>
 {
     public async Task<Result> Handle(RemoveUserCommand request, CancellationToken token)

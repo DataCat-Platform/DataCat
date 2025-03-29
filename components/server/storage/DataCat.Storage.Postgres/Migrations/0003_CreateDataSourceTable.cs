@@ -3,18 +3,18 @@ namespace DataCat.Server.Postgres.Migrations;
 [Migration(3)]
 public class CreateDataSourceTable : Migration 
 {
-    public static string UpSql = null!;
-    public static string DownSql = null!;
+    public static readonly string UpSql = null!;
+    public static readonly string DownSql = null!;
 
     static CreateDataSourceTable()
     {
         UpSql = @$"
             --- crete data source table
             CREATE TABLE {Public.DataSourceTable} (
-                {Public.DataSources.DataSourceId} TEXT PRIMARY KEY,
-                {Public.DataSources.DataSourceName} TEXT NOT NULL,
-                {Public.DataSources.DataSourceType} INT NOT NULL,
-                {Public.DataSources.DataSourceConnectionString} TEXT NOT NULL
+                {Public.DataSources.Id} TEXT PRIMARY KEY,
+                {Public.DataSources.Name} TEXT NOT NULL,
+                {Public.DataSources.TypeId} INT NOT NULL,
+                {Public.DataSources.ConnectionString} TEXT NOT NULL
             );
         ";
         

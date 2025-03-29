@@ -1,9 +1,9 @@
 namespace DataCat.Server.Application.Commands.Dashboard.AddUser;
 
 public sealed class AddUserToDashboardCommandHandler(
-    IDashboardAccessRepository dashboardAccessRepository,
-    IDefaultRepository<UserEntity, Guid> userRepository,
-    IDefaultRepository<DashboardEntity, Guid> dashboardRepository)
+    IDashboardRepository dashboardRepository,
+    IRepository<UserEntity, Guid> userRepository,
+    IRepository<DashboardEntity, Guid> dashboardBaseRepository)
     : IRequestHandler<AddUserToDashboardCommand, Result>
 {
     public async Task<Result> Handle(AddUserToDashboardCommand request, CancellationToken cancellationToken)
@@ -12,11 +12,11 @@ public sealed class AddUserToDashboardCommandHandler(
         if (user is null)
             return Result.Fail(UserError.NotFound);
         
-        var dashboard =  await dashboardRepository.GetByIdAsync(Guid.Parse(request.DashboardId), cancellationToken);
+        var dashboard =  await dashboardBaseRepository.GetByIdAsync(Guid.Parse(request.DashboardId), cancellationToken);
         if (dashboard is null)
             return Result.Fail(DashboardError.NotFound(request.DashboardId));
         
-        await dashboardAccessRepository.AddUserToDashboard(user, dashboard, cancellationToken);
+        await dashboardRepository.AddUserToDashboard(user, dashboard, cancellationToken);
         return Result.Success();
     }
 }

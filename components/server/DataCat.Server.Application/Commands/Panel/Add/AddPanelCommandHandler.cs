@@ -1,9 +1,9 @@
 namespace DataCat.Server.Application.Commands.Panel.Add;
 
 public sealed class AddPanelCommandHandler(
-    IDefaultRepository<PanelEntity, Guid> panelRepository,
-    IDefaultRepository<DataSourceEntity, Guid> dataSourceRepository,
-    IDefaultRepository<DashboardEntity, Guid> dashboardRepository)
+    IRepository<PanelEntity, Guid> panelRepository,
+    IRepository<DataSourceEntity, Guid> dataSourceRepository,
+    IRepository<DashboardEntity, Guid> dashboardRepository)
     : IRequestHandler<AddPanelCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(AddPanelCommand request, CancellationToken cancellationToken)

@@ -1,90 +1,142 @@
+using DataCat.Server.Domain.Common;
+using DataCat.Storage.Postgres.Sql;
+
 namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class DashboardRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork UnitOfWork)
-    : IDefaultRepository<DashboardEntity, Guid>
+    : IRepository<DashboardEntity, Guid>, IDashboardRepository
 {
     public async Task<DashboardEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
-        var parameters = new { DashboardId = id.ToString() };
+        var parameters = new { p_dashboard_id = id.ToString() };
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        var sql = Sql.FindDashboard;
+        const string sql = DashboardSql.Select.FindDashboard;
         
         var dashboardDictionary = new Dictionary<string, DashboardSnapshot>();
-        await connection
-            .QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DashboardSnapshot>(
-                sql,
-                map: MapFunctions.MapDashboard(dashboardDictionary),
-                splitOn: $"{Public.Users.UserId}, {Public.Panels.PanelId}, {Public.Users.UserId}, {Public.DataSources.DataSourceId}",
-                param: parameters, 
-                transaction: UnitOfWork.Transaction);
+        await connection.QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DashboardSnapshot>(
+            sql,
+            map: (dashboard, userOwner, panel, sharedUser, dataSource) =>
+            {
+                if (!dashboardDictionary.TryGetValue(dashboard.Id, out var existingDashboard))
+                {
+                    dashboard.Owner = userOwner;
+                    dashboard.Panels = new List<PanelSnapshot>();
+                    dashboard.SharedWith = new List<UserSnapshot>();
+                    dashboardDictionary.Add(dashboard.Id, dashboard);
+                    existingDashboard = dashboard;
+                }
+
+                if (panel is not null && existingDashboard.Panels.All(p => p.Id != panel.Id))
+                {
+                    panel.DataSource = dataSource;
+                    existingDashboard.Panels.Add(panel);
+                }
+
+                if (sharedUser is not null && existingDashboard.SharedWith.All(u => u.UserId != sharedUser.UserId))
+                {
+                    existingDashboard.SharedWith.Add(sharedUser);
+                }
+
+                return existingDashboard;
+            },
+            splitOn: $"{nameof(UserSnapshot.UserId)}, {nameof(PanelSnapshot.Id)}, {nameof(UserSnapshot.UserId)}, {nameof(DataSourceSnapshot.Id)}",
+            param: parameters, 
+            transaction: UnitOfWork.Transaction);
 
         var dashboardSnapshot = dashboardDictionary.FirstOrDefault().Value;
         return dashboardSnapshot?.RestoreFromSnapshot();
     }
-
-    public async IAsyncEnumerable<DashboardEntity> SearchAsync(
-        string? filter = null, 
-        int page = 1,
-        int pageSize = 10, 
-        [EnumeratorCancellation] CancellationToken token = default)
-    {
-        var offset = (page - 1) * pageSize;
-        var parameters = new { Name = $"{filter}%", Page = offset, PageSize = pageSize };
-        var connection = await Factory.GetOrCreateConnectionAsync(token);
-        var sql = Sql.SearchDashboards;
-        
-        var dashboardDictionary = new Dictionary<string, DashboardSnapshot>();
-        
-        await connection
-                .QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DashboardSnapshot>(
-                    sql,
-                    map: MapFunctions.MapDashboard(dashboardDictionary),
-                    splitOn: $"{Public.Users.UserId}, {Public.Panels.PanelId}, {Public.Users.UserId}, {Public.DataSources.DataSourceId}",
-                    param: parameters,
-                    transaction: UnitOfWork.Transaction);
-
-        foreach (var dashboard in dashboardDictionary.Values)
-        {
-            yield return dashboard.RestoreFromSnapshot();
-        }
-    }
-
+    
     public async Task AddAsync(DashboardEntity entity, CancellationToken token = default)
     {
         var snapshot = entity.Save();
-        var sql = $"""
-            INSERT INTO {DashboardSnapshot.DashboardTable}(
-                {Public.Dashboards.DashboardId}, 
-                {Public.Dashboards.DashboardName}, 
-                {Public.Dashboards.DashboardDescription}, 
-                {Public.Dashboards.DashboardOwnerId}, 
-                {Public.Dashboards.DashboardCreatedAt}, 
-                {Public.Dashboards.DashboardUpdatedAt})
+        const string sql = $"""
+            INSERT INTO {Public.DashboardTable}(
+                {Public.Dashboards.Id}, 
+                {Public.Dashboards.Name}, 
+                {Public.Dashboards.Description}, 
+                {Public.Dashboards.OwnerId}, 
+                {Public.Dashboards.CreatedAt}, 
+                {Public.Dashboards.UpdatedAt})
             VALUES 
-                (@DashboardId, 
-                 @DashboardName, 
-                 @DashboardDescription, 
-                 @OwnerId, 
-                 @DashboardCreatedAt, 
-                 @DashboardUpdatedAt);
+                (@{nameof(DashboardSnapshot.Id)}, 
+                 @{nameof(DashboardSnapshot.Name)}, 
+                 @{nameof(DashboardSnapshot.Description)}, 
+                 @{nameof(DashboardSnapshot.OwnerId)}, 
+                 @{nameof(DashboardSnapshot.CreatedAt)}, 
+                 @{nameof(DashboardSnapshot.UpdatedAt)}
+            );
             """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, snapshot, transaction: UnitOfWork.Transaction);
     }
 
+    public async Task<Page<DashboardEntity>> SearchAsync(
+        string? filter = null, 
+        int page = 1,
+        int pageSize = 10, 
+        CancellationToken token = default)
+    {
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+        
+        var totalQueryArguments = new { p_name = $"{filter}%" };
+        const string totalCountSql = DashboardSql.Select.SearchDashboardsTotalCount;
+        var totalCount = await connection.QuerySingleAsync<int>(totalCountSql, totalQueryArguments);
+        
+        var offset = (page - 1) * pageSize;
+        var parameters = new { p_name = $"{filter}%", offset = offset, limit = pageSize };
+        const string sql = DashboardSql.Select.SearchDashboards;
+        
+        var dashboardDictionary = new Dictionary<string, DashboardSnapshot>();
+        
+        await connection
+            .QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DashboardSnapshot>(
+                sql,
+                map: (dashboard, userOwner, panel, sharedUser, dataSource) =>
+                {
+                    if (!dashboardDictionary.TryGetValue(dashboard.Id, out var existingDashboard))
+                    {
+                        dashboard.Owner = userOwner;
+                        dashboard.Panels = new List<PanelSnapshot>();
+                        dashboard.SharedWith = new List<UserSnapshot>();
+                        dashboardDictionary.Add(dashboard.Id, dashboard);
+                        existingDashboard = dashboard;
+                    }
+
+                    if (panel is not null && existingDashboard.Panels.All(p => p.Id != panel.Id))
+                    {
+                        panel.DataSource = dataSource;
+                        existingDashboard.Panels.Add(panel);
+                    }
+
+                    if (sharedUser is not null && existingDashboard.SharedWith.All(u => u.UserId != sharedUser.UserId))
+                    {
+                        existingDashboard.SharedWith.Add(sharedUser);
+                    }
+
+                    return existingDashboard;
+                },
+                splitOn: $"{nameof(UserSnapshot.UserId)}, {nameof(PanelSnapshot.Id)}, {nameof(UserSnapshot.UserId)}, {nameof(DataSourceSnapshot.Id)}",
+                param: parameters,
+                transaction: UnitOfWork.Transaction);
+
+        var items = dashboardDictionary.Values.Select(x => x.RestoreFromSnapshot());
+        return new Page<DashboardEntity>(items, totalCount, PageNumber: offset, pageSize);
+    }
+
     public async Task UpdateAsync(DashboardEntity entity, CancellationToken token = default)
     {
         var snapshot = entity.Save();
-        var sql = $"""
-            UPDATE {DashboardSnapshot.DashboardTable}
+        const string sql = $"""
+            UPDATE {Public.DashboardTable}
             SET 
-                {Public.Dashboards.DashboardName} = @DashboardName,
-                {Public.Dashboards.DashboardDescription} = @DashboardDescription,
-                {Public.Dashboards.DashboardUpdatedAt} = @DashboardUpdatedAt
-            WHERE {Public.Dashboards.DashboardId} = @DashboardId
+                {Public.Dashboards.Name}         = @{nameof(DashboardSnapshot.Name)},
+                {Public.Dashboards.Description}  = @{nameof(DashboardSnapshot.Description)},
+                {Public.Dashboards.UpdatedAt}    = @{nameof(DashboardSnapshot.UpdatedAt)}
+            WHERE {Public.Dashboards.Id} = @{nameof(DashboardSnapshot.Id)}
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -93,14 +145,38 @@ public sealed class DashboardRepository(
 
     public async Task DeleteAsync(Guid id, CancellationToken token = default)
     {
-        var parameters = new { DashboardId = id.ToString() };
+        var parameters = new { p_dashboard_id = id.ToString() };
         
-        var sql = $"""
-            DELETE FROM {DashboardSnapshot.DashboardTable} 
-            WHERE {Public.Dashboards.DashboardId} = @DashboardId
-            """;
+        const string sql = $"""
+            DELETE FROM {Public.DashboardTable} 
+            WHERE {Public.Dashboards.Id} = @p_dashboard_id
+        """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, parameters, transaction: UnitOfWork.Transaction);
+    }
+    
+    public async Task AddUserToDashboard(UserEntity user, DashboardEntity dashboard, CancellationToken token = default)
+    {
+        var parameters = new
+        {
+            dashboard_id = dashboard.Id.ToString(),
+            user_id = user.Id.ToString(),
+        };
+        const string sql = $"""
+            INSERT INTO {Public.DashboardUserLinkTable} (
+               {Public.Dashboards.Id},
+               {Public.Users.Id}
+            ) 
+            VALUES (
+               @dashboard_id,
+               @user_id
+            );
+        """;
+        
+        var command = new CommandDefinition(sql, parameters, transaction: UnitOfWork.Transaction);
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+
+        await connection.ExecuteAsync(command);
     }
 }

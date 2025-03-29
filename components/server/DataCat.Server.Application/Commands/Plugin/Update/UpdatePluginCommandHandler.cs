@@ -1,14 +1,15 @@
 namespace DataCat.Server.Application.Commands.Plugin.Update;
 
 public sealed class UpdatePluginCommandHandler(
-    IDefaultRepository<PluginEntity, Guid> pluginRepository)
+    IRepository<PluginEntity, Guid> pluginBaseRepository,
+    IPluginRepository pluginRepository)
     : IRequestHandler<UpdatePluginCommand, Result>
 {
     public async Task<Result> Handle(UpdatePluginCommand request, CancellationToken token)
     {
         var id = Guid.Parse(request.PluginId);
         
-        var plugin = await pluginRepository.GetByIdAsync(id, token);
+        var plugin = await pluginBaseRepository.GetByIdAsync(id, token);
         if (plugin is null)
             return Result.Fail(PluginError.NotFound(id.ToString()));
         

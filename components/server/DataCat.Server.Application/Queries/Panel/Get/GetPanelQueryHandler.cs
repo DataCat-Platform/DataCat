@@ -1,14 +1,14 @@
 namespace DataCat.Server.Application.Queries.Panel.Get;
 
 public class GetPanelQueryHandler(
-    IDefaultRepository<PanelEntity, Guid> panelRepository)
-    : IRequestHandler<GetPanelQuery, Result<PanelEntity>>
+    IRepository<PanelEntity, Guid> panelRepository)
+    : IRequestHandler<GetPanelQuery, Result<GetPanelResponse>>
 {
-    public async Task<Result<PanelEntity>> Handle(GetPanelQuery request, CancellationToken token)
+    public async Task<Result<GetPanelResponse>> Handle(GetPanelQuery request, CancellationToken token)
     {
         var entity = await panelRepository.GetByIdAsync(request.PanelId, token);
         return entity is null 
-            ? Result.Fail<PanelEntity>(PanelError.NotFound(request.PanelId.ToString())) 
-            : Result<PanelEntity>.Success(entity);
+            ? Result.Fail<GetPanelResponse>(PanelError.NotFound(request.PanelId.ToString())) 
+            : Result<GetPanelResponse>.Success(entity.ToResponse());
     }
 }

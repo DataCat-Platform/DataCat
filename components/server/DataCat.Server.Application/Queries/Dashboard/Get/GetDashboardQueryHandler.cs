@@ -1,14 +1,14 @@
 namespace DataCat.Server.Application.Queries.Dashboard.Get;
 
 public class GetDashboardQueryHandler(
-    IDefaultRepository<DashboardEntity, Guid> dashboardRepository)
-    : IRequestHandler<GetDashboardQuery, Result<DashboardEntity>>
+    IRepository<DashboardEntity, Guid> dashboardRepository)
+    : IRequestHandler<GetDashboardQuery, Result<GetDashboardResponse>>
 {
-    public async Task<Result<DashboardEntity>> Handle(GetDashboardQuery request, CancellationToken token)
+    public async Task<Result<GetDashboardResponse>> Handle(GetDashboardQuery request, CancellationToken token)
     {
         var entity = await dashboardRepository.GetByIdAsync(request.DashboardId, token);
         return entity is null 
-            ? Result.Fail<DashboardEntity>(DashboardError.NotFound(request.DashboardId.ToString())) 
-            : Result<DashboardEntity>.Success(entity);
+            ? Result.Fail<GetDashboardResponse>(DashboardError.NotFound(request.DashboardId.ToString())) 
+            : Result<GetDashboardResponse>.Success(entity.ToResponse());
     }
 }

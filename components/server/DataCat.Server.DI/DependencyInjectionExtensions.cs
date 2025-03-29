@@ -2,23 +2,6 @@ namespace DataCat.Server.DI;
 
 public static class DependencyInjectionExtensions
 {
-    public static IServiceCollection AddApiSetup(this IServiceCollection services)
-    {
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-        services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-                options.JsonSerializerOptions.Converters.Add(
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, false));
-            });
-
-        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-        
-        return services;
-    }
-
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMediatR(config =>

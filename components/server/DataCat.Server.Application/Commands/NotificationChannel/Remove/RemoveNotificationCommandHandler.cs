@@ -1,7 +1,7 @@
 namespace DataCat.Server.Application.Commands.NotificationChannel.Remove;
 
 public sealed class RemoveNotificationCommandHandler(
-    IDefaultRepository<NotificationChannelEntity, Guid> notificationRepository)
+    INotificationChannelRepository notificationRepository)
     : IRequestHandler<RemoveNotificationCommand, Result>
 {
     public async Task<Result> Handle(RemoveNotificationCommand request, CancellationToken cancellationToken)

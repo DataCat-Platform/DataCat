@@ -3,6 +3,7 @@
 global using Ardalis.SmartEnum;
 global using DataCat.Server.Domain.Common;
 global using DataCat.Server.Domain.Common.ResultFlow;
+global using DataCat.Server.Domain.Core;
 global using DataCat.Server.Domain.Core.Enums;
 global using DataCat.Server.Domain.Core.Errors;
 global using DataCat.Server.Domain.Core.ValueObjects;

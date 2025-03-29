@@ -5,7 +5,7 @@ namespace DataCat.Storage.Postgres.Jobs;
 #endif
 public sealed class AlertChecker(
     IAlertMonitorService alertMonitorService,
-    IDefaultRepository<AlertEntity, Guid> alertRepository,
+    IAlertRepository alertRepository,
     DataSourceManager dataSourceManager,
     UnitOfWork unitOfWork,
     ILogger<AlertChecker> logger) 

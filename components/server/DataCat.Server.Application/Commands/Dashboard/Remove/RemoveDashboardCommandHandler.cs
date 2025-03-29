@@ -1,7 +1,7 @@
 namespace DataCat.Server.Application.Commands.Dashboard.Remove;
 
 public sealed class RemoveDashboardCommandHandler(
-    IDefaultRepository<DashboardEntity, Guid> dashboardRepository)
+    IDashboardRepository dashboardRepository)
     : IRequestHandler<RemoveDashboardCommand, Result>
 {
     public async Task<Result> Handle(RemoveDashboardCommand request, CancellationToken token)

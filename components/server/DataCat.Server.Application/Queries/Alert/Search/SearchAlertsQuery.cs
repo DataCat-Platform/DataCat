@@ -4,4 +4,4 @@ public sealed record SearchAlertsQuery(
     int Page,
     int PageSize,
     string? Filter)
-    : IRequest<Result<List<AlertEntity>>>, ISearchQuery, IAuthorizedQuery;
+    : IRequest<Result<Page<SearchAlertsResponse>>>, ISearchQuery, IAuthorizedQuery;

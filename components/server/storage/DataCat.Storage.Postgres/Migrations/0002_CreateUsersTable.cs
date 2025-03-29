@@ -3,17 +3,14 @@ namespace DataCat.Server.Postgres.Migrations;
 [Migration(2)]
 public sealed class CreateUsersTable : Migration 
 {
-    public static string UpSql = null!;
-    public static string DownSql = null!;
+    public static readonly string UpSql = null!;
+    public static readonly string DownSql = null!;
 
     static CreateUsersTable()
     {
         UpSql = @$"
             CREATE TABLE {Public.UserTable} (
-                {Public.Users.UserId} TEXT PRIMARY KEY,
-                {Public.Users.UserName} TEXT NOT NULL,
-                {Public.Users.UserEmail} TEXT NOT NULL,
-                {Public.Users.UserRole} INT NOT NULL
+                {Public.Users.Id} TEXT PRIMARY KEY
             );
         ";
         DownSql = $"DROP TABLE IF EXISTS {Public.UserTable};";

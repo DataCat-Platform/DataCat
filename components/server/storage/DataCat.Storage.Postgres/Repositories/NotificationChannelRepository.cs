@@ -1,19 +1,25 @@
+using DataCat.Server.Domain.Common;
+
 namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class NotificationChannelRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork unitOfWork,
     NotificationChannelManager NotificationChannelManager)
-    : IDefaultRepository<NotificationChannelEntity, Guid>
+    : IRepository<NotificationChannelEntity, Guid>, INotificationChannelRepository
 {
     public async Task<NotificationChannelEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
-        var parameters = new { NotificationChannelId = id.ToString() };
+        var parameters = new { p_notification_channel_id = id.ToString() };
 
-        var sql = $@"
-            SELECT * 
+        const string sql = $"""
+            SELECT
+                {Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)},
+                {Public.NotificationChannels.DestinationId}    {nameof(NotificationChannelSnapshot.DestinationId)},
+                {Public.NotificationChannels.Settings}         {nameof(NotificationChannelSnapshot.Settings)}
             FROM {Public.NotificationTable}
-            WHERE {Public.NotificationChannels.NotificationChannelId} = @NotificationChannelId";
+            WHERE {Public.NotificationChannels.Id} = @p_notification_channel_id
+        """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         var result = await connection.QueryFirstOrDefaultAsync<NotificationChannelSnapshot>(sql, parameters, transaction: unitOfWork.Transaction);
@@ -21,47 +27,20 @@ public sealed class NotificationChannelRepository(
         return result?.RestoreFromSnapshot(NotificationChannelManager);
     }
 
-    public async IAsyncEnumerable<NotificationChannelEntity> SearchAsync(
-        string? filter = null, 
-        int page = 1, 
-        int pageSize = 10, 
-        [EnumeratorCancellation] CancellationToken token = default)
-    {
-        var offset = (page - 1) * pageSize;
-        var sql = $"SELECT * FROM {Public.NotificationTable} ";
-
-        if (!string.IsNullOrEmpty(filter))
-        {
-            sql += $"WHERE {Public.NotificationChannels.NotificationSettings} LIKE @Filter ";
-        }
-
-        sql += "LIMIT @PageSize OFFSET @Offset";
-        var parameters = new { Filter = $"%{filter}%", PageSize = pageSize, Offset = offset };
-
-        var connection = await Factory.GetOrCreateConnectionAsync(token);
-        await using var reader = await connection.ExecuteReaderAsync(sql, parameters, transaction: unitOfWork.Transaction);
-
-        while (await reader.ReadAsync(token))
-        {
-            var snapshot = reader.ReadNotificationChannel();
-            yield return snapshot.RestoreFromSnapshot(NotificationChannelManager);
-        }
-    }
-
     public async Task AddAsync(NotificationChannelEntity entity, CancellationToken token = default)
     {
         var snapshot = entity.Save();
 
-        var sql = $@"
+        const string sql = $@"
             INSERT INTO {Public.NotificationTable} (
-                {Public.NotificationChannels.NotificationChannelId},
-                {Public.NotificationChannels.NotificationDestination},
-                {Public.NotificationChannels.NotificationSettings}
+                {Public.NotificationChannels.Id},
+                {Public.NotificationChannels.DestinationId},
+                {Public.NotificationChannels.Settings}
             )
             VALUES (
-                @NotificationChannelId,
-                @NotificationDestination,
-                @NotificationSettings
+                @{nameof(NotificationChannelSnapshot.Id)},
+                @{nameof(NotificationChannelSnapshot.DestinationId)},
+                @{nameof(NotificationChannelSnapshot.Settings)}
             )";
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -72,12 +51,13 @@ public sealed class NotificationChannelRepository(
     {
         var snapshot = entity.Save();
 
-        var sql = $@"
+        const string sql = $"""
             UPDATE {Public.NotificationTable}
             SET 
-                {Public.NotificationChannels.NotificationDestination} = @NotificationDestination,
-                {Public.NotificationChannels.NotificationSettings} = @NotificationSettings
-            WHERE {Public.NotificationChannels.NotificationChannelId} = @NotificationChannelId";
+                {Public.NotificationChannels.DestinationId} = @{nameof(NotificationChannelSnapshot.DestinationId)},
+                {Public.NotificationChannels.Settings}      = @{nameof(NotificationChannelSnapshot.Settings)}
+            WHERE {Public.NotificationChannels.Id} = @{nameof(NotificationChannelSnapshot.Id)}
+        """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, snapshot, transaction: unitOfWork.Transaction);
@@ -85,11 +65,12 @@ public sealed class NotificationChannelRepository(
 
     public async Task DeleteAsync(Guid id, CancellationToken token = default)
     {
-        var parameters = new { NotificationChannelId = id.ToString() };
+        var parameters = new { p_notification_channel_id = id.ToString() };
 
-        var sql = $@"
+        const string sql = $"""
             DELETE FROM {Public.NotificationTable}
-            WHERE {Public.NotificationChannels.NotificationChannelId} = @NotificationChannelId";
+            WHERE {Public.NotificationChannels.Id} = @p_notification_channel_id
+        """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, parameters, transaction: unitOfWork.Transaction);

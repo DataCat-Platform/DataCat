@@ -1,94 +1,107 @@
+using DataCat.Server.Domain.Common;
+
 namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class PluginRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork UnitOfWork)
-    : IDefaultRepository<PluginEntity, Guid>
+    : IRepository<PluginEntity, Guid>, IPluginRepository
 {
     public async Task<PluginEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
-        var parameters = new { PluginId = id.ToString() };
+        var parameters = new { p_plugin_id = id.ToString() };
         var connection = await Factory.GetOrCreateConnectionAsync(token);
 
-        var sql = $"SELECT * FROM {Public.PluginTable} WHERE {Public.Plugins.PluginId} = @PluginId";
+        const string sql = $"""
+            SELECT
+                {Public.Plugins.Id}                  {nameof(PluginSnapshot.Id)},
+                {Public.Plugins.Name}                {nameof(PluginSnapshot.Name)},
+                {Public.Plugins.Version}             {nameof(PluginSnapshot.Version)},
+                {Public.Plugins.Description}         {nameof(PluginSnapshot.Description)},
+                {Public.Plugins.Author}              {nameof(PluginSnapshot.Author)},
+                {Public.Plugins.IsEnabled}           {nameof(PluginSnapshot.IsEnabled)},
+                {Public.Plugins.Settings}            {nameof(PluginSnapshot.Settings)},
+                {Public.Plugins.CreatedAt}           {nameof(PluginSnapshot.CreatedAt)},
+                {Public.Plugins.UpdatedAt}           {nameof(PluginSnapshot.UpdatedAt)}
+            FROM {Public.PluginTable} 
+            WHERE {Public.Plugins.Id} = @p_plugin_id
+        """;
         var result = await connection.QueryAsync<PluginSnapshot>(sql, param: parameters, transaction: UnitOfWork.Transaction);
 
         var pluginSnapshot = result.FirstOrDefault();
         return pluginSnapshot?.RestoreFromSnapshot();
     }
-
-    public async IAsyncEnumerable<PluginEntity> SearchAsync(
-        string? filter = null, 
-        int page = 1, 
-        int pageSize = 1, 
-        [EnumeratorCancellation] CancellationToken token = default)
-    {
-        var connection = await Factory.GetOrCreateConnectionAsync(token);
-        var offset = (page - 1) * pageSize;
-        var sql = $"SELECT * FROM {Public.PluginTable} ";
-        
-        var parameters = new { Filter = $"{filter}%", PageSize = pageSize, Offset = offset };
-
-        if (!string.IsNullOrEmpty(filter))
-        {
-            sql += $"WHERE {Public.Plugins.PluginName} LIKE @Filter ";
-        }
-
-        sql += "LIMIT @PageSize OFFSET @Offset";
-        
-        await using var reader = await connection.ExecuteReaderAsync(
-            sql, 
-            parameters, 
-            transaction: UnitOfWork.Transaction);
-        
-        while (await reader.ReadAsync(token))
-        {
-            var snapshot = reader.ReadPlugin();
-            yield return snapshot.RestoreFromSnapshot();
-        }
-    }
-
+    
     public async Task AddAsync(PluginEntity entity, CancellationToken token)
     {
         var pluginSnapshot = entity.Save();
 
-        var sql = 
-            $"""
-             INSERT INTO {Public.PluginTable} (
-                 {Public.Plugins.PluginId},
-                 {Public.Plugins.PluginName},
-                 {Public.Plugins.PluginVersion},
-                 {Public.Plugins.PluginDescription},
-                 {Public.Plugins.PluginAuthor},
-                 {Public.Plugins.PluginIsEnabled},
-                 {Public.Plugins.PluginSettings},
-                 {Public.Plugins.PluginCreatedAt},
-                 {Public.Plugins.PluginUpdatedAt}
-             )
-             VALUES (@PluginId, @PluginName, @PluginVersion, @PluginDescription, @PluginAuthor, @PluginIsEnabled, @PluginSettings, @PluginCreatedAt, @PluginUpdatedAt)
-             """;
+        const string sql = $"""
+            INSERT INTO {Public.PluginTable} (
+                {Public.Plugins.Id},
+                {Public.Plugins.Name},
+                {Public.Plugins.Version},
+                {Public.Plugins.Description},
+                {Public.Plugins.Author},
+                {Public.Plugins.IsEnabled},
+                {Public.Plugins.Settings},
+                {Public.Plugins.CreatedAt},
+                {Public.Plugins.UpdatedAt}
+            )
+            VALUES (
+                @{nameof(PluginSnapshot.Id)}, 
+                @{nameof(PluginSnapshot.Name)},
+                @{nameof(PluginSnapshot.Version)},
+                @{nameof(PluginSnapshot.Description)},
+                @{nameof(PluginSnapshot.Author)},
+                @{nameof(PluginSnapshot.IsEnabled)},
+                @{nameof(PluginSnapshot.Settings)},
+                @{nameof(PluginSnapshot.CreatedAt)},
+                @{nameof(PluginSnapshot.UpdatedAt)}
+            )
+        """;
         
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, pluginSnapshot, transaction: UnitOfWork.Transaction);
+    }
+
+    public async Task<Page<PluginEntity>> SearchAsync(
+        string? filter = null, 
+        int page = 1, 
+        int pageSize = 1, 
+        CancellationToken token = default)
+    {
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+        
+        var totalQueryArguments = new { p_name = $"{filter}%" };
+        const string totalCountSql = PluginSql.Select.SearchPluginsTotalCount;
+        var totalCount = await connection.QuerySingleAsync<int>(totalCountSql, totalQueryArguments);
+        
+        var offset = (page - 1) * pageSize;
+        var parameters = new { p_name = $"{filter}%", limit = pageSize, offset = offset };
+        const string sql = PluginSql.Select.SearchPlugins;
+        var result = await connection.QueryAsync<PluginSnapshot>(sql, param: parameters, transaction: UnitOfWork.Transaction);
+        
+        var items = result.Select(x => x.RestoreFromSnapshot());
+        return new Page<PluginEntity>(items, totalCount, page, pageSize);
     }
 
     public async Task UpdateAsync(PluginEntity entity, CancellationToken token = default)
     {
         var pluginSnapshot = entity.Save();
 
-        var sql = 
-            $"""
-             UPDATE {Public.PluginTable} 
-             SET 
-                 {Public.Plugins.PluginName} = @PluginName, 
-                 {Public.Plugins.PluginVersion} = @PluginVersion, 
-                 {Public.Plugins.PluginDescription} = @PluginDescription, 
-                 {Public.Plugins.PluginAuthor} = @PluginAuthor, 
-                 {Public.Plugins.PluginIsEnabled} = @PluginIsEnabled, 
-                 {Public.Plugins.PluginSettings} = @PluginSettings, 
-                 {Public.Plugins.PluginUpdatedAt} = @PluginUpdatedAt
-             WHERE {Public.Plugins.PluginId} = @PluginId
-             """;
+        const string sql = $"""
+            UPDATE {Public.PluginTable} 
+            SET 
+                {Public.Plugins.Name}        = @{nameof(PluginSnapshot.Name)}, 
+                {Public.Plugins.Version}     = @{nameof(PluginSnapshot.Version)}, 
+                {Public.Plugins.Description} = @{nameof(PluginSnapshot.Description)}, 
+                {Public.Plugins.Author}      = @{nameof(PluginSnapshot.Author)}, 
+                {Public.Plugins.IsEnabled}   = @{nameof(PluginSnapshot.IsEnabled)}, 
+                {Public.Plugins.Settings}    = @{nameof(PluginSnapshot.Settings)}, 
+                {Public.Plugins.UpdatedAt}   = @{nameof(PluginSnapshot.UpdatedAt)}
+            WHERE {Public.Plugins.Id} = @{nameof(PluginSnapshot.Id)}
+        """;
         
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, pluginSnapshot, transaction: UnitOfWork.Transaction);
@@ -96,11 +109,38 @@ public sealed class PluginRepository(
 
     public async Task DeleteAsync(Guid id, CancellationToken token = default)
     {
-        var parameters = new { PluginId = id.ToString() };
+        var parameters = new { p_plugin_id = id.ToString() };
 
-        var sql = $"DELETE FROM {Public.PluginTable} WHERE {Public.Plugins.PluginId} = @PluginId";
+        const string sql = $"""
+            DELETE FROM {Public.PluginTable} 
+            WHERE {Public.Plugins.Id} = @p_plugin_id
+        """;
         
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, param: parameters, transaction: UnitOfWork.Transaction);
+    }
+    
+    public async Task<bool> ToggleStatusAsync(Guid id, bool isEnabled, CancellationToken token = default)
+    {
+        var parameters = new
+        {
+            p_plugin_id = id.ToString(), 
+            p_is_enabled = isEnabled, 
+            p_updated_at = DateTime.UtcNow
+        };
+        
+        const string sql = $"""
+            UPDATE {Public.PluginTable} 
+            SET 
+                {Public.Plugins.IsEnabled} = @p_is_enabled,
+                {Public.Plugins.UpdatedAt} = @p_updated_at
+            WHERE {Public.Plugins.Id} = @p_plugin_id
+        """;
+        
+        var command = new CommandDefinition(sql, parameters, transaction: UnitOfWork.Transaction);
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+
+        var affectedRows = await connection.ExecuteAsync(command);
+        return affectedRows > 0;
     }
 }

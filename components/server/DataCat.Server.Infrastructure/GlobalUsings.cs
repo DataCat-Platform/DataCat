@@ -5,7 +5,6 @@ global using System.Reflection;
 global using System.Security.Authentication;
 global using DataCat.Server.Application.Auth;
 global using DataCat.Server.Application.Security;
-global using DataCat.Server.Domain.Core.Repositories;
 global using DataCat.Server.Domain.Identity.Enums;
 global using DataCat.Server.Domain.Plugins;
 global using DataCat.Server.Domain.Plugins.Repos;

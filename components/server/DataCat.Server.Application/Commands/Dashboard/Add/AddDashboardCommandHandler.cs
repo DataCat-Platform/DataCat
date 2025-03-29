@@ -1,8 +1,8 @@
 namespace DataCat.Server.Application.Commands.Dashboard.Add;
 
 public sealed class AddDashboardCommandHandler(
-    IDefaultRepository<DashboardEntity, Guid> dashboardRepository,
-    IDefaultRepository<UserEntity, Guid> userRepository)
+    IRepository<DashboardEntity, Guid> dashboardRepository,
+    IRepository<UserEntity, Guid> userRepository)
     : IRequestHandler<AddDashboardCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(AddDashboardCommand request, CancellationToken cancellationToken)

@@ -1,3 +1,4 @@
 namespace DataCat.Server.Application.Queries.Dashboard.Get;
 
-public sealed record GetDashboardQuery(Guid DashboardId) : IRequest<Result<DashboardEntity>>, IAuthorizedQuery;
+public sealed record GetDashboardQuery(Guid DashboardId)
+    : IRequest<Result<GetDashboardResponse>>, IAuthorizedQuery;

@@ -1,7 +1,7 @@
 namespace DataCat.Server.Application.Commands.Plugin.Add;
 
 public sealed class AddPluginCommandHandler(
-    IDefaultRepository<PluginEntity, Guid> pluginRepository,
+    IRepository<PluginEntity, Guid> pluginRepository,
     IPluginStorage blobPlugin)
     : IRequestHandler<AddPluginCommand, Result<Guid>>
 {

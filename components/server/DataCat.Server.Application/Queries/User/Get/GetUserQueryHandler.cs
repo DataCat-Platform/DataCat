@@ -1,7 +1,7 @@
 namespace DataCat.Server.Application.Queries.User.Get;
 
 public sealed record GetUserQueryHandler(
-    IDefaultRepository<UserEntity, Guid> userRepository)
+    IRepository<UserEntity, Guid> userRepository)
     : IRequestHandler<GetUserQuery, Result<UserEntity>>
 {
     public async Task<Result<UserEntity>> Handle(GetUserQuery request, CancellationToken token)
