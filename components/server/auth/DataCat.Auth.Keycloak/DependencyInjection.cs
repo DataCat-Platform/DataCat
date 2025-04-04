@@ -10,6 +10,8 @@ public static class DependencyInjection
     {
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer();
+
+        services.AddSingleton<KeycloakRequestBuilder>();
         
         services.Configure<AuthenticationOptions>(configuration.GetSection("Authentication"));
         services.ConfigureOptions<JwtBearerOptionsSetup>();
@@ -27,7 +29,24 @@ public static class DependencyInjection
         {
             var keycloakOptions = serviceProvider.GetRequiredService<IOptions<KeycloakOptions>>().Value;
 
-            httpClient.BaseAddress = new Uri(keycloakOptions.TokenUrl);
+            httpClient.BaseAddress = new Uri(keycloakOptions.BaseUrl);
+        });
+        
+        services.AddQuartz(q =>
+        {
+            #region UserSynchronizationJob
+            var userSynchronizationJobKey = new JobKey("UserSynchronizationJob");
+            q.AddJob<UserSynchronizationJob>(opts => opts.WithIdentity(userSynchronizationJobKey));
+    
+            q.AddTrigger(opts => opts
+                .ForJob(userSynchronizationJobKey)
+                .WithIdentity("UserSynchronizationJob-trigger")
+                .WithSimpleSchedule(action =>
+                {
+                    action.WithIntervalInSeconds(20).RepeatForever();
+                })
+            );
+            #endregion
         });
         
         return services;

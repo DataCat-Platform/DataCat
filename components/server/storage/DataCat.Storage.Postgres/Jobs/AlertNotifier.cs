@@ -13,9 +13,10 @@ public sealed class AlertNotifier(
     ILogger<AlertNotifier> logger)
     : BaseBackgroundWorker(logger)
 {
+    protected override string JobName => nameof(AlertNotifier);
+
     protected override async Task RunAsync(CancellationToken stoppingToken = default)
     {
-        TrackJobStart(nameof(AlertNotifier));
         await unitOfWork.StartTransactionAsync(stoppingToken);
         
         const int limit = 5;
@@ -101,10 +102,6 @@ public sealed class AlertNotifier(
         {
             logger.LogError(exception, "[{Job}] Job failed", nameof(AlertNotifier));
             await unitOfWork.RollbackAsync(stoppingToken);
-        }
-        finally
-        {
-            TrackJobEnd(nameof(AlertNotifier));
         }
     }
 }

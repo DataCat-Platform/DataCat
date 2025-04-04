@@ -26,7 +26,7 @@ public sealed class PostgresPlugin : IDatabasePlugin
         services.AddScoped<IPluginRepository, PluginRepository>();
         
         services.AddScoped<UnitOfWork>();
-        services.AddScoped<IUnitOfWork<NpgsqlTransaction>>(provider => provider.GetRequiredService<UnitOfWork>());
+        services.AddScoped<IUnitOfWork<IDbTransaction>>(provider => provider.GetRequiredService<UnitOfWork>());
         
         services.AddSingleton<IMigrationRunnerFactory, PostgresRunnerFactory>(sp =>
         {
@@ -80,7 +80,6 @@ public sealed class PostgresPlugin : IDatabasePlugin
             #endregion
         });
         
-        services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
         return services;
     }
     

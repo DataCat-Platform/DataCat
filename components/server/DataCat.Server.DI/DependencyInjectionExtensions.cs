@@ -20,6 +20,8 @@ public static class DependencyInjectionExtensions
         services.AddSingleton<DataSourceManager>();
         
         services.AddSingleton<IMetricClient, DataCatDbClient>(); // TODO: Register in another module
+        
+        services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
         return services;
     }

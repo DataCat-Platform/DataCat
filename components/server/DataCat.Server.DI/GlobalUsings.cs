@@ -29,5 +29,6 @@ global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Options;
 global using Npgsql;
+global using Quartz;
 global using Serilog;
 global using Serilog.Events;

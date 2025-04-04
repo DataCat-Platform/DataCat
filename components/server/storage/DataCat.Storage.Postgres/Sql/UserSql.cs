@@ -76,7 +76,7 @@ public static class UserSql
                @{nameof(UserSnapshot.CreatedAt)},
                @{nameof(UserSnapshot.UpdatedAt)}
            )
-           ON CONFLICT ({Public.Users.Id}) DO NOTHING;
+           ON CONFLICT ({Public.Users.IdentityId}) DO NOTHING;
         """;
     }
 }

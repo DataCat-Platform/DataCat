@@ -5,9 +5,12 @@ public sealed class UserSynchronizationJob(
     ILogger<UserSynchronizationJob> logger,
     HttpClient httpClient,
     IUserRepository userRepository,
-    IJwtService jwtService)
+    IJwtService jwtService,
+    IUnitOfWork<IDbTransaction> unitOfWork)
     : BaseBackgroundWorker(logger)
 {
+    protected override string JobName => nameof(UserSynchronizationJob);
+
     protected override async Task RunAsync(CancellationToken stoppingToken = default)
     {
         var tokenResult = await jwtService.GetServerAccessTokenAsync(stoppingToken);
@@ -64,12 +67,16 @@ public sealed class UserSynchronizationJob(
                         nameof(UserSynchronizationJob), user.Errors);
                 }
             }
+
+            await unitOfWork.StartTransactionAsync(stoppingToken);
             
             await userRepository.BulkInsertAsync(userEntities
                 .Where(x => x.IsSuccess)
                 .Select(x => x.Value)
                 .ToList(), 
                 stoppingToken);
+            
+            await unitOfWork.CommitAsync(stoppingToken);
         }
         catch (Exception ex)
         {

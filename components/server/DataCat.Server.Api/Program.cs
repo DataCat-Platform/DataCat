@@ -4,6 +4,8 @@ builder.Logging.ClearProviders();
 var configuration = builder.Configuration;
 
 builder.Services.AddGrpc();
+builder.Services.AddMemoryCache();
+
 builder.Services
     .AddApiSetup()
     .AddApplicationServices(configuration)

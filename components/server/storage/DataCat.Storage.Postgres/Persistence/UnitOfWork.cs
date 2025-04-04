@@ -2,17 +2,17 @@ namespace DataCat.Storage.Postgres.Persistence;
 
 public sealed class UnitOfWork(
     IDbConnectionFactory<NpgsqlConnection> Factory)
-    : IUnitOfWork<NpgsqlTransaction>, IDisposable
+    : IUnitOfWork<IDbTransaction>, IDisposable
 {
     private NpgsqlTransaction? _transaction;
     private PostgresIsolationLevel _isolationLevel = PostgresIsolationLevel.ReadCommitted;
     private bool _disposed;
 
-    public NpgsqlTransaction Transaction => 
+    public IDbTransaction Transaction => 
         _transaction 
         ?? throw new InvalidOperationException("Transaction has not been started");
 
-    public async ValueTask<NpgsqlTransaction> StartTransactionAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IDbTransaction> StartTransactionAsync(CancellationToken cancellationToken = default)
     {
         if (_transaction is not null)
         {

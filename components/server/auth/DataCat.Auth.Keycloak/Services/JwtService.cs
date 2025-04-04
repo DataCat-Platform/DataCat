@@ -2,11 +2,14 @@ namespace DataCat.Auth.Keycloak.Services;
 
 public sealed class JwtService(
     HttpClient httpClient,
-    KeycloakRequestBuilder keycloakRequestBuilder) : IJwtService
+    KeycloakRequestBuilder keycloakRequestBuilder,
+    IMemoryCache cache) : IJwtService
 {
     private static readonly ErrorInfo AuthenticationFailed = new(
         "Keycloak.AuthenticationFailed",
         "Failed to acquire access token do to authentication failure");
+    
+    private const string AdminAccessTokenKey = "AdminAccessToken";
 
     public async Task<Result<string>> GetUserAccessTokenAsync(
         string email,
@@ -36,6 +39,11 @@ public sealed class JwtService(
     
     public async Task<Result<string>> GetServerAccessTokenAsync(CancellationToken cancellationToken = default)
     {
+        if (cache.TryGetValue(AdminAccessTokenKey, out AuthorizationToken? token))
+        {
+            return Result.Success(token!.AccessToken);
+        }
+        
         try
         {
             var authRequestParameters = keycloakRequestBuilder.BuildAuthServerRequestParameters();
@@ -47,9 +55,18 @@ public sealed class JwtService(
 
             var authorizationToken = await response.Content.ReadFromJsonAsync<AuthorizationToken>(cancellationToken: cancellationToken);
 
-            return authorizationToken is null 
-                ? Result.Fail<string>(AuthenticationFailed) 
-                : Result.Success(authorizationToken.AccessToken);
+            if (authorizationToken is null)
+            {
+                Result.Fail<string>(AuthenticationFailed);
+            }
+            
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromSeconds(authorizationToken!.ExpiresIn))
+                .SetPriority(CacheItemPriority.High);
+
+            cache.Set(AdminAccessTokenKey, authorizationToken, cacheOptions);
+            
+            return Result.Success(authorizationToken.AccessToken);
         }
         catch (HttpRequestException)
         {

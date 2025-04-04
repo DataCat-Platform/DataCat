@@ -1,11 +1,11 @@
 namespace DataCat.Auth.Keycloak.Models;
 
-public class UserKeycloakResponse
+public sealed record UserKeycloakResponse
 {
     [JsonPropertyName("id")]
     public required string IdentityId { get; init; }
     
-    [JsonPropertyName("name")]
+    [JsonPropertyName("username")]
     public required string Name { get; init; }
     
     [JsonPropertyName("email")]
