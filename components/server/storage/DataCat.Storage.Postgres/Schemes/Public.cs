@@ -3,13 +3,23 @@ namespace DataCat.Storage.Postgres.Schemes;
 public static class Public
 {
     public const string PluginTable = "plugins";
+    
     public const string UserTable = "datacat_users";
+    public const string RoleTable = "datacat_roles";
+    public const string PermissionsTable = "datacat_permissions";
+    public const string NamespaceTable = "datacat_namespaces";
+    public const string ExternalRoleMappingTable = "external_role_mappings";
+    public const string ExternalPermissionMappingTable = "external_permission_mappings";
+
     public const string DataSourceTable = "data_sources";
     public const string DashboardTable = "dashboards";
     public const string PanelTable = "panels";
     public const string AlertTable = "alerts";
     public const string NotificationTable = "notification_channel";
+    
     public const string DashboardUserLinkTable = "dashboard_user_link";
+    public const string UserRoleLinkTable = "user_role_link";
+    public const string UserPermissionLinkTable = "user_permission_link";
 
     public static class Plugins
     {
@@ -27,6 +37,62 @@ public static class Public
     public static class Users
     {
         public const string Id = "pk_user_id";
+        public const string IdentityId = "identity_id";
+        public const string Email = "email";
+        public const string Name = "name";
+        public const string CreatedAt = "created_at_utc";
+        public const string UpdatedAt = "updated_at_utc";
+    }
+
+    public static class Roles
+    {
+        public const string Id = "pk_role_id";
+        public const string Name = "name";
+    }
+    
+    public static class UsersRolesLink
+    {
+        public const string UserId = "user_id";
+        public const string RoleId = "role_id";
+        public const string NamespaceId = "namespace_id";
+        public const string IsManual = "is_manual";
+    }
+
+    public static class Permissions
+    {
+        public const string Id = "pk_permission_id";
+        public const string Name = "name";
+    }
+
+    public static class UsersPermissionsLink
+    {
+        public const string UserId = Users.Id;
+        public const string PermissionId = "permission_id";
+        public const string NamespaceId = "namespace_id";
+        public const string IsManual = "is_manual";
+    }
+
+    public static class Namespaces
+    {
+        public const string Id = "pk_namespace_id";
+        public const string Name = "name";
+        public const string Description = "Description";
+    }
+
+    public static class ExternalRoleMappings
+    {
+        public const string Id = "pk_external_role_mapping_id";
+        public const string ExternalRole = "external_role";
+        public const string InternalRoleId = "role_id";
+        public const string NamespaceId = "namespace_id";
+    }
+    
+    public static class ExternalPermissionMappings
+    {
+        public const string Id = "pk_external_permission_mapping_id";
+        public const string ExternalPermission = "external_permission";
+        public const string InternalPermissionId = "permission_id";
+        public const string NamespaceId = "namespace_id";
     }
     
     public static class DataSources
@@ -45,6 +111,12 @@ public static class Public
         public const string OwnerId = "owner_id";
         public const string CreatedAt = "created_at_utc";
         public const string UpdatedAt = "updated_at_utc";
+    }
+
+    public static class DashboardsUsersLink
+    {
+        public const string UserId = "user_id";
+        public const string DashboardId = "dashboard_id";
     }
 
     public static class Panels

@@ -12,7 +12,7 @@ public sealed class UpdateAlert : ApiEndpointBase
     {
         app.MapPut("api/v{version:apiVersion}/alert/update/{alertId}", async (
                 [FromServices] IMediator mediator,
-                [FromRoute] string alertId, 
+                [FromRoute] string alertId,
                 [FromBody] UpdateAlertRequest request,
                 CancellationToken token = default) =>
             {

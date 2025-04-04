@@ -1,5 +1,3 @@
-using DataCat.Server.Api;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
@@ -14,7 +12,8 @@ builder.Services
     .AddSecretsSetup(configuration)
     .AddAuthSetup(configuration)
     .AddNotificationsSetup(configuration)
-    .AddRealTimeCommunication(configuration);
+    .AddRealTimeCommunication(configuration)
+    .AddKeycloakAuth(configuration);
 
 builder.Services
     .AddCustomMiddlewares();
@@ -64,6 +63,10 @@ app.UseSwaggerUI(options =>
 app.UseRouting();
 
 app.UseLoggingRequests();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseExceptionHandling();
 app.UseCustomAuth();
 

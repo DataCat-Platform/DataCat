@@ -1,9 +1,12 @@
 // Global using directives
 
+global using System.Security.Authentication;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
 global using Asp.Versioning.ApiExplorer;
+global using DataCat.Auth.Keycloak;
 global using DataCat.Export.Metrics.V1;
+global using DataCat.Server.Api;
 global using DataCat.Server.Api.Endpoints;
 global using DataCat.Server.Api.Middlewares;
 global using DataCat.Server.Api.OpenApi;
@@ -32,6 +35,7 @@ global using DataCat.Server.Application.Commands.Plugin.Remove;
 global using DataCat.Server.Application.Commands.Plugin.ToggleStatus;
 global using DataCat.Server.Application.Commands.Plugin.Update;
 global using DataCat.Server.Application.Commands.User.Add;
+global using DataCat.Server.Application.Commands.User.Login;
 global using DataCat.Server.Application.Commands.User.Remove;
 global using DataCat.Server.Application.Metrics;
 global using DataCat.Server.Application.Persistence;

@@ -12,4 +12,9 @@ public abstract class UserRole(string name, int value)
     private sealed class ViewerUserRole() : UserRole("Viewer", 2);
 
     private sealed class EditorUserRole() : UserRole("Editor", 3);
+    
+    public static IReadOnlyCollection<UserRole> All =>
+    [
+        Admin, Viewer, Editor
+    ];
 }

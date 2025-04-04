@@ -1,4 +1,3 @@
-using DataCat.Server.Domain.Common;
 using DataCat.Storage.Postgres.Sql;
 
 namespace DataCat.Storage.Postgres.Repositories;

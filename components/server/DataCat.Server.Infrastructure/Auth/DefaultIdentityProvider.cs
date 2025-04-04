@@ -1,6 +1,6 @@
 namespace DataCat.Server.Infrastructure.Auth;
 
-public sealed class DefaultIdentityProvider(AuthMappingOptions authMappingOptions)
+public sealed class DefaultIdentityProvider(AuthMappingOptions _)
     : IIdentityProvider
 {
     public IIdentity? CurrentIdentity { get; private set; }

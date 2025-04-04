@@ -3,8 +3,7 @@
   <nav class="flex items-center justify-between px-4 py-3">
     <div class="space-x-4">
       <p-button [link]="true" label="Lists"/>
-      <p-button [link]="true" label="Shared Dashboards"/>
-      <p-button [link]="true" label="Reports"/>
+      <p-button [link]="true" label="Namespaces"/>
     </div>
 
     <p-button
@@ -25,16 +24,33 @@
         <p-dropdown
           [(ngModel)]="selectedTeam"
           [options]="teamOptions"
-          placeholder="Select a Team"
+          placeholder="Select a Namespace"
           styleClass="w-full !border-gray-300 !rounded focus:!border-blue-500"
         ></p-dropdown>
 
-        <div class="font-bold">Preset Lists</div>
+        <div class="font-bold">Namespace Access</div>
         <ul class="space-y-1">
-          <p-button [link]="true" icon="pi pi-star" iconPos="left" label="All custom"/>
-          <p-button [link]="true" icon="pi pi-star" iconPos="left" label="All teams"/>
-          <p-button [link]="true" icon="pi pi-star" iconPos="left" label="Starred by you"/>
-          <p-button [link]="true" icon="pi pi-star" iconPos="left" label="Recently viewed"/>
+          <p-button
+            [link]="true"
+            [pTooltip]="'Namespace where the user has read permissions'"
+            icon="pi pi-star"
+            iconPos="left"
+            label="Read Namespaces"
+          />
+          <p-button
+            [link]="true"
+            [pTooltip]="'Namespace where the user has write permissions'"
+            icon="pi pi-star"
+            iconPos="left"
+            label="Write Namespaces"
+          />
+          <p-button
+            [link]="true"
+            [pTooltip]="'Namespace where the user has admin permissions'"
+            icon="pi pi-star"
+            iconPos="left"
+            label="Admin Namespaces"
+          />
         </ul>
       </div>
     </aside>

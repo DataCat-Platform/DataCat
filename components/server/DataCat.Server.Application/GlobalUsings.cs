@@ -33,4 +33,6 @@ global using DataCat.Server.Domain.Plugins.Repos;
 global using FluentValidation;
 global using MediatR;
 global using Microsoft.AspNetCore.Http;
+global using Microsoft.Extensions.Logging;
+global using Quartz;
 global using DataCatDbIsolationLevel = System.Data.IsolationLevel;

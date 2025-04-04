@@ -1,5 +1,3 @@
-using System.Security.Authentication;
-
 namespace DataCat.Server.Api.Middlewares;
 
 public sealed class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger)

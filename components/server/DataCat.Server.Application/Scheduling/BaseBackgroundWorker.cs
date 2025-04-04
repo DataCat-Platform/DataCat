@@ -1,4 +1,4 @@
-namespace DataCat.Storage.Postgres.Jobs;
+namespace DataCat.Server.Application.Scheduling;
 
 public abstract class BaseBackgroundWorker(
     ILogger<BaseBackgroundWorker> logger)
