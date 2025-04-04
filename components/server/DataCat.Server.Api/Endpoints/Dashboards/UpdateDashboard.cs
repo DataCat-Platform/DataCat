@@ -1,5 +1,7 @@
 namespace DataCat.Server.Api.Endpoints.Dashboards;
 
+public sealed record UpdateDashboardRequest(string Name, string? Description);
+
 public sealed class UpdateDashboard : ApiEndpointBase
 {
     public override void MapEndpoint(IEndpointRouteBuilder app)

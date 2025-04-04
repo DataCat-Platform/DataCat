@@ -20,7 +20,6 @@
     <ItemGroup>
       <ProjectReference Include="..\auth\DataCat.Auth.Keycloak\DataCat.Auth.Keycloak.csproj" />
       <ProjectReference Include="..\DataCat.Server.DI\DataCat.Server.DI.csproj" />
-      <ProjectReference Include="..\DataCat.Server.HttpModels\DataCat.Server.HttpModels.csproj" />
       <ProjectReference Include="..\DataCat.Server.Metrics\DataCat.Server.Metrics.csproj" />
     </ItemGroup>
 
