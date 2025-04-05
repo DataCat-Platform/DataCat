@@ -1,5 +1,3 @@
-using DataCat.Storage.Postgres.Sql;
-
 namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class DashboardRepository(
@@ -55,15 +53,17 @@ public sealed class DashboardRepository(
             INSERT INTO {Public.DashboardTable}(
                 {Public.Dashboards.Id}, 
                 {Public.Dashboards.Name}, 
-                {Public.Dashboards.Description}, 
-                {Public.Dashboards.OwnerId}, 
+                {Public.Dashboards.Description},
+                {Public.Dashboards.OwnerId},
+                {Public.Dashboards.NamespaceId},
                 {Public.Dashboards.CreatedAt}, 
                 {Public.Dashboards.UpdatedAt})
             VALUES 
                 (@{nameof(DashboardSnapshot.Id)}, 
                  @{nameof(DashboardSnapshot.Name)}, 
                  @{nameof(DashboardSnapshot.Description)}, 
-                 @{nameof(DashboardSnapshot.OwnerId)}, 
+                 @{nameof(DashboardSnapshot.OwnerId)},
+                 @{nameof(DashboardSnapshot.NamespaceId)}, 
                  @{nameof(DashboardSnapshot.CreatedAt)}, 
                  @{nameof(DashboardSnapshot.UpdatedAt)}
             );

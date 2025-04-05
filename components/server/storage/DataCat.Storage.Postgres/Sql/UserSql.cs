@@ -55,6 +55,43 @@ public static class UserSql
                {Public.UserPermissionLinkTable} upl ON upl.{Public.UsersPermissionsLink.UserId} = u.{Public.Users.Id}
            WHERE {Public.Users.Email} = @p_email
         """;
+        
+        public const string GetExternalRolesMappings = $"""
+            SELECT
+                {Public.ExternalRoleMappings.ExternalRole}            {nameof(ExternalRoleMappingSnapshot.ExternalRole)}
+                ,{Public.ExternalRoleMappings.InternalRoleId}         {nameof(ExternalRoleMappingSnapshot.RoleId)}
+                ,{Public.ExternalRoleMappings.NamespaceId}            {nameof(ExternalRoleMappingSnapshot.NamespaceId)}
+            FROM  {Public.ExternalRoleMappingTable}
+        """;
+
+        public const string GetOldestByUpdatedAtUserAsync = $"""
+             SELECT
+                 u.{Public.Users.Id}             {nameof(UserSnapshot.UserId)},
+                 u.{Public.Users.IdentityId}     {nameof(UserSnapshot.IdentityId)},
+                 u.{Public.Users.Name}           {nameof(UserSnapshot.Name)},
+                 u.{Public.Users.Email}          {nameof(UserSnapshot.Email)},
+                 u.{Public.Users.CreatedAt}      {nameof(UserSnapshot.CreatedAt)},
+                 u.{Public.Users.UpdatedAt}      {nameof(UserSnapshot.UpdatedAt)},
+ 
+                 url.{Public.UsersRolesLink.RoleId}        {nameof(AssignedUserRoleSnapshot.RoleId)},
+                 url.{Public.UsersRolesLink.NamespaceId}   {nameof(AssignedUserRoleSnapshot.NamespaceId)},
+                 url.{Public.UsersRolesLink.IsManual}      {nameof(AssignedUserRoleSnapshot.IsManual)},
+ 
+                 upl.{Public.UsersPermissionsLink.PermissionId}     {nameof(AssignedUserPermissionSnapshot.PermissionId)},
+                 upl.{Public.UsersPermissionsLink.NamespaceId}      {nameof(AssignedUserPermissionSnapshot.NamespaceId)},
+                 upl.{Public.UsersPermissionsLink.IsManual}         {nameof(AssignedUserPermissionSnapshot.IsManual)}
+ 
+             FROM {Public.UserTable} u
+             LEFT JOIN {Public.UserRoleLinkTable} url ON url.{Public.UsersRolesLink.UserId} = u.{Public.Users.Id}
+             LEFT JOIN {Public.UserPermissionLinkTable} upl ON upl.{Public.UsersPermissionsLink.UserId} = u.{Public.Users.Id}
+             WHERE u.{Public.Users.UpdatedAt} = (
+                 SELECT MIN(u2.{Public.Users.UpdatedAt})
+                 FROM {Public.UserTable} u2
+             )
+             ORDER BY u.{Public.Users.Id}
+             LIMIT 1
+             FOR UPDATE
+        """;
     }
 
     public static class Insert

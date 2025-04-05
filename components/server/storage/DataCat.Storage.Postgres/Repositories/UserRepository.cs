@@ -1,3 +1,5 @@
+using Microsoft.Data.SqlClient;
+
 namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class UserRepository(
@@ -91,6 +93,125 @@ public sealed class UserRepository(
         
         var userSnapshot = result.FirstOrDefault();
         return userSnapshot?.RestoreFromSnapshot();
+    }
+
+    public async Task<List<ExternalRoleMapping>> GetExternalRoleMappingsAsync(CancellationToken token = default)
+    {
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+
+        const string sql = UserSql.Select.GetExternalRolesMappings;
+        
+        var result = await connection.QueryAsync<ExternalRoleMappingSnapshot>(
+            sql,
+            transaction: UnitOfWork.Transaction);
+
+        return result.Select(x => x.RestoreFromSnapshot()).ToList();
+    }
+
+    public async Task<UserEntity?> GetOldestByUpdatedAtUserAsync(CancellationToken token = default)
+    {
+        const string sql = UserSql.Select.GetOldestByUpdatedAtUserAsync;
+
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+        await connection.OpenAsync(token);
+
+        var user = await connection.QueryFirstOrDefaultAsync<UserSnapshot>(
+            sql, 
+            transaction: UnitOfWork.Transaction
+        );
+
+        return user?.RestoreFromSnapshot();
+    }
+
+    public async Task UpdateUserRolesAsync(UserEntity user, List<ExternalRoleMapping> currentUserRolesFromKeycloak, CancellationToken token)
+    {
+        var dataTable = new DataTable();
+    
+        dataTable.Columns.Add(nameof(Public.UsersRolesLink.UserId), typeof(string));
+        dataTable.Columns.Add(nameof(Public.UsersRolesLink.RoleId), typeof(int));
+        dataTable.Columns.Add(nameof(Public.UsersRolesLink.NamespaceId), typeof(string));
+        dataTable.Columns.Add(nameof(Public.UsersRolesLink.IsManual), typeof(bool));
+        
+        foreach (var roleMapping in currentUserRolesFromKeycloak)
+        {
+            dataTable.Rows.Add(user.Id, roleMapping.Role.Value, roleMapping.NamespaceId, roleMapping, false);
+        }
+
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+
+        const string TempUserRoles = "#TempUserRoles";  
+        
+        await using var cmd = connection.CreateCommand();
+        cmd.Transaction = UnitOfWork.Transaction as NpgsqlTransaction;
+        cmd.CommandText = $"""
+          CREATE TEMPORARY TABLE {TempUserRoles} (
+              {nameof(Public.UsersRolesLink.UserId)} TEXT,
+              {nameof(Public.UsersRolesLink.RoleId)} INT,
+              {nameof(Public.UsersRolesLink.NamespaceId)} TEXT,
+              {nameof(Public.UsersRolesLink.IsManual)} BOOLEAN
+          );
+        """;
+        await cmd.ExecuteNonQueryAsync(token);
+        
+        const string copySql =
+            $"""
+             COPY {TempUserRoles} (
+                 {nameof(Public.UsersRolesLink.UserId)}, 
+                 {nameof(Public.UsersRolesLink.RoleId)}, 
+                 {nameof(Public.UsersRolesLink.NamespaceId)}, 
+                 {nameof(Public.UsersRolesLink.IsManual)}
+             ) FROM STDIN (FORMAT BINARY)
+             """;
+
+        await using var writer = await connection.BeginBinaryImportAsync(copySql, token);
+        foreach (DataRow row in dataTable.Rows)
+        {
+            await writer.StartRowAsync(token);
+            await writer.WriteAsync(row[nameof(Public.UsersRolesLink.UserId)], NpgsqlTypes.NpgsqlDbType.Text, token);
+            await writer.WriteAsync(row[nameof(Public.UsersRolesLink.RoleId)], NpgsqlTypes.NpgsqlDbType.Integer, token);
+            await writer.WriteAsync(row[nameof(Public.UsersRolesLink.NamespaceId)], NpgsqlTypes.NpgsqlDbType.Text, token);
+            await writer.WriteAsync(row[nameof(Public.UsersRolesLink.IsManual)], NpgsqlTypes.NpgsqlDbType.Boolean, token);
+        }
+
+        await writer.CompleteAsync(token);
+
+        await using var mergeCmd = connection.CreateCommand();
+        mergeCmd.Transaction = UnitOfWork.Transaction as NpgsqlTransaction;
+        mergeCmd.CommandText = $"""
+        -- We delete records that have is_manual = false and are no longer needed for this user
+        DELETE FROM {Public.UserRoleLinkTable} target
+        USING {TempUserRoles} source
+        WHERE target.{Public.UsersRolesLink.IsManual} = false
+            AND NOT EXISTS (
+                SELECT 1
+                FROM {TempUserRoles} s
+                WHERE s.{nameof(Public.UsersRolesLink.UserId)} = target.{Public.UsersRolesLink.UserId}
+                    AND s.{nameof(Public.UsersRolesLink.RoleId)} = target.{Public.UsersRolesLink.RoleId}
+                    AND s.{nameof(Public.UsersRolesLink.NamespaceId)} = target.{Public.UsersRolesLink.NamespaceId}
+          );
+        
+        -- If the records match, we do nothing
+        MERGE INTO {Public.UserRoleLinkTable} AS target
+        USING {TempUserRoles} AS source
+        ON target.{Public.UsersRolesLink.UserId} = source.{nameof(Public.UsersRolesLink.UserId)}
+            AND target.{Public.UsersRolesLink.RoleId} = source.{nameof(Public.UsersRolesLink.RoleId)}
+            AND target.{Public.UsersRolesLink.NamespaceId} = source.{nameof(Public.UsersRolesLink.NamespaceId)}
+        WHEN NOT MATCHED THEN
+            INSERT (
+                {Public.UsersRolesLink.UserId}, 
+                {Public.UsersRolesLink.RoleId}, 
+                {Public.UsersRolesLink.NamespaceId}, 
+                {Public.UsersRolesLink.IsManual}
+            )
+            VALUES (
+                source.{nameof(Public.UsersRolesLink.UserId)}, 
+                source.{nameof(Public.UsersRolesLink.RoleId)}, 
+                source.{nameof(Public.UsersRolesLink.NamespaceId)},
+                false
+            );
+        """;
+        
+        await mergeCmd.ExecuteNonQueryAsync(token);
     }
 
     public async Task AddAsync(UserEntity entity, CancellationToken token = default)

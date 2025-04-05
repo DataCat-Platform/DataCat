@@ -1,6 +1,6 @@
 namespace DataCat.Storage.Postgres.Snapshots;
 
-public sealed class NotificationChannelSnapshot
+public sealed record NotificationChannelSnapshot
 {
     public required string Id { get; init; }
     public required int DestinationId { get; init; }

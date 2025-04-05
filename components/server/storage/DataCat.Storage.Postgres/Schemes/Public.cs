@@ -76,12 +76,10 @@ public static class Public
     {
         public const string Id = "pk_namespace_id";
         public const string Name = "name";
-        public const string Description = "Description";
     }
 
     public static class ExternalRoleMappings
     {
-        public const string Id = "pk_external_role_mapping_id";
         public const string ExternalRole = "external_role";
         public const string InternalRoleId = "role_id";
         public const string NamespaceId = "namespace_id";
@@ -89,7 +87,6 @@ public static class Public
     
     public static class ExternalPermissionMappings
     {
-        public const string Id = "pk_external_permission_mapping_id";
         public const string ExternalPermission = "external_permission";
         public const string InternalPermissionId = "permission_id";
         public const string NamespaceId = "namespace_id";
@@ -111,6 +108,7 @@ public static class Public
         public const string OwnerId = "owner_id";
         public const string CreatedAt = "created_at_utc";
         public const string UpdatedAt = "updated_at_utc";
+        public const string NamespaceId = "namespace_id";
     }
 
     public static class DashboardsUsersLink

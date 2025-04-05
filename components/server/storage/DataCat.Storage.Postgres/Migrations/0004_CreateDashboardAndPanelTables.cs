@@ -15,8 +15,10 @@ public class CreateDashboardAndPanelTables : Migration
                 {Public.Dashboards.Name} TEXT NOT NULL,
                 {Public.Dashboards.Description} TEXT NOT NULL,
                 {Public.Dashboards.OwnerId} TEXT NOT NULL,
+                {Public.Dashboards.NamespaceId} TEXT NOT NULL,
                 {Public.Dashboards.CreatedAt} TIMESTAMP NOT NULL,
-                {Public.Dashboards.UpdatedAt} TIMESTAMP NOT NULL
+                {Public.Dashboards.UpdatedAt} TIMESTAMP NOT NULL,
+                FOREIGN KEY ({Public.Dashboards.NamespaceId}) REFERENCES {Public.NamespaceTable}({Public.Namespaces.Id}) ON DELETE CASCADE
             );
 
             --- create panel table

@@ -30,8 +30,7 @@ public sealed class CreateUsersTable : Migration
 
             CREATE TABLE {Public.NamespaceTable} (
                 {Public.Namespaces.Id} TEXT PRIMARY KEY,
-                {Public.Namespaces.Name} VARCHAR(255) UNIQUE,
-                {Public.Namespaces.Description} TEXT NULL
+                {Public.Namespaces.Name} VARCHAR(255) UNIQUE
             );
 
             CREATE TABLE {Public.UserRoleLinkTable} (
