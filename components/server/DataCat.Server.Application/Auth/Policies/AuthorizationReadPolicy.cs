@@ -4,6 +4,6 @@ public sealed class AuthorizationReadPolicy : IAuthorizationPolicy
 {
     public bool IsAuthorized(IIdentity? user)
     {
-        return user is not null && user.IsViewer;
+        return user is not null && user.RoleClaims.Any(x => UserRole.Viewer == x.Role);
     }
 }

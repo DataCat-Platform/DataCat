@@ -98,8 +98,7 @@ public static class DependencyInjection
     {
         services
             .AddSingleton<ExceptionHandlingMiddleware>()
-            .AddSingleton<RequestLoggingMiddleware>()
-            .AddTransient<AuthorizationMiddleware>();
+            .AddSingleton<RequestLoggingMiddleware>();
 
         return services;
     }

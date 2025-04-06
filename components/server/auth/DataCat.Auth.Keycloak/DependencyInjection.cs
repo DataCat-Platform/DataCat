@@ -10,6 +10,9 @@ public static class DependencyInjection
     {
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer();
+        
+        services.AddTransient<IClaimsTransformation, DataCatKeycloakClaimsTransformation>();
+        services.AddScoped<IIdentity, KeycloakIdentity>();
 
         services.AddSingleton<KeycloakRequestBuilder>();
         

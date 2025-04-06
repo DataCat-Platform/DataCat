@@ -17,7 +17,7 @@ public sealed class SearchAlerts : ApiEndpointBase
             })
             .RequireAuthorization(c =>
             {
-                c.RequireRole("view-profile");
+                c.RequireRole(UserRole.Admin.Name);
             })
             .WithTags(ApiTags.Alerts)
             .HasApiVersion(ApiVersions.V1)

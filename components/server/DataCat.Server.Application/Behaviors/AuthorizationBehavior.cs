@@ -20,15 +20,13 @@ public interface IAdminRequest : IAuthorizedRequest
     IAuthorizationPolicy IAuthorizedRequest.GetPolicy() => new AuthorizationAdminPolicy();
 }
 
-public sealed class AuthorizationBehavior<TRequest, TResponse>(IIdentityProvider identityProvider)
+public sealed class AuthorizationBehavior<TRequest, TResponse>(IIdentity identity)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>, IAuthorizedRequest
     where TResponse : Result
 {
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken token)
     {
-        var identity = identityProvider.CurrentIdentity;
-
         var policy = request.GetPolicy();
         if (!policy.IsAuthorized(identity))
         {

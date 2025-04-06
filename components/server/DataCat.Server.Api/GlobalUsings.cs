@@ -51,6 +51,7 @@ global using DataCat.Server.Application.Security;
 global using DataCat.Server.Application.Validations;
 global using DataCat.Server.DI;
 global using DataCat.Server.Domain.Common.ResultFlow;
+global using DataCat.Server.Domain.Identity.Enums;
 global using DataCat.Server.Infrastructure.Migrations;
 global using DataCat.Server.Metrics.Hubs;
 global using Google.Protobuf.WellKnownTypes;

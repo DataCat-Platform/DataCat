@@ -70,7 +70,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseExceptionHandling();
-app.UseCustomAuth();
 
 app.MapHub<MetricsHub>("/datacat-metrics");
 app.MapGrpcService<ReceiveMetricService>();
