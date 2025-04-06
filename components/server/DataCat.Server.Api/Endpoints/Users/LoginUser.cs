@@ -19,7 +19,7 @@ public sealed class LoginUser : ApiEndpointBase
             })
             .WithTags(ApiTags.Users)
             .HasApiVersion(ApiVersions.V1)
-            .Produces<GetPanelResponse>()
+            .Produces<AccessTokenResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
