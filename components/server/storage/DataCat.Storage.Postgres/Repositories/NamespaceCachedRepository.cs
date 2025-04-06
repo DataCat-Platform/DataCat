@@ -39,7 +39,7 @@ public sealed class NamespaceCachedRepository(
         return entity;
     }
 
-    public async ValueTask<NamespaceEntity?> GetDefaultNamespaceAsync(CancellationToken token)
+    public async ValueTask<NamespaceEntity> GetDefaultNamespaceAsync(CancellationToken token)
     {
         if (cache.TryGetValue(DefaultNamespaceCacheKey, out NamespaceEntity? cached))
         {

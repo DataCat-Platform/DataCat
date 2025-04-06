@@ -22,6 +22,8 @@ global using DataCat.Server.Application.Commands.Dashboard.UpdateName;
 global using DataCat.Server.Application.Commands.DataSource.Add;
 global using DataCat.Server.Application.Commands.DataSource.Remove;
 global using DataCat.Server.Application.Commands.DataSource.UpdateConnectionString;
+global using DataCat.Server.Application.Commands.ExternalRoleMapping.Add;
+global using DataCat.Server.Application.Commands.Namespace.Add;
 global using DataCat.Server.Application.Commands.NotificationChannel.Add;
 global using DataCat.Server.Application.Commands.NotificationChannel.Remove;
 global using DataCat.Server.Application.Commands.NotificationChannel.UpdateNotificationQuery;

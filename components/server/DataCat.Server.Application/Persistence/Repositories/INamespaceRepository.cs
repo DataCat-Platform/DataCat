@@ -4,5 +4,5 @@ public interface INamespaceRepository
 {
     ValueTask<NamespaceEntity?> GetByNameAsync(string name, CancellationToken token);
     
-    ValueTask<NamespaceEntity?> GetDefaultNamespaceAsync(CancellationToken token);
+    ValueTask<NamespaceEntity> GetDefaultNamespaceAsync(CancellationToken token);
 }

@@ -13,9 +13,9 @@ public interface IUserRepository
     /// </summary>
     /// <param name="token"></param>
     /// <returns></returns>
-    Task<List<ExternalRoleMapping>> GetExternalRoleMappingsAsync(CancellationToken token = default);
+    Task<List<ExternalRoleMappingValue>> GetExternalRoleMappingsAsync(CancellationToken token = default);
     
     Task<UserEntity?> GetOldestByUpdatedAtUserAsync(CancellationToken token = default);
     
-    Task UpdateUserRolesAsync(UserEntity user, List<ExternalRoleMapping> currentUserRolesFromKeycloak, CancellationToken token);
+    Task UpdateUserRolesAsync(UserEntity user, List<ExternalRoleMappingValue> currentUserRolesFromKeycloak, CancellationToken token);
 }

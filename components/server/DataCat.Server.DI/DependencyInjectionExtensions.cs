@@ -18,6 +18,7 @@ public static class DependencyInjectionExtensions
         services.AddSingleton<PluginStoreOptions>(sp => sp.GetRequiredService<IOptions<PluginStoreOptions>>().Value);
         services.AddSingleton<IPluginStorage, DiskPluginStorage>();
         services.AddSingleton<DataSourceManager>();
+        services.AddScoped<INamespaceService, NamespaceService>();
         
         services.AddSingleton<IMetricClient, DataCatDbClient>(); // TODO: Register in another module
         

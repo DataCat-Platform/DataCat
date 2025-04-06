@@ -11,4 +11,5 @@ public static class ApiTags
     public const string Plugins = nameof(Plugins);
     public const string Secrets = nameof(Secrets);
     public const string Users = nameof(Users);
+    public const string ExternalRoleMappings = nameof(ExternalRoleMappings);
 }

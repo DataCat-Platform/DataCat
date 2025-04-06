@@ -72,9 +72,6 @@ public sealed class UserRoleSynchronizationJob(
         catch (Exception ex)
         {
             logger.LogError(ex, "[{Job}] Exception occurred during user synchronization.", nameof(UserRoleSynchronizationJob));
-        }
-        finally
-        {
             await unitOfWork.RollbackAsync(stoppingToken);
         }
     }

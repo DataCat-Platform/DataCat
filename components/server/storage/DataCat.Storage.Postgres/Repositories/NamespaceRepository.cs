@@ -37,7 +37,7 @@ public sealed class NamespaceRepository(
                 {Public.Namespaces.Id}       {nameof(NamespaceSnapshot.Id)}, 
                 {Public.Namespaces.Name}     {nameof(NamespaceSnapshot.Name)}
             FROM {Public.NamespaceTable}
-            WHERE {Public.Namespaces.Id} = @p_name
+            WHERE {Public.Namespaces.Name} = @p_name
         """;
 
         var result = await connection.QuerySingleOrDefaultAsync<NamespaceSnapshot>(
@@ -49,9 +49,9 @@ public sealed class NamespaceRepository(
         return result?.RestoreFromSnapshot();
     }
 
-    public async ValueTask<NamespaceEntity?> GetDefaultNamespaceAsync(CancellationToken token)
+    public async ValueTask<NamespaceEntity> GetDefaultNamespaceAsync(CancellationToken token)
     {
-        return await GetByNameAsync(ApplicationConstants.DefaultNamespace, token);
+        return (await GetByNameAsync(ApplicationConstants.DefaultNamespace, token))!;
     }
 
     public async Task AddAsync(NamespaceEntity entity, CancellationToken token = default)

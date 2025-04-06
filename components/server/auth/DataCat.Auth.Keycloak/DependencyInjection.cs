@@ -32,6 +32,13 @@ public static class DependencyInjection
             httpClient.BaseAddress = new Uri(keycloakOptions.BaseUrl);
         });
         
+        services.AddHttpClient<UserRoleSynchronizationJob>((serviceProvider, httpClient) =>
+        {
+            var keycloakOptions = serviceProvider.GetRequiredService<IOptions<KeycloakOptions>>().Value;
+
+            httpClient.BaseAddress = new Uri(keycloakOptions.BaseUrl);
+        });
+        
         services.AddQuartz(q =>
         {
             #region UserSynchronizationJob
@@ -41,6 +48,20 @@ public static class DependencyInjection
             q.AddTrigger(opts => opts
                 .ForJob(userSynchronizationJobKey)
                 .WithIdentity("UserSynchronizationJob-trigger")
+                .WithSimpleSchedule(action =>
+                {
+                    action.WithIntervalInSeconds(20).RepeatForever();
+                })
+            );
+            #endregion
+            
+            #region UserRoleSynchronizationJob
+            var userRoleSynchronizationJobKey = new JobKey("UserRoleSynchronizationJob");
+            q.AddJob<UserRoleSynchronizationJob>(opts => opts.WithIdentity(userRoleSynchronizationJobKey));
+    
+            q.AddTrigger(opts => opts
+                .ForJob(userRoleSynchronizationJobKey)
+                .WithIdentity("UserRoleSynchronizationJob-trigger")
                 .WithSimpleSchedule(action =>
                 {
                     action.WithIntervalInSeconds(20).RepeatForever();

@@ -16,6 +16,7 @@ public static class AppBuilderExtensions
 
         await SeedRolesAsync(databaseOptions.ConnectionString);
         await SeedPermissionsAsync(databaseOptions.ConnectionString);
+        await SeedDefaultNamespace(databaseOptions.ConnectionString);
     }
     
     private static async Task SeedRolesAsync(string connectionString)
@@ -73,6 +74,29 @@ public static class AppBuilderExtensions
 
                 await insertPermissionCommand.ExecuteNonQueryAsync();
             }
+        }
+    }
+    
+    private static async Task SeedDefaultNamespace(string connectionString)
+    {
+        await using var connection = new NpgsqlConnection(connectionString);
+        await connection.OpenAsync();
+
+        const string defaultNamespaceExistsQuery = $"""
+            SELECT 1 
+            FROM {Public.NamespaceTable} n 
+            WHERE n.{Public.Namespaces.Name} = '{ApplicationConstants.DefaultNamespace}';
+        """;
+        var isExist = await connection.ExecuteScalarAsync<long>(defaultNamespaceExistsQuery);
+
+        if (isExist != 1)
+        {
+            var insertSql = $"""
+                INSERT INTO {Public.NamespaceTable} ({Public.Namespaces.Id}, {Public.Namespaces.Name})
+                VALUES ('{Guid.NewGuid()}', '{ApplicationConstants.DefaultNamespace}');
+            """; 
+            
+            await connection.ExecuteAsync(insertSql);
         }
     }
 }

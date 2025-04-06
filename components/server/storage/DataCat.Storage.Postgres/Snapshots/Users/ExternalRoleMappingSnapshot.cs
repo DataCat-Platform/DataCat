@@ -9,17 +9,17 @@ public sealed class ExternalRoleMappingSnapshot
 
 public static class ExternalRoleMappingSnapshotExtensions
 {
-    public static ExternalRoleMappingSnapshot Save(this ExternalRoleMapping mapping)
+    public static ExternalRoleMappingSnapshot Save(this ExternalRoleMappingValue mappingValue)
     {
         return new ExternalRoleMappingSnapshot
         {
-            ExternalRole = mapping.ExternalRole,
-            NamespaceId = mapping.NamespaceId.ToString(),
-            RoleId = mapping.Role.Value,
+            ExternalRole = mappingValue.ExternalRole,
+            NamespaceId = mappingValue.NamespaceId.ToString(),
+            RoleId = mappingValue.Role.Value,
         };
     }
     
-    public static ExternalRoleMapping RestoreFromSnapshot(this ExternalRoleMappingSnapshot snapshot) => 
+    public static ExternalRoleMappingValue RestoreFromSnapshot(this ExternalRoleMappingSnapshot snapshot) => 
         new(snapshot.ExternalRole, 
             UserRole.FromValue(snapshot.RoleId), 
             namespaceId: Guid.Parse(snapshot.NamespaceId));

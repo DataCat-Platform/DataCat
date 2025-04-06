@@ -1,8 +1,8 @@
 namespace DataCat.Server.Domain.Identity.ValueObjects;
 
-public sealed class ExternalRoleMapping : ValueObject
+public sealed class ExternalRoleMappingValue : ValueObject
 {
-    public ExternalRoleMapping(string externalRole, UserRole role, Guid namespaceId)
+    public ExternalRoleMappingValue(string externalRole, UserRole role, Guid namespaceId)
     {
         ExternalRole = externalRole;
         Role = role;

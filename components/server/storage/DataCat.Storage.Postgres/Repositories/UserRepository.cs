@@ -1,4 +1,3 @@
-using Microsoft.Data.SqlClient;
 
 namespace DataCat.Storage.Postgres.Repositories;
 
@@ -95,7 +94,7 @@ public sealed class UserRepository(
         return userSnapshot?.RestoreFromSnapshot();
     }
 
-    public async Task<List<ExternalRoleMapping>> GetExternalRoleMappingsAsync(CancellationToken token = default)
+    public async Task<List<ExternalRoleMappingValue>> GetExternalRoleMappingsAsync(CancellationToken token = default)
     {
         var connection = await Factory.GetOrCreateConnectionAsync(token);
 
@@ -113,7 +112,6 @@ public sealed class UserRepository(
         const string sql = UserSql.Select.GetOldestByUpdatedAtUserAsync;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        await connection.OpenAsync(token);
 
         var user = await connection.QueryFirstOrDefaultAsync<UserSnapshot>(
             sql, 
@@ -123,7 +121,7 @@ public sealed class UserRepository(
         return user?.RestoreFromSnapshot();
     }
 
-    public async Task UpdateUserRolesAsync(UserEntity user, List<ExternalRoleMapping> currentUserRolesFromKeycloak, CancellationToken token)
+    public async Task UpdateUserRolesAsync(UserEntity user, List<ExternalRoleMappingValue> currentUserRolesFromKeycloak, CancellationToken token)
     {
         var dataTable = new DataTable();
     
@@ -134,12 +132,12 @@ public sealed class UserRepository(
         
         foreach (var roleMapping in currentUserRolesFromKeycloak)
         {
-            dataTable.Rows.Add(user.Id, roleMapping.Role.Value, roleMapping.NamespaceId, roleMapping, false);
+            dataTable.Rows.Add(user.Id, roleMapping.Role.Value, roleMapping.NamespaceId, false);
         }
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
 
-        const string TempUserRoles = "#TempUserRoles";  
+        const string TempUserRoles = "temp_user_roles";  
         
         await using var cmd = connection.CreateCommand();
         cmd.Transaction = UnitOfWork.Transaction as NpgsqlTransaction;
@@ -163,17 +161,19 @@ public sealed class UserRepository(
              ) FROM STDIN (FORMAT BINARY)
              """;
 
-        await using var writer = await connection.BeginBinaryImportAsync(copySql, token);
-        foreach (DataRow row in dataTable.Rows)
+        await using (var writer = await connection.BeginBinaryImportAsync(copySql, token))
         {
-            await writer.StartRowAsync(token);
-            await writer.WriteAsync(row[nameof(Public.UsersRolesLink.UserId)], NpgsqlTypes.NpgsqlDbType.Text, token);
-            await writer.WriteAsync(row[nameof(Public.UsersRolesLink.RoleId)], NpgsqlTypes.NpgsqlDbType.Integer, token);
-            await writer.WriteAsync(row[nameof(Public.UsersRolesLink.NamespaceId)], NpgsqlTypes.NpgsqlDbType.Text, token);
-            await writer.WriteAsync(row[nameof(Public.UsersRolesLink.IsManual)], NpgsqlTypes.NpgsqlDbType.Boolean, token);
-        }
+            foreach (DataRow row in dataTable.Rows)
+            {
+                await writer.StartRowAsync(token);
+                await writer.WriteAsync(row[nameof(Public.UsersRolesLink.UserId)], NpgsqlTypes.NpgsqlDbType.Text, token);
+                await writer.WriteAsync(row[nameof(Public.UsersRolesLink.RoleId)], NpgsqlTypes.NpgsqlDbType.Integer, token);
+                await writer.WriteAsync(row[nameof(Public.UsersRolesLink.NamespaceId)], NpgsqlTypes.NpgsqlDbType.Text, token);
+                await writer.WriteAsync(row[nameof(Public.UsersRolesLink.IsManual)], NpgsqlTypes.NpgsqlDbType.Boolean, token);
+            }
 
-        await writer.CompleteAsync(token);
+            await writer.CompleteAsync(token);
+        }
 
         await using var mergeCmd = connection.CreateCommand();
         mergeCmd.Transaction = UnitOfWork.Transaction as NpgsqlTransaction;
