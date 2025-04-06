@@ -1,11 +1,11 @@
-using DataCat.Server.Api;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 var configuration = builder.Configuration;
 
 builder.Services.AddGrpc();
+builder.Services.AddMemoryCache();
+
 builder.Services
     .AddApiSetup()
     .AddApplicationServices(configuration)
@@ -14,7 +14,8 @@ builder.Services
     .AddSecretsSetup(configuration)
     .AddAuthSetup(configuration)
     .AddNotificationsSetup(configuration)
-    .AddRealTimeCommunication(configuration);
+    .AddRealTimeCommunication(configuration)
+    .AddKeycloakAuth(configuration);
 
 builder.Services
     .AddCustomMiddlewares();
@@ -64,8 +65,11 @@ app.UseSwaggerUI(options =>
 app.UseRouting();
 
 app.UseLoggingRequests();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseExceptionHandling();
-app.UseCustomAuth();
 
 app.MapHub<MetricsHub>("/datacat-metrics");
 app.MapGrpcService<ReceiveMetricService>();

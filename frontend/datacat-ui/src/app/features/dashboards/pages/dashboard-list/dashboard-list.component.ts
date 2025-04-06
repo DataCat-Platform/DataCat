@@ -9,6 +9,7 @@ import { DropdownModule } from "primeng/dropdown";
 import { InputText } from "primeng/inputtext";
 import { InputIcon } from "primeng/inputicon";
 import { IconField } from "primeng/iconfield";
+import { Tooltip } from "primeng/tooltip";
 
 interface DashboardItem {
   name: string;
@@ -33,7 +34,8 @@ interface DashboardItem {
     NgIf,
     InputText,
     InputIcon,
-    IconField
+    IconField,
+    Tooltip
   ],
   templateUrl: './dashboard-list.component.html'
 })
@@ -44,10 +46,10 @@ export class DashboardListComponent {
 
   // Пример опций для p-dropdown
   teamOptions = [
-    {label: 'Team A', value: 'Team A'},
-    {label: 'Team B', value: 'Team B'},
-    {label: 'Team C', value: 'Team C'},
-    {label: 'Team D', value: 'Team D'}
+    {label: 'Namespace A', value: 'Namespace A'},
+    {label: 'Namespace B', value: 'Namespace B'},
+    {label: 'Namespace C', value: 'Namespace C'},
+    {label: 'Namespace D', value: 'Namespace D'}
   ];
   selectedTeam: string | null = null;
 

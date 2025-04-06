@@ -11,9 +11,10 @@ public sealed class AlertChecker(
     ILogger<AlertChecker> logger) 
     : BaseBackgroundWorker(logger)
 {
+    protected override string JobName => nameof(AlertChecker);
+
     protected override async Task RunAsync(CancellationToken stoppingToken = default)
     {
-        TrackJobStart(nameof(AlertChecker));
         await unitOfWork.StartTransactionAsync(stoppingToken);
         
         // TODO: Change hardcoded top argument
@@ -77,10 +78,6 @@ public sealed class AlertChecker(
         {
             logger.LogError(exception, "[{Job}] Job failed", nameof(AlertChecker));
             await unitOfWork.RollbackAsync(stoppingToken);
-        }
-        finally
-        {
-            TrackJobEnd(nameof(AlertChecker));
         }
     }
 }

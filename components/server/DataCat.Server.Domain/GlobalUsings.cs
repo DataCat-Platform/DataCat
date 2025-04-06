@@ -10,4 +10,5 @@ global using DataCat.Server.Domain.Core.ValueObjects;
 global using DataCat.Server.Domain.Exceptions;
 global using DataCat.Server.Domain.Identity;
 global using DataCat.Server.Domain.Identity.Enums;
+global using DataCat.Server.Domain.Identity.ValueObjects;
 global using DataCat.Server.Domain.Plugins.ValueObjects;

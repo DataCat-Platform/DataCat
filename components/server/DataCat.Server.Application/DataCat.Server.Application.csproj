@@ -16,6 +16,8 @@
       <PackageReference Include="FluentValidation" Version="11.11.0" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
       <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+      <PackageReference Include="Quartz" Version="3.14.0" />
+      <PackageReference Include="Quartz.AspNetCore" Version="3.14.0" />
     </ItemGroup>
 
 </Project>

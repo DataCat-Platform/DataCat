@@ -1,6 +1,6 @@
 namespace DataCat.Server.Domain.Core.ValueObjects;
 
-public class TimeRange : ValueObject
+public sealed class TimeRange : ValueObject
 {
     private TimeRange(DateTime from, DateTime to)
     {

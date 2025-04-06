@@ -1,9 +1,7 @@
 namespace DataCat.Storage.Postgres.Snapshots;
 
-public sealed class DataSourceTypeSnapshot
+public sealed record DataSourceTypeSnapshot
 {
-    public const string DataSourceTypeTable = "data_source_types";
-
     public required int Id { get; init; }
     public required string Source { get; init; }
 }

@@ -1,7 +1,6 @@
-using Asp.Versioning;
-using Asp.Versioning.Builder;
-
 namespace DataCat.Server.Api.Endpoints.Secrets;
+
+public sealed record SecretModel(string Key, string Value);
 
 public sealed class AddSecret : ApiEndpointBase
 {

@@ -1,6 +1,6 @@
 namespace DataCat.Storage.Postgres.Snapshots;
 
-public sealed class PluginSnapshot
+public sealed record PluginSnapshot
 {
     public required string Id { get; init; }
     public required string Name { get; init; }

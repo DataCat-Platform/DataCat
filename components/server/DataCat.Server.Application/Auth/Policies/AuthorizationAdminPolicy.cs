@@ -4,6 +4,6 @@ public sealed class AuthorizationAdminPolicy : IAuthorizationPolicy
 {
     public bool IsAuthorized(IIdentity? user)
     {
-        return user is not null && user.IsAdmin;
+        return user is not null && user.RoleClaims.Any(x => UserRole.Admin == x.Role);
     }
 }
