@@ -15,6 +15,10 @@ public sealed class SearchAlerts : ApiEndpointBase
                 var result = await mediator.Send(query, token);
                 return HandleCustomResponse(result);
             })
+            .RequireAuthorization(c =>
+            {
+                c.RequireRole(UserRole.Admin.Name);
+            })
             .WithTags(ApiTags.Alerts)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Page<SearchAlertsResponse>>()

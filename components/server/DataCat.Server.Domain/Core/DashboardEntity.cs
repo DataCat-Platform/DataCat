@@ -9,6 +9,7 @@ public class DashboardEntity
         IEnumerable<PanelEntity> panels,
         UserEntity owner,
         IEnumerable<UserEntity> sharedWith,
+        Guid namespaceId,
         DateTime createdAt,
         DateTime updatedAt)
     {
@@ -18,6 +19,7 @@ public class DashboardEntity
         Panels = panels;
         Owner = owner;
         SharedWith = sharedWith;
+        NamespaceId = namespaceId;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
@@ -33,6 +35,7 @@ public class DashboardEntity
     public UserEntity Owner { get; private set; }
 
     public IEnumerable<UserEntity> SharedWith { get; private set; }
+    public Guid NamespaceId { get; }
 
     public DateTime CreatedAt { get; private set; }
 
@@ -49,6 +52,7 @@ public class DashboardEntity
         IEnumerable<PanelEntity>? panels,
         UserEntity? owner,
         IEnumerable<UserEntity>? sharedWith,
+        Guid namespaceId,
         DateTime createdAt,
         DateTime updatedAt)
     {
@@ -65,7 +69,7 @@ public class DashboardEntity
         {
             validationList.Add(Result.Fail<DashboardEntity>(BaseError.FieldIsNull(nameof(owner))));
         }
-
+        
         #endregion
 
         panels ??= Array.Empty<PanelEntity>();
@@ -80,6 +84,7 @@ public class DashboardEntity
                 panels,
                 owner!,
                 sharedWith,
+                namespaceId,
                 createdAt,
                 updatedAt));
     }

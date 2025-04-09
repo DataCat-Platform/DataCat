@@ -6,5 +6,7 @@ public sealed record AddDashboardCommand : IRequest<Result<Guid>>, IAuthorizedCo
 
     public string? Description { get; init; }
 
+    public Guid? NamespaceId { get; set; } = null;
+    
     public required string UserId { get; init; }
 }

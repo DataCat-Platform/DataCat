@@ -1,5 +1,3 @@
-using DataCat.Server.Domain.Common;
-
 namespace DataCat.Storage.Postgres;
 
 public sealed class PostgresPlugin : IDatabasePlugin
@@ -27,8 +25,13 @@ public sealed class PostgresPlugin : IDatabasePlugin
         services.AddScoped<IRepository<PluginEntity, Guid>, PluginRepository>();
         services.AddScoped<IPluginRepository, PluginRepository>();
         
+        services.AddScoped<IRepository<NamespaceEntity, Guid>, NamespaceRepository>();
+        services.AddScoped<INamespaceRepository, NamespaceRepository>();
+        
+        services.AddScoped<IExternalRoleMappingRepository, ExternalRoleMappingRepository>();
+        
         services.AddScoped<UnitOfWork>();
-        services.AddScoped<IUnitOfWork<NpgsqlTransaction>>(provider => provider.GetRequiredService<UnitOfWork>());
+        services.AddScoped<IUnitOfWork<IDbTransaction>>(provider => provider.GetRequiredService<UnitOfWork>());
         
         services.AddSingleton<IMigrationRunnerFactory, PostgresRunnerFactory>(sp =>
         {
@@ -82,7 +85,6 @@ public sealed class PostgresPlugin : IDatabasePlugin
             #endregion
         });
         
-        services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
         return services;
     }
     

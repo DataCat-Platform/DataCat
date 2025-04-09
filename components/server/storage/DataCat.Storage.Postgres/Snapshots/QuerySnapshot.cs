@@ -1,6 +1,6 @@
 namespace DataCat.Storage.Postgres.Snapshots;
 
-public sealed class QuerySnapshot
+public sealed record QuerySnapshot
 {
     public required string PanelRawQuery { get; init; }
     public required DataSourceSnapshot DataSource { get; init; }        

@@ -1,5 +1,3 @@
-using DataCat.Server.Domain.Common;
-
 namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class PanelRepository(

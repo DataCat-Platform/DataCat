@@ -12,6 +12,7 @@ public static class DashboardSql
               d.{Public.Dashboards.Name}                 {nameof(DashboardSnapshot.Name)},
               d.{Public.Dashboards.Description}          {nameof(DashboardSnapshot.Description)},
               d.{Public.Dashboards.OwnerId}              {nameof(DashboardSnapshot.OwnerId)},
+              d.{Public.Dashboards.NamespaceId}          {nameof(DashboardSnapshot.NamespaceId)},
               d.{Public.Dashboards.CreatedAt}            {nameof(DashboardSnapshot.CreatedAt)},
               d.{Public.Dashboards.UpdatedAt}            {nameof(DashboardSnapshot.UpdatedAt)},
               
@@ -64,6 +65,7 @@ public static class DashboardSql
               d.{Public.Dashboards.Name}         {nameof(DashboardSnapshot.Name)},
               d.{Public.Dashboards.Description}  {nameof(DashboardSnapshot.Description)},
               d.{Public.Dashboards.OwnerId}      {nameof(DashboardSnapshot.OwnerId)},
+              d.{Public.Dashboards.NamespaceId}  {nameof(DashboardSnapshot.NamespaceId)},
               d.{Public.Dashboards.CreatedAt}    {nameof(DashboardSnapshot.CreatedAt)},
               d.{Public.Dashboards.UpdatedAt}    {nameof(DashboardSnapshot.UpdatedAt)},
               

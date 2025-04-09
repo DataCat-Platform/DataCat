@@ -1,6 +1,6 @@
 namespace DataCat.Storage.Postgres.Snapshots;
 
-public sealed class PanelTypeSnapshot
+public sealed record PanelTypeSnapshot
 {
     public const string PanelTypeTable = "panel_types";
 

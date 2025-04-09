@@ -1,6 +1,6 @@
 namespace DataCat.Storage.Postgres.Snapshots;
 
-public sealed class AlertSnapshot
+public sealed record AlertSnapshot
 {
     public required string Id { get; init; }
     public required string? Description { get; init; }

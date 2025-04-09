@@ -16,11 +16,11 @@ public class CreateDashboardAndUserLink : Migration
 
             --- create many-to-many relationship table between dashboards and users
             CREATE TABLE {Public.DashboardUserLinkTable} (
-                {Public.Dashboards.Id} TEXT NOT NULL,
-                {Public.Users.Id} TEXT NOT NULL,
-                PRIMARY KEY ({Public.Dashboards.Id}, {Public.Users.Id}),
-                FOREIGN KEY ({Public.Dashboards.Id}) REFERENCES {Public.DashboardTable}({Public.Dashboards.Id}),
-                FOREIGN KEY ({Public.Users.Id}) REFERENCES {Public.UserTable}({Public.Users.Id})
+                {Public.DashboardsUsersLink.UserId} TEXT NOT NULL,
+                {Public.DashboardsUsersLink.DashboardId} TEXT NOT NULL,
+                PRIMARY KEY ({Public.DashboardsUsersLink.UserId}, {Public.DashboardsUsersLink.DashboardId}),
+                FOREIGN KEY ({Public.DashboardsUsersLink.DashboardId}) REFERENCES {Public.DashboardTable}({Public.Dashboards.Id}) ON DELETE CASCADE,
+                FOREIGN KEY ({Public.DashboardsUsersLink.UserId}) REFERENCES {Public.UserTable}({Public.Users.Id}) ON DELETE CASCADE
             );
         ";
         
