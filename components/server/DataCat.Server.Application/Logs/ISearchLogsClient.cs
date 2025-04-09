@@ -40,10 +40,13 @@ public interface ISearchLogsClient
     );
     
     /// <summary>
-    /// Checks whether the specified log index/pattern exists in the storage.
+    /// Ensures that the specified index exists in the storage. Creates the index if it does not exist.
     /// </summary>
-    /// <param name="indexPattern">The index name or pattern to check.</param>
-    /// <param name="token">Cancellation token to abort the operation.</param>
-    /// <returns>A task that represents the asynchronous operation and indicates whether the index exists.</returns>
-    Task<bool> IndexExistsAsync(string indexPattern, CancellationToken token = default);
+    /// <param name="indexPattern">The name or pattern of the index to verify or create.</param>
+    /// <param name="token">A cancellation token that can be used to cancel the operation.</param>
+    /// <returns>
+    /// A task representing the asynchronous operation. The result is <c>true</c> if the index already existed
+    /// or was created successfully; otherwise, <c>false</c>.
+    /// </returns>
+    Task<bool> CreateIndexIfNotExistsAsync(string indexPattern, CancellationToken token = default);
 }

@@ -1,6 +1,14 @@
 namespace DataCat.Logs.ElasticSearch;
 
-public class ElasticSearchClientFactory
+public sealed class ElasticSearchClientFactory : ISearchLogsClientFactory
 {
-    
+    public ISearchLogsClient CreateClient()
+    {
+        throw new NotImplementedException();
+    }
+
+    public ISearchLogsClient CreateClient(string indexPattern)
+    {
+        throw new NotImplementedException();
+    }
 }

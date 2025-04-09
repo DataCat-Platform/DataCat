@@ -7,6 +7,7 @@ global using System.Security.Claims;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
 global using DataCat.Auth.Keycloak.Extensions;
+global using DataCat.Auth.Keycloak.Jobs;
 global using DataCat.Auth.Keycloak.Models;
 global using DataCat.Auth.Keycloak.Services;
 global using DataCat.Server.Application.Auth;

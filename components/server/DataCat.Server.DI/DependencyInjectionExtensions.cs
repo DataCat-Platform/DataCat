@@ -145,6 +145,6 @@ public static class DependencyInjectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        
+        return services.AddElasticSearchLogSearching(configuration);
     }
 }

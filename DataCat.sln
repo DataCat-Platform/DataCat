@@ -55,6 +55,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Metrics.DataCatDb",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.NSwag", "components\server\DataCat.Server.NSwag\DataCat.Server.NSwag.csproj", "{A096821A-4F01-449F-A505-2AB5D9429854}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "logs", "logs", "{C3DC4972-AD43-4A6D-A5B1-03DF8CE7D048}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Logs.ElasticSearch", "components\server\logs\DataCat.Logs.ElasticSearch\DataCat.Logs.ElasticSearch.csproj", "{3D053634-4E0E-49AD-A52D-A7FFA8B3AAAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +89,8 @@ Global
 		{18883BEA-DF25-4871-9C81-5D974688D6DB} = {6810E2F4-F559-444A-A800-758C8A5BEC23}
 		{F7A1BDCC-8432-4FF4-8404-215A0DA2910F} = {18883BEA-DF25-4871-9C81-5D974688D6DB}
 		{A096821A-4F01-449F-A505-2AB5D9429854} = {7670EE1F-5E02-4470-83A9-9AF0C981298A}
+		{3D053634-4E0E-49AD-A52D-A7FFA8B3AAAE} = {C3DC4972-AD43-4A6D-A5B1-03DF8CE7D048}
+		{C3DC4972-AD43-4A6D-A5B1-03DF8CE7D048} = {6810E2F4-F559-444A-A800-758C8A5BEC23}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1621F9FE-91B0-4532-BF6B-E1BFDE263D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -151,5 +157,9 @@ Global
 		{A096821A-4F01-449F-A505-2AB5D9429854}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A096821A-4F01-449F-A505-2AB5D9429854}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A096821A-4F01-449F-A505-2AB5D9429854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D053634-4E0E-49AD-A52D-A7FFA8B3AAAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D053634-4E0E-49AD-A52D-A7FFA8B3AAAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D053634-4E0E-49AD-A52D-A7FFA8B3AAAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D053634-4E0E-49AD-A52D-A7FFA8B3AAAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
