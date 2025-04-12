@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\logs\DataCat.Logs.ElasticSearch\DataCat.Logs.ElasticSearch.csproj" />
       <ProjectReference Include="..\metrics\DataCat.Metrics.DataCatDb\DataCat.Metrics.DataCatDb.csproj" />
         
       <ProjectReference Include="..\notifications\DataCat.Notifications.Email\DataCat.Notifications.Email.csproj" />

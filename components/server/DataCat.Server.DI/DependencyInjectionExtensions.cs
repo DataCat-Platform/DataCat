@@ -140,4 +140,11 @@ public static class DependencyInjectionExtensions
         
         return services;
     }
+
+    public static IServiceCollection AddSearchLogsServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        return services.AddElasticSearchLogSearching(configuration);
+    }
 }

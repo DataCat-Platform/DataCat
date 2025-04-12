@@ -4,6 +4,7 @@ global using System.Reflection;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
 global using Dapper;
+global using DataCat.Logs.ElasticSearch;
 global using DataCat.Metrics.DataCatDb;
 global using DataCat.Server.Application.Alerts;
 global using DataCat.Server.Application.Assembly;

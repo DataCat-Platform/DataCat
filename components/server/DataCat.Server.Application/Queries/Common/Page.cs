@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.Common;
 
 public sealed record Page<T>(
     IEnumerable<T> Items, 
-    int TotalCount, 
+    long TotalCount, 
     int PageNumber, 
     int PageSize)
 {

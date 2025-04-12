@@ -1,5 +1,3 @@
-using DataCat.Auth.Keycloak.Jobs;
-
 namespace DataCat.Auth.Keycloak;
 
 public static class DependencyInjection

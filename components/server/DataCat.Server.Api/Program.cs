@@ -15,6 +15,7 @@ builder.Services
     .AddAuthSetup(configuration)
     .AddNotificationsSetup(configuration)
     .AddRealTimeCommunication(configuration)
+    .AddSearchLogsServices(configuration)
     .AddKeycloakAuth(configuration);
 
 builder.Services
