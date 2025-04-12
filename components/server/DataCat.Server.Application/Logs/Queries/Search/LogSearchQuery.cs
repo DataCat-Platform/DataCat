@@ -1,6 +1,5 @@
-namespace DataCat.Server.Application.Logs.Models;
+namespace DataCat.Server.Application.Logs.Queries.Search;
 
-// Параметры поиска логов
 public sealed record LogSearchQuery(
     string? TraceId = null,
     DateTime? From = null,
@@ -9,7 +8,7 @@ public sealed record LogSearchQuery(
     string? ServiceName = null,
     Dictionary<string, string>? CustomFilters = null,
     int PageSize = 100,
-    int PageNumber = 1,
-    string? SortField = LogSortFields.Timestamp,
+    int Page = 1,
+    string? SortField = null,
     bool SortAscending = false
-);
+) : IRequest<Result<Page<LogEntry>>>, IPaginationQuery;

@@ -1,4 +1,6 @@
-namespace DataCat.Server.Application.Logs;
+using DataCat.Server.Application.Logs.Queries.Search;
+
+namespace DataCat.Server.Application.Logs.Abstractions;
 
 /// <summary>
 /// Provides functionality for searching and analyzing log data in a log storage system.
@@ -11,7 +13,7 @@ public interface ISearchLogsClient
     /// <param name="query">The search criteria including filters, pagination and sorting options.</param>
     /// <param name="token">Cancellation token to abort the operation.</param>
     /// <returns>A task that represents the asynchronous operation and contains the search results.</returns>
-    Task<LogSearchResult> SearchAsync(LogSearchQuery query, CancellationToken token = default);
+    Task<Page<LogEntry>> SearchAsync(LogSearchQuery query, CancellationToken token = default);
     
     /// <summary>
     /// Retrieves distinct values for a specified field, optionally filtered by a base query.
@@ -38,15 +40,4 @@ public interface ISearchLogsClient
         TimeSpan interval,
         CancellationToken token = default
     );
-    
-    /// <summary>
-    /// Ensures that the specified index exists in the storage. Creates the index if it does not exist.
-    /// </summary>
-    /// <param name="indexPattern">The name or pattern of the index to verify or create.</param>
-    /// <param name="token">A cancellation token that can be used to cancel the operation.</param>
-    /// <returns>
-    /// A task representing the asynchronous operation. The result is <c>true</c> if the index already existed
-    /// or was created successfully; otherwise, <c>false</c>.
-    /// </returns>
-    Task<bool> CreateIndexIfNotExistsAsync(string indexPattern, CancellationToken token = default);
 }

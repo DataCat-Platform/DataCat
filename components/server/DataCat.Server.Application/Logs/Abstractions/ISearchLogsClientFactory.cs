@@ -1,4 +1,4 @@
-namespace DataCat.Server.Application.Logs;
+namespace DataCat.Server.Application.Logs.Abstractions;
 
 /// <summary>
 /// Factory for creating instances of <see cref="ISearchLogsClient"/>.

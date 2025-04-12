@@ -35,6 +35,8 @@ global using DataCat.Server.Application.Commands.Plugin.Remove;
 global using DataCat.Server.Application.Commands.Plugin.ToggleStatus;
 global using DataCat.Server.Application.Commands.Plugin.Update;
 global using DataCat.Server.Application.Commands.User.Login;
+global using DataCat.Server.Application.Logs.Models;
+global using DataCat.Server.Application.Logs.Queries.Search;
 global using DataCat.Server.Application.Queries.Alert.Get;
 global using DataCat.Server.Application.Queries.Alert.Search;
 global using DataCat.Server.Application.Queries.Common;

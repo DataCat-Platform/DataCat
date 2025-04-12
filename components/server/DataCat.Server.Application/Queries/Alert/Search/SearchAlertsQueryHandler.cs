@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Queries.Alert.Search;
 
-public class SearchAlertsQueryHandler(
+public sealed class SearchAlertsQueryHandler(
     IAlertRepository alertRepository)
     : IRequestHandler<SearchAlertsQuery, Result<Page<SearchAlertsResponse>>>
 {

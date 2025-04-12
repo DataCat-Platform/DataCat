@@ -1,4 +1,4 @@
-namespace DataCat.Server.Application.Logs;
+namespace DataCat.Server.Application.Logs.Abstractions;
 
 public interface ISearchLogsSettings
 {
@@ -7,4 +7,5 @@ public interface ISearchLogsSettings
     TimeSpan RequestTimeout { get; }
     string UserName { get; }
     string Password { get; }
+    bool EnableDebugLogging { get; }
 }

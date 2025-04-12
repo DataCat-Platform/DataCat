@@ -12,6 +12,7 @@ global using DataCat.Server.Application.Alerts;
 global using DataCat.Server.Application.Auth;
 global using DataCat.Server.Application.Auth.Policies;
 global using DataCat.Server.Application.Behaviors;
+global using DataCat.Server.Application.Logs.Abstractions;
 global using DataCat.Server.Application.Logs.Models;
 global using DataCat.Server.Application.Metrics.Models;
 global using DataCat.Server.Application.Persistence.Repositories;

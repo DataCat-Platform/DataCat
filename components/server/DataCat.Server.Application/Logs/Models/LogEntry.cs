@@ -28,4 +28,4 @@ public sealed record LogEntry(
     string Severity,
     string ServiceName,
     string TraceId,
-    Dictionary<string, object> AdditionalFields);
+    Dictionary<string, object?> AdditionalFields);

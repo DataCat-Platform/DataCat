@@ -1,7 +1,8 @@
-namespace DataCat.Server.Application.Logs.Models;
+namespace DataCat.Logs.ElasticSearch.Constants;
 
-public static class LogSortFields
+public static class LogFields
 {
+    public const string TraceId = "TraceId";
     public const string Timestamp = "@timestamp";
     public const string Severity = "Severity";
     public const string ServiceName = "ServiceName";
