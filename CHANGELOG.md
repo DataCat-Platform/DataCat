@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - *(datacat-ui)* Add expanded drawer
 - *(datacat-ui)* Add dashboard-list page
 - *(datacat-server)* Implement full integration with keycloak provider
+- *(datacat-server)* Complete elasticsearch integration
 
 ### 🚜 Refactor
 
