@@ -1,0 +1,24 @@
+@for (filter of filters; track filter) {
+  @switch (filter) {}
+  <p-input-group [dt]="{ addon: { padding: '{padding.xs} {padding.sm}' } }">
+    <!-- <p-inputgroup-addon [dt]="{ addon: { padding: { y: '{padding.xs}' } } }">
+      {{ name }}
+    </p-inputgroup-addon> -->
+    <!-- <p-select
+      [options]="predicates"
+      [optionValue]="selectedPredicate"
+      [dt]="{ padding: { y: '{padding.xs}' } }"
+    /> -->
+    <p-button
+      icon="pi pi-times"
+      [dt]="{ padding: { y: '{padding.xs}' } }"
+      variant="outlined"
+      severity="secondary"
+      pTooltip="Remove filter"
+    ></p-button>
+  </p-input-group>
+}
+<p-button (click)="addFilter.toggle($event)" icon="pi pi-filter" severity="secondary" pTooltip="Add filter" tooltipPosition="top">
+<p-popover #addFilter>
+  Select filter type
+</p-popover>

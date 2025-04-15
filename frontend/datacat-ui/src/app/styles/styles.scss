@@ -1,0 +1,15 @@
+@import 'fonts';
+@import 'primeicons/primeicons.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'JetBrains Mono', monospace;
+
+  // Font size scales all of PrimeNG components.
+  font-size: 14px;
+
+  background-color: var(--p-surface-50);
+}

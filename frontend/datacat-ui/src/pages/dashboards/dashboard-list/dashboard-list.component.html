@@ -1,0 +1,134 @@
+<div class="w-full min-h-screen">
+  <nav class="flex items-center justify-between px-4 py-3">
+    <div class="space-x-4">
+      <p-button [link]="true" label="Lists" />
+      <p-button [link]="true" label="Namespaces" />
+    </div>
+
+    <p-button (click)="newDashboard()" label="New Dashboard"></p-button>
+  </nav>
+
+  <div class="flex">
+    <aside
+      [ngClass]="showControls ? 'w-64' : 'w-0 overflow-hidden'"
+      style="transition: width 0.3s ease"
+    >
+      <div *ngIf="showControls" class="p-4 space-y-4">
+        <div class="font-bold text-lg">My Teams</div>
+
+        <p-dropdown
+          [(ngModel)]="selectedTeam"
+          [options]="teamOptions"
+          placeholder="Select a Namespace"
+          styleClass="w-full !border-gray-300 !rounded focus:!border-blue-500"
+        ></p-dropdown>
+
+        <div class="font-bold">Namespace Access</div>
+        <ul class="space-y-1">
+          <p-button
+            [link]="true"
+            [pTooltip]="'Namespace where the user has read permissions'"
+            icon="pi pi-star"
+            iconPos="left"
+            label="Read Namespaces"
+          />
+          <p-button
+            [link]="true"
+            [pTooltip]="'Namespace where the user has write permissions'"
+            icon="pi pi-star"
+            iconPos="left"
+            label="Write Namespaces"
+          />
+          <p-button
+            [link]="true"
+            [pTooltip]="'Namespace where the user has admin permissions'"
+            icon="pi pi-star"
+            iconPos="left"
+            label="Admin Namespaces"
+          />
+        </ul>
+      </div>
+    </aside>
+
+    <main class="flex-1 p-4">
+      <div class="flex items-center gap-2 mb-4">
+        <p-button
+          (click)="toggleControls()"
+          [label]="showControls ? 'Hide Controls' : 'Show Controls'"
+        ></p-button>
+
+        <div class="flex-1">
+          <p-iconfield class="w-full">
+            <p-inputicon styleClass="pi pi-search"></p-inputicon>
+            <input
+              [(ngModel)]="searchValue"
+              class="w-full"
+              pInputText
+              placeholder="Search dashboards"
+              type="text"
+            />
+          </p-iconfield>
+        </div>
+
+        <p-button
+          (click)="onSearch(searchValue)"
+          [loading]="isSearchLoading"
+          label="Search"
+        ></p-button>
+      </div>
+
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xl font-bold">All Dashboards</h2>
+        <div class="flex space-x-2">
+          <p-button (click)="editTeams()" label="Edit Teams"></p-button>
+          <p-button (click)="addTo()" label="Add to"></p-button>
+          <p-button (click)="deleteDashboards()" label="Delete"></p-button>
+        </div>
+      </div>
+
+      <p-table
+        [value]="dashboardItems"
+        class="rounded overflow-hidden mb-3 mt-8"
+        tableStyleClass="w-full text-left border-collapse"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="py-2 px-4 font-medium">NAME</th>
+            <th class="py-2 px-4 font-medium">AUTHOR</th>
+            <th class="py-2 px-4 font-medium">TEAMS</th>
+            <th class="py-2 px-4 font-medium">MODIFIED</th>
+            <th class="py-2 px-4 font-medium">POPULARITY</th>
+            <th class="py-2 px-4 font-medium"></th>
+          </tr>
+        </ng-template>
+
+        <ng-template let-item pTemplate="body">
+          <tr class="border-b transition-colors">
+            <!-- NAME -->
+            <td class="py-2 px-4">
+              <div class="inline-flex items-center space-x-2">
+                <p-checkbox
+                  [(ngModel)]="item.checked"
+                  binary="true"
+                  styleClass="text-blue-600"
+                ></p-checkbox>
+                <span>{{ item.name }}</span>
+              </div>
+            </td>
+            <td class="py-2 px-4">{{ item.author }}</td>
+            <td class="py-2 px-4">{{ item.teams }}</td>
+            <td class="py-2 px-4">{{ item.modified }}</td>
+            <td class="py-2 px-4">{{ item.popularity }}</td>
+            <td class="py-2 px-4">
+              <p-button
+                (click)="onMoreClick(item)"
+                [link]="true"
+                label="More"
+              ></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </main>
+  </div>
+</div>
