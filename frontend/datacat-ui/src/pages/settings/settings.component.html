@@ -2,10 +2,9 @@
   <div class="flex flex-row gap-[1rem] items-center">
     <p>Theme:</p>
     <p-select-button
-      [options]="themeOptions"
-      [(ngModel)]="theme"
+      [options]="settingsService.allThemes"
+      [(ngModel)]="settingsService.currentTheme"
       [allowEmpty]="false"
-      (onChange)="onThemeChange()"
     />
   </div>
 </p-panel>
