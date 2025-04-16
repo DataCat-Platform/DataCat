@@ -18,6 +18,7 @@ import { SelectModule } from 'primeng/select';
     SelectModule,
   ],
   templateUrl: './app-root.component.html',
+  styleUrl: './app-root.component.scss',
 })
 export class AppComponent implements OnInit {
   // Breadcrumb parameters.

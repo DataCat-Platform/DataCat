@@ -5,9 +5,10 @@ import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { PopoverModule } from 'primeng/popover';
+import { Filter } from './filters-panel.types';
 
 @Component({
-  selector: 'filters',
+  selector: 'filter-panel',
   standalone: true,
   imports: [
     InputGroupModule,
@@ -20,13 +21,26 @@ import { PopoverModule } from 'primeng/popover';
   templateUrl: './filters-panel.component.html',
 })
 export class FilterComponent {
-  filters!: any[];
+  filters: Filter[] = [];
 
-  @Input() availableFilters!: any[];
-
-  @Output() onFiltersChange!: EventEmitter<any[]>;
+  @Output() onFiltersChange: EventEmitter<Filter[]> = new EventEmitter<Filter[]>();
 
   notifyFiltersChanged() {
     this.onFiltersChange.emit(this.filters);
+  }
+
+  addFilter() {
+    this.filters = [
+      ...this.filters,
+      {
+        prefix: 'Something',
+        operation: {
+          variants: ['is', 'is not'],
+          selectedVariant: 'is',
+          operand: {},
+        },
+      }
+    ];
+    this.notifyFiltersChanged();
   }
 }

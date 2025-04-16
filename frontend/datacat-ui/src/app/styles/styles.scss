@@ -7,5 +7,10 @@
   // Font size scales all of PrimeNG components.
   font-size: 14px;
 
-  background-color: var(--p-surface-50);
+  background-color: var(--p-background);
+}
+
+* {
+  padding: 0;
+  margin: 0;
 }

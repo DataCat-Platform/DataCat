@@ -1,0 +1,22 @@
+<p-table [value]="searchAlertsService.alerts">
+  <ng-template #header>
+    <tr>
+      <th>ID</th>
+      <th>Description</th>
+      <th>Last Status</th>
+      <th pTooltip="Last Time Executed" tooltipPosition="top">LTE</th>
+      <th pTooltip="Next Execution Time" tooltipPosition="top">NET</th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-alert>
+    <tr>
+      <td>{{ alert.id }}</td>
+      <td>{{ alert.description }}</td>
+      <td>
+        <p-tag [severity]="severityFromStatus(alert.status)">{{ alert.status | uppercase }}</p-tag>
+      </td>
+      <td>{{ alert.lastTimeExecuted | date: 'shortTime' }}</td>
+      <td>{{ alert.nextExecutionTime | date: 'shortTime' }}</td>
+    </tr>
+  </ng-template>
+</p-table>

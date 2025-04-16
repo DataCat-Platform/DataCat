@@ -1,24 +1,33 @@
-@for (filter of filters; track filter) {
-  @switch (filter) {}
-  <p-input-group [dt]="{ addon: { padding: '{padding.xs} {padding.sm}' } }">
-    <!-- <p-inputgroup-addon [dt]="{ addon: { padding: { y: '{padding.xs}' } } }">
-      {{ name }}
-    </p-inputgroup-addon> -->
-    <!-- <p-select
-      [options]="predicates"
-      [optionValue]="selectedPredicate"
-      [dt]="{ padding: { y: '{padding.xs}' } }"
-    /> -->
-    <p-button
-      icon="pi pi-times"
-      [dt]="{ padding: { y: '{padding.xs}' } }"
-      variant="outlined"
-      severity="secondary"
-      pTooltip="Remove filter"
-    ></p-button>
-  </p-input-group>
-}
-<p-button (click)="addFilter.toggle($event)" icon="pi pi-filter" severity="secondary" pTooltip="Add filter" tooltipPosition="top">
-<p-popover #addFilter>
-  Select filter type
-</p-popover>
+<div class="flex flex-row flex-wrap">
+  @for (filter of filters; track filter) {
+    <p-input-group [dt]="{ addon: { padding: '{padding.xs} {padding.sm}' } }">
+      <p-inputgroup-addon [dt]="{ addon: { padding: { y: '{padding.xs}' } } }">
+        {{ filter.prefix }}
+      </p-inputgroup-addon>
+      <p-select
+        [options]="filter.operation.variants"
+        [optionValue]="filter.operation.selectedVariant"
+        [dt]="{ padding: { x: '0rem', y: '0rem' } }"
+        unstyled
+      />
+      <!-- <ng-template [ngTemplateOutlet]="operand" [ngTemplateContext]="filter" /> -->
+      <p-button
+        icon="pi pi-times"
+        [dt]="{ padding: { y: '{padding.xs}' } }"
+        variant="outlined"
+        severity="secondary"
+        pTooltip="Remove filter"
+      />
+    </p-input-group>
+  }
+  <p-button
+    (click)="addFilterPopover.toggle($event)"
+    icon="pi pi-filter"
+    severity="secondary"
+    pTooltip="Add filter"
+    tooltipPosition="top"
+  />
+  <p-popover #addFilterPopover>
+    <p-button (onClick)="addFilter()">Add some filter</p-button>
+  </p-popover>
+</div>

@@ -4,8 +4,11 @@ import Aura from '@primeng/themes/aura';
 export const DATACAT_PRIMENG_PRESET = definePreset(Aura, {
   primitive: {
     padding: {
+      none: '0',
       xs: '0.15rem',
       sm: '0.2rem',
+      md: '0.3rem',
+      lg: '1rem',
     },
     borderRadius: {
       none: '0',
@@ -414,6 +417,7 @@ export const DATACAT_PRIMENG_PRESET = definePreset(Aura, {
     },
     colorScheme: {
       light: {
+        background: '{slate.100}',
         surface: {
           0: '#ffffff',
           50: '#f8fafc',
@@ -539,6 +543,7 @@ export const DATACAT_PRIMENG_PRESET = definePreset(Aura, {
         },
       },
       dark: {
+        background: '{grey.900}',
         surface: {
           0: '#ffffff',
           50: '#fafafa',
@@ -668,6 +673,11 @@ export const DATACAT_PRIMENG_PRESET = definePreset(Aura, {
   components: {
     tree: {
       background: '{primary.contrast}',
+      padding: '{padding.lg} {padding.none}',
+      indent: '0rem',
+      node: {
+        padding: '{padding.md} {padding.none}',
+      }
     },
     splitter: {
       border: {
