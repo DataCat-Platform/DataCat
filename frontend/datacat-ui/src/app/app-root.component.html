@@ -1,9 +1,16 @@
 <div class="screen">
-  <p-splitter [panelSizes]="[20, 80]" [minSizes]="[20, 70]" [gutterSize]="2" [style]="{ height: '100%' }">
+  <p-splitter
+    [panelSizes]="[20, 80]"
+    [minSizes]="[20, 70]"
+    [gutterSize]="2"
+    [style]="{ height: '100%' }"
+  >
     <!-- Navigation panel. -->
     <ng-template pTemplate>
       <div class="navigation">
-        <p-select placeholder="Select a namespace" size="small" />
+        <p-select placeholder="Select a namespace" size="small">
+          <ng-template #dropdownicon />
+        </p-select>
         <p-tree [value]="treeMenuNodes" selectionMode="single" class="w-full">
           <ng-template let-node pTemplate="url">
             <a [routerLink]="node.data">{{ node.label }}</a>

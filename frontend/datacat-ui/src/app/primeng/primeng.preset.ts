@@ -677,7 +677,7 @@ export const DATACAT_PRIMENG_PRESET = definePreset(Aura, {
       indent: '0rem',
       node: {
         padding: '{padding.md} {padding.none}',
-      }
+      },
     },
     splitter: {
       border: {
@@ -693,7 +693,32 @@ export const DATACAT_PRIMENG_PRESET = definePreset(Aura, {
     },
     tooltip: {
       border: {
-        radius: '{borderRadius.sm}',
+        radius: '{borderRadius.lg}',
+      },
+    },
+    select: {
+      dropdown: {
+        width: 0,
+      },
+      padding: {
+        x: '{padding.md}',
+        y: '{padding.none}',
+      },
+    },
+    button: {
+      padding: {
+        x: '{padding.md}',
+        y: '{padding.md}',
+      },
+      icon: {
+        only: {
+          width: '1.8rem',
+        },
+      },
+    },
+    panel: {
+      content: {
+        padding: '{padding.none}',
       },
     },
   },
