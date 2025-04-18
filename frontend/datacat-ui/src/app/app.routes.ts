@@ -23,4 +23,8 @@ export const ROUTES: Routes = [
     loadChildren: () =>
       import('../pages/alerting/alerting.routes').then((m) => m.ROUTES),
   },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
