@@ -12,8 +12,6 @@ export class SettingsService {
   }
 
   set currentTheme(theme: string) {
-    console.log('Setting to: ' + theme);
-
     this._currentTheme = theme;
 
     const element = document.querySelector('html')!;

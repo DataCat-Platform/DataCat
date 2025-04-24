@@ -1,0 +1,13 @@
+<p-panel header="Settings" [dt]="{ content: { padding: '{padding.lg}' } }">
+  <div>
+    <p-divider />
+    <div class="settings__lr">
+      <p>Theme</p>
+      <p-select-button
+        [options]="settingsService.allThemes"
+        [(ngModel)]="settingsService.currentTheme"
+        [allowEmpty]="false"
+      />
+    </div>
+  </div>
+</p-panel>
