@@ -18,7 +18,7 @@ public class CreateAlertAndNotificationChannelTable : Migration
                 {Public.NotificationChannels.Id} TEXT PRIMARY KEY,
                 {Public.NotificationChannels.DestinationId} INT NOT NULL,
                 {Public.NotificationChannels.Settings} TEXT NOT NULL,
-                FOREIGN KEY ({Public.DataSources.TypeId}) REFERENCES {Public.DataSourceTypeTable}({Public.DataSourceType.Id})
+                FOREIGN KEY ({Public.NotificationChannels.DestinationId}) REFERENCES {Public.NotificationDestinationTable}({Public.NotificationDestination.Id})
             );
 
             CREATE TABLE {Public.AlertTable} (
