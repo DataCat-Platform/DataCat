@@ -11,11 +11,13 @@ public static class Public
     public const string ExternalRoleMappingTable = "external_role_mappings";
     public const string ExternalPermissionMappingTable = "external_permission_mappings";
 
-    public const string DataSourceTable = "data_sources";
-    public const string DashboardTable = "dashboards";
-    public const string PanelTable = "panels";
     public const string AlertTable = "alerts";
+    public const string DashboardTable = "dashboards";
+    public const string DataSourceTable = "data_sources";
+    public const string DataSourceTypeTable = "data_source_type";
+    public const string NotificationDestinationTable = "notification_destination";
     public const string NotificationTable = "notification_channel";
+    public const string PanelTable = "panels";
     
     public const string DashboardUserLinkTable = "dashboard_user_link";
     public const string UserRoleLinkTable = "user_role_link";
@@ -150,5 +152,17 @@ public static class Public
         public const string Id = "pk_notification_id";
         public const string DestinationId = "destination_id";
         public const string Settings = "settings";
+    }
+
+    public static class DataSourceType
+    {
+        public const string Id = "pk_data_source_type_id";
+        public const string Name = "name";
+    }
+
+    public static class NotificationDestination
+    {
+        public const string Id = "pk_notification_destination_id";
+        public const string Name = "name";
     }
 }

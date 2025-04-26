@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.ExternalRoleMappings.Add;
+
 namespace DataCat.Server.Api.Endpoints.ExternalRoleMapping;
 
 public sealed record AddExternalRoleMappingRequest(

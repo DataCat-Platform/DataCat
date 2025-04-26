@@ -6,7 +6,7 @@ public class PostgresAlertMonitorService(
     NotificationChannelManager notificationChannelManager)
     : IAlertMonitorService
 {
-    public async Task<IEnumerable<AlertEntity>> GetAlertsToCheckAsync(int limit = 5, CancellationToken token = default)
+    public async Task<IEnumerable<Alert>> GetAlertsToCheckAsync(int limit = 5, CancellationToken token = default)
     {
         var parameters = new { p_limit = limit };
         var sql = $"""
@@ -64,7 +64,7 @@ public class PostgresAlertMonitorService(
         return alertsToCheck.Select(x => x.RestoreFromSnapshot(notificationChannelManager));
     }
 
-    public async Task<IEnumerable<AlertEntity>> GetTriggeredAlertsAsync(int limit = 5, CancellationToken token = default)
+    public async Task<IEnumerable<Alert>> GetTriggeredAlertsAsync(int limit = 5, CancellationToken token = default)
     {
         var parameters = new { p_limit = limit };
         

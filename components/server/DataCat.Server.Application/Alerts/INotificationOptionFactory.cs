@@ -2,9 +2,9 @@ namespace DataCat.Server.Application.Alerts;
 
 public interface INotificationOptionFactory
 {
-    NotificationDestination NotificationDestination { get; }
+    bool IsResponsibleFor(string notificationOptionName);
     
-    Result<BaseNotificationOption> Create(string settings);
+    Result<BaseNotificationOption> Create(NotificationDestination? destination, string settings);
     
     Task<Result<INotificationService>> CreateNotificationServiceAsync(
         BaseNotificationOption notificationOption,

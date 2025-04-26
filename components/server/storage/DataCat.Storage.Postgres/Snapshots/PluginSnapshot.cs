@@ -35,25 +35,25 @@ public static class PluginEntitySnapshotMapper
         };
     }
     
-    public static PluginSnapshot Save(this PluginEntity pluginEntity)
+    public static PluginSnapshot Save(this Plugin plugin)
     {
         return new PluginSnapshot
         {
-            Id = pluginEntity.PluginId.ToString(),
-            Name = pluginEntity.Name,
-            Version = pluginEntity.Version,
-            Description = pluginEntity.Description,
-            Author = pluginEntity.Author,
-            IsEnabled = pluginEntity.IsEnabled,
-            Settings = pluginEntity.Settings,
-            CreatedAt = pluginEntity.CreatedAt.ToUniversalTime(),
-            UpdatedAt = pluginEntity.UpdatedAt.ToUniversalTime(),
+            Id = plugin.PluginId.ToString(),
+            Name = plugin.Name,
+            Version = plugin.Version,
+            Description = plugin.Description,
+            Author = plugin.Author,
+            IsEnabled = plugin.IsEnabled,
+            Settings = plugin.Settings,
+            CreatedAt = plugin.CreatedAt.ToUniversalTime(),
+            UpdatedAt = plugin.UpdatedAt.ToUniversalTime(),
         };
     }
 
-    public static PluginEntity RestoreFromSnapshot(this PluginSnapshot snapshot)
+    public static Plugin RestoreFromSnapshot(this PluginSnapshot snapshot)
     {
-        var result = PluginEntity.Create(
+        var result = Plugin.Create(
             Guid.Parse(snapshot.Id),
             snapshot.Name,
             snapshot.Version,
@@ -64,6 +64,6 @@ public static class PluginEntitySnapshotMapper
             snapshot.CreatedAt.ToUniversalTime(),
             snapshot.UpdatedAt.ToUniversalTime());
 
-        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(PluginEntity));
+        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(Plugin));
     }
 }

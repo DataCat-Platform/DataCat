@@ -3,52 +3,59 @@ namespace DataCat.Storage.Postgres.Repositories;
 public sealed class PanelRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork UnitOfWork)
-    : IRepository<PanelEntity, Guid>, IPanelRepository
+    : IRepository<Panel, Guid>, IPanelRepository
 {
-    public async Task<PanelEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<Panel?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         var parameters = new { p_panel_id = id.ToString() };
 
         const string sql = $"""
             SELECT
-                {Public.Panels.Id}                   {nameof(PanelSnapshot.Id)},
-                {Public.Panels.Title}                {nameof(PanelSnapshot.Title)},
-                {Public.Panels.TypeId}               {nameof(PanelSnapshot.TypeId)},
-                {Public.Panels.RawQuery}             {nameof(PanelSnapshot.RawQuery)},
-                {Public.Panels.DataSourceId}         {nameof(PanelSnapshot.DataSourceId)},
-                {Public.Panels.X}                    {nameof(PanelSnapshot.X)},
-                {Public.Panels.Y}                    {nameof(PanelSnapshot.Y)},
-                {Public.Panels.Width}                {nameof(PanelSnapshot.Width)},
-                {Public.Panels.Height}               {nameof(PanelSnapshot.Height)},
-                {Public.Panels.DashboardId}          {nameof(PanelSnapshot.DashboardId)},
+                p.{Public.Panels.Id}                   {nameof(PanelSnapshot.Id)},
+                p.{Public.Panels.Title}                {nameof(PanelSnapshot.Title)},
+                p.{Public.Panels.TypeId}               {nameof(PanelSnapshot.TypeId)},
+                p.{Public.Panels.RawQuery}             {nameof(PanelSnapshot.RawQuery)},
+                p.{Public.Panels.DataSourceId}         {nameof(PanelSnapshot.DataSourceId)},
+                p.{Public.Panels.X}                    {nameof(PanelSnapshot.X)},
+                p.{Public.Panels.Y}                    {nameof(PanelSnapshot.Y)},
+                p.{Public.Panels.Width}                {nameof(PanelSnapshot.Width)},
+                p.{Public.Panels.Height}               {nameof(PanelSnapshot.Height)},
+                p.{Public.Panels.DashboardId}          {nameof(PanelSnapshot.DashboardId)},
                 
-                {Public.DataSources.Id}                 {nameof(DataSourceSnapshot.Id)},
-                {Public.DataSources.Name}               {nameof(DataSourceSnapshot.Name)},
-                {Public.DataSources.TypeId}             {nameof(DataSourceSnapshot.TypeId)},
-                {Public.DataSources.ConnectionString}   {nameof(DataSourceSnapshot.ConnectionString)}
+                ds.{Public.DataSources.Id}                 {nameof(DataSourceSnapshot.Id)},
+                ds.{Public.DataSources.Name}               {nameof(DataSourceSnapshot.Name)},
+                ds.{Public.DataSources.TypeId}             {nameof(DataSourceSnapshot.TypeId)},
+                ds.{Public.DataSources.ConnectionString}   {nameof(DataSourceSnapshot.ConnectionString)},
+                
+                dst.{Public.DataSourceType.Id}              {nameof(DataSourceTypeSnapshot.Id)},
+                dst.{Public.DataSourceType.Name}            {nameof(DataSourceTypeSnapshot.Name)}
+        
             FROM 
                 {Public.PanelTable} p
-            LEFT JOIN 
+            JOIN 
                 {Public.DataSourceTable} ds ON ds.{Public.DataSources.Id} = p.{Public.Panels.DataSourceId}
+            JOIN 
+                {Public.DataSourceTypeTable} dst ON dst.{Public.DataSourceType.Id} = ds.{Public.DataSources.TypeId} 
             WHERE {Public.Panels.Id} = @p_panel_id
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        var result = await connection.QueryAsync<PanelSnapshot, DataSourceSnapshot, PanelSnapshot>(
+        var result = await connection.QueryAsync<PanelSnapshot, DataSourceSnapshot, DataSourceTypeSnapshot, PanelSnapshot>(
             sql, 
-            map: (panel, dataSource) =>
+            map: (panel, dataSource, dataSourceTypeSnapshot) =>
             {
+                dataSource.DataSourceType = dataSourceTypeSnapshot;
                 panel.DataSource = dataSource;
                 return panel;
             },
-            splitOn: $"{nameof(DataSourceSnapshot.Id)}",
+            splitOn: $"{nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
             param: parameters, 
             transaction: UnitOfWork.Transaction);
 
         return result.FirstOrDefault()?.RestoreFromSnapshot();
     }
     
-    public async Task AddAsync(PanelEntity entity, CancellationToken token = default)
+    public async Task AddAsync(Panel entity, CancellationToken token = default)
     {
         var panelSnapshot = entity.Save();
 
@@ -83,7 +90,7 @@ public sealed class PanelRepository(
         await connection.ExecuteAsync(sql, panelSnapshot, transaction: UnitOfWork.Transaction);
     }
 
-    public async Task UpdateAsync(PanelEntity entity, CancellationToken token = default)
+    public async Task UpdateAsync(Panel entity, CancellationToken token = default)
     {
         var panelSnapshot = entity.Save();
 

@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.Alerts.Update;
+
 namespace DataCat.Server.Api.Endpoints.Alerts;
 
 public sealed record UpdateAlertRequest(

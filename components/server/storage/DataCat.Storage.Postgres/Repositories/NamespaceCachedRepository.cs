@@ -3,17 +3,17 @@ namespace DataCat.Storage.Postgres.Repositories;
 public sealed class NamespaceCachedRepository(
     IMemoryCache cache,
     NamespaceRepository namespaceRepository) 
-    : IRepository<NamespaceEntity, Guid>, INamespaceRepository
+    : IRepository<Namespace, Guid>, INamespaceRepository
 {
     private const string DefaultNamespaceCacheKey = "namespace:default";
     private const string ByIdCacheKeyPrefix = "namespace:id:";
     private const string ByNameCacheKeyPrefix = "namespace:name:";
     
-    public async Task<NamespaceEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<Namespace?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         var cacheKey = $"{ByIdCacheKeyPrefix}{id}";
         
-        if (cache.TryGetValue(cacheKey, out NamespaceEntity? cached))
+        if (cache.TryGetValue(cacheKey, out Namespace? cached))
         {
             return cached!;
         }
@@ -24,11 +24,11 @@ public sealed class NamespaceCachedRepository(
         return entity;
     }
     
-    public async ValueTask<NamespaceEntity?> GetByNameAsync(string name, CancellationToken token)
+    public async ValueTask<Namespace?> GetByNameAsync(string name, CancellationToken token)
     {
         var cacheKey = $"{ByNameCacheKeyPrefix}{name}";
         
-        if (cache.TryGetValue(cacheKey, out NamespaceEntity? cached))
+        if (cache.TryGetValue(cacheKey, out Namespace? cached))
         {
             return cached!;
         }
@@ -39,9 +39,9 @@ public sealed class NamespaceCachedRepository(
         return entity;
     }
 
-    public async ValueTask<NamespaceEntity> GetDefaultNamespaceAsync(CancellationToken token)
+    public async ValueTask<Namespace> GetDefaultNamespaceAsync(CancellationToken token)
     {
-        if (cache.TryGetValue(DefaultNamespaceCacheKey, out NamespaceEntity? cached))
+        if (cache.TryGetValue(DefaultNamespaceCacheKey, out Namespace? cached))
         {
             return cached!;
         }
@@ -52,7 +52,7 @@ public sealed class NamespaceCachedRepository(
         return entity;
     }
 
-    public Task AddAsync(NamespaceEntity entity, CancellationToken token = default)
+    public Task AddAsync(Namespace entity, CancellationToken token = default)
     {
         return namespaceRepository.AddAsync(entity, token);
     }

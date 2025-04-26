@@ -20,7 +20,7 @@ public sealed class AlertChecker(
         // TODO: Change hardcoded top argument
         const int limit = 5;
         var alerts = await alertMonitorService.GetAlertsToCheckAsync(limit, stoppingToken);
-        var alertChannel = Channel.CreateBounded<AlertEntity>(new BoundedChannelOptions(limit)
+        var alertChannel = Channel.CreateBounded<Alert>(new BoundedChannelOptions(limit)
         {
             SingleReader = true,
             SingleWriter = false,
@@ -38,8 +38,8 @@ public sealed class AlertChecker(
         {
             try
             {
-                var metricClient = dataSourceManager.GetMetricClient(alert.QueryEntity.DataSourceEntity);
-                var isTriggered = await metricClient.CheckAlertTriggerAsync(alert.QueryEntity.RawQuery, token);
+                var metricClient = dataSourceManager.GetMetricClient(alert.Query.DataSource);
+                var isTriggered = await metricClient.CheckAlertTriggerAsync(alert.Query.RawQuery, token);
                 if (isTriggered)
                 {
                     alert.SetWarningStatus();

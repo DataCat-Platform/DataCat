@@ -11,7 +11,7 @@ public interface IMetricClient
     /// <param name="token"></param>
     /// <returns></returns>
     Task<IEnumerable<MetricModel>> GetRandomMetricsAsync(int count, CancellationToken token);
-
+    
     /// <summary>
     /// Method to check if an alert has been triggered based on <paramref name="rawQuery"/>
     /// </summary>
@@ -19,7 +19,7 @@ public interface IMetricClient
     /// <param name="token"></param>
     /// <returns></returns>
     Task<bool> CheckAlertTriggerAsync(string rawQuery, CancellationToken token);
-
+    
     /// <summary>
     /// Method to get alerts that need to be checked (inactive or triggered)
     /// </summary>

@@ -1,5 +1,3 @@
-using DataCat.Logs.ElasticSearch.Searching;
-
 namespace DataCat.Logs.ElasticSearch;
 
 public static class DependencyInjection

@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Queries.NotificationChannels.Get;
+
 namespace DataCat.Server.Api.Endpoints.NotificationChannels;
 
 public sealed class GetNotificationChannelById : ApiEndpointBase

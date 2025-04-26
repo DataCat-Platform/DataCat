@@ -4,31 +4,33 @@ public sealed class PostgresPlugin : IDatabasePlugin
 {
     public IServiceCollection RegisterRepositories(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IRepository<DashboardEntity, Guid>, DashboardRepository>();
+        services.AddScoped<IRepository<Dashboard, Guid>, DashboardRepository>();
         services.AddScoped<IDashboardRepository, DashboardRepository>();
         
-        services.AddScoped<IRepository<DataSourceEntity, Guid>, DataSourceRepository>();
+        services.AddScoped<IRepository<DataSource, Guid>, DataSourceRepository>();
         services.AddScoped<IDataSourceRepository, DataSourceRepository>();
 
-        services.AddScoped<IRepository<PanelEntity, Guid>, PanelRepository>();
+        services.AddScoped<IRepository<Panel, Guid>, PanelRepository>();
         services.AddScoped<IPanelRepository, PanelRepository>();
 
-        services.AddScoped<IRepository<UserEntity, Guid>, UserRepository>();
+        services.AddScoped<IRepository<User, Guid>, UserRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         
-        services.AddScoped<IRepository<AlertEntity, Guid>, AlertRepository>();
+        services.AddScoped<IRepository<Alert, Guid>, AlertRepository>();
         services.AddScoped<IAlertRepository, AlertRepository>();
 
-        services.AddScoped<IRepository<NotificationChannelEntity, Guid>, NotificationChannelRepository>();
+        services.AddScoped<IRepository<NotificationChannel, Guid>, NotificationChannelRepository>();
         services.AddScoped<INotificationChannelRepository, NotificationChannelRepository>();
         
-        services.AddScoped<IRepository<PluginEntity, Guid>, PluginRepository>();
+        services.AddScoped<IRepository<Plugin, Guid>, PluginRepository>();
         services.AddScoped<IPluginRepository, PluginRepository>();
         
-        services.AddScoped<IRepository<NamespaceEntity, Guid>, NamespaceRepository>();
+        services.AddScoped<IRepository<Namespace, Guid>, NamespaceRepository>();
         services.AddScoped<INamespaceRepository, NamespaceRepository>();
         
         services.AddScoped<IExternalRoleMappingRepository, ExternalRoleMappingRepository>();
+        services.AddScoped<INotificationDestinationRepository, NotificationDestinationRepository>();
+        services.AddScoped<IDataSourceTypeRepository, DataSourceTypeRepository>();
         
         services.AddScoped<UnitOfWork>();
         services.AddScoped<IUnitOfWork<IDbTransaction>>(provider => provider.GetRequiredService<UnitOfWork>());

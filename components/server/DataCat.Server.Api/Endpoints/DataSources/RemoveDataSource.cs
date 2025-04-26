@@ -4,7 +4,7 @@ public sealed class RemoveDataSource : ApiEndpointBase
 {
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete("api/v{version:apiVersion}/datasource/remove/{dataSourceId}", async (
+        app.MapDelete("api/v{version:apiVersion}/data-source/remove/{dataSourceId}", async (
                 [FromServices] IMediator mediator,
                 [FromRoute] string dataSourceId,
                 CancellationToken token = default) =>

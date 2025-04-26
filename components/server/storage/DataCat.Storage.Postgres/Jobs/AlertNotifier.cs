@@ -21,7 +21,7 @@ public sealed class AlertNotifier(
         
         const int limit = 5;
         var triggeredAlerts = await alertMonitorService.GetTriggeredAlertsAsync(limit, stoppingToken);
-        var alertChannel = Channel.CreateBounded<AlertEntity>(new BoundedChannelOptions(limit)
+        var alertChannel = Channel.CreateBounded<Alert>(new BoundedChannelOptions(limit)
         {
             SingleReader = true,
             SingleWriter = false,
@@ -39,15 +39,18 @@ public sealed class AlertNotifier(
         {
             try
             {
-                var metricClient = dataSourceManager.GetMetricClient(alert.QueryEntity.DataSourceEntity);
-                var isTriggeredYet = await metricClient.CheckAlertTriggerAsync(alert.QueryEntity.RawQuery, token);
+                var metricClient = dataSourceManager.GetMetricClient(alert.Query.DataSource);
+                var isTriggeredYet = await metricClient.CheckAlertTriggerAsync(alert.Query.RawQuery, token);
                 
                 if (isTriggeredYet)
                 {
                     alert.SetFire();
-                    var notificationOptionFactory = notificationChannelManager.GetNotificationChannelFactory(alert.NotificationChannelEntity.NotificationOption.NotificationDestination);
+                    var notificationOptionFactory = notificationChannelManager.GetNotificationChannelFactory(alert.NotificationChannel.NotificationOption.NotificationDestination);
+                    
                     var optionResult =
-                        notificationOptionFactory.Create(alert.NotificationChannelEntity.NotificationOption.Settings);
+                        notificationOptionFactory.Create(
+                            alert.NotificationChannel.NotificationOption.NotificationDestination, 
+                            alert.NotificationChannel.NotificationOption.Settings);
 
                     if (optionResult.IsFailure)
                     {

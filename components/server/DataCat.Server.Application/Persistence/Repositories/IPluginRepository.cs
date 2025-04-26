@@ -2,13 +2,13 @@ namespace DataCat.Server.Application.Persistence.Repositories;
 
 public interface IPluginRepository
 {
-    Task<Page<PluginEntity>> SearchAsync(
+    Task<Page<Plugin>> SearchAsync(
         string? filter = null,
         int page = 1,
         int pageSize = 10,
         CancellationToken token = default);
     
-    Task UpdateAsync(PluginEntity entity, CancellationToken token = default);
+    Task UpdateAsync(Plugin entity, CancellationToken token = default);
 
     Task DeleteAsync(Guid id, CancellationToken token = default);
     

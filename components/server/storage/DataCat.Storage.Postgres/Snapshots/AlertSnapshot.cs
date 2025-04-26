@@ -18,16 +18,16 @@ public sealed record AlertSnapshot
 
 public static class AlertSnapshotExtensions
 {
-    public static AlertSnapshot Save(this AlertEntity alert)
+    public static AlertSnapshot Save(this Alert alert)
     {
         return new AlertSnapshot
         {
             Id = alert.Id.ToString(),
             Description = alert.Description,
             Status = alert.Status.Value,
-            RawQuery = alert.QueryEntity.RawQuery,
-            DataSource = alert.QueryEntity.DataSourceEntity.Save(),
-            NotificationChannel = alert.NotificationChannelEntity.Save(),
+            RawQuery = alert.Query.RawQuery,
+            DataSource = alert.Query.DataSource.Save(),
+            NotificationChannel = alert.NotificationChannel.Save(),
             PreviousExecution = alert.PreviousExecution.DateTime,
             NextExecution = alert.NextExecution.DateTime,
             RepeatIntervalInTicks = alert.RepeatInterval.Ticks,
@@ -35,12 +35,12 @@ public static class AlertSnapshotExtensions
         };
     }
 
-    public static AlertEntity RestoreFromSnapshot(this AlertSnapshot snapshot, NotificationChannelManager notificationChannelManager)
+    public static Alert RestoreFromSnapshot(this AlertSnapshot snapshot, NotificationChannelManager notificationChannelManager)
     {
-        var result = AlertEntity.Create(
+        var result = Alert.Create(
             Guid.Parse(snapshot.Id),
             snapshot.Description,
-            QueryEntity.Create(snapshot.DataSource.RestoreFromSnapshot(), snapshot.RawQuery).Value,
+            Query.Create(snapshot.DataSource.RestoreFromSnapshot(), snapshot.RawQuery).Value,
             AlertStatus.FromValue(snapshot.Status),
             snapshot.NotificationChannel.RestoreFromSnapshot(notificationChannelManager),
             snapshot.PreviousExecution,
@@ -49,6 +49,6 @@ public static class AlertSnapshotExtensions
             TimeSpan.FromTicks(snapshot.RepeatIntervalInTicks)
         );
 
-        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(AlertEntity));
+        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(Alert));
     }
 }

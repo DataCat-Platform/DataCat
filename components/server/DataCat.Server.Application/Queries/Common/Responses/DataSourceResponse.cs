@@ -10,7 +10,7 @@ public sealed record DataSourceResponse
 
 public static class DataSourceResponseExtensions
 {
-    public static DataSourceResponse ToResponse(this DataSourceEntity dataSource)
+    public static DataSourceResponse ToResponse(this DataSource dataSource)
     {
         return new DataSourceResponse
         {

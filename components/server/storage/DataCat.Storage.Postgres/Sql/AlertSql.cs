@@ -24,7 +24,10 @@ public static class AlertSql
                 {Public.DataSources.Id}                          {nameof(DataSourceSnapshot.Id)},
                 {Public.DataSources.Name}                        {nameof(DataSourceSnapshot.Name)},
                 {Public.DataSources.TypeId}                      {nameof(DataSourceSnapshot.TypeId)},
-                {Public.DataSources.ConnectionString}            {nameof(DataSourceSnapshot.ConnectionString)}
+                {Public.DataSources.ConnectionString}            {nameof(DataSourceSnapshot.ConnectionString)},
+                
+                {Public.DataSourceType.Id}                        {nameof(DataSourceTypeSnapshot.Id)},
+                {Public.DataSourceType.Name}                      {nameof(DataSourceTypeSnapshot.Name)}
 
              FROM 
                  {Public.AlertTable} a
@@ -32,6 +35,8 @@ public static class AlertSql
                  {Public.NotificationTable} n ON a.{Public.Alerts.NotificationChannelId} = n.{Public.NotificationChannels.Id}
              JOIN
                  {Public.DataSourceTable} d ON a.{Public.Alerts.DataSourceId} = d.{Public.DataSources.Id}
+             JOIN
+                 {Public.DataSourceTypeTable} type ON type.{Public.DataSourceType.Id} = d.{Public.DataSources.TypeId}
              WHERE {Public.Alerts.Id} = @p_alert_id
              ";
         
@@ -65,7 +70,10 @@ public static class AlertSql
                 {Public.DataSources.Id}                            {nameof(DataSourceSnapshot.Id)},
                 {Public.DataSources.Name}                          {nameof(DataSourceSnapshot.Name)},
                 {Public.DataSources.TypeId}                        {nameof(DataSourceSnapshot.TypeId)},
-                {Public.DataSources.ConnectionString}              {nameof(DataSourceSnapshot.ConnectionString)}
+                {Public.DataSources.ConnectionString}              {nameof(DataSourceSnapshot.ConnectionString)},
+                
+                {Public.DataSourceType.Id}                        {nameof(DataSourceTypeSnapshot.Id)},
+                {Public.DataSourceType.Name}                      {nameof(DataSourceTypeSnapshot.Name)}
              
              FROM 
                  {Public.AlertTable} a
@@ -73,6 +81,8 @@ public static class AlertSql
                  {Public.NotificationTable} n ON a.{Public.Alerts.NotificationChannelId} = n.{Public.NotificationChannels.Id}
              JOIN
                  {Public.DataSourceTable} d ON a.{Public.Alerts.DataSourceId} = d.{Public.DataSources.Id}
+             JOIN
+                 {Public.DataSourceTypeTable} type ON type.{Public.DataSourceType.Id} = d.{Public.DataSources.TypeId}
              WHERE a.{Public.Alerts.Description} ILIKE @p_description
              LIMIT @limit OFFSET @offset
              """;

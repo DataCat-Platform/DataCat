@@ -46,5 +46,4 @@ public sealed class SearchLogs : ApiEndpointBase
             request.SortAscending
         );
     }
-
 }

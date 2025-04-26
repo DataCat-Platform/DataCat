@@ -4,9 +4,9 @@ public interface IUserRepository
 {
     Task DeleteAsync(Guid id, CancellationToken token = default);
     
-    Task BulkInsertAsync(IList<UserEntity> users, CancellationToken token = default);
+    Task BulkInsertAsync(IList<User> users, CancellationToken token = default);
     
-    Task<UserEntity?> FindByEmailAsync(string email, CancellationToken token = default);
+    Task<User?> FindByEmailAsync(string email, CancellationToken token = default);
     
     /// <summary>
     /// Todo: implement with passing external_role_param to fetch only necessary roles
@@ -15,7 +15,7 @@ public interface IUserRepository
     /// <returns></returns>
     Task<List<ExternalRoleMappingValue>> GetExternalRoleMappingsAsync(CancellationToken token = default);
     
-    Task<UserEntity?> GetOldestByUpdatedAtUserAsync(CancellationToken token = default);
+    Task<User?> GetOldestByUpdatedAtUserAsync(CancellationToken token = default);
     
-    Task UpdateUserRolesAsync(UserEntity user, List<ExternalRoleMappingValue> currentUserRolesFromKeycloak, CancellationToken token);
+    Task UpdateUserRolesAsync(User user, List<ExternalRoleMappingValue> currentUserRolesFromKeycloak, CancellationToken token);
 }

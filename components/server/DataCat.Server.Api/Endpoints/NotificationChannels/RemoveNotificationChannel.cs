@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.NotificationChannels.Remove;
+
 namespace DataCat.Server.Api.Endpoints.NotificationChannels;
 
 public sealed class RemoveNotificationChannel : ApiEndpointBase

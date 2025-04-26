@@ -3,9 +3,9 @@ namespace DataCat.Storage.Postgres.Repositories;
 public sealed class PluginRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork UnitOfWork)
-    : IRepository<PluginEntity, Guid>, IPluginRepository
+    : IRepository<Plugin, Guid>, IPluginRepository
 {
-    public async Task<PluginEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<Plugin?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         var parameters = new { p_plugin_id = id.ToString() };
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -30,7 +30,7 @@ public sealed class PluginRepository(
         return pluginSnapshot?.RestoreFromSnapshot();
     }
     
-    public async Task AddAsync(PluginEntity entity, CancellationToken token)
+    public async Task AddAsync(Plugin entity, CancellationToken token)
     {
         var pluginSnapshot = entity.Save();
 
@@ -63,7 +63,7 @@ public sealed class PluginRepository(
         await connection.ExecuteAsync(sql, pluginSnapshot, transaction: UnitOfWork.Transaction);
     }
 
-    public async Task<Page<PluginEntity>> SearchAsync(
+    public async Task<Page<Plugin>> SearchAsync(
         string? filter = null, 
         int page = 1, 
         int pageSize = 1, 
@@ -81,10 +81,10 @@ public sealed class PluginRepository(
         var result = await connection.QueryAsync<PluginSnapshot>(sql, param: parameters, transaction: UnitOfWork.Transaction);
         
         var items = result.Select(x => x.RestoreFromSnapshot());
-        return new Page<PluginEntity>(items, totalCount, page, pageSize);
+        return new Page<Plugin>(items, totalCount, page, pageSize);
     }
 
-    public async Task UpdateAsync(PluginEntity entity, CancellationToken token = default)
+    public async Task UpdateAsync(Plugin entity, CancellationToken token = default)
     {
         var pluginSnapshot = entity.Save();
 

@@ -5,6 +5,7 @@ global using System.Text.Json.Serialization;
 global using System.Text.RegularExpressions;
 global using DataCat.Logs.ElasticSearch.Constants;
 global using DataCat.Logs.ElasticSearch.Models;
+global using DataCat.Logs.ElasticSearch.Searching;
 global using DataCat.Server.Application.Logs;
 global using DataCat.Server.Application.Logs.Abstractions;
 global using DataCat.Server.Application.Logs.Models;

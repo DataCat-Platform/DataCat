@@ -2,11 +2,11 @@ namespace DataCat.Server.Application.Metrics;
 
 public sealed class DataSourceManager(IEnumerable<IMetricClient> metricClients)
 {
-    private readonly Dictionary<string, IMetricClient> _clientCache = new();
+    private readonly Dictionary<Guid, IMetricClient> _clientCache = new();
 
-    public IMetricClient GetMetricClient(DataSourceEntity dataSource)
+    public IMetricClient GetMetricClient(DataSource dataSource)
     {
-        var key = dataSource.Name;
+        var key = dataSource.Id;
 
         if (_clientCache.TryGetValue(key, out var client))
         {

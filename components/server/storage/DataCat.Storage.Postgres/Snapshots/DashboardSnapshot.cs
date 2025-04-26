@@ -16,7 +16,7 @@ public sealed record DashboardSnapshot
 
 public static class DashboardEntitySnapshotMapper
 {
-    public static DashboardSnapshot Save(this DashboardEntity dashboard)
+    public static DashboardSnapshot Save(this Dashboard dashboard)
     {
         return new DashboardSnapshot
         {
@@ -32,9 +32,9 @@ public static class DashboardEntitySnapshotMapper
         };
     }
 
-    public static DashboardEntity RestoreFromSnapshot(this DashboardSnapshot snapshot)
+    public static Dashboard RestoreFromSnapshot(this DashboardSnapshot snapshot)
     {
-        var result = DashboardEntity.Create(
+        var result = Dashboard.Create(
             Guid.Parse(snapshot.Id),
             snapshot.Name,
             snapshot.Description,
@@ -46,6 +46,6 @@ public static class DashboardEntitySnapshotMapper
             snapshot.UpdatedAt.ToUniversalTime()
         );
 
-        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSourceEntity));
+        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSource));
     }
 }

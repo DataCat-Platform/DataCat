@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.Namespaces.Add;
+
 namespace DataCat.Server.Api.Endpoints.Namespaces;
 
 public sealed record AddNamespaceRequest(string Name);

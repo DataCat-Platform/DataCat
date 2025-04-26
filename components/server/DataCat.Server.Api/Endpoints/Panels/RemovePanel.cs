@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.Panels.Remove;
+
 namespace DataCat.Server.Api.Endpoints.Panels;
 
 public sealed class RemovePanel : ApiEndpointBase

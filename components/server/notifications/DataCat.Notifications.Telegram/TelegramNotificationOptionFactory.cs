@@ -2,13 +2,20 @@ namespace DataCat.Notifications.Telegram;
 
 public sealed class TelegramNotificationOptionFactory : INotificationOptionFactory
 {
-    public NotificationDestination NotificationDestination => NotificationDestination.Telegram;
+    public bool IsResponsibleFor(string notificationOptionName) 
+        => string.Compare(notificationOptionName, TelegramConstants.Telegram, 
+            StringComparison.InvariantCultureIgnoreCase) == 0;
 
-    public Result<BaseNotificationOption> Create(string settings)
+    public Result<BaseNotificationOption> Create(NotificationDestination? destination, string settings)
     {
         if (string.IsNullOrWhiteSpace(settings))
         {
             return Result.Fail<BaseNotificationOption>(BaseError.FieldIsNull(settings));
+        }
+        
+        if (!TelegramDestinationValidator.IsTelegramDestination(destination))
+        {
+            Result.Fail<BaseNotificationOption>("Invalid destination type");
         }
         
         try
@@ -24,7 +31,7 @@ public sealed class TelegramNotificationOptionFactory : INotificationOptionFacto
             var telegramTokenPath = tokenPathElement.GetString()!;
             var chatId = chatIdElement.GetString()!;
 
-            return TelegramNotificationOption.Create(telegramTokenPath, chatId);
+            return TelegramNotificationOption.Create(destination!, telegramTokenPath, chatId);
         }
         catch (JsonException)
         {

@@ -14,7 +14,7 @@ public sealed class UserSnapshot
 
 public static class UserSnapshotExtensions 
 {
-    public static UserSnapshot Save(this UserEntity user)
+    public static UserSnapshot Save(this User user)
     {
         return new UserSnapshot
         {
@@ -29,9 +29,9 @@ public static class UserSnapshotExtensions
         };
     }
 
-    public static UserEntity RestoreFromSnapshot(this UserSnapshot snapshot)
+    public static User RestoreFromSnapshot(this UserSnapshot snapshot)
     {
-        var result = UserEntity.Create(
+        var result = User.Create(
             Guid.Parse(snapshot.UserId),
             snapshot.IdentityId,
             snapshot.Email,
@@ -41,6 +41,6 @@ public static class UserSnapshotExtensions
             snapshot.Roles.Select(r => r.RestoreFromSnapshot()),
             snapshot.Permissions.Select(p => p.RestoreFromSnapshot()));
         
-        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(UserEntity));
+        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(User));
     }
 }

@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.Dashboards.UpdateName;
+
 namespace DataCat.Server.Api.Endpoints.Dashboards;
 
 public sealed record UpdateDashboardRequest(string Name, string? Description);
