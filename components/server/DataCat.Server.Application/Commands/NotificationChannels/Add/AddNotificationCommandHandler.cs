@@ -14,13 +14,13 @@ public sealed class AddNotificationCommandHandler(
 
         var factory = notificationChannelManager.GetNotificationChannelFactory(destination);
         
-        var settingsResult = factory.Create(destination, request.Settings);
-        if (settingsResult.IsFailure)
-            return Result.Fail<Guid>(settingsResult.Errors!);
+        var notificationOptionResult = factory.Create(destination, request.Settings);
+        if (notificationOptionResult.IsFailure)
+            return Result.Fail<Guid>(notificationOptionResult.Errors!);
 
         var notificationResult = NotificationChannel.Create(
             Guid.NewGuid(),
-            settingsResult.Value);
+            notificationOptionResult.Value);
         
         if (notificationResult.IsFailure)
             return Result.Fail<Guid>(notificationResult.Errors!);

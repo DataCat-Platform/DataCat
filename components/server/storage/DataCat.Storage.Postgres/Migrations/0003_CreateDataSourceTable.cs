@@ -17,15 +17,17 @@ public class CreateDataSourceTable : Migration
             --- crete data source table
             CREATE TABLE {Public.DataSourceTable} (
                 {Public.DataSources.Id} TEXT PRIMARY KEY,
-                {Public.DataSources.Name} TEXT NOT NULL,
+                {Public.DataSources.Name} TEXT UNIQUE NOT NULL,
                 {Public.DataSources.TypeId} INT NOT NULL,
-                {Public.DataSources.ConnectionString} TEXT NOT NULL,
+                {Public.DataSources.ConnectionSettings} TEXT NOT NULL,
+                {Public.DataSources.Purpose} TEXT NOT NULL,
                 FOREIGN KEY ({Public.DataSources.TypeId}) REFERENCES {Public.DataSourceTypeTable}({Public.DataSourceType.Id})
             );
         ";
         
         DownSql = @$"
             DROP TABLE IF EXISTS {Public.DataSourceTable};
+            DROP TABLE IF EXISTS {Public.DataSourceTypeTable};
         ";
     }
     

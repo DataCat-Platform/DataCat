@@ -11,7 +11,7 @@ public sealed class UpdateDashboardCommandHandler(
         
         var dashboard = await dashboardBaseRepository.GetByIdAsync(id, cancellationToken);
         if (dashboard is null)
-            return Result.Fail(DataSourceError.NotFound(id.ToString()));
+            return Result.Fail(DashboardError.NotFound(id.ToString()));
         
         dashboard.ChangeName(request.Name);
         dashboard.ChangeDescription(request.Description);

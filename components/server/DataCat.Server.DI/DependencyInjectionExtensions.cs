@@ -1,7 +1,3 @@
-using DataCat.Notifications.Email;
-using DataCat.Notifications.Telegram;
-using DataCat.Server.Application.Commands.Plugins.Add;
-
 namespace DataCat.Server.DI;
 
 public static class DependencyInjectionExtensions
@@ -21,12 +17,30 @@ public static class DependencyInjectionExtensions
         services.Configure<PluginStoreOptions>(configuration.GetSection("PluginStoreOptions"));
         services.AddSingleton<PluginStoreOptions>(sp => sp.GetRequiredService<IOptions<PluginStoreOptions>>().Value);
         services.AddSingleton<IPluginStorage, DiskPluginStorage>();
+        
         services.AddSingleton<DataSourceManager>();
+        services.AddSingleton<DataSourceContainer>();
+
         services.AddScoped<INamespaceService, NamespaceService>();
         
-        // services.AddSingleton<IMetricClient, DataCatDbClient>(); // TODO: Register in another module
-        
         services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+        
+        services.AddQuartz(q =>
+        {
+            #region DataSourceContainerLoaderJob
+            var dataSourceContainerLoaderJob = new JobKey("DataSourceContainerLoaderJob");
+            q.AddJob<DataSourceContainerLoaderJob>(opts => opts.WithIdentity(dataSourceContainerLoaderJob));
+    
+            q.AddTrigger(opts => opts
+                .ForJob(dataSourceContainerLoaderJob)
+                .WithIdentity("DataSourceContainerLoaderJob-trigger")
+                .WithSimpleSchedule(action =>
+                {
+                    action.WithIntervalInMinutes(60).RepeatForever();
+                })
+            );
+            #endregion
+        });
 
         return services;
     }

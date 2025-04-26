@@ -7,4 +7,6 @@ public sealed record AddDataSourceCommand : IRequest<Result<Guid>>, IAdminReques
     public required string DataSourceType { get; init; }
 
     public required string ConnectionString { get; init; }
+    
+    public required DataSourceKind Purpose {get; init; }
 }

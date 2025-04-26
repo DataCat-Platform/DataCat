@@ -21,10 +21,11 @@ public static class AlertSql
                 {Public.NotificationChannels.DestinationId}       {nameof(NotificationChannelSnapshot.DestinationId)},
                 {Public.NotificationChannels.Settings}            {nameof(NotificationChannelSnapshot.Settings)},
                 
-                {Public.DataSources.Id}                          {nameof(DataSourceSnapshot.Id)},
-                {Public.DataSources.Name}                        {nameof(DataSourceSnapshot.Name)},
-                {Public.DataSources.TypeId}                      {nameof(DataSourceSnapshot.TypeId)},
-                {Public.DataSources.ConnectionString}            {nameof(DataSourceSnapshot.ConnectionString)},
+                {Public.DataSources.Id}                            {nameof(DataSourceSnapshot.Id)},
+                {Public.DataSources.Name}                          {nameof(DataSourceSnapshot.Name)},
+                {Public.DataSources.TypeId}                        {nameof(DataSourceSnapshot.TypeId)},
+                {Public.DataSources.ConnectionSettings}            {nameof(DataSourceSnapshot.ConnectionSettings)},
+                {Public.DataSources.Purpose}                       {nameof(DataSourceSnapshot.Purpose)},
                 
                 {Public.DataSourceType.Id}                        {nameof(DataSourceTypeSnapshot.Id)},
                 {Public.DataSourceType.Name}                      {nameof(DataSourceTypeSnapshot.Name)}
@@ -70,7 +71,8 @@ public static class AlertSql
                 {Public.DataSources.Id}                            {nameof(DataSourceSnapshot.Id)},
                 {Public.DataSources.Name}                          {nameof(DataSourceSnapshot.Name)},
                 {Public.DataSources.TypeId}                        {nameof(DataSourceSnapshot.TypeId)},
-                {Public.DataSources.ConnectionString}              {nameof(DataSourceSnapshot.ConnectionString)},
+                {Public.DataSources.ConnectionSettings}            {nameof(DataSourceSnapshot.ConnectionSettings)},
+                {Public.DataSources.Purpose}                       {nameof(DataSourceSnapshot.Purpose)},
                 
                 {Public.DataSourceType.Id}                        {nameof(DataSourceTypeSnapshot.Id)},
                 {Public.DataSourceType.Name}                      {nameof(DataSourceTypeSnapshot.Name)}

@@ -5,7 +5,7 @@ public abstract class BaseBackgroundWorker(
     : IJob
 {
     private readonly Stopwatch StopWatch = new();
-    protected virtual string JobName => nameof(BaseBackgroundWorker);
+    protected abstract string JobName { get; }
     
     public async Task Execute(IJobExecutionContext context)
     {

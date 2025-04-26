@@ -860,6 +860,181 @@ export class ApiService extends ClientBaseService {
         return _observableOf(null as any);
     }
 
+    postApiV1NotificationDestinationAdd(request: AddNotificationDestinationRequest): Observable<number> {
+        let url_ = this.baseUrl + "/api/v1/notification-destination/add";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPostApiV1NotificationDestinationAdd(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPostApiV1NotificationDestinationAdd(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processPostApiV1NotificationDestinationAdd(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getApiV1NotificationDestination(name: string): Observable<GetNotificationDestinationResponse> {
+        let url_ = this.baseUrl + "/api/v1/notification-destination/{name}";
+        if (name === undefined || name === null)
+            throw new Error("The parameter 'name' must be defined.");
+        url_ = url_.replace("{name}", encodeURIComponent("" + name));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetApiV1NotificationDestination(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetApiV1NotificationDestination(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetNotificationDestinationResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetNotificationDestinationResponse>;
+        }));
+    }
+
+    protected processGetApiV1NotificationDestination(response: HttpResponseBase): Observable<GetNotificationDestinationResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetNotificationDestinationResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteApiV1NotificationDestinationRemove(name: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/v1/notification-destination/remove/{name}";
+        if (name === undefined || name === null)
+            throw new Error("The parameter 'name' must be defined.");
+        url_ = url_.replace("{name}", encodeURIComponent("" + name));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteApiV1NotificationDestinationRemove(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteApiV1NotificationDestinationRemove(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteApiV1NotificationDestinationRemove(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     postApiV1NotificationChannelAdd(request: AddNotificationChannelRequest): Observable<string> {
         let url_ = this.baseUrl + "/api/v1/notification-channel/add";
         url_ = url_.replace(/[?&]$/, "");
@@ -1138,66 +1313,6 @@ export class ApiService extends ClientBaseService {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
-            return _observableOf(result200);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    postApiV1MetricsSearch(request: F): Observable<PageOfLogEntry> {
-        let url_ = this.baseUrl + "/api/v1/metrics/search";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPostApiV1MetricsSearch(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPostApiV1MetricsSearch(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<PageOfLogEntry>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<PageOfLogEntry>;
-        }));
-    }
-
-    protected processPostApiV1MetricsSearch(response: HttpResponseBase): Observable<PageOfLogEntry> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PageOfLogEntry.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
@@ -1512,8 +1627,8 @@ export class ApiService extends ClientBaseService {
         return _observableOf(null as any);
     }
 
-    postApiV1DatasourceAdd(request: AddDataSourceRequest): Observable<string> {
-        let url_ = this.baseUrl + "/api/v1/datasource/add";
+    postApiV1DataSourceTypeAdd(request: AddDataSourceTypeRequest): Observable<number> {
+        let url_ = this.baseUrl + "/api/v1/data-source-type/add";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(request);
@@ -1530,20 +1645,20 @@ export class ApiService extends ClientBaseService {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPostApiV1DatasourceAdd(response_);
+            return this.processPostApiV1DataSourceTypeAdd(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPostApiV1DatasourceAdd(response_ as any);
+                    return this.processPostApiV1DataSourceTypeAdd(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<string>;
+                    return _observableThrow(e) as any as Observable<number>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<string>;
+                return _observableThrow(response_) as any as Observable<number>;
         }));
     }
 
-    protected processPostApiV1DatasourceAdd(response: HttpResponseBase): Observable<string> {
+    protected processPostApiV1DataSourceTypeAdd(response: HttpResponseBase): Observable<number> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1573,11 +1688,11 @@ export class ApiService extends ClientBaseService {
         return _observableOf(null as any);
     }
 
-    getApiV1Datasources(id: string): Observable<GetDataSourceResponse> {
-        let url_ = this.baseUrl + "/api/v1/datasources/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    getApiV1DataSourceType(name: string): Observable<GetDataSourceTypeResponse> {
+        let url_ = this.baseUrl + "/api/v1/data-source-type/{name}";
+        if (name === undefined || name === null)
+            throw new Error("The parameter 'name' must be defined.");
+        url_ = url_.replace("{name}", encodeURIComponent("" + name));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1590,20 +1705,20 @@ export class ApiService extends ClientBaseService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetApiV1Datasources(response_);
+            return this.processGetApiV1DataSourceType(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetApiV1Datasources(response_ as any);
+                    return this.processGetApiV1DataSourceType(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<GetDataSourceResponse>;
+                    return _observableThrow(e) as any as Observable<GetDataSourceTypeResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<GetDataSourceResponse>;
+                return _observableThrow(response_) as any as Observable<GetDataSourceTypeResponse>;
         }));
     }
 
-    protected processGetApiV1Datasources(response: HttpResponseBase): Observable<GetDataSourceResponse> {
+    protected processGetApiV1DataSourceType(response: HttpResponseBase): Observable<GetDataSourceTypeResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1614,7 +1729,7 @@ export class ApiService extends ClientBaseService {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = GetDataSourceResponse.fromJS(resultData200);
+            result200 = GetDataSourceTypeResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
@@ -1632,11 +1747,11 @@ export class ApiService extends ClientBaseService {
         return _observableOf(null as any);
     }
 
-    deleteApiV1DatasourceRemove(dataSourceId: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/v1/datasource/remove/{dataSourceId}";
-        if (dataSourceId === undefined || dataSourceId === null)
-            throw new Error("The parameter 'dataSourceId' must be defined.");
-        url_ = url_.replace("{dataSourceId}", encodeURIComponent("" + dataSourceId));
+    deleteApiV1DatasourceRemove(name: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/v1/datasource/remove/{name}";
+        if (name === undefined || name === null)
+            throw new Error("The parameter 'name' must be defined.");
+        url_ = url_.replace("{name}", encodeURIComponent("" + name));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1687,8 +1802,183 @@ export class ApiService extends ClientBaseService {
         return _observableOf(null as any);
     }
 
-    getApiV1DatasourcesSearch(filter?: string | null | undefined, page?: number | undefined, pageSize?: number | undefined): Observable<PageOfSearchDataSourcesResponse> {
-        let url_ = this.baseUrl + "/api/v1/datasources/search?";
+    postApiV1DataSourceAdd(request: AddDataSourceRequest): Observable<string> {
+        let url_ = this.baseUrl + "/api/v1/data-source/add";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPostApiV1DataSourceAdd(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPostApiV1DataSourceAdd(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string>;
+        }));
+    }
+
+    protected processPostApiV1DataSourceAdd(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getApiV1DataSource(id: string): Observable<GetDataSourceResponse> {
+        let url_ = this.baseUrl + "/api/v1/data-source/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetApiV1DataSource(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetApiV1DataSource(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetDataSourceResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetDataSourceResponse>;
+        }));
+    }
+
+    protected processGetApiV1DataSource(response: HttpResponseBase): Observable<GetDataSourceResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetDataSourceResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteApiV1DataSourceRemove(dataSourceId: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/v1/data-source/remove/{dataSourceId}";
+        if (dataSourceId === undefined || dataSourceId === null)
+            throw new Error("The parameter 'dataSourceId' must be defined.");
+        url_ = url_.replace("{dataSourceId}", encodeURIComponent("" + dataSourceId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteApiV1DataSourceRemove(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteApiV1DataSourceRemove(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDeleteApiV1DataSourceRemove(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getApiV1DataSourceSearch(filter?: string | null | undefined, page?: number | undefined, pageSize?: number | undefined): Observable<PageOfSearchDataSourcesResponse> {
+        let url_ = this.baseUrl + "/api/v1/data-source/search?";
         if (filter !== undefined && filter !== null)
             url_ += "filter=" + encodeURIComponent("" + filter) + "&";
         if (page === null)
@@ -1711,11 +2001,11 @@ export class ApiService extends ClientBaseService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetApiV1DatasourcesSearch(response_);
+            return this.processGetApiV1DataSourceSearch(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetApiV1DatasourcesSearch(response_ as any);
+                    return this.processGetApiV1DataSourceSearch(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<PageOfSearchDataSourcesResponse>;
                 }
@@ -1724,7 +2014,7 @@ export class ApiService extends ClientBaseService {
         }));
     }
 
-    protected processGetApiV1DatasourcesSearch(response: HttpResponseBase): Observable<PageOfSearchDataSourcesResponse> {
+    protected processGetApiV1DataSourceSearch(response: HttpResponseBase): Observable<PageOfSearchDataSourcesResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1753,8 +2043,8 @@ export class ApiService extends ClientBaseService {
         return _observableOf(null as any);
     }
 
-    putApiV1AlertUpdateConnectionString(dataSourceId: string, request: UpdateDataSourceRequest): Observable<void> {
-        let url_ = this.baseUrl + "/api/v1/alert/update-connection-string/{dataSourceId}";
+    putApiV1DataSourceUpdateConnectionString(dataSourceId: string, request: UpdateDataSourceRequest): Observable<void> {
+        let url_ = this.baseUrl + "/api/v1/data-source/update-connection-string/{dataSourceId}";
         if (dataSourceId === undefined || dataSourceId === null)
             throw new Error("The parameter 'dataSourceId' must be defined.");
         url_ = url_.replace("{dataSourceId}", encodeURIComponent("" + dataSourceId));
@@ -1773,11 +2063,11 @@ export class ApiService extends ClientBaseService {
         };
 
         return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPutApiV1AlertUpdateConnectionString(response_);
+            return this.processPutApiV1DataSourceUpdateConnectionString(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPutApiV1AlertUpdateConnectionString(response_ as any);
+                    return this.processPutApiV1DataSourceUpdateConnectionString(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<void>;
                 }
@@ -1786,7 +2076,7 @@ export class ApiService extends ClientBaseService {
         }));
     }
 
-    protected processPutApiV1AlertUpdateConnectionString(response: HttpResponseBase): Observable<void> {
+    protected processPutApiV1DataSourceUpdateConnectionString(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3434,6 +3724,86 @@ export interface IUpdatePanelRequest {
     dashboardId?: string;
 }
 
+export class AddNotificationDestinationRequest implements IAddNotificationDestinationRequest {
+    name?: string;
+
+    constructor(data?: IAddNotificationDestinationRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): AddNotificationDestinationRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddNotificationDestinationRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data;
+    }
+
+    clone(): AddNotificationDestinationRequest {
+        const json = this.toJSON();
+        let result = new AddNotificationDestinationRequest();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAddNotificationDestinationRequest {
+    name?: string;
+}
+
+export class GetNotificationDestinationResponse implements IGetNotificationDestinationResponse {
+
+    constructor(data?: IGetNotificationDestinationResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): GetNotificationDestinationResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetNotificationDestinationResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+
+    clone(): GetNotificationDestinationResponse {
+        const json = this.toJSON();
+        let result = new GetNotificationDestinationResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetNotificationDestinationResponse {
+}
+
 export class AddNotificationChannelRequest implements IAddNotificationChannelRequest {
     destinationName?: string;
     settings?: string;
@@ -3622,6 +3992,57 @@ export interface IAddNamespaceRequest {
     name?: string;
 }
 
+export class SchemaResponse implements ISchemaResponse {
+    migration?: string;
+    upSql?: any;
+    downSql?: any;
+
+    constructor(data?: ISchemaResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.migration = _data["migration"];
+            this.upSql = _data["upSql"];
+            this.downSql = _data["downSql"];
+        }
+    }
+
+    static fromJS(data: any): SchemaResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new SchemaResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["migration"] = this.migration;
+        data["upSql"] = this.upSql;
+        data["downSql"] = this.downSql;
+        return data;
+    }
+
+    clone(): SchemaResponse {
+        const json = this.toJSON();
+        let result = new SchemaResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISchemaResponse {
+    migration?: string;
+    upSql?: any;
+    downSql?: any;
+}
+
 export class PageOfLogEntry implements IPageOfLogEntry {
     items?: LogEntry[];
     totalCount?: number;
@@ -3772,107 +4193,8 @@ export interface ILogEntry {
     additionalFields?: { [key: string]: any; };
 }
 
-export class F implements IF {
-    request?: DataSourceTypeEnum;
-
-    constructor(data?: IF) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.request = _data["request"];
-        }
-    }
-
-    static fromJS(data: any): F {
-        data = typeof data === 'object' ? data : {};
-        let result = new F();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["request"] = this.request;
-        return data;
-    }
-
-    clone(): F {
-        const json = this.toJSON();
-        let result = new F();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IF {
-    request?: DataSourceTypeEnum;
-}
-
-export enum DataSourceTypeEnum {
-    DataCat = "dataCat",
-    PostgreSQL = "postgreSQL",
-    SQLLite = "sqlLite",
-}
-
-export class SchemaResponse implements ISchemaResponse {
-    migration?: string;
-    upSql?: any;
-    downSql?: any;
-
-    constructor(data?: ISchemaResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.migration = _data["migration"];
-            this.upSql = _data["upSql"];
-            this.downSql = _data["downSql"];
-        }
-    }
-
-    static fromJS(data: any): SchemaResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new SchemaResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["migration"] = this.migration;
-        data["upSql"] = this.upSql;
-        data["downSql"] = this.downSql;
-        return data;
-    }
-
-    clone(): SchemaResponse {
-        const json = this.toJSON();
-        let result = new SchemaResponse();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface ISchemaResponse {
-    migration?: string;
-    upSql?: any;
-    downSql?: any;
-}
-
 export class SearchLogsRequest implements ISearchLogsRequest {
+    dataSourceName?: string;
     traceId?: string | undefined;
     from?: Date | undefined;
     to?: Date | undefined;
@@ -3895,6 +4217,7 @@ export class SearchLogsRequest implements ISearchLogsRequest {
 
     init(_data?: any) {
         if (_data) {
+            this.dataSourceName = _data["dataSourceName"];
             this.traceId = _data["traceId"];
             this.from = _data["from"] ? new Date(_data["from"].toString()) : <any>undefined;
             this.to = _data["to"] ? new Date(_data["to"].toString()) : <any>undefined;
@@ -3923,6 +4246,7 @@ export class SearchLogsRequest implements ISearchLogsRequest {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["dataSourceName"] = this.dataSourceName;
         data["traceId"] = this.traceId;
         data["from"] = this.from ? this.from.toISOString() : <any>undefined;
         data["to"] = this.to ? this.to.toISOString() : <any>undefined;
@@ -3951,6 +4275,7 @@ export class SearchLogsRequest implements ISearchLogsRequest {
 }
 
 export interface ISearchLogsRequest {
+    dataSourceName?: string;
     traceId?: string | undefined;
     from?: Date | undefined;
     to?: Date | undefined;
@@ -4014,10 +4339,101 @@ export interface IAddExternalRoleMappingRequest {
     roleId?: number;
 }
 
+export class AddDataSourceTypeRequest implements IAddDataSourceTypeRequest {
+    name?: string;
+
+    constructor(data?: IAddDataSourceTypeRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): AddDataSourceTypeRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddDataSourceTypeRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data;
+    }
+
+    clone(): AddDataSourceTypeRequest {
+        const json = this.toJSON();
+        let result = new AddDataSourceTypeRequest();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAddDataSourceTypeRequest {
+    name?: string;
+}
+
+export class GetDataSourceTypeResponse implements IGetDataSourceTypeResponse {
+    id?: number;
+    name?: string;
+
+    constructor(data?: IGetDataSourceTypeResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): GetDataSourceTypeResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetDataSourceTypeResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+
+    clone(): GetDataSourceTypeResponse {
+        const json = this.toJSON();
+        let result = new GetDataSourceTypeResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetDataSourceTypeResponse {
+    id?: number;
+    name?: string;
+}
+
 export class AddDataSourceRequest implements IAddDataSourceRequest {
     name?: string;
     type?: string;
     connectionString?: string;
+    purpose?: string;
 
     constructor(data?: IAddDataSourceRequest) {
         if (data) {
@@ -4033,6 +4449,7 @@ export class AddDataSourceRequest implements IAddDataSourceRequest {
             this.name = _data["name"];
             this.type = _data["type"];
             this.connectionString = _data["connectionString"];
+            this.purpose = _data["purpose"];
         }
     }
 
@@ -4048,6 +4465,7 @@ export class AddDataSourceRequest implements IAddDataSourceRequest {
         data["name"] = this.name;
         data["type"] = this.type;
         data["connectionString"] = this.connectionString;
+        data["purpose"] = this.purpose;
         return data;
     }
 
@@ -4063,6 +4481,7 @@ export interface IAddDataSourceRequest {
     name?: string;
     type?: string;
     connectionString?: string;
+    purpose?: string;
 }
 
 export class GetDataSourceResponse implements IGetDataSourceResponse {

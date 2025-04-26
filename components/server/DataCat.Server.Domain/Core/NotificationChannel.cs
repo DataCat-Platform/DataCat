@@ -3,7 +3,7 @@ namespace DataCat.Server.Domain.Core;
 public class NotificationChannel
 {
     private NotificationChannel(
-        Guid id, 
+        Guid id,
         BaseNotificationOption notificationOption)
     {
         Id = id;
@@ -20,18 +20,18 @@ public class NotificationChannel
     }
 
     public static Result<NotificationChannel> Create(Guid id, 
-        BaseNotificationOption? settings)
+        BaseNotificationOption? notificationOption)
     {
         var validationList = new List<Result<NotificationChannel>>();
 
         #region Validation
 
-        if (settings is null)
+        if (notificationOption is null)
         {
-            validationList.Add(Result.Fail<NotificationChannel>(BaseError.FieldIsNull(nameof(settings))));
+            validationList.Add(Result.Fail<NotificationChannel>(BaseError.FieldIsNull(nameof(notificationOption))));
         }
 
-        if (settings?.NotificationDestination is null)
+        if (notificationOption?.NotificationDestination is null)
         {
             validationList.Add(Result.Fail<NotificationChannel>(BaseError.FieldIsNull(nameof(BaseNotificationOption.NotificationDestination))));
         }
@@ -40,6 +40,6 @@ public class NotificationChannel
 
         return validationList.Count != 0 
             ? validationList.FoldResults()!
-            : Result.Success(new NotificationChannel(id, settings!));
+            : Result.Success(new NotificationChannel(id, notificationOption!));
     }
 }

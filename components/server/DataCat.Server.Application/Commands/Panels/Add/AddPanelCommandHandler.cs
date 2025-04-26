@@ -11,7 +11,7 @@ public sealed class AddPanelCommandHandler(
         var dataSource = await dataSourceRepository.GetByIdAsync(Guid.Parse(request.DataSourceId), cancellationToken);
         if (dataSource is null)
         {
-            return Result.Fail<Guid>(DataSourceError.NotFound(request.DataSourceId));
+            return Result.Fail<Guid>(DataSourceError.NotFoundById(request.DataSourceId));
         }
         var isDashboardExist = await dashboardRepository.GetByIdAsync(Guid.Parse(request.DashboardId), cancellationToken) is not null;
         if (!isDashboardExist)

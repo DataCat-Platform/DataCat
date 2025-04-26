@@ -99,7 +99,8 @@ public static class Public
         public const string Id = "pk_datasource_id";
         public const string Name = "name";
         public const string TypeId = "type_id";
-        public const string ConnectionString = "connection_string";
+        public const string ConnectionSettings = "connection_string";
+        public const string Purpose = "purpose";
     }
     
     public static class Dashboards

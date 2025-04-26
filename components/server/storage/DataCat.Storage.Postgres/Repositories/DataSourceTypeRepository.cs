@@ -7,15 +7,17 @@ public sealed class DataSourceTypeRepository(
     public async Task<DataSourceType?> GetByNameAsync(string name, CancellationToken token = default)
     {
         const string sql = $"""
-            SELECT {Public.DataSourceType.Id}, {Public.DataSourceType.Name}
+            SELECT 
+                {Public.DataSourceType.Id}    {nameof(DataSourceTypeSnapshot.Id)},
+                {Public.DataSourceType.Name}  {nameof(DataSourceTypeSnapshot.Name)}
             FROM {Public.DataSourceTypeTable}
-            WHERE {Public.DataSourceType.Name} = @{nameof(name)}
+            WHERE {Public.DataSourceType.Name} ILIKE @{nameof(name)}
             LIMIT 1;
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        var result = await connection.QuerySingleOrDefaultAsync<DataSourceType>(sql, new { name }, transaction: UnitOfWork.Transaction);
-        return result;
+        var result = await connection.QuerySingleOrDefaultAsync<DataSourceTypeSnapshot>(sql, new { name }, transaction: UnitOfWork.Transaction);
+        return result?.RestoreFromSnapshot();
     }
 
     public async Task<int> AddAsync(DataSourceType dataSourceType, CancellationToken token = default)

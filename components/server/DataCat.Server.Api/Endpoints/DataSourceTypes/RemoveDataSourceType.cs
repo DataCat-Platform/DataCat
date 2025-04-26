@@ -13,7 +13,7 @@ public sealed class RemoveDataSourceType : ApiEndpointBase
                 var result = await mediator.Send(query, token);
                 return HandleCustomResponse(result);
             })
-            .WithTags(ApiTags.DataSources)
+            .WithTags(ApiTags.DataSourceTypes)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);

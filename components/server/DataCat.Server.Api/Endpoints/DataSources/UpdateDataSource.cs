@@ -28,7 +28,7 @@ public sealed class UpdateDataSource : ApiEndpointBase
     {
         return new UpdateConnectionStringDataSourceCommand
         {
-            DataSourceId = dataSourceId,
+            DataSourceName = dataSourceId,
             ConnectionString = request.ConnectionString
         };
     }

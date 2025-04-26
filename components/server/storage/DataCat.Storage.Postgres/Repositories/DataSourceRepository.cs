@@ -11,10 +11,11 @@ public sealed class DataSourceRepository(
         
         const string sql = $"""
             SELECT 
-                data_source.{Public.DataSources.Id}                 {nameof(DataSourceSnapshot.Id)},
-                data_source.{Public.DataSources.Name}               {nameof(DataSourceSnapshot.Name)},
-                data_source.{Public.DataSources.TypeId}             {nameof(DataSourceSnapshot.TypeId)},
-                data_source.{Public.DataSources.ConnectionString}   {nameof(DataSourceSnapshot.ConnectionString)},
+                data_source.{Public.DataSources.Id}                   {nameof(DataSourceSnapshot.Id)},
+                data_source.{Public.DataSources.Name}                 {nameof(DataSourceSnapshot.Name)},
+                data_source.{Public.DataSources.TypeId}               {nameof(DataSourceSnapshot.TypeId)},
+                data_source.{Public.DataSources.ConnectionSettings}   {nameof(DataSourceSnapshot.ConnectionSettings)},
+                data_source.{Public.DataSources.Purpose}              {nameof(DataSourceSnapshot.Purpose)},
             
                 data_source_type.{Public.DataSourceType.Id}            {nameof(DataSourceTypeSnapshot.Id)},
                 data_source_type.{Public.DataSourceType.Name}          {nameof(DataSourceTypeSnapshot.Name)}
@@ -48,18 +49,56 @@ public sealed class DataSourceRepository(
                 {Public.DataSources.Id},
                 {Public.DataSources.Name},
                 {Public.DataSources.TypeId},
-                {Public.DataSources.ConnectionString}
+                {Public.DataSources.ConnectionSettings},
+                {Public.DataSources.Purpose}
             )
             VALUES (
                 @{nameof(DataSourceSnapshot.Id)},
                 @{nameof(DataSourceSnapshot.Name)},
                 @{nameof(DataSourceSnapshot.TypeId)},
-                @{nameof(DataSourceSnapshot.ConnectionString)}
+                @{nameof(DataSourceSnapshot.ConnectionSettings)},
+                @{nameof(DataSourceSnapshot.Purpose)}
             )
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, panelSnapshot, transaction: unitOfWork.Transaction);
+    }
+
+    public async Task<DataSource?> GetByNameAsync(string name, CancellationToken token = default)
+    {
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+
+        var parameters = new { p_name = name };
+        const string sql = DataSourceSql.Select.GetByName;
+        var result = await connection.QueryAsync<DataSourceSnapshot, DataSourceTypeSnapshot, DataSourceSnapshot>(sql,
+            map: (dataSourceSnapshot, sourceTypeSnapshot) =>
+            {
+                dataSourceSnapshot.DataSourceType = sourceTypeSnapshot;
+                return dataSourceSnapshot;
+            },
+            splitOn: $"{nameof(DataSourceTypeSnapshot.Id)}",
+            param: parameters, 
+            transaction: unitOfWork.Transaction);
+
+        return result.FirstOrDefault()?.RestoreFromSnapshot();
+    }
+
+    public async Task<IReadOnlyCollection<DataSource>> GetAllAsync(CancellationToken token = default)
+    {
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+
+        const string sql = DataSourceSql.Select.GetAll;
+        var result = await connection.QueryAsync<DataSourceSnapshot, DataSourceTypeSnapshot, DataSourceSnapshot>(sql,
+            map: (dataSourceSnapshot, sourceTypeSnapshot) =>
+            {
+                dataSourceSnapshot.DataSourceType = sourceTypeSnapshot;
+                return dataSourceSnapshot;
+            },
+            splitOn: $"{nameof(DataSourceTypeSnapshot.Id)}",
+            transaction: unitOfWork.Transaction);
+
+        return result.Select(x => x.RestoreFromSnapshot()).ToList();
     }
 
     public async Task<Page<DataSource>> SearchAsync(
@@ -98,9 +137,10 @@ public sealed class DataSourceRepository(
         const string sql = $"""
             UPDATE {Public.DataSourceTable}
             SET 
-                {Public.DataSources.Name}             = @{nameof(DataSourceSnapshot.Name)},
-                {Public.DataSources.TypeId}           = @{nameof(DataSourceSnapshot.TypeId)},
-                {Public.DataSources.ConnectionString} = @{nameof(DataSourceSnapshot.ConnectionString)}
+                {Public.DataSources.Name}               = @{nameof(DataSourceSnapshot.Name)},
+                {Public.DataSources.TypeId}             = @{nameof(DataSourceSnapshot.TypeId)},
+                {Public.DataSources.ConnectionSettings} = @{nameof(DataSourceSnapshot.ConnectionSettings)},
+                {Public.DataSources.Purpose}            = @{nameof(DataSourceSnapshot.Purpose)}
             WHERE {Public.DataSources.Id} = @{nameof(DataSourceSnapshot.Id)}
         """;
 

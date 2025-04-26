@@ -3,7 +3,8 @@ namespace DataCat.Server.Api.Endpoints.DataSources;
 public sealed record AddDataSourceRequest(
     string Name,
     string Type,
-    string ConnectionString);
+    string ConnectionString,
+    DataSourceKind Purpose);
 
 public sealed class AddDataSource : ApiEndpointBase
 {
@@ -30,7 +31,8 @@ public sealed class AddDataSource : ApiEndpointBase
         {
             Name = request.Name,
             ConnectionString = request.ConnectionString,
-            DataSourceType = request.Type
+            DataSourceType = request.Type,
+            Purpose = request.Purpose
         };
     }
 }

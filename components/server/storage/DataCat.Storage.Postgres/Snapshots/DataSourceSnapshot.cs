@@ -6,7 +6,8 @@ public sealed record DataSourceSnapshot
     public required string Name { get; init; }
     public required DataSourceTypeSnapshot DataSourceType { get; set; }
     public int? TypeId => DataSourceType.Id;
-    public required string ConnectionString { get; init; }
+    public required string ConnectionSettings { get; init; }
+    public required string Purpose { get; init; } 
 }
 
 public static class DataSourceEntitySnapshotMapper 
@@ -18,7 +19,8 @@ public static class DataSourceEntitySnapshotMapper
             Id = dataSource.Id.ToString(),
             Name = dataSource.Name,
             DataSourceType = dataSource.DataSourceType.Save(),
-            ConnectionString = dataSource.ConnectionString
+            ConnectionSettings = dataSource.ConnectionSettings,
+            Purpose = dataSource.Purpose.Name
         };
     }
 
@@ -28,7 +30,8 @@ public static class DataSourceEntitySnapshotMapper
             Guid.Parse(snapshot.Id),
             snapshot.Name,
             snapshot.DataSourceType.RestoreFromSnapshot(),
-            snapshot.ConnectionString);
+            snapshot.ConnectionSettings,
+            DataSourcePurpose.FromName(snapshot.Purpose));
 
         return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSource));
     }

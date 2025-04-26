@@ -15,7 +15,7 @@ public sealed class AddDataSourceType : ApiEndpointBase
                 var result = await mediator.Send(query, token);
                 return HandleCustomResponse(result);
             })
-            .WithTags(ApiTags.DataSources)
+            .WithTags(ApiTags.DataSourceTypes)
             .HasApiVersion(ApiVersions.V1)
             .Produces<int>()
             .ProducesProblem(StatusCodes.Status400BadRequest);

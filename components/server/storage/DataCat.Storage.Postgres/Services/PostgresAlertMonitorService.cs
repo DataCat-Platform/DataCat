@@ -25,7 +25,8 @@ public class PostgresAlertMonitorService(
                ds.{Public.DataSources.Id}                                    {nameof(DataSourceSnapshot.Id)},
                ds.{Public.DataSources.Name}                                  {nameof(DataSourceSnapshot.Name)},
                ds.{Public.DataSources.TypeId}                                {nameof(DataSourceSnapshot.TypeId)},
-               ds.{Public.DataSources.ConnectionString}                      {nameof(DataSourceSnapshot.ConnectionString)},
+               ds.{Public.DataSources.ConnectionSettings}                    {nameof(DataSourceSnapshot.ConnectionSettings)},
+               ds.{Public.DataSources.Purpose}                               {nameof(DataSourceSnapshot.Purpose)},
    
                nc.{Public.NotificationChannels.Id}                           {nameof(NotificationChannelSnapshot.Id)},
                nc.{Public.NotificationChannels.Settings}                     {nameof(NotificationChannelSnapshot.Settings)},
@@ -81,10 +82,11 @@ public class PostgresAlertMonitorService(
                 a.{Public.Alerts.WaitTimeBeforeAlertingInTicks}  {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
                 a.{Public.Alerts.RepeatIntervalInTicks}          {nameof(AlertSnapshot.RepeatIntervalInTicks)},
                
-                ds.{Public.DataSources.Id}                     {nameof(DataSourceSnapshot.Id)},
-                ds.{Public.DataSources.Name}                   {nameof(DataSourceSnapshot.Name)},
-                ds.{Public.DataSources.TypeId}                 {nameof(DataSourceSnapshot.TypeId)},
-                ds.{Public.DataSources.ConnectionString}       {nameof(DataSourceSnapshot.ConnectionString)},
+                ds.{Public.DataSources.Id}                       {nameof(DataSourceSnapshot.Id)},
+                ds.{Public.DataSources.Name}                     {nameof(DataSourceSnapshot.Name)},
+                ds.{Public.DataSources.TypeId}                   {nameof(DataSourceSnapshot.TypeId)},
+                ds.{Public.DataSources.ConnectionSettings}       {nameof(DataSourceSnapshot.ConnectionSettings)},
+                ds.{Public.DataSources.Purpose}                  {nameof(DataSourceSnapshot.Purpose)},
                
                 nc.{Public.NotificationChannels.Id}            {nameof(NotificationChannelSnapshot.Id)},
                 nc.{Public.NotificationChannels.Settings}      {nameof(NotificationChannelSnapshot.Settings)},

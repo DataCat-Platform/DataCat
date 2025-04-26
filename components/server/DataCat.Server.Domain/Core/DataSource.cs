@@ -2,12 +2,13 @@ namespace DataCat.Server.Domain.Core;
 
 public class DataSource
 {
-    private DataSource(Guid id, string name, DataSourceType dataSourceType, string connectionString)
+    private DataSource(Guid id, string name, DataSourceType dataSourceType, string connectionSettings, DataSourcePurpose purpose)
     {
         Id = id;
         Name = name;
         DataSourceType = dataSourceType;
-        ConnectionString = connectionString;
+        ConnectionSettings = connectionSettings;
+        Purpose = purpose;
     }
 
     public Guid Id { get; private set; }
@@ -16,14 +17,15 @@ public class DataSource
 
     public DataSourceType DataSourceType { get; private set; }
 
-    public string ConnectionString { get; private set; }
+    public string ConnectionSettings { get; private set; }
+    public DataSourcePurpose Purpose { get; }
 
     public void ChangeConnectionString(string connectionString)
     {
-        ConnectionString = connectionString;
+        ConnectionSettings = connectionString;
     }
 
-    public static Result<DataSource> Create(Guid id, string name, DataSourceType? dataSourceType, string? connectionString)
+    public static Result<DataSource> Create(Guid id, string name, DataSourceType? dataSourceType, string? connectionString, DataSourcePurpose? purpose)
     {
         var validationList = new List<Result<DataSource>>();
 
@@ -43,11 +45,16 @@ public class DataSource
         {
             validationList.Add(Result.Fail<DataSource>(BaseError.FieldIsNull(nameof(dataSourceType))));
         }
+        
+        if (purpose is null)
+        {
+            validationList.Add(Result.Fail<DataSource>(BaseError.FieldIsNull(nameof(purpose))));
+        }
 
         #endregion
 
         return validationList.Count != 0 
             ? validationList.FoldResults()! 
-            : Result.Success(new DataSource(id, name, dataSourceType!, connectionString!));
+            : Result.Success(new DataSource(id, name, dataSourceType!, connectionString!, purpose!));
     }
 }

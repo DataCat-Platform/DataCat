@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Telemetry.Metrics;
+
 namespace DataCat.Storage.Postgres.Jobs;
 
 #if DEBUG
@@ -39,7 +41,17 @@ public sealed class AlertNotifier(
         {
             try
             {
-                var metricClient = dataSourceManager.GetMetricClient(alert.Query.DataSource);
+                var metricClient = dataSourceManager.GetMetricsClient(alert.Query.DataSource.Name);
+                if (metricClient is null)
+                {
+                    logger.LogError(
+                        "[{Job}] Failed to create metrics client for DataSource '{DataSourceName}'",
+                        nameof(AlertNotifier),
+                        alert.Query.DataSource.Name
+                    );
+                    return;
+                }
+                
                 var isTriggeredYet = await metricClient.CheckAlertTriggerAsync(alert.Query.RawQuery, token);
                 
                 if (isTriggeredYet)

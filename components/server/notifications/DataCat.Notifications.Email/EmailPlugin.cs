@@ -6,6 +6,8 @@ public sealed class EmailPlugin : INotificationPlugin
     {
         services.AddSingleton<INotificationOptionFactory, EmailNotificationOptionFactory>();
 
+        services.AddHostedService<EmailNotificationInitializer>();
+        
         return services;
     }
 }

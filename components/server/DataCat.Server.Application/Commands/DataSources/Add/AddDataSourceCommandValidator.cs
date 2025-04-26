@@ -8,5 +8,6 @@ public sealed class AddDataSourceCommandValidator : AbstractValidator<AddDataSou
         RuleFor(x => x.Name).NotEmpty();
         RuleFor(x => x.ConnectionString).NotEmpty();
         RuleFor(x => x.DataSourceType).NotEmpty();
+        RuleFor(x => x.Purpose).NotEmpty();
     }
 }

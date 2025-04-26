@@ -16,7 +16,7 @@ public static class GetDataSourceResponseExtensions
         {
             Id = dataSource.Id,
             Name = dataSource.Name,
-            ConnectionString = dataSource.ConnectionString,
+            ConnectionString = dataSource.ConnectionSettings,
             Type = dataSource.DataSourceType.Name
         };
     }

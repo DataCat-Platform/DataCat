@@ -14,7 +14,7 @@ public sealed class UpdateAlertQueryCommandHandler(
         
         var dataSource = await dataSourceRepository.GetByIdAsync(Guid.Parse(request.DataSourceId), cancellationToken);
         if (dataSource is null)
-            return Result.Fail<Guid>(DataSourceError.NotFound(request.DataSourceId));
+            return Result.Fail<Guid>(DataSourceError.NotFoundById(request.DataSourceId));
 
         var queryResult = Query.Create(dataSource, request.RawQuery);
         if (queryResult.IsFailure)

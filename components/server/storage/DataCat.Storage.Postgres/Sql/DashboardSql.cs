@@ -34,10 +34,11 @@ public static class DashboardSql
               sw.{Public.Users.Id}             {nameof(UserSnapshot.UserId)},
          
               -- DataSources
-              ds.{Public.DataSources.Id}                   {nameof(DataSourceSnapshot.Id)},
-              ds.{Public.DataSources.Name}                 {nameof(DataSourceSnapshot.Name)},
-              ds.{Public.DataSources.TypeId}               {nameof(DataSourceSnapshot.TypeId)},
-              ds.{Public.DataSources.ConnectionString}     {nameof(DataSourceSnapshot.ConnectionString)},
+              ds.{Public.DataSources.Id}                     {nameof(DataSourceSnapshot.Id)},
+              ds.{Public.DataSources.Name}                   {nameof(DataSourceSnapshot.Name)},
+              ds.{Public.DataSources.TypeId}                 {nameof(DataSourceSnapshot.TypeId)},
+              ds.{Public.DataSources.ConnectionSettings}     {nameof(DataSourceSnapshot.ConnectionSettings)},
+              ds.{Public.DataSources.Purpose}                {nameof(DataSourceSnapshot.Purpose)},
               
               dst.{Public.DataSourceType.Id}     {nameof(DataSourceTypeSnapshot.Id)},
               dst.{Public.DataSourceType.Name}   {nameof(DataSourceTypeSnapshot.Name)}
@@ -92,10 +93,12 @@ public static class DashboardSql
               sw.{Public.Users.Id}               {nameof(UserSnapshot.UserId)},
               
               -- DataSources
-              ds.{Public.DataSources.Id}                {nameof(DataSourceSnapshot.Id)},
-              ds.{Public.DataSources.Name}              {nameof(DataSourceSnapshot.Name)},
-              ds.{Public.DataSources.TypeId}            {nameof(DataSourceSnapshot.TypeId)},
-              ds.{Public.DataSources.ConnectionString}  {nameof(DataSourceSnapshot.ConnectionString)},
+              ds.{Public.DataSources.Id}                  {nameof(DataSourceSnapshot.Id)},
+              ds.{Public.DataSources.Name}                {nameof(DataSourceSnapshot.Name)},
+              ds.{Public.DataSources.TypeId}              {nameof(DataSourceSnapshot.TypeId)},
+              ds.{Public.DataSources.ConnectionSettings}  {nameof(DataSourceSnapshot.ConnectionSettings)},
+              ds.{Public.DataSources.Purpose}             {nameof(DataSourceSnapshot.Purpose)},
+              
               
               dst.{Public.DataSourceType.Id}            {nameof(DataSourceTypeSnapshot.Id)},
               dst.{Public.DataSourceType.Name}          {nameof(DataSourceTypeSnapshot.Name)}

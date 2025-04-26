@@ -12,7 +12,7 @@ public sealed class UpdatePanelCommandHandler(
         if (panelResult.IsFailure) 
             return panelResult;
 
-        var dataSourceResult = await GetEntityAsync(dataSourceRepository, request.DataSourceId, DataSourceError.NotFound(request.DataSourceId));
+        var dataSourceResult = await GetEntityAsync(dataSourceRepository, request.DataSourceId, DataSourceError.NotFoundById(request.DataSourceId));
         if (dataSourceResult.IsFailure) 
             return dataSourceResult;
         

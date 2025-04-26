@@ -22,10 +22,10 @@ public sealed class PanelRepository(
                 p.{Public.Panels.Height}               {nameof(PanelSnapshot.Height)},
                 p.{Public.Panels.DashboardId}          {nameof(PanelSnapshot.DashboardId)},
                 
-                ds.{Public.DataSources.Id}                 {nameof(DataSourceSnapshot.Id)},
-                ds.{Public.DataSources.Name}               {nameof(DataSourceSnapshot.Name)},
-                ds.{Public.DataSources.TypeId}             {nameof(DataSourceSnapshot.TypeId)},
-                ds.{Public.DataSources.ConnectionString}   {nameof(DataSourceSnapshot.ConnectionString)},
+                ds.{Public.DataSources.Id}                   {nameof(DataSourceSnapshot.Id)},
+                ds.{Public.DataSources.Name}                 {nameof(DataSourceSnapshot.Name)},
+                ds.{Public.DataSources.TypeId}               {nameof(DataSourceSnapshot.TypeId)},
+                ds.{Public.DataSources.ConnectionSettings}   {nameof(DataSourceSnapshot.ConnectionSettings)},
                 
                 dst.{Public.DataSourceType.Id}              {nameof(DataSourceTypeSnapshot.Id)},
                 dst.{Public.DataSourceType.Name}            {nameof(DataSourceTypeSnapshot.Name)}

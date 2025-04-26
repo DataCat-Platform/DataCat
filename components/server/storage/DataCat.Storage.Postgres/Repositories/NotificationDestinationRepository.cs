@@ -7,15 +7,17 @@ public sealed class NotificationDestinationRepository(
     public async Task<NotificationDestination?> GetByNameAsync(string name, CancellationToken token = default)
     {
         const string sql = $"""
-            SELECT {Public.NotificationDestination.Id}, {Public.NotificationDestination.Name}
+            SELECT 
+                {Public.NotificationDestination.Id}       {nameof(NotificationDestinationSnapshot.Id)}, 
+                {Public.NotificationDestination.Name}     {nameof(NotificationDestinationSnapshot.Name)}
             FROM {Public.NotificationDestinationTable}
-            WHERE {Public.NotificationDestination.Name} = @{nameof(name)}
+            WHERE {Public.NotificationDestination.Name} ILIKE @{nameof(name)}
             LIMIT 1;
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        var result = await connection.QuerySingleOrDefaultAsync<NotificationDestination>(sql, new { name }, transaction: UnitOfWork.Transaction);
-        return result;
+        var result = await connection.QuerySingleOrDefaultAsync<NotificationDestinationSnapshot>(sql, new { name }, transaction: UnitOfWork.Transaction);
+        return result?.RestoreFromSnapshot();
     }
 
     public async Task<int> AddAsync(NotificationDestination destination, CancellationToken token = default)

@@ -4,13 +4,6 @@ public sealed class RemoveDataSourceValidator : AbstractValidator<RemoveDataSour
 {
     public RemoveDataSourceValidator()
     {
-        RuleFor(x => x.DataSourceId).NotEmpty()
-            .Custom((input, context) =>
-            {
-                if (!Guid.TryParse(input, out _))
-                {
-                    context.AddFailure("Plugin Id must be a Guid");
-                }
-            });
+        RuleFor(x => x.DataSourceName).NotEmpty();
     }
 }

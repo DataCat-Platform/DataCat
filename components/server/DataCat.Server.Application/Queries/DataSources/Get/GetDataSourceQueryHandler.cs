@@ -8,7 +8,7 @@ public class GetDataSourceQueryHandler(
     {
         var entity = await dataSourceRepository.GetByIdAsync(request.DataSourceId, token);
         return entity is null 
-            ? Result.Fail<GetDataSourceResponse>(DataSourceError.NotFound(request.DataSourceId.ToString())) 
+            ? Result.Fail<GetDataSourceResponse>(DataSourceError.NotFoundById(request.DataSourceId.ToString())) 
             : Result<GetDataSourceResponse>.Success(entity.ToResponse());
     }
 }
