@@ -7,11 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Constants\" />
-      <Folder Include="Core\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\DataCat.Server.Application\DataCat.Server.Application.csproj" />
     </ItemGroup>
 
