@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.Panels.Update;
+
 namespace DataCat.Server.Api.Endpoints.Panels;
 
 public sealed record UpdatePanelRequest(

@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.Plugins.ToggleStatus;
+
 namespace DataCat.Server.Api.Endpoints.Plugins;
 
 public sealed class TogglePluginStatus : ApiEndpointBase

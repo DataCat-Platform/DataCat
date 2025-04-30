@@ -9,7 +9,7 @@ public sealed record NotificationChannelResponse
 
 public static class NotificationChannelResponseExtensions
 {
-    public static NotificationChannelResponse ToResponse(this NotificationChannelEntity alert)
+    public static NotificationChannelResponse ToResponse(this NotificationChannel alert)
     {
         return new NotificationChannelResponse
         {

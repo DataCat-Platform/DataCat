@@ -1,7 +1,6 @@
 namespace DataCat.Server.Application.Alerts;
 
 public sealed class NotificationChannelManager(
-    IServiceProvider serviceProvider,
     IEnumerable<INotificationOptionFactory> factories)
 {
     private readonly ConcurrentDictionary<string, INotificationOptionFactory> _notificationOptionFactoryCache = new();
@@ -15,7 +14,7 @@ public sealed class NotificationChannelManager(
             return factory;
         }
 
-        var notificationFactory = factories.FirstOrDefault(x => x.NotificationDestination == notificationDestination);
+        var notificationFactory = factories.FirstOrDefault(x => x.IsResponsibleFor(notificationDestination.Name));
         _notificationOptionFactoryCache[key] = notificationFactory 
                                                ?? throw new InvalidOperationException($"The Notification Destination {notificationDestination.Name} is not supported.");
 

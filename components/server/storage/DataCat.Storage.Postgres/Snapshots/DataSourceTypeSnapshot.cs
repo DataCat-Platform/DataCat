@@ -3,7 +3,7 @@ namespace DataCat.Storage.Postgres.Snapshots;
 public sealed record DataSourceTypeSnapshot
 {
     public required int Id { get; init; }
-    public required string Source { get; init; }
+    public required string Name { get; init; }
 }
 
 public static class DataSourceTypeEntitySnapshotMapper 
@@ -12,14 +12,14 @@ public static class DataSourceTypeEntitySnapshotMapper
     {
         return new DataSourceTypeSnapshot
         {
-            Id = dataSourceType.Value,
-            Source = dataSourceType.Name
+            Id = dataSourceType.Id,
+            Name = dataSourceType.Name
         };
     }
 
     public static DataSourceType RestoreFromSnapshot(this DataSourceTypeSnapshot snapshot)
     {
-        var result = DataSourceType.FromValue(snapshot.Id);
-        return result ?? throw new DatabaseMappingException(typeof(DataSourceType));
+        var result = DataSourceType.Create(snapshot.Name, snapshot.Id).Value;
+        return result;
     }
 }

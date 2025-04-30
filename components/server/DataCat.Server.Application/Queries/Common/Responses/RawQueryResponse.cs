@@ -8,12 +8,12 @@ public sealed record RawQueryResponse
 
 public static class RawQueryResponseExtensions
 {
-    public static RawQueryResponse ToResponse(this QueryEntity queryEntity)
+    public static RawQueryResponse ToResponse(this Query query)
     {
         return new RawQueryResponse
         {
-            Query = queryEntity.RawQuery,
-            DataSource = queryEntity.DataSourceEntity.ToResponse()
+            Query = query.RawQuery,
+            DataSource = query.DataSource.ToResponse()
         };
     }
 }

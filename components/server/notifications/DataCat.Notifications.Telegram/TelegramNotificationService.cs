@@ -2,7 +2,7 @@ namespace DataCat.Notifications.Telegram;
 
 public sealed class TelegramNotificationService(TelegramNotificationOption option) : INotificationService
 {
-    public async Task SendNotificationAsync(AlertEntity alertEntity, CancellationToken token = default)
+    public async Task SendNotificationAsync(Alert alert, CancellationToken token = default)
     {
         Console.WriteLine($"[TelegramNotificationService] Sending notification, {option.Settings}");
         var bot = new TelegramBotClient(option.TelegramToken);
@@ -10,14 +10,14 @@ public sealed class TelegramNotificationService(TelegramNotificationOption optio
         var message = $"""
                            🔔 *Alert Notification* 🔔
                        
-                           *ID:* `{alertEntity.Id}`
-                           *Status:* {alertEntity.Status.Name}
-                           *Description:* {EscapeMarkdown(alertEntity.Description ?? "No description")}
-                           *Query:* `{EscapeMarkdown(alertEntity.QueryEntity.RawQuery)}`
-                           *Previous Execution:* `{alertEntity.PreviousExecution.DateTime}`
-                           *Next Execution:* `{alertEntity.NextExecution.DateTime}`
-                           *Repeat Interval:* `{alertEntity.RepeatInterval}`
-                           *Wait Time Before Alerting:* `{alertEntity.WaitTimeBeforeAlerting}`
+                           *ID:* `{alert.Id}`
+                           *Status:* {alert.Status.Name}
+                           *Description:* {EscapeMarkdown(alert.Description ?? "No description")}
+                           *Query:* `{EscapeMarkdown(alert.Query.RawQuery)}`
+                           *Previous Execution:* `{alert.PreviousExecution.DateTime}`
+                           *Next Execution:* `{alert.NextExecution.DateTime}`
+                           *Repeat Interval:* `{alert.RepeatInterval}`
+                           *Wait Time Before Alerting:* `{alert.WaitTimeBeforeAlerting}`
                        """;
 
         await bot.SendMessage(

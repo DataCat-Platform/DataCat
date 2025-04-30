@@ -3,18 +3,18 @@ namespace DataCat.Storage.Postgres.Repositories;
 public sealed class DashboardRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork UnitOfWork)
-    : IRepository<DashboardEntity, Guid>, IDashboardRepository
+    : IRepository<Dashboard, Guid>, IDashboardRepository
 {
-    public async Task<DashboardEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<Dashboard?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         var parameters = new { p_dashboard_id = id.ToString() };
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         const string sql = DashboardSql.Select.FindDashboard;
         
         var dashboardDictionary = new Dictionary<string, DashboardSnapshot>();
-        await connection.QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DashboardSnapshot>(
+        await connection.QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DataSourceTypeSnapshot, DashboardSnapshot>(
             sql,
-            map: (dashboard, userOwner, panel, sharedUser, dataSource) =>
+            map: (dashboard, userOwner, panel, sharedUser, dataSource, dataSourceType) =>
             {
                 if (!dashboardDictionary.TryGetValue(dashboard.Id, out var existingDashboard))
                 {
@@ -27,6 +27,7 @@ public sealed class DashboardRepository(
 
                 if (panel is not null && existingDashboard.Panels.All(p => p.Id != panel.Id))
                 {
+                    dataSource.DataSourceType = dataSourceType;
                     panel.DataSource = dataSource;
                     existingDashboard.Panels.Add(panel);
                 }
@@ -46,7 +47,7 @@ public sealed class DashboardRepository(
         return dashboardSnapshot?.RestoreFromSnapshot();
     }
     
-    public async Task AddAsync(DashboardEntity entity, CancellationToken token = default)
+    public async Task AddAsync(Dashboard entity, CancellationToken token = default)
     {
         var snapshot = entity.Save();
         const string sql = $"""
@@ -73,7 +74,7 @@ public sealed class DashboardRepository(
         await connection.ExecuteAsync(sql, snapshot, transaction: UnitOfWork.Transaction);
     }
 
-    public async Task<Page<DashboardEntity>> SearchAsync(
+    public async Task<Page<Dashboard>> SearchAsync(
         string? filter = null, 
         int page = 1,
         int pageSize = 10, 
@@ -92,9 +93,9 @@ public sealed class DashboardRepository(
         var dashboardDictionary = new Dictionary<string, DashboardSnapshot>();
         
         await connection
-            .QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DashboardSnapshot>(
+            .QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DataSourceTypeSnapshot, DashboardSnapshot>(
                 sql,
-                map: (dashboard, userOwner, panel, sharedUser, dataSource) =>
+                map: (dashboard, userOwner, panel, sharedUser, dataSource, dataSourceType) =>
                 {
                     if (!dashboardDictionary.TryGetValue(dashboard.Id, out var existingDashboard))
                     {
@@ -107,6 +108,7 @@ public sealed class DashboardRepository(
 
                     if (panel is not null && existingDashboard.Panels.All(p => p.Id != panel.Id))
                     {
+                        dataSource.DataSourceType = dataSourceType;
                         panel.DataSource = dataSource;
                         existingDashboard.Panels.Add(panel);
                     }
@@ -123,10 +125,10 @@ public sealed class DashboardRepository(
                 transaction: UnitOfWork.Transaction);
 
         var items = dashboardDictionary.Values.Select(x => x.RestoreFromSnapshot());
-        return new Page<DashboardEntity>(items, totalCount, PageNumber: offset, pageSize);
+        return new Page<Dashboard>(items, totalCount, PageNumber: offset, pageSize);
     }
 
-    public async Task UpdateAsync(DashboardEntity entity, CancellationToken token = default)
+    public async Task UpdateAsync(Dashboard entity, CancellationToken token = default)
     {
         var snapshot = entity.Save();
         const string sql = $"""
@@ -155,7 +157,7 @@ public sealed class DashboardRepository(
         await connection.ExecuteAsync(sql, parameters, transaction: UnitOfWork.Transaction);
     }
     
-    public async Task AddUserToDashboard(UserEntity user, DashboardEntity dashboard, CancellationToken token = default)
+    public async Task AddUserToDashboard(User user, Dashboard dashboard, CancellationToken token = default)
     {
         var parameters = new
         {

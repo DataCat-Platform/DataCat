@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Queries.Alerts.Search;
+
 namespace DataCat.Server.Api.Endpoints.Alerts;
 
 public sealed class SearchAlerts : ApiEndpointBase
@@ -14,10 +16,6 @@ public sealed class SearchAlerts : ApiEndpointBase
                 var query = ToQuery(filter, page, pageSize);
                 var result = await mediator.Send(query, token);
                 return HandleCustomResponse(result);
-            })
-            .RequireAuthorization(c =>
-            {
-                c.RequireRole(UserRole.Admin.Name);
             })
             .WithTags(ApiTags.Alerts)
             .HasApiVersion(ApiVersions.V1)

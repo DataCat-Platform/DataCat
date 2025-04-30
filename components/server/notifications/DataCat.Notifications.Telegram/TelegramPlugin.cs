@@ -6,6 +6,8 @@ public sealed class TelegramPlugin : INotificationPlugin
     {
         services.AddSingleton<INotificationOptionFactory, TelegramNotificationOptionFactory>();
 
+        services.AddHostedService<TelegramNotificationInitializer>();
+        
         return services;
     }
 }

@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.Alerts.Mute;
+
 namespace DataCat.Server.Api.Endpoints.Alerts;
 
 public sealed class MuteAlert : ApiEndpointBase

@@ -1,4 +1,4 @@
-using Asp.Versioning;
+using System.Text.Json;
 
 namespace DataCat.Server.Api;
 
@@ -66,10 +66,22 @@ public static class DependencyInjection
         // services.AddControllers()
         //     .AddJsonOptions(options =>
         //     {
-        //         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        //         options.JsonSerializerOptions.Converters.Add(
-        //             new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, false));
+        //         // options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        //         // options.JsonSerializerOptions.Converters.Add(
+        //         //     new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, false));
         //     });
+        
+        services.Configure<JsonOptions>(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(
+                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: false)
+            );
+        });
+        
+        services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: false));
+        });
 
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
         

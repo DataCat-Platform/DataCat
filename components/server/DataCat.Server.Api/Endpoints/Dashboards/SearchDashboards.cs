@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Queries.Dashboards.Search;
+
 namespace DataCat.Server.Api.Endpoints.Dashboards;
 
 public sealed class SearchDashboards : ApiEndpointBase

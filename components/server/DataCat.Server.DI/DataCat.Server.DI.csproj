@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\logs\DataCat.Logs.ElasticSearch\DataCat.Logs.ElasticSearch.csproj" />
-      <ProjectReference Include="..\metrics\DataCat.Metrics.DataCatDb\DataCat.Metrics.DataCatDb.csproj" />
+      <ProjectReference Include="..\metrics\DataCat.Metrics.Prometheus\DataCat.Metrics.Prometheus.csproj" />
         
       <ProjectReference Include="..\notifications\DataCat.Notifications.Email\DataCat.Notifications.Email.csproj" />
       <ProjectReference Include="..\notifications\DataCat.Notifications.Telegram\DataCat.Notifications.Telegram.csproj" />

@@ -4,30 +4,31 @@ public sealed class AlertRepository(
     UnitOfWork unitOfWork,
     IDbConnectionFactory<NpgsqlConnection> Factory,
     NotificationChannelManager notificationChannelManager)
-    : IRepository<AlertEntity, Guid>, IAlertRepository
+    : IRepository<Alert, Guid>, IAlertRepository
 {
-    public async Task<AlertEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<Alert?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         var parameters = new { p_alert_id = id.ToString() };
         const string sql = AlertSql.Select.GetById;
         
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        var result = await connection.QueryAsync<AlertSnapshot, NotificationChannelSnapshot, DataSourceSnapshot, AlertSnapshot>(
+        var result = await connection.QueryAsync<AlertSnapshot, NotificationChannelSnapshot, DataSourceSnapshot, DataSourceTypeSnapshot, AlertSnapshot>(
             sql,
-            map: (alert, notification, dataSource) =>
+            map: (alert, notification, dataSource, dataSourceTypeSnapshot) =>
             {
                 alert.NotificationChannel = notification;
+                dataSource.DataSourceType = dataSourceTypeSnapshot;
                 alert.DataSource = dataSource;
                 return alert;
             },
-            splitOn: $"{nameof(NotificationChannelSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}",
+            splitOn: $"{nameof(NotificationChannelSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
             param: parameters,
             transaction: unitOfWork.Transaction);
 
         return result.FirstOrDefault()?.RestoreFromSnapshot(notificationChannelManager);
     }
     
-    public async Task AddAsync(AlertEntity entity, CancellationToken token = default)
+    public async Task AddAsync(Alert entity, CancellationToken token = default)
     {
         var alertSnapshot = entity.Save();
         
@@ -61,7 +62,7 @@ public sealed class AlertRepository(
         await connection.ExecuteAsync(sql, alertSnapshot, transaction: unitOfWork.Transaction);
     }
 
-    public async Task<Page<AlertEntity>> SearchAsync(
+    public async Task<Page<Alert>> SearchAsync(
         string? filter = null, 
         int page = 1, 
         int pageSize = 10, 
@@ -77,11 +78,12 @@ public sealed class AlertRepository(
         var parameters = new { p_description = $"{filter}%", offset = offset, limit = pageSize };
         const string sql = AlertSql.Select.SearchAlerts;
         
-        var result = await connection.QueryAsync<AlertSnapshot, NotificationChannelSnapshot, DataSourceSnapshot, AlertSnapshot>(
+        var result = await connection.QueryAsync<AlertSnapshot, NotificationChannelSnapshot, DataSourceSnapshot, DataSourceTypeSnapshot, AlertSnapshot>(
             sql,
-            map: (alert, notification, dataSource) =>
+            map: (alert, notification, dataSource, dataSourceTypeSnapshot) =>
             {
                 alert.NotificationChannel = notification;
+                dataSource.DataSourceType = dataSourceTypeSnapshot;
                 alert.DataSource = dataSource;
                 return alert;
             },
@@ -90,10 +92,10 @@ public sealed class AlertRepository(
             transaction: unitOfWork.Transaction);
         
         var items = result.Select(x => x.RestoreFromSnapshot(notificationChannelManager));
-        return new Page<AlertEntity>(items, totalCount, page, pageSize);
+        return new Page<Alert>(items, totalCount, page, pageSize);
     }
 
-    public async Task UpdateAsync(AlertEntity entity, CancellationToken token = default)
+    public async Task UpdateAsync(Alert entity, CancellationToken token = default)
     {
         var alertSnapshot = entity.Save();
         

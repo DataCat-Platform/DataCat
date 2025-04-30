@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Queries.Plugins.Search;
+
 namespace DataCat.Server.Api.Endpoints.Plugins;
 
 public sealed class SearchPlugins : ApiEndpointBase

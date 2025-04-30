@@ -47,7 +47,7 @@ public sealed class UserSynchronizationJob(
 
             logger.LogInformation("[{Job}] Successfully fetched {Count} users.", nameof(UserSynchronizationJob), users.Count);
 
-            var userEntities = users.Select(user => UserEntity.Create(
+            var userEntities = users.Select(user => User.Create(
                 Guid.NewGuid(),
                 user.IdentityId,
                 user.Email,

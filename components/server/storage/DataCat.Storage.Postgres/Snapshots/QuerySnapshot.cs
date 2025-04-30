@@ -8,21 +8,21 @@ public sealed record QuerySnapshot
 
 public static class QueryEntitySnapshotMapper
 {
-    public static QuerySnapshot Save(this QueryEntity query)
+    public static QuerySnapshot Save(this Query query)
     {
         return new QuerySnapshot
         {
             PanelRawQuery = query.RawQuery,
-            DataSource = query.DataSourceEntity.Save(),
+            DataSource = query.DataSource.Save(),
         };
     }
 
-    public static QueryEntity RestoreFromSnapshot(this QuerySnapshot snapshot)
+    public static Query RestoreFromSnapshot(this QuerySnapshot snapshot)
     {
-        var result = QueryEntity.Create(
+        var result = Query.Create(
             snapshot.DataSource.RestoreFromSnapshot(),
             snapshot.PanelRawQuery);
 
-        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSourceEntity));
+        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSource));
     }
 }

@@ -3,32 +3,32 @@ namespace DataCat.Storage.Postgres.Snapshots;
 public sealed record NotificationChannelSnapshot
 {
     public required string Id { get; init; }
-    public required int DestinationId { get; init; }
+    public required NotificationDestinationSnapshot Destination { get; set; }
+    public int? DestinationId => Destination.Id;
     public required string Settings { get; init; }
 }
 
 public static class NotificationChannelSnapshotExtensions
 {
-    public static NotificationChannelSnapshot Save(this NotificationChannelEntity notification)
+    public static NotificationChannelSnapshot Save(this NotificationChannel notification)
     {
         return new NotificationChannelSnapshot
         {
             Id = notification.Id.ToString(),
-            DestinationId = notification.NotificationOption.NotificationDestination.Value,
+            Destination = notification.NotificationOption.NotificationDestination.Save(),
             Settings = notification.NotificationOption.Settings
         };
     }
 
-    public static NotificationChannelEntity RestoreFromSnapshot(this NotificationChannelSnapshot snapshot, NotificationChannelManager notificationChannelManager)
+    public static NotificationChannel RestoreFromSnapshot(this NotificationChannelSnapshot snapshot, NotificationChannelManager notificationChannelManager)
     {
-        var destination = NotificationDestination.FromValue(snapshot.DestinationId);
+        var destination = snapshot.Destination.RestoreFromSnapshot();
         
-        var result = NotificationChannelEntity.Create(
+        var result = NotificationChannel.Create(
             Guid.Parse(snapshot.Id),
-            destination,
-            notificationChannelManager.GetNotificationChannelFactory(destination).Create(snapshot.Settings).Value
+            notificationChannelManager.GetNotificationChannelFactory(destination).Create(destination, snapshot.Settings).Value
         );
 
-        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(NotificationChannelEntity));
+        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(NotificationChannel));
     }
 }

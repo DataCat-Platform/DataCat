@@ -1,10 +1,12 @@
+using DataCat.Server.Application.Queries.DataSources.Search;
+
 namespace DataCat.Server.Api.Endpoints.DataSources;
 
 public sealed class SearchDataSources : ApiEndpointBase
 {
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v{version:apiVersion}/datasources/search", async (
+        app.MapGet("api/v{version:apiVersion}/data-source/search", async (
                 [FromServices] IMediator mediator,
                 [FromQuery] string? filter = null,
                 [FromQuery] int page = 1,

@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Commands.Plugins.Remove;
+
 namespace DataCat.Server.Api.Endpoints.Plugins;
 
 public sealed class RemovePlugin : ApiEndpointBase

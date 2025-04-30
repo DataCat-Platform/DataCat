@@ -6,7 +6,7 @@ public class PostgresAlertMonitorService(
     NotificationChannelManager notificationChannelManager)
     : IAlertMonitorService
 {
-    public async Task<IEnumerable<AlertEntity>> GetAlertsToCheckAsync(int limit = 5, CancellationToken token = default)
+    public async Task<IEnumerable<Alert>> GetAlertsToCheckAsync(int limit = 5, CancellationToken token = default)
     {
         var parameters = new { p_limit = limit };
         var sql = $"""
@@ -25,7 +25,8 @@ public class PostgresAlertMonitorService(
                ds.{Public.DataSources.Id}                                    {nameof(DataSourceSnapshot.Id)},
                ds.{Public.DataSources.Name}                                  {nameof(DataSourceSnapshot.Name)},
                ds.{Public.DataSources.TypeId}                                {nameof(DataSourceSnapshot.TypeId)},
-               ds.{Public.DataSources.ConnectionString}                      {nameof(DataSourceSnapshot.ConnectionString)},
+               ds.{Public.DataSources.ConnectionSettings}                    {nameof(DataSourceSnapshot.ConnectionSettings)},
+               ds.{Public.DataSources.Purpose}                               {nameof(DataSourceSnapshot.Purpose)},
    
                nc.{Public.NotificationChannels.Id}                           {nameof(NotificationChannelSnapshot.Id)},
                nc.{Public.NotificationChannels.Settings}                     {nameof(NotificationChannelSnapshot.Settings)},
@@ -64,7 +65,7 @@ public class PostgresAlertMonitorService(
         return alertsToCheck.Select(x => x.RestoreFromSnapshot(notificationChannelManager));
     }
 
-    public async Task<IEnumerable<AlertEntity>> GetTriggeredAlertsAsync(int limit = 5, CancellationToken token = default)
+    public async Task<IEnumerable<Alert>> GetTriggeredAlertsAsync(int limit = 5, CancellationToken token = default)
     {
         var parameters = new { p_limit = limit };
         
@@ -81,10 +82,11 @@ public class PostgresAlertMonitorService(
                 a.{Public.Alerts.WaitTimeBeforeAlertingInTicks}  {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
                 a.{Public.Alerts.RepeatIntervalInTicks}          {nameof(AlertSnapshot.RepeatIntervalInTicks)},
                
-                ds.{Public.DataSources.Id}                     {nameof(DataSourceSnapshot.Id)},
-                ds.{Public.DataSources.Name}                   {nameof(DataSourceSnapshot.Name)},
-                ds.{Public.DataSources.TypeId}                 {nameof(DataSourceSnapshot.TypeId)},
-                ds.{Public.DataSources.ConnectionString}       {nameof(DataSourceSnapshot.ConnectionString)},
+                ds.{Public.DataSources.Id}                       {nameof(DataSourceSnapshot.Id)},
+                ds.{Public.DataSources.Name}                     {nameof(DataSourceSnapshot.Name)},
+                ds.{Public.DataSources.TypeId}                   {nameof(DataSourceSnapshot.TypeId)},
+                ds.{Public.DataSources.ConnectionSettings}       {nameof(DataSourceSnapshot.ConnectionSettings)},
+                ds.{Public.DataSources.Purpose}                  {nameof(DataSourceSnapshot.Purpose)},
                
                 nc.{Public.NotificationChannels.Id}            {nameof(NotificationChannelSnapshot.Id)},
                 nc.{Public.NotificationChannels.Settings}      {nameof(NotificationChannelSnapshot.Settings)},
