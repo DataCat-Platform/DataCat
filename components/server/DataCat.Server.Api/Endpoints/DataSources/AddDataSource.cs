@@ -1,8 +1,8 @@
 namespace DataCat.Server.Api.Endpoints.DataSources;
 
 public sealed record AddDataSourceRequest(
-    string Name,
-    string Type,
+    string UniqueName,
+    string DataSourceType,
     string ConnectionString,
     DataSourceKind Purpose);
 
@@ -29,9 +29,9 @@ public sealed class AddDataSource : ApiEndpointBase
     {
         return new AddDataSourceCommand
         {
-            Name = request.Name,
+            Name = request.UniqueName,
             ConnectionString = request.ConnectionString,
-            DataSourceType = request.Type,
+            DataSourceType = request.DataSourceType,
             Purpose = request.Purpose
         };
     }

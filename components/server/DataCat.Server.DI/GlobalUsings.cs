@@ -5,6 +5,7 @@ global using System.Text.Json;
 global using System.Text.Json.Serialization;
 global using Dapper;
 global using DataCat.Logs.ElasticSearch;
+global using DataCat.Metrics.Prometheus;
 global using DataCat.Notifications.Email;
 global using DataCat.Notifications.Telegram;
 global using DataCat.Server.Application.Alerts;

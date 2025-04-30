@@ -13,7 +13,9 @@ public sealed class ElasticClientFactory : ILogsClientFactory, IDisposable
     public ILogsClient CreateClient(DataSource dataSource)
     {
         if (string.IsNullOrWhiteSpace(dataSource.ConnectionSettings))
+        {
             throw new ArgumentException("ConnectionSettings must be provided for ElasticSearch DataSource", nameof(dataSource));
+        }
 
         ElasticSettings settings;
         try

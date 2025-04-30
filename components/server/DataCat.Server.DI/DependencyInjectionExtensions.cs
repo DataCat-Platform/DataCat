@@ -143,4 +143,11 @@ public static class DependencyInjectionExtensions
     {
         return services.AddElasticSearchLogSearching(configuration);
     }
+    
+    public static IServiceCollection AddSearchMetricsServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        return services.AddPrometheusMetrics(configuration);
+    }
 }

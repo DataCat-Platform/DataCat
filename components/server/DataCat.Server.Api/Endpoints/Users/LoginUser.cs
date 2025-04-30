@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Commands.Users.Login;
-
 namespace DataCat.Server.Api.Endpoints.Users;
 
 public sealed record LoginUserRequest(

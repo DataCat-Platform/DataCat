@@ -9,5 +9,5 @@ internal sealed record PrometheusResult
     public object[] Value { get; set; } = [];
 
     [JsonPropertyName("values")]
-    public List<object[]> Values { get; set; } = [];
+    public List<object[]?> Values { get; set; } = [];
 }

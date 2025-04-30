@@ -30,7 +30,7 @@ public sealed class AuthorizationBehavior<TRequest, TResponse>(IIdentity identit
         var policy = request.GetPolicy();
         if (!policy.IsAuthorized(identity))
         {
-            throw new AuthenticationException("You are not authorized to perform this operation.");
+            throw new AuthenticationException($"You are not authorized to perform this operation.");
         }
         var response = await next();
         return response;
