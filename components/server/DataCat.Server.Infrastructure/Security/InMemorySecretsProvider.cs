@@ -1,4 +1,4 @@
-namespace DataCat.Server.Infrastructure.SecretsManagement;
+namespace DataCat.Server.Infrastructure.Security;
 
 public class InMemorySecretsProvider : ISecretsProvider
 {
@@ -39,5 +39,10 @@ public class InMemorySecretsProvider : ISecretsProvider
         {
             throw new InvalidOperationException("Secret cannot be written");
         }
+    }
+
+    public void Dispose()
+    {
+        // TODO release managed resources here
     }
 }

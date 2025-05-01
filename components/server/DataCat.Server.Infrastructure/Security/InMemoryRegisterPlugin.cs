@@ -1,4 +1,4 @@
-namespace DataCat.Server.Infrastructure.SecretsManagement;
+namespace DataCat.Server.Infrastructure.Security;
 
 public sealed class InMemoryRegisterPlugin : ISecretsPlugin
 {
