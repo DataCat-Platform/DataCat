@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - *(datacat-server)* Complete elasticsearch integration
 - *(datacat-server)* Add prometheus integration
 - *(datacat-server)* Complete jaeger (traces) integration
+- *(datacat-server)* Complete security module
 
 ### 🚜 Refactor
 
