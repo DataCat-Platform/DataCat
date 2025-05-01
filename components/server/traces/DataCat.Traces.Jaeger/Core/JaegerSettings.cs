@@ -3,6 +3,8 @@ namespace DataCat.Traces.Jaeger.Core;
 public sealed class JaegerSettings
 {
     public required string ServerUrl { get; init; }
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public JaegerAuthType AuthType { get; init; } = JaegerAuthType.None;
     public string? Username { get; init; }
     public string? Password { get; init; }

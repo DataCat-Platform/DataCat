@@ -150,4 +150,11 @@ public static class DependencyInjectionExtensions
     {
         return services.AddPrometheusMetrics(configuration);
     }
+    
+    public static IServiceCollection AddSearchTracesServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        return services.AddJaegerTraces(configuration);
+    }
 }
