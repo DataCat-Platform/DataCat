@@ -20,4 +20,11 @@
       <PackageReference Include="Quartz.AspNetCore" Version="3.14.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Telemetry\Traces\Queries\GetByTraceId\" />
+      <Folder Include="Telemetry\Traces\Queries\GetOperations\" />
+      <Folder Include="Telemetry\Traces\Queries\GetServices\" />
+      <Folder Include="Telemetry\Traces\Queries\Search\" />
+    </ItemGroup>
+
 </Project>

@@ -1,6 +1,6 @@
 namespace DataCat.Logs.ElasticSearch.Searching;
 
-public sealed partial class ElasticClient : ILogsClient, IDisposable
+public sealed partial class ElasticClient : ILogsClient
 {
     private readonly ElasticsearchClient _client;
     private readonly string _indexPattern;

@@ -10,7 +10,7 @@ public sealed class LogSearchQueryHandler(
         if (dataSource is null)
             return Result.Fail<Page<LogEntry>>(DataSourceError.NotFoundByName(request.DataSourceName));
 
-        var searchClient = dataSourceManager.GetLogsClient(dataSource.Name);
+        using var searchClient = dataSourceManager.GetLogsClient(dataSource.Name);
         if (searchClient is null)
             return Result.Fail<Page<LogEntry>>(DataSourceError.NotFoundByName(request.DataSourceName));
         

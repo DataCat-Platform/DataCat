@@ -28,6 +28,7 @@ global using DataCat.Server.Application.Telemetry.Logs.Queries.Search;
 global using DataCat.Server.Application.Telemetry.Metrics.Abstractions;
 global using DataCat.Server.Application.Telemetry.Metrics.Models;
 global using DataCat.Server.Application.Telemetry.Traces.Abstractions;
+global using DataCat.Server.Application.Telemetry.Traces.Models;
 global using DataCat.Server.Application.Validations;
 global using DataCat.Server.Domain.Common;
 global using DataCat.Server.Domain.Common.ResultFlow;

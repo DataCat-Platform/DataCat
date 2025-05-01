@@ -1,6 +1,6 @@
 namespace DataCat.Metrics.Prometheus.Core;
 
-public sealed class PrometheusClient : IMetricsClient, IDisposable
+public sealed class PrometheusClient : IMetricsClient
 {
     public string Name => PrometheusConstants.Prometheus;
     

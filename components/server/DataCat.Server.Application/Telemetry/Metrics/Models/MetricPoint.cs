@@ -3,7 +3,7 @@ namespace DataCat.Server.Application.Telemetry.Metrics.Models;
 /// <summary>
 /// Represents a single metric value at a point in time.
 /// </summary>
-public class MetricPoint
+public sealed record MetricPoint
 {
     public required string MetricName { get; init; }
     public required double Value { get; init; }
