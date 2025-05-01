@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Telemetry;
 
-public interface IDataSourceClient
+public interface IDataSourceClient : IDisposable
 {
     string Name { get; }
 }

@@ -10,7 +10,7 @@ public class SearchMetricsRangeQueryHandler(
         if (dataSource is null)
             return Result.Fail<IEnumerable<TimeSeries>>(DataSourceError.NotFoundByName(request.DataSourceName));
 
-        var searchClient = dataSourceManager.GetMetricsClient(dataSource.Name);
+        using var searchClient = dataSourceManager.GetMetricsClient(dataSource.Name);
         if (searchClient is null)
             return Result.Fail<IEnumerable<TimeSeries>>(DataSourceError.NotFoundByName(request.DataSourceName));
         

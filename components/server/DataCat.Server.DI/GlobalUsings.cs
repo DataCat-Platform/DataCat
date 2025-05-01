@@ -26,6 +26,7 @@ global using DataCat.Server.Infrastructure.Options;
 global using DataCat.Server.Infrastructure.Repositories;
 global using DataCat.Server.PDK;
 global using DataCat.Storage.Postgres.Schemes;
+global using DataCat.Traces.Jaeger;
 global using FluentValidation;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Http;

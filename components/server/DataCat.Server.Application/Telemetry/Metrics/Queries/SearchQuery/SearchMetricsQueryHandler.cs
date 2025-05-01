@@ -10,7 +10,7 @@ public sealed class SearchMetricsQueryHandler(
         if (dataSource is null)
             return Result.Fail<IEnumerable<MetricPoint>>(DataSourceError.NotFoundByName(request.DataSourceName));
 
-        var searchClient = dataSourceManager.GetMetricsClient(dataSource.Name);
+        using var searchClient = dataSourceManager.GetMetricsClient(dataSource.Name);
         if (searchClient is null)
             return Result.Fail<IEnumerable<MetricPoint>>(DataSourceError.NotFoundByName(request.DataSourceName));
         

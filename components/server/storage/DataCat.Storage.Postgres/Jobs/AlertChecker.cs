@@ -38,7 +38,7 @@ public sealed class AlertChecker(
         {
             try
             {
-                var metricClient = dataSourceManager.GetMetricsClient(alert.Query.DataSource.Name);
+                using var metricClient = dataSourceManager.GetMetricsClient(alert.Query.DataSource.Name);
                 if (metricClient is null)
                 {
                     logger.LogError(

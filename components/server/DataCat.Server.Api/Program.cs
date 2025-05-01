@@ -17,6 +17,7 @@ builder.Services
     .AddRealTimeCommunication(configuration)
     .AddSearchLogsServices(configuration)
     .AddSearchMetricsServices(configuration)
+    .AddSearchTracesServices(configuration)
     .AddKeycloakAuth(configuration);
 
 builder.Services
