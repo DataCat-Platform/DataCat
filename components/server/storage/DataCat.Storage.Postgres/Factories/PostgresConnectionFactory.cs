@@ -1,7 +1,7 @@
 namespace DataCat.Storage.Postgres.Factories;
 
-public class PostgresConnectionFactory(IOptions<DatabaseOptions> DbOptions)
-    : IDbConnectionFactory<NpgsqlConnection>
+public class PostgresConnectionFactory(DatabaseOptions DbOptions)
+    : IDbConnectionFactory<NpgsqlConnection>, IDisposable
 {
     private NpgsqlConnection? _connection;
     private bool _isDisposed;
@@ -13,7 +13,7 @@ public class PostgresConnectionFactory(IOptions<DatabaseOptions> DbOptions)
             return _connection;
         }
 
-        _connection = new NpgsqlConnection(DbOptions.Value.ConnectionString);
+        _connection = new NpgsqlConnection(DbOptions.ConnectionString);
         await _connection.OpenAsync(token);
         return _connection;
     }
@@ -23,7 +23,7 @@ public class PostgresConnectionFactory(IOptions<DatabaseOptions> DbOptions)
         if (!_isDisposed)
         {
             _connection?.Dispose();
-            GC.SuppressFinalize(this);    
+            GC.SuppressFinalize(this);
         }
         _isDisposed = true;
     }

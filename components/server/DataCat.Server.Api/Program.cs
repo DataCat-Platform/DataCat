@@ -4,7 +4,6 @@ builder.Logging.ClearProviders();
 var configuration = builder.Configuration;
 
 builder.Services.AddGrpc();
-builder.Services.AddMemoryCache();
 
 builder.Services
     .AddApiSetup()
@@ -18,7 +17,8 @@ builder.Services
     .AddSearchLogsServices(configuration)
     .AddSearchMetricsServices(configuration)
     .AddSearchTracesServices(configuration)
-    .AddKeycloakAuth(configuration);
+    .AddKeycloakAuth(configuration)
+    .AddCachingServices(configuration);
 
 builder.Services
     .AddCustomMiddlewares();

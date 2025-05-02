@@ -15,6 +15,7 @@ global using DataCat.Server.Application.Constants;
 global using DataCat.Server.Application.Persistence;
 global using DataCat.Server.Application.Persistence.Repositories;
 global using DataCat.Server.Application.Scheduling;
+global using DataCat.Server.Application.Security;
 global using DataCat.Server.Domain.Common.ResultFlow;
 global using DataCat.Server.Domain.Identity;
 global using Microsoft.AspNetCore.Authentication;

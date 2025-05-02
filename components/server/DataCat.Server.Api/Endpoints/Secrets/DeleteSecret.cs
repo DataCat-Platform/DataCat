@@ -18,7 +18,10 @@ public sealed class DeleteSecret : ApiEndpointBase
                 await secretsProvider.DeleteSecretAsync(key, token);
                 return Results.Ok("Secret removed");
             })
-            .RequireAuthorization(UserRole.Admin.Name)
+            .RequireAuthorization(opt =>
+            {
+                opt.RequireRole(UserRole.Admin.Name);
+            })
             .WithTags(ApiTags.Secrets)
             .HasApiVersion(ApiVersions.V1)
             .Produces<string>()

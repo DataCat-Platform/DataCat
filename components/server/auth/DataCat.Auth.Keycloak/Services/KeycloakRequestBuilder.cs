@@ -1,6 +1,6 @@
 namespace DataCat.Auth.Keycloak.Services;
 
-public sealed class KeycloakRequestBuilder(IOptions<KeycloakOptions> keycloakOptions)
+public sealed class KeycloakRequestBuilder(KeycloakOptions keycloakOptions)
 {
     /// <summary>
     /// Builds the authentication request parameters for the Keycloak client.
@@ -12,8 +12,8 @@ public sealed class KeycloakRequestBuilder(IOptions<KeycloakOptions> keycloakOpt
     {
         var authRequestParameters = new KeyValuePair<string, string>[]
         {
-            new("client_id", keycloakOptions.Value.AuthClientId),
-            new("client_secret", keycloakOptions.Value.AuthClientSecret),
+            new("client_id", keycloakOptions.AuthClientId),
+            new("client_secret", keycloakOptions.AuthClientSecret),
             new("scope", "openid email"),
             new("grant_type", "password"),
             new("username", email),
@@ -31,8 +31,8 @@ public sealed class KeycloakRequestBuilder(IOptions<KeycloakOptions> keycloakOpt
     {
         var authRequestParameters = new KeyValuePair<string, string>[]
         {
-            new("client_id", keycloakOptions.Value.AdminClientId),
-            new("client_secret", keycloakOptions.Value.AdminClientSecret),
+            new("client_id", keycloakOptions.AdminClientId),
+            new("client_secret", keycloakOptions.AdminClientSecret),
             new("scope", "openid"),
             new("grant_type", "client_credentials"),
         };
