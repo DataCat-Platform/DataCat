@@ -1,5 +1,3 @@
-using DataCat.Caching.Redis;
-
 namespace DataCat.Server.DI;
 
 public static class DependencyInjectionExtensions
@@ -178,6 +176,16 @@ public static class DependencyInjectionExtensions
 
         services.AddRedisCaching(configuration);
         
+        return services;
+    }
+
+    public static IServiceCollection AddObservability(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        ILoggingBuilder loggingBuilder)
+    {
+        services.AddTelemetry(configuration, loggingBuilder);
+        services.AddSingleton<IMetricsContainer, MetricsContainer>();
         return services;
     }
 }

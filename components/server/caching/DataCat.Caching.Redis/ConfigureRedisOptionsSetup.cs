@@ -1,6 +1,6 @@
 namespace DataCat.Caching.Redis;
 
-public sealed class ConfigureRedisOptions(
+public sealed class ConfigureRedisOptionsSetup(
     IOptions<RedisSettings> settings,
     ISecretsProvider secretsProvider)
     : IConfigureOptions<RedisCacheOptions>

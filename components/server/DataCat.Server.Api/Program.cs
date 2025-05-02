@@ -18,23 +18,13 @@ builder.Services
     .AddSearchMetricsServices(configuration)
     .AddSearchTracesServices(configuration)
     .AddKeycloakAuth(configuration)
-    .AddCachingServices(configuration);
+    .AddCachingServices(configuration)
+    .AddObservability(configuration, builder.Logging);
 
 builder.Services
     .AddCustomMiddlewares();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(5000, listenOptions =>
-    {
-        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
-    });
-
-    options.ListenAnyIP(5001, listenOptions =>
-    {
-        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
-    });
-});
+builder.AddAspireServiceDefaults();
 
 var app = builder.Build();
 
@@ -78,6 +68,8 @@ app.MapHub<MetricsHub>("/datacat-metrics");
 app.MapGrpcService<ReceiveMetricService>();
 
 app.MapApiEndpoints();
+
+app.MapAspireEndpoints();
 
 app.UseEndpoints(_ => { });
 

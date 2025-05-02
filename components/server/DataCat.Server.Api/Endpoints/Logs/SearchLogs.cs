@@ -1,3 +1,6 @@
+using DataCat.Server.Application.Telemetry;
+using DataCat.Server.Telemetry;
+
 namespace DataCat.Server.Api.Endpoints.Logs;
 
 public sealed record SearchLogsRequest(
@@ -20,6 +23,7 @@ public sealed class SearchLogs : ApiEndpointBase
         app.MapPost("api/v{version:apiVersion}/logs/search", async (
                 [FromServices] IMediator mediator,
                 [FromBody] SearchLogsRequest request,
+                [FromServices] IMetricsContainer MetricsContainer,
                 CancellationToken token = default) =>
             {
                 var query = ToQuery(request);

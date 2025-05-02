@@ -67,6 +67,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "caching", "caching", "{98C9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Caching.Redis", "components\server\caching\DataCat.Caching.Redis\DataCat.Caching.Redis.csproj", "{481EB119-3E68-4500-83CB-2AF7D22A094F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "orchestration", "orchestration", "{DBA04004-391D-4542-BCD1-F7B582BF4DE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Aspire.AppHost", "components\server\aspire\DataCat.Aspire.AppHost\DataCat.Aspire.AppHost.csproj", "{23C94A7C-CB44-408D-A937-208F7ED97524}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Aspire.ServiceDefaults", "components\server\aspire\DataCat.Aspire.ServiceDefaults\DataCat.Aspire.ServiceDefaults.csproj", "{F93E266F-DAC4-48DE-9A31-6B1B706960EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.Telemetry", "components\server\DataCat.Server.Telemetry\DataCat.Server.Telemetry.csproj", "{7B0DD30D-E12F-4A88-A1F3-AD61DA91726E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +111,10 @@ Global
 		{4B75F0B4-D326-4A89-8E87-077F1C4A0AD0} = {7DAE98AA-1A14-47DA-ACAE-BB7D232174B2}
 		{98C9AF3C-5DC0-4204-89C8-6EE9CCC2CB52} = {6810E2F4-F559-444A-A800-758C8A5BEC23}
 		{481EB119-3E68-4500-83CB-2AF7D22A094F} = {98C9AF3C-5DC0-4204-89C8-6EE9CCC2CB52}
+		{DBA04004-391D-4542-BCD1-F7B582BF4DE9} = {6810E2F4-F559-444A-A800-758C8A5BEC23}
+		{23C94A7C-CB44-408D-A937-208F7ED97524} = {DBA04004-391D-4542-BCD1-F7B582BF4DE9}
+		{F93E266F-DAC4-48DE-9A31-6B1B706960EE} = {DBA04004-391D-4542-BCD1-F7B582BF4DE9}
+		{7B0DD30D-E12F-4A88-A1F3-AD61DA91726E} = {7670EE1F-5E02-4470-83A9-9AF0C981298A}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1621F9FE-91B0-4532-BF6B-E1BFDE263D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -181,5 +193,17 @@ Global
 		{481EB119-3E68-4500-83CB-2AF7D22A094F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{481EB119-3E68-4500-83CB-2AF7D22A094F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{481EB119-3E68-4500-83CB-2AF7D22A094F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23C94A7C-CB44-408D-A937-208F7ED97524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23C94A7C-CB44-408D-A937-208F7ED97524}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23C94A7C-CB44-408D-A937-208F7ED97524}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23C94A7C-CB44-408D-A937-208F7ED97524}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F93E266F-DAC4-48DE-9A31-6B1B706960EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F93E266F-DAC4-48DE-9A31-6B1B706960EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F93E266F-DAC4-48DE-9A31-6B1B706960EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F93E266F-DAC4-48DE-9A31-6B1B706960EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B0DD30D-E12F-4A88-A1F3-AD61DA91726E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B0DD30D-E12F-4A88-A1F3-AD61DA91726E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B0DD30D-E12F-4A88-A1F3-AD61DA91726E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B0DD30D-E12F-4A88-A1F3-AD61DA91726E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
