@@ -678,6 +678,7 @@ export const DATACAT_PRIMENG_PRESET = definePreset(Aura, {
       indent: '0rem',
       node: {
         padding: '{padding.xs} {padding.none}',
+        gap: '{padding.sm}',
       },
     },
     splitter: {
@@ -724,6 +725,11 @@ export const DATACAT_PRIMENG_PRESET = definePreset(Aura, {
         cell: {
           padding: '{padding.sm} {padding.md}',
         },
+      },
+    },
+    divider: {
+      horizontal: {
+        margin: '0',
       },
     },
   },

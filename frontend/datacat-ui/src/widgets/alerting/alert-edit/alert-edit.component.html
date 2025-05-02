@@ -1,1 +1,57 @@
-Alert edit
+<p-panel [style]="{ display: 'block', height: '100%' }">
+  <ng-template #header>
+    <div
+      style="
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: var(--p-padding-md);
+      "
+    >
+      @if (alert) {
+        {{ alert.description }} <p-tag>{{ alert.status }}</p-tag>
+      }
+    </div>
+  </ng-template>
+  <ng-template pTemplate="icons">
+    <p-splitbutton label="Save changes" size="small" [model]="[
+      {
+        label: 'Cancel'
+      }
+    ]" />
+  </ng-template>
+  @if (alert) {
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0"> Trigger </p-tab>
+        <p-tab value="1"> Details </p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          <textarea rows="20" cols="50" pTextarea [(ngModel)]="alert.query"> </textarea>
+
+          <p-inputgroup>
+            <p-inputgroup-addon>Evaulate every</p-inputgroup-addon>
+            <input type="text" pTextInput placeholder="1m">
+          </p-inputgroup>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+          Alert ID: {{ alert.id }}<br />
+          Last evaluated at: {{ alert.previousExecutionTime | date: 'short' }}
+          <br />
+          Last evaluation duration: {{ 0 }}
+          <br />
+          Next evaluation at: {{ alert.nextExecutionTime | date: 'short'
+          }}<br />
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  } @else {
+    <div class="spinner-container">
+      <p-progress-spinner
+        ariaLabel="loading"
+        class="spinner-container__spinner"
+      />
+    </div>
+  }
+</p-panel>

@@ -1,1 +1,1 @@
-export { MainPageComponent } from './spa.component';
+export { WorkspaceComponent } from './workspace.component';

@@ -1,0 +1,8 @@
+.panels-container {
+  display: grid;
+  gap: var(--p-padding-md);
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  padding-left: var(--p-padding-md);
+  padding-right: var(--p-padding-md);
+}

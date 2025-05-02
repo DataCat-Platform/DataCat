@@ -1,0 +1,8 @@
+.template-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-sm);
+  padding-left: var(--p-padding-md);
+  padding-right: var(--p-padding-md);
+  padding-bottom: var(--p-padding-md);
+}

@@ -12,6 +12,6 @@ import { Divider } from 'primeng/divider';
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
 })
-export class SettingsPageComponent {
+export class SettingsComponent {
   constructor(public settingsService: SettingsService) {}
 }

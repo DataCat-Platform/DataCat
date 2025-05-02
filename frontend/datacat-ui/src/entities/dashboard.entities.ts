@@ -1,37 +1,49 @@
-export interface DashboardInSearchList {
+export type DashboardInSearchList = {
   id: string;
   name: string;
   description?: string;
   ownerId: string;
-  lastUpdatedAt: Date;
-}
+  lastUpdatedAt: number;
+  tags: string[];
+  isInFavorites: boolean;
+};
 
-export interface Dashboard {
+export type Dashboard = {
   id: string;
   name: string;
   description?: string;
   ownerId: string;
-  lastUpdatedAt: Date;
+  lastUpdatedAt: number;
   panels: Panel[];
-}
+  tags: string[];
+  isInFavorites: boolean;
+};
 
-export enum PanelType {
-  LINE = 'line',
-  BAR = 'bar',
-}
+export type DashboardsFilter = {
+  onlyFavorites?: boolean;
+  tags: string[];
+};
 
-export interface Panel {
+export type Panel = {
   id: string;
   title: string;
   type: PanelType;
   rawQuery: string;
   dashboardId: string;
   layout: PanelLayout;
-}
+};
 
-export interface PanelLayout {
+export type PanelLayout = {
   x: number;
   y: number;
   width: number;
   height: number;
+};
+
+export enum PanelType {
+  LINE = 'line',
+  BAR = 'bar',
+  PIE = 'pie',
+  GAUGE = 'gauge',
+  TABLE = 'table',
 }

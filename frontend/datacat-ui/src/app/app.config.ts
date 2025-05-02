@@ -1,6 +1,6 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
-import { ROUTES } from '../pages/spa.routes';
+import { ROUTES } from '../pages/workspace.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import { PRIMENG_CONFIG } from '../shared/primeng/primeng.config';

@@ -1,0 +1,29 @@
+<p-panel>
+  <ng-template pTemplate="header">
+    {{ channelsGroup?.name }}
+  </ng-template>
+  <ng-template pTemplate="icons">
+    <div class="actions-container">
+      <p-button icon="pi pi-trash" [text]="true" />
+      <p-button icon="pi pi-pencil" [text]="true" />
+    </div>
+  </ng-template>
+  <div class="channels-container">
+    @for (channel of channelsGroup?.channels; track $index) {
+      @switch (channel.type) {
+        @case (NotificationChannelType.EMAIL) {
+          <datacat-email-channel [channel]="channel" />
+        }
+        @case (NotificationChannelType.TELEGRAM) {
+          <datacat-telegram-channel [channel]="channel" />
+        }
+        @case (NotificationChannelType.WEBHOOK) {
+          <datacat-webhook-channel [channel]="channel" />
+        }
+        @default {
+          <!-- TODO -->
+        }
+      }
+    }
+  </div>
+</p-panel>
