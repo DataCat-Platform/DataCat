@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - *(datacat-server)* Add prometheus integration
 - *(datacat-server)* Complete jaeger (traces) integration
 - *(datacat-server)* Complete security module
+- *(datacat-server)* Add distributed caching module, fix some security issues
 
 ### 🚜 Refactor
 
