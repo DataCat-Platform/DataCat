@@ -1,3 +1,5 @@
+using DataCat.Caching.Redis;
+
 namespace DataCat.Server.DI;
 
 public static class DependencyInjectionExtensions
@@ -72,7 +74,17 @@ public static class DependencyInjectionExtensions
         NullGuard.ThrowIfNullOrWhiteSpace(configuration["DataSourceType"]);
         
         services.Configure<DatabaseOptions>(configuration.GetSection("DatabaseOptions"));
-        services.AddSingleton<DatabaseOptions>(sp => sp.GetRequiredService<IOptions<DatabaseOptions>>().Value);
+        services.AddSingleton<DatabaseOptions>(sp =>
+        {
+            var option = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+            var secretPath = option.ConnectionString;
+
+            var secretsProvider = sp.GetRequiredService<ISecretsProvider>();
+            
+            var connectionString = secretsProvider.GetSecretAsync(secretPath).GetAwaiter().GetResult();
+            
+            return option with { ConnectionString = connectionString };
+        });
         
         PluginLoader.LoadDatabasePlugin(services, configuration["DataSourceType"]!, configuration);
 
@@ -156,5 +168,16 @@ public static class DependencyInjectionExtensions
         IConfiguration configuration)
     {
         return services.AddJaegerTraces(configuration);
+    }
+
+    public static IServiceCollection AddCachingServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddMemoryCache();
+
+        services.AddRedisCaching(configuration);
+        
+        return services;
     }
 }

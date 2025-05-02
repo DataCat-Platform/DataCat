@@ -48,6 +48,8 @@ public sealed class PostgresPlugin : IDatabasePlugin
 
         services.AddScoped<IAlertMonitorService, PostgresAlertMonitorService>();
 
+        services.AddScoped<PostgresSeedService>();
+
         AddApiBackgroundWorkers(services);
         AddPipelines(services);
         

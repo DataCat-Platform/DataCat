@@ -60,18 +60,26 @@ internal sealed class VaultSecretsProvider
             return cachedValue!;
         }
 
-        var (mountPoint, secretPath, secretKey) = ParseSecretKey(key);
-        var secret = await _vaultClient.V1.Secrets.KeyValue.V2.ReadSecretAsync(
-            path: secretPath, 
-            mountPoint: mountPoint);
-
-        if (!secret.Data.Data.TryGetValue(secretKey, out var value))
+        try
         {
-            return string.Empty;
-        }
+            var (mountPoint, secretPath, secretKey) = ParseSecretKey(key);
+            var secret = await _vaultClient.V1.Secrets.KeyValue.V2.ReadSecretAsync(
+                path: secretPath,
+                mountPoint: mountPoint);
 
-        CacheSecret(key, value?.ToString() ?? string.Empty);
-        return value?.ToString() ?? string.Empty;
+            if (!secret.Data.Data.TryGetValue(secretKey, out var value))
+            {
+                return string.Empty;
+            }
+
+            CacheSecret(key, value?.ToString() ?? string.Empty);
+            return value?.ToString() ?? string.Empty;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            throw;
+        }
     }
 
     public Task SetSecretAsync(string key, string value, CancellationToken cancellationToken = default)

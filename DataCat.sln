@@ -63,6 +63,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "traces", "traces", "{7DAE98
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Traces.Jaeger", "components\server\traces\DataCat.Traces.Jaeger\DataCat.Traces.Jaeger.csproj", "{4B75F0B4-D326-4A89-8E87-077F1C4A0AD0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "caching", "caching", "{98C9AF3C-5DC0-4204-89C8-6EE9CCC2CB52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Caching.Redis", "components\server\caching\DataCat.Caching.Redis\DataCat.Caching.Redis.csproj", "{481EB119-3E68-4500-83CB-2AF7D22A094F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +101,8 @@ Global
 		{926F4FEA-0E3B-424C-ABD1-26E317C9D94A} = {18883BEA-DF25-4871-9C81-5D974688D6DB}
 		{7DAE98AA-1A14-47DA-ACAE-BB7D232174B2} = {6810E2F4-F559-444A-A800-758C8A5BEC23}
 		{4B75F0B4-D326-4A89-8E87-077F1C4A0AD0} = {7DAE98AA-1A14-47DA-ACAE-BB7D232174B2}
+		{98C9AF3C-5DC0-4204-89C8-6EE9CCC2CB52} = {6810E2F4-F559-444A-A800-758C8A5BEC23}
+		{481EB119-3E68-4500-83CB-2AF7D22A094F} = {98C9AF3C-5DC0-4204-89C8-6EE9CCC2CB52}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1621F9FE-91B0-4532-BF6B-E1BFDE263D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -171,5 +177,9 @@ Global
 		{4B75F0B4-D326-4A89-8E87-077F1C4A0AD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B75F0B4-D326-4A89-8E87-077F1C4A0AD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B75F0B4-D326-4A89-8E87-077F1C4A0AD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{481EB119-3E68-4500-83CB-2AF7D22A094F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{481EB119-3E68-4500-83CB-2AF7D22A094F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{481EB119-3E68-4500-83CB-2AF7D22A094F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{481EB119-3E68-4500-83CB-2AF7D22A094F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

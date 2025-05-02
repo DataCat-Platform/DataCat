@@ -19,7 +19,7 @@ public sealed class AddNamespace : ApiEndpointBase
             })
             .WithTags(ApiTags.Namespaces)
             .HasApiVersion(ApiVersions.V1)
-            .Produces<Guid>(StatusCodes.Status200OK)
+            .Produces<Guid>()
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 

@@ -8,9 +8,9 @@ public sealed record PostgresMigrationRunner : IDataCatMigrationRunner
     private readonly IServiceProvider _serviceProvider;
 
     public PostgresMigrationRunner(DatabaseOptions options)
-        : this(options, CreateServiceProvider(options)) { }
+        : this(CreateServiceProvider(options)) { }
 
-    private PostgresMigrationRunner(DatabaseOptions options, IServiceProvider serviceProvider)
+    private PostgresMigrationRunner(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
@@ -20,10 +20,11 @@ public sealed record PostgresMigrationRunner : IDataCatMigrationRunner
     /// </summary>
     public async Task ApplyMigrationsAsync(CancellationToken token = default)
     {
+        await Task.CompletedTask;
         using var scope = _serviceProvider.CreateScope();
         var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
 
-        await Task.Run(() => runner.MigrateUp(), token);
+        runner.MigrateUp();
     }
 
     /// <summary>
@@ -31,10 +32,10 @@ public sealed record PostgresMigrationRunner : IDataCatMigrationRunner
     /// </summary>
     public async Task RollbackLastMigrationAsync(int steps, CancellationToken token = default)
     {
+        await Task.CompletedTask;
         using var scope = _serviceProvider.CreateScope();
         var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
-
-        await Task.Run(() => runner.Rollback(steps), token);
+        runner.Rollback(steps);
     }
 
     /// <summary>
@@ -42,12 +43,11 @@ public sealed record PostgresMigrationRunner : IDataCatMigrationRunner
     /// </summary>
     public async Task<string?> GetCurrentMigrationVersionAsync(CancellationToken token = default)
     {
+        await Task.CompletedTask;
         using var scope = _serviceProvider.CreateScope();
         var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
 
-        var migrationVersion = await Task.Run(
-            () => runner.MigrationLoader.LoadMigrations().LastOrDefault().Value.Version.ToString(), 
-            token);
+        var migrationVersion = runner.MigrationLoader.LoadMigrations().LastOrDefault().Value.Version.ToString();
 
         return migrationVersion;
     }
@@ -63,7 +63,8 @@ public sealed record PostgresMigrationRunner : IDataCatMigrationRunner
         using var scope = _serviceProvider.CreateScope();
         var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
 
-        await Task.Run(() => runner.MigrateUp(version), token);
+        runner.MigrateUp(version);
+        await Task.CompletedTask;
     }
 
     /// <summary>

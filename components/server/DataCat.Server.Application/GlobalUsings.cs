@@ -47,6 +47,7 @@ global using DataCat.Server.Domain.Plugins.Repos;
 global using FluentValidation;
 global using MediatR;
 global using Microsoft.AspNetCore.Http;
+global using Microsoft.Extensions.Caching.Distributed;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Logging;

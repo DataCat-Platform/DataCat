@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Telemetry.Metrics;
-
 namespace DataCat.Storage.Postgres.Jobs;
 
 #if DEBUG

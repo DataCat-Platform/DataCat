@@ -1,6 +1,6 @@
 namespace DataCat.Auth.Keycloak.Models;
 
-public sealed class KeycloakOptions
+public sealed record KeycloakOptions
 {
     public string BaseUrl { get; init; } = string.Empty;
     
