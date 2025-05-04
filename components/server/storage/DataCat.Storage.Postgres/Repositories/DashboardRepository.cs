@@ -128,6 +128,27 @@ public sealed class DashboardRepository(
         return new Page<Dashboard>(items, totalCount, PageNumber: offset, pageSize);
     }
 
+    public async Task<IReadOnlyCollection<DashboardResponse>> GetDashboardsByNamespaceId(Guid id, CancellationToken token = default)
+    {
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+        
+        var parameters = new { p_namespace_id = id.ToString() };
+        
+        var result = await connection.QueryAsync<DashboardSnapshot>(
+            sql: DashboardSql.Select.GetDashboardsByNamespaceId,
+            param: parameters,
+            transaction: UnitOfWork.Transaction);
+
+        return result.Select(x => new DashboardResponse()
+        {
+            Id = Guid.Parse(x.Id),
+            Name = x.Name,
+            Description = x.Description,
+            OwnerId = Guid.Parse(x.OwnerId),
+            UpdatedAt = x.UpdatedAt
+        }).ToList();
+    }
+
     public async Task UpdateAsync(Dashboard entity, CancellationToken token = default)
     {
         var snapshot = entity.Save();

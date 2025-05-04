@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.Plugins.Get;
 
 public sealed record GetPluginQueryHandler(
     IRepository<Plugin, Guid> pluginRepository)
-    : IRequestHandler<GetPluginQuery, Result<GetPluginResponse>>
+    : IQueryHandler<GetPluginQuery, GetPluginResponse>
 {
     public async Task<Result<GetPluginResponse>> Handle(GetPluginQuery request, CancellationToken token)
     {

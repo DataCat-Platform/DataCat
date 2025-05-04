@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.Plugins.ToggleStatus;
 
-public sealed record ToggleStatusCommand : IRequest<Result>, IAdminRequest
+public sealed record ToggleStatusCommand : ICommand, IAdminRequest
 {
     public required string PluginId { get; init; }
     

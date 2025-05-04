@@ -10,6 +10,8 @@ public static class DependencyInjectionExtensions
             
             config.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            config.AddOpenBehavior(typeof(CommandMetricsBehavior<,>));
+            config.AddOpenBehavior(typeof(QueryMetricsBehavior<,>));
         });
 
         services.AddValidatorsFromAssembly(ApplicationAssembly.Assembly, includeInternalTypes: true);
@@ -175,6 +177,7 @@ public static class DependencyInjectionExtensions
         services.AddMemoryCache();
 
         services.AddRedisCaching(configuration);
+        
         
         return services;
     }

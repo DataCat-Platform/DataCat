@@ -25,8 +25,9 @@ public sealed class PostgresPlugin : IDatabasePlugin
         services.AddScoped<IRepository<Plugin, Guid>, PluginRepository>();
         services.AddScoped<IPluginRepository, PluginRepository>();
         
-        services.AddScoped<IRepository<Namespace, Guid>, NamespaceRepository>();
-        services.AddScoped<INamespaceRepository, NamespaceRepository>();
+        services.AddScoped<IRepository<Namespace, Guid>, NamespaceCachedRepository>();
+        services.AddScoped<NamespaceRepository>();
+        services.AddScoped<INamespaceRepository, NamespaceCachedRepository>();
         
         services.AddScoped<IExternalRoleMappingRepository, ExternalRoleMappingRepository>();
         services.AddScoped<INotificationDestinationRepository, NotificationDestinationRepository>();

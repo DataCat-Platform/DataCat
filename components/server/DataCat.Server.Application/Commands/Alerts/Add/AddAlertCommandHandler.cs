@@ -4,7 +4,7 @@ public sealed class AddAlertCommandHandler(
     IRepository<Alert, Guid> alertRepository,
     IRepository<DataSource, Guid> dataSourceRepository,
     IRepository<NotificationChannel, Guid> notificationChannelRepository)
-    : IRequestHandler<AddAlertCommand, Result<Guid>>
+    : ICommandHandler<AddAlertCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AddAlertCommand request, CancellationToken cancellationToken)
     {

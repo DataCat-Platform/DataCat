@@ -28,6 +28,7 @@ global using DataCat.Server.Application.Queries.Common;
 global using DataCat.Server.Application.Queries.Dashboards.GetFullInfo;
 global using DataCat.Server.Application.Queries.DataSources.Get;
 global using DataCat.Server.Application.Queries.DataSourceTypes.Get;
+global using DataCat.Server.Application.Queries.Namespaces.GetByName;
 global using DataCat.Server.Application.Queries.NotificationDestinations.Get;
 global using DataCat.Server.Application.Security;
 global using DataCat.Server.Application.Telemetry.Logs.Models;

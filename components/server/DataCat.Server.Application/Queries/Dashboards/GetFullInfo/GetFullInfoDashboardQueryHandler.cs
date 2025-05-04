@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.Dashboards.GetFullInfo;
 
 public sealed class GetFullInfoDashboardQueryHandler(
     IRepository<Dashboard, Guid> dashboardRepository)
-    : IRequestHandler<GetFullInfoDashboardQuery, Result<GetFullInfoDashboardResponse>>
+    : IQueryHandler<GetFullInfoDashboardQuery, GetFullInfoDashboardResponse>
 {
     public async Task<Result<GetFullInfoDashboardResponse>> Handle(GetFullInfoDashboardQuery request, CancellationToken token)
     {

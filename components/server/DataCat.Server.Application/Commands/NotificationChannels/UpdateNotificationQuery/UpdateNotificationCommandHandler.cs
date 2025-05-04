@@ -5,7 +5,7 @@ public sealed class UpdateNotificationCommandHandler(
     INotificationDestinationRepository notificationDestinationRepository,
     INotificationChannelRepository notificationRepository,
     NotificationChannelManager notificationChannelManager)
-    : IRequestHandler<UpdateNotificationCommand, Result>
+    : ICommandHandler<UpdateNotificationCommand>
 {
     public async Task<Result> Handle(UpdateNotificationCommand request, CancellationToken token)
     {

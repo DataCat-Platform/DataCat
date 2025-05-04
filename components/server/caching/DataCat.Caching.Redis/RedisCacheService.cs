@@ -1,23 +1,47 @@
 namespace DataCat.Caching.Redis;
 
-public sealed class RedisCacheService(IDistributedCache cache) : ICacheService
+public sealed class RedisCacheService : ICacheService
 {
+    private const string GetOperation = "get";
+    private const string SetOperation = "set";
+    private const string RemoveOperation = "remove";
+    
+    private readonly IDistributedCache _cache;
+    private readonly IMetricsContainer _metricsContainer;
+
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
-        WriteIndented = false
+        WriteIndented = false,
     };
     
     private readonly RedisAsyncLock _asyncLock = new();
+
+    public RedisCacheService(IDistributedCache cache, IMetricsContainer metricsContainer)
+    {
+        _cache = cache;
+        _metricsContainer = metricsContainer;
+
+        _jsonOptions.AddAllJsonConverters(ApplicationAssembly.Assembly);
+    }
 
     public async Task<T?> GetAsync<T>(string key, CancellationToken ct = default)
     {
         try
         {
-            var cachedData = await cache.GetStringAsync(key, ct);
-            return cachedData is null 
-                ? default 
-                : JsonSerializer.Deserialize<T>(cachedData, _jsonOptions);
+            var stopwatch = Stopwatch.StartNew();
+            var cachedData = await _cache.GetStringAsync(key, ct);
+            stopwatch.Stop();
+            _metricsContainer.AddCacheOperationTime(GetOperation, stopwatch.ElapsedMilliseconds);
+
+            if (cachedData is not null)
+            {
+                _metricsContainer.AddCacheHit(isHit: true, key);
+                return JsonSerializer.Deserialize<T>(cachedData, _jsonOptions);
+            }
+            
+            _metricsContainer.AddCacheHit(isHit: false, key);
+            return default;
         }
         catch
         {
@@ -28,23 +52,35 @@ public sealed class RedisCacheService(IDistributedCache cache) : ICacheService
     public async Task SetAsync<T>(string key, T value, DistributedCacheEntryOptions? options = null, CancellationToken ct = default)
     {
         var serializedValue = JsonSerializer.Serialize(value, _jsonOptions);
-        await cache.SetStringAsync(key, serializedValue, options ?? new DistributedCacheEntryOptions(), ct);
+        var stopwatch = Stopwatch.StartNew();
+        
+        await _cache.SetStringAsync(key, serializedValue, options ?? new DistributedCacheEntryOptions(), ct);
+        
+        stopwatch.Stop();
+        _metricsContainer.AddCacheOperationTime(
+            operationType: SetOperation, 
+            durationMs: stopwatch.ElapsedMilliseconds);
     }
 
     public async Task RemoveAsync(string key, CancellationToken ct = default)
     {
-        await cache.RemoveAsync(key, ct);
+        var stopwatch = Stopwatch.StartNew();
+        await _cache.RemoveAsync(key, ct);
+        stopwatch.Stop();
+        _metricsContainer.AddCacheOperationTime(
+            operationType: SetOperation, 
+            durationMs: stopwatch.ElapsedMilliseconds);
     }
 
     public async Task<bool> ExistsAsync(string key, CancellationToken ct = default)
     {
-        var data = await cache.GetStringAsync(key, ct);
+        var data = await _cache.GetStringAsync(key, ct);
         return data is not null;
     }
 
     public async Task RefreshAsync(string key, CancellationToken ct = default)
     {
-        await cache.RefreshAsync(key, ct);
+        await _cache.RefreshAsync(key, ct);
     }
 
     public async Task<T> GetOrCreateAsync<T>(string key, Func<Task<T>> factory, DistributedCacheEntryOptions? options = null,

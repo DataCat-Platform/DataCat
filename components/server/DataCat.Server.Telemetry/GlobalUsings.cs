@@ -2,6 +2,7 @@
 
 global using System.Diagnostics;
 global using System.Diagnostics.Metrics;
+global using System.Text.Json.Serialization;
 global using DataCat.Server.Application.Security;
 global using DataCat.Server.Application.Telemetry;
 global using Microsoft.Extensions.Configuration;

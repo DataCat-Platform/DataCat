@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.Plugins.Add;
 
-public sealed record AddPluginCommand : IRequest<Result<Guid>>, IAdminRequest
+public sealed record AddPluginCommand : ICommand<Guid>, IAdminRequest
 {
     public required IFormFile File { get; init; }
     

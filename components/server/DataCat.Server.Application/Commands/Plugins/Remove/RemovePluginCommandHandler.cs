@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Commands.Plugins.Remove;
 
 public sealed class RemovePluginCommandHandler(
     IPluginRepository pluginRepository)
-    : IRequestHandler<RemovePluginCommand, Result>
+    : ICommand<RemovePluginCommand>
 {
     public async Task<Result> Handle(RemovePluginCommand request, CancellationToken token)
     {

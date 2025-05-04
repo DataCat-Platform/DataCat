@@ -28,59 +28,59 @@ public class MetricsContainer : IMetricsContainer
 
         // Commands/Queries
         _commandExecutions = meter.CreateCounter<long>(
-            "app.commands.executed.total",
+            "datacat.app.commands.executed.total",
             description: "Total commands executed");
             
         _commandDurations = meter.CreateHistogram<long>(
-            "app.commands.duration.ms",
+            "datacat.app.commands.duration.ms",
             unit: "ms",
             description: "Command execution duration");
             
         _queryExecutions = meter.CreateCounter<long>(
-            "app.queries.executed.total",
+            "datacat.app.queries.executed.total",
             description: "Total queries executed");
             
         _queryDurations = meter.CreateHistogram<long>(
-            "app.queries.duration.ms",
+            "datacat.app.queries.duration.ms",
             unit: "ms",
             description: "Query execution duration");
 
         // Alerting
         _alertsTriggered = meter.CreateCounter<long>(
-            "alerts.triggered.total",
+            "datacat.alerts.triggered.total",
             description: "Total alerts triggered");
             
         _notificationsSent = meter.CreateCounter<long>(
-            "notifications.sent.total",
+            "datacat.notifications.sent.total",
             description: "Total notifications sent");
             
         _notificationDeliveryTimes = meter.CreateHistogram<long>(
-            "notifications.delivery.time.ms",
+            "datacat.notifications.delivery.time.ms",
             unit: "ms",
             description: "Notification delivery duration");
 
         // Cache
         _cacheHits = meter.CreateCounter<long>(
-            "cache.operations.total",
+            "datacat.cache.operations.total",
             description: "Total cache operations");
             
         _cacheOperationTimes = meter.CreateHistogram<long>(
-            "cache.operations.time.ms",
+            "datacat.cache.operations.time.ms",
             unit: "ms",
             description: "Cache operation duration");
 
         // System
         _backgroundJobDurations = meter.CreateHistogram<long>(
-            "background.jobs.duration.ms",
+            "datacat.background.jobs.duration.ms",
             unit: "ms",
             description: "Background job execution duration");
             
         _errors = meter.CreateCounter<long>(
-            "errors.total",
+            "datacat.errors.total",
             description: "Total errors occurred");
             
         _validationErrors = meter.CreateCounter<long>(
-            "validation.errors.total",
+            "datacat.validation.errors.total",
             description: "Total validation errors");
     }
     
@@ -106,14 +106,9 @@ public class MetricsContainer : IMetricsContainer
         _queryDurations.Record(durationMs, tags);
     }
 
-    public void AddAlertTriggered(string alertType, string severity)
+    public void AddAlertTriggered()
     {
-        var tags = new TagList
-        {
-            { "alert_type", alertType },
-            { "severity", severity }
-        };
-        _alertsTriggered.Add(1, tags);
+        _alertsTriggered.Add(1);
     }
 
     public void AddNotificationSent(string channelType, bool isSuccess)
@@ -161,8 +156,8 @@ public class MetricsContainer : IMetricsContainer
         _errors.Add(1, tags);
     }
 
-    public void AddValidationError(string validatorType)
+    public void AddValidationError()
     {
-        _validationErrors.Add(1, new TagList { { "validator_type", validatorType } });
+        _validationErrors.Add(1);
     }
 }

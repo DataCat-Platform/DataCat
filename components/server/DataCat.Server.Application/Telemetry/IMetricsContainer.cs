@@ -7,7 +7,7 @@ public interface IMetricsContainer
     void AddQueryExecution(string queryType, long durationMs, bool isSuccess);
     
     // Alerting metrics
-    void AddAlertTriggered(string alertType, string severity);
+    void AddAlertTriggered();
     void AddNotificationSent(string channelType, bool isSuccess);
     void AddNotificationDeliveryTime(long millis, string channelType);
     
@@ -20,5 +20,5 @@ public interface IMetricsContainer
     
     // Error metrics
     void AddError(string errorType, string source);
-    void AddValidationError(string validatorType);
+    void AddValidationError();
 }

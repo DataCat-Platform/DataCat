@@ -4,7 +4,7 @@ public sealed class AddUserToDashboardCommandHandler(
     IDashboardRepository dashboardRepository,
     IRepository<User, Guid> userRepository,
     IRepository<Dashboard, Guid> dashboardBaseRepository)
-    : IRequestHandler<AddUserToDashboardCommand, Result>
+    : ICommandHandler<AddUserToDashboardCommand>
 {
     public async Task<Result> Handle(AddUserToDashboardCommand request, CancellationToken cancellationToken)
     {

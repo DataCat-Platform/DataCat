@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.Alerts.Get;
 
 public class GetAlertQueryHandler(
     IRepository<Alert, Guid> alertRepository)
-    : IRequestHandler<GetAlertQuery, Result<GetAlertResponse>>
+    : IQueryHandler<GetAlertQuery, GetAlertResponse>
 {
     public async Task<Result<GetAlertResponse>> Handle(GetAlertQuery request, CancellationToken token)
     {

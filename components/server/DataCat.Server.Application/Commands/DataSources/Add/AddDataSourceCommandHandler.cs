@@ -4,7 +4,7 @@ public sealed class AddDataSourceCommandHandler(
     IDataSourceTypeRepository dataSourceTypeRepository,
     DataSourceContainer container,
     IRepository<DataSource, Guid> dataSourceRepository)
-    : IRequestHandler<AddDataSourceCommand, Result<Guid>>
+    : ICommandHandler<AddDataSourceCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AddDataSourceCommand request, CancellationToken cancellationToken)
     {

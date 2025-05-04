@@ -83,6 +83,14 @@ public static class DependencyInjection
             );
             #endregion
         });
+
+        services.AddSingleton<KeycloakMetricsContainer>();
+
+        services.AddOpenTelemetry()
+            .ConfigureResource(configure => configure
+                .AddService(KeycloakMetricsConstants.ServiceName))
+            .WithMetrics(configure => configure
+                .AddMeter(KeycloakMetricsConstants.MeterName));
         
         return services;
     }

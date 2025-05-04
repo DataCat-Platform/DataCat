@@ -8,8 +8,9 @@ public sealed class AlertChecker(
     IAlertRepository alertRepository,
     DataSourceManager dataSourceManager,
     UnitOfWork unitOfWork,
-    ILogger<AlertChecker> logger) 
-    : BaseBackgroundWorker(logger)
+    ILogger<AlertChecker> logger,
+    IMetricsContainer metricsContainer) 
+    : BaseBackgroundWorker(logger, metricsContainer)
 {
     protected override string JobName => nameof(AlertChecker);
 
@@ -52,6 +53,7 @@ public sealed class AlertChecker(
                 var isTriggered = await metricClient.CheckAlertTriggerAsync(alert.Query.RawQuery, token);
                 if (isTriggered)
                 {
+                    metricsContainer.AddAlertTriggered();
                     alert.SetWarningStatus();
                     logger.LogWarning("[{Job}] Alert: {Alert} switched to the warning status", nameof(AlertChecker), alert.Id);
                 }

@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.Panels.Get;
 
 public class GetPanelQueryHandler(
     IRepository<Panel, Guid> panelRepository)
-    : IRequestHandler<GetPanelQuery, Result<GetPanelResponse>>
+    : IQueryHandler<GetPanelQuery, GetPanelResponse>
 {
     public async Task<Result<GetPanelResponse>> Handle(GetPanelQuery request, CancellationToken token)
     {

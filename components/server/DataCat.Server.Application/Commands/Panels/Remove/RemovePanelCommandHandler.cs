@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Commands.Panels.Remove;
 
 public sealed class RemovePanelCommandHandler(
     IPanelRepository panelRepository)
-    : IRequestHandler<RemovePanelCommand, Result>
+    : ICommandHandler<RemovePanelCommand>
 {
     public async Task<Result> Handle(RemovePanelCommand request, CancellationToken token)
     {

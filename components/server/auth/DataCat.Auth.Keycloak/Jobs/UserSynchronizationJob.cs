@@ -6,18 +6,27 @@ public sealed class UserSynchronizationJob(
     HttpClient httpClient,
     IUserRepository userRepository,
     IJwtService jwtService,
-    IUnitOfWork<IDbTransaction> unitOfWork)
-    : BaseBackgroundWorker(logger)
+    IUnitOfWork<IDbTransaction> unitOfWork,
+    IMetricsContainer metricsContainer,
+    KeycloakMetricsContainer keycloakMetricsContainer)
+    : BaseBackgroundWorker(logger, metricsContainer)
 {
+    private const string UsersKeycloakEndpoint = "users";
+    private const int MaxUsersPerRequest = 1000;
+    
     protected override string JobName => nameof(UserSynchronizationJob);
 
     protected override async Task RunAsync(CancellationToken stoppingToken = default)
     {
+        var stopwatch = Stopwatch.StartNew();
+        keycloakMetricsContainer.AddUserSyncOperation();
+        
         var tokenResult = await jwtService.GetServerAccessTokenAsync(stoppingToken);
 
         if (tokenResult.IsFailure)
         {
             logger.LogError("[{Job}] Error was occured. Error: {@Errors}", nameof(UserSynchronizationJob), tokenResult.Errors);
+            keycloakMetricsContainer.AddUserSyncFailure();
             return;
         }
         
@@ -26,12 +35,18 @@ public sealed class UserSynchronizationJob(
 
         try
         {
+            keycloakMetricsContainer.AddKeycloakApiCall(UsersKeycloakEndpoint);
+            var apiStopwatch = Stopwatch.StartNew();
+            
             using var response = await httpClient.SendAsync(request, stoppingToken);
+            apiStopwatch.Stop();
         
             if (!response.IsSuccessStatusCode)
             {
                 logger.LogError("[{Job}] Request failed with status code {StatusCode}. Reason: {ReasonPhrase}", 
                     nameof(UserSynchronizationJob), response.StatusCode, response.ReasonPhrase);
+                keycloakMetricsContainer.AddKeycloakApiFailure(UsersKeycloakEndpoint);
+                keycloakMetricsContainer.AddUserSyncFailure();
                 return;
             }
 
@@ -42,6 +57,8 @@ public sealed class UserSynchronizationJob(
             if (users is null)
             {
                 logger.LogWarning("[{Job}] No users were returned from Keycloak.", nameof(UserSynchronizationJob));
+                keycloakMetricsContainer.AddKeycloakApiFailure(UsersKeycloakEndpoint);
+                keycloakMetricsContainer.AddUserSyncFailure();
                 return;
             }
 
@@ -70,17 +87,28 @@ public sealed class UserSynchronizationJob(
 
             await unitOfWork.StartTransactionAsync(stoppingToken);
             
-            await userRepository.BulkInsertAsync(userEntities
+            var validUsers = userEntities
                 .Where(x => x.IsSuccess)
                 .Select(x => x.Value)
-                .ToList(), 
+                .ToList();
+            
+            await userRepository.BulkInsertAsync(validUsers, 
                 stoppingToken);
             
             await unitOfWork.CommitAsync(stoppingToken);
+            
+            var duration = stopwatch.ElapsedMilliseconds;
+            keycloakMetricsContainer.AddUsersSynced(validUsers.Count);
+            keycloakMetricsContainer.RecordUserSyncDuration(duration, isSuccess: true);
+            keycloakMetricsContainer.RecordKeycloakApiDuration(UsersKeycloakEndpoint, apiStopwatch.ElapsedMilliseconds, isSuccess: true);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "[{Job}] Exception occurred during user synchronization.", nameof(UserSynchronizationJob));
+            
+            var duration = stopwatch.ElapsedMilliseconds;
+            keycloakMetricsContainer.AddUserSyncFailure();
+            keycloakMetricsContainer.RecordUserSyncDuration(duration, isSuccess: false);
         }
     }
 }

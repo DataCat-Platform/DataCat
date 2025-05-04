@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.Alerts.Search;
 
 public sealed class SearchAlertsQueryHandler(
     IAlertRepository alertRepository)
-    : IRequestHandler<SearchAlertsQuery, Result<Page<SearchAlertsResponse>>>
+    : IQueryHandler<SearchAlertsQuery, Page<SearchAlertsResponse>>
 {
     public async Task<Result<Page<SearchAlertsResponse>>> Handle(SearchAlertsQuery request, CancellationToken token)
     {

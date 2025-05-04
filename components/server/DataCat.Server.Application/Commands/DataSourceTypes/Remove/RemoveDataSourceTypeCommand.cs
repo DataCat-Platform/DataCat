@@ -1,3 +1,3 @@
 namespace DataCat.Server.Application.Commands.DataSourceTypes.Remove;
 
-public sealed record RemoveDataSourceTypeCommand(string Name) : IRequest<Result>, IAdminRequest;
+public sealed record RemoveDataSourceTypeCommand(string Name) : ICommand, IAdminRequest;

@@ -10,6 +10,8 @@ public interface IDashboardRepository
         int pageSize = 10,
         CancellationToken token = default);
     
+    Task<IReadOnlyCollection<DashboardResponse>> GetDashboardsByNamespaceId(Guid id, CancellationToken token = default);
+    
     Task UpdateAsync(Dashboard entity, CancellationToken token = default);
 
     Task DeleteAsync(Guid id, CancellationToken token = default);

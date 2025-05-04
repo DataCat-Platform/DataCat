@@ -10,8 +10,9 @@ public sealed class AlertNotifier(
     NotificationChannelManager notificationChannelManager,
     ISecretsProvider serviceProvider,
     UnitOfWork unitOfWork,
-    ILogger<AlertNotifier> logger)
-    : BaseBackgroundWorker(logger)
+    ILogger<AlertNotifier> logger,
+    IMetricsContainer metricsContainer)
+    : BaseBackgroundWorker(logger, metricsContainer)
 {
     protected override string JobName => nameof(AlertNotifier);
 
@@ -78,8 +79,14 @@ public sealed class AlertNotifier(
                         await alertChannel.Writer.WriteAsync(alert, token);
                         return;
                     }
-                        
+
+                    var stopwatch = Stopwatch.StartNew();
                     await notificationServiceResult.Value.SendNotificationAsync(alert, stoppingToken);
+                    stopwatch.Stop();
+                    
+                    metricsContainer.AddNotificationSent(alert.NotificationChannel.NotificationOption.NotificationDestination.Name, isSuccess: true);
+                    metricsContainer.AddNotificationDeliveryTime(stopwatch.ElapsedMilliseconds, alert.NotificationChannel.NotificationOption.NotificationDestination.Name);
+                    
                     logger.LogWarning("[{Job}] Alert: {Alert} is fired", nameof(AlertNotifier), alert.Id);
                 }
                 else
@@ -93,6 +100,8 @@ public sealed class AlertNotifier(
             catch (Exception exception)
             {
                 logger.LogError(exception, "{Job} failed", nameof(AlertChecker));
+                metricsContainer.AddNotificationSent(alert.NotificationChannel.NotificationOption.NotificationDestination.Name, isSuccess: false);
+
             }
         });
         

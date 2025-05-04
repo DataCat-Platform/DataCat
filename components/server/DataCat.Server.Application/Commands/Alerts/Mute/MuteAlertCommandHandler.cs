@@ -3,7 +3,7 @@ namespace DataCat.Server.Application.Commands.Alerts.Mute;
 public sealed class MuteAlertCommandHandler(
     IRepository<Alert, Guid> alertBaseRepository,
     IAlertRepository alertRepository)
-    : IRequestHandler<MuteAlertCommand, Result>
+    : ICommandHandler<MuteAlertCommand>
 {
     public async Task<Result> Handle(MuteAlertCommand request, CancellationToken cancellationToken)
     {

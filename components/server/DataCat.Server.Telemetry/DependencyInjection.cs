@@ -9,6 +9,13 @@ public static class DependencyInjection
             return services;
         }
         
+        services.AddOptions<DataCatExporterOption>()
+            .Bind(configuration.GetSection(DataCatExporterOption.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services.ConfigureOptions<DataCatExporterOptionSetup>();
+        
         loggingBuilder.AddOpenTelemetry(options => 
         {
             options.IncludeScopes = true;

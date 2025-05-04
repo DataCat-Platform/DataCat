@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Behaviors;
 
-public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
+public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators, IMetricsContainer metricsContainer)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : Result
@@ -22,6 +22,7 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidat
 
         if (errors.Count != 0)
         {
+            metricsContainer.AddValidationError();
             throw new CustomValidationException(errors);
         }
 

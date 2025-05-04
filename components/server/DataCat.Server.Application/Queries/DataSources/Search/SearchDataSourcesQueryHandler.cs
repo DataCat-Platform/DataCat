@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.DataSources.Search;
 
 public class SearchDataSourcesQueryHandler(
     IDataSourceRepository dataSourceRepository)
-    : IRequestHandler<SearchDataSourcesQuery, Result<Page<SearchDataSourcesResponse>>>
+    : IQueryHandler<SearchDataSourcesQuery, Page<SearchDataSourcesResponse>>
 {
     public async Task<Result<Page<SearchDataSourcesResponse>>> Handle(SearchDataSourcesQuery request, CancellationToken token)
     {

@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Commands.Plugins.ToggleStatus;
 
 public class ToggleStatusCommandHandler(
     IPluginRepository pluginRepository)
-    : IRequestHandler<ToggleStatusCommand, Result>
+    : ICommandHandler<ToggleStatusCommand>
 {
     public async Task<Result> Handle(ToggleStatusCommand request, CancellationToken token)
     {

@@ -1,8 +1,9 @@
 namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class NamespaceCachedRepository(
-    IMemoryCache cache,
-    NamespaceRepository namespaceRepository) 
+    ICacheService cache,
+    NamespaceRepository namespaceRepository,
+    IMetricsContainer metricsContainer)
     : IRepository<Namespace, Guid>, INamespaceRepository
 {
     private const string DefaultNamespaceCacheKey = "namespace:default";
@@ -13,43 +14,37 @@ public sealed class NamespaceCachedRepository(
     {
         var cacheKey = $"{ByIdCacheKeyPrefix}{id}";
         
-        if (cache.TryGetValue(cacheKey, out Namespace? cached))
-        {
-            return cached!;
-        }
-
-        var entity = await namespaceRepository.GetByIdAsync(id, token);
-
-        cache.Set(cacheKey, entity, TimeSpan.FromHours(1));
-        return entity;
+        var @namespace = await cache.GetOrCreateAsync(cacheKey, 
+            factory: () => namespaceRepository.GetByIdAsync(id, token), new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            }, token);
+        
+        return @namespace;
     }
     
-    public async ValueTask<Namespace?> GetByNameAsync(string name, CancellationToken token)
+    public async Task<Namespace?> GetByNameAsync(string name, CancellationToken token)
     {
         var cacheKey = $"{ByNameCacheKeyPrefix}{name}";
         
-        if (cache.TryGetValue(cacheKey, out Namespace? cached))
-        {
-            return cached!;
-        }
-
-        var entity = await namespaceRepository.GetByNameAsync(name, token);
-
-        cache.Set(cacheKey, entity, TimeSpan.FromHours(1));
-        return entity;
+        var @namespace = await cache.GetOrCreateAsync(cacheKey, 
+            factory: () => namespaceRepository.GetByNameAsync(name, token), new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            }, token);
+        
+        return @namespace;
     }
 
-    public async ValueTask<Namespace> GetDefaultNamespaceAsync(CancellationToken token)
+    public async Task<Namespace> GetDefaultNamespaceAsync(CancellationToken token)
     {
-        if (cache.TryGetValue(DefaultNamespaceCacheKey, out Namespace? cached))
-        {
-            return cached!;
-        }
-
-        var entity = await namespaceRepository.GetDefaultNamespaceAsync(token);
-
-        cache.Set(DefaultNamespaceCacheKey, entity, TimeSpan.FromHours(1));
-        return entity;
+        var @namespace = await cache.GetOrCreateAsync(DefaultNamespaceCacheKey, 
+            factory: () => namespaceRepository.GetDefaultNamespaceAsync(token), new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            }, token);
+        
+        return @namespace;
     }
 
     public Task AddAsync(Namespace entity, CancellationToken token = default)

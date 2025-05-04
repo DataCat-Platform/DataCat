@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.DataSources.Get;
 
 public class GetDataSourceQueryHandler(
     IRepository<DataSource, Guid> dataSourceRepository)
-    : IRequestHandler<GetDataSourceQuery, Result<GetDataSourceResponse>>
+    : IQueryHandler<GetDataSourceQuery, GetDataSourceResponse>
 {
     public async Task<Result<GetDataSourceResponse>> Handle(GetDataSourceQuery request, CancellationToken token)
     {
