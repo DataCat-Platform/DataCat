@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
-import { NotificationChannel } from '../../../features/alerting/notifications-explorer/notifications-explorer.types';
-import { EmailSettings } from '../../../entities/notifications.entities';
+import { EmailSettings, NotificationChannel } from '../../../entities';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { DividerModule } from 'primeng/divider';
@@ -17,6 +16,6 @@ export class EmailChannelComponent {
   @Input() public channel?: NotificationChannel;
 
   protected settingsAsEmailSettings(): EmailSettings {
-    return this.channel?.channelSettings as EmailSettings;
+    return this.channel?.settings as EmailSettings;
   }
 }

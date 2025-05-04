@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { NotificationTemplate } from '../../../features/alerting/notifications-explorer/notifications-explorer.types';
 import { PanelModule } from 'primeng/panel';
 import { TextareaModule } from 'primeng/textarea';
 import { FormsModule } from '@angular/forms';
+import { NotificationTemplate } from '../../../entities';
 
 @Component({
   standalone: true,

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SelectModule } from 'primeng/select';
-import { EmailSettings, NotificationChannelType } from '../../../entities';
+import { EmailSettings, NotificationChannelDriver } from '../../../entities';
 import { EmailSettingsComponent } from '../email-settings/email-settings.component';
 
 @Component({
@@ -10,11 +10,9 @@ import { EmailSettingsComponent } from '../email-settings/email-settings.compone
   imports: [SelectModule, EmailSettingsComponent],
 })
 export class CreateNotificationChannelComponent {
-  protected NotificationChannelType = NotificationChannelType;
-  protected notificationChannelType: NotificationChannelType =
-    NotificationChannelType.EMAIL;
+  protected NotificationChannelDriver = NotificationChannelDriver;
+  protected notificationChannelType: NotificationChannelDriver =
+    NotificationChannelDriver.EMAIL;
 
-  protected setSettings(settings: EmailSettings) {
-
-  }
+  protected setSettings(settings: EmailSettings) {}
 }

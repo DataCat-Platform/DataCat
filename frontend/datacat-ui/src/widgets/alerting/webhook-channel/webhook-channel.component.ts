@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
-import { NotificationChannel } from '../../../features/alerting/notifications-explorer/notifications-explorer.types';
-import { WebhookSettings } from '../../../entities/notifications.entities';
+import { NotificationChannel, WebhookSettings } from '../../../entities';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { DividerModule } from 'primeng/divider';
@@ -17,6 +16,6 @@ export class WebhookChannelComponent {
   @Input() public channel?: NotificationChannel;
 
   protected settingsAsWebhookSettings(): WebhookSettings {
-    return this.channel?.channelSettings as WebhookSettings;
+    return this.channel?.settings as WebhookSettings;
   }
 }

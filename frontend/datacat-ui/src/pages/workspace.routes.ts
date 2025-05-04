@@ -15,20 +15,6 @@ export const ROUTES: Routes = [
     canActivate: [namespaceSelectedGuardFn],
     children: [
       {
-        path: urls.DASHBOARDS_EXPLORER_URL,
-        loadComponent: () =>
-          import(
-            '../widgets/dashboards/dashboards-explore/dashboards-explore.component'
-          ).then((m) => m.DashboardsExploreComponent),
-      },
-      {
-        path: urls.DASHBOARD_URL,
-        loadComponent: () =>
-          import('../widgets/dashboards/dashboard/dashboard.component').then(
-            (m) => m.DashboardComponent,
-          ),
-      },
-      {
         path: urls.SETTINGS_URL,
         loadComponent: () =>
           import('../processes/settings/settings.component').then(

@@ -26,7 +26,7 @@ export enum NotificationChannelDriver {
   TELEGRAM = 'telegram',
 };
 
-export type NotificationChannelSettings = EmailSettings;
+export type NotificationChannelSettings = EmailSettings | WebhookSettings | TelegramSettings;
 
 export type NotificationChannel = {
   id: string;

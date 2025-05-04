@@ -1,10 +1,10 @@
 <p-select> </p-select>
 @switch (notificationChannelType) {
-  @case (NotificationChannelType.EMAIL) {
+  @case (NotificationChannelDriver.EMAIL) {
     <datacat-email-settings (settings)="setSettings($event)" />
   }
-  @case (NotificationChannelType.TELEGRAM) {}
-  @case (NotificationChannelType.WEBHOOK) {}
+  @case (NotificationChannelDriver.TELEGRAM) {}
+  @case (NotificationChannelDriver.WEBHOOK) {}
   @default {
     <!-- TODO -->
   }

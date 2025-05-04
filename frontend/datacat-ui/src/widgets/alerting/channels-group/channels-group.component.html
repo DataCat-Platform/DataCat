@@ -9,21 +9,21 @@
     </div>
   </ng-template>
   <div class="channels-container">
-    @for (channel of channelsGroup?.channels; track $index) {
+    <!-- @for (channel of channelsGroup?.notificationChannelsIds; track $index) {
       @switch (channel.type) {
-        @case (NotificationChannelType.EMAIL) {
+        @case (NotificationChannelDriver.EMAIL) {
           <datacat-email-channel [channel]="channel" />
         }
-        @case (NotificationChannelType.TELEGRAM) {
+        @case (NotificationChannelDriver.TELEGRAM) {
           <datacat-telegram-channel [channel]="channel" />
         }
-        @case (NotificationChannelType.WEBHOOK) {
+        @case (NotificationChannelDriver.WEBHOOK) {
           <datacat-webhook-channel [channel]="channel" />
         }
         @default {
-          <!-- TODO -->
+
         }
       }
-    }
+    } -->
   </div>
 </p-panel>

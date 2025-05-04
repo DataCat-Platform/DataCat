@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Panel } from 'primeng/panel';
 import { TabsModule } from 'primeng/tabs';
-import { NotificationChannelType } from '../../../entities';
-import { NotificationsExplorerService } from '../../../features/alerting/notifications-explorer/notifications-explorer.service';
 import {
-  NotificationChannelsGroup,
+  NotificationChannelDriver,
+  NotificationGroup,
   NotificationTemplate,
-} from '../../../features/alerting/notifications-explorer/notifications-explorer.types';
+} from '../../../entities';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ChannelsGroupComponent } from '../channels-group/channels-group.component';
 import { NotificationTemplateComponent } from '../notification-template/notification-template.component';
@@ -29,25 +28,12 @@ import { ButtonModule } from 'primeng/button';
   ],
 })
 export class NotificationChannelsComponent implements OnInit {
-  protected NotificationChannelType = NotificationChannelType;
+  protected NotificationChannelDriver = NotificationChannelDriver;
 
-  protected channelsGroups?: NotificationChannelsGroup[];
+  protected channelsGroups?: NotificationGroup[];
   protected notificationTemplates?: NotificationTemplate[];
 
-  constructor(
-    private notificationsExplorerService: NotificationsExplorerService,
-  ) {}
+  constructor() {}
 
-  ngOnInit() {
-    this.notificationsExplorerService.refreshNotificationTemplates();
-    this.notificationsExplorerService.refreshChannelsGroups();
-    this.notificationsExplorerService.channelsGroups$.subscribe((groups) => {
-      this.channelsGroups = groups;
-    });
-    this.notificationsExplorerService.notificationTemplates$.subscribe(
-      (templates) => {
-        this.notificationTemplates = templates;
-      },
-    );
-  }
+  ngOnInit() {}
 }

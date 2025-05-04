@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { NotificationChannelsGroup } from '../../../features/alerting/notifications-explorer/notifications-explorer.types';
 import { EmailChannelComponent } from '../email-channel/email-channel.component';
 import { WebhookChannelComponent } from '../webhook-channel/webhook-channel.component';
 import { TelegramChannelComponent } from '../telegram-channel/telegram-channel.component';
-import { NotificationChannelType } from '../../../entities';
+import { NotificationChannelDriver, NotificationGroup } from '../../../entities';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 
@@ -21,7 +20,7 @@ import { ButtonModule } from 'primeng/button';
   ],
 })
 export class ChannelsGroupComponent {
-  protected NotificationChannelType = NotificationChannelType;
+  protected NotificationChannelDriver = NotificationChannelDriver;
 
-  @Input() public channelsGroup?: NotificationChannelsGroup;
+  @Input() public channelsGroup?: NotificationGroup;
 }
