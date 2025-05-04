@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - *(datacat-server)* Complete jaeger (traces) integration
 - *(datacat-server)* Complete security module
 - *(datacat-server)* Add distributed caching module, fix some security issues
+- *(datacat-server)* Add server custom metrics
 
 ### 🚜 Refactor
 
