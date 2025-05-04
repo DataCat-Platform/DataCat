@@ -1,0 +1,25 @@
+<p-button label="Delete" severity="danger" (onClick)="showDeletionDialog()" />
+<p-dialog
+  header="Delete alert?"
+  [(visible)]="isDeletionDialogVisible"
+  [closable]="false"
+  [modal]="true"
+>
+  <p>Are you sure you want to delete this alert?</p>
+  @if (isDeletionError) {
+    <p class="text-secondary error">Unable to delete alert</p>
+  }
+  <div class="actions-container">
+    <p-button
+      label="Cancel"
+      severity="secondary"
+      (onClick)="hideDeletionDialog()"
+    />
+    <p-button
+      [loading]="isDeletionInitiated"
+      label="Delete"
+      severity="danger"
+      (onClick)="deleteAlert()"
+    />
+  </div>
+</p-dialog>

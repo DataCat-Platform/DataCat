@@ -7,6 +7,8 @@
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel value="0">
+        <p-button label="Create channels group" severity="secondary" />
+        <p-button label="Create channel" severity="secondary" />
         <p-scroll-panel>
           <div class="channels-container">
             @for (channelsGroup of channelsGroups; track $index) {

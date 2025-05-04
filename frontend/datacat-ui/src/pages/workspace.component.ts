@@ -14,8 +14,8 @@ import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { MenuItem, TreeNode } from 'primeng/api';
 import { Location } from '@angular/common';
-import { PathToActivityComponent } from '../widgets/common/path-to-activity.component';
-import * as urls from '../entities/urls';
+import { PathToActivityComponent } from '../widgets/workspace/breadcrumb/breadcrumb.component';
+import * as urls from '../shared/common/urls';
 
 interface TreeMenuNodeData {
   url?: string;

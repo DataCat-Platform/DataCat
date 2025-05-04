@@ -699,17 +699,17 @@ export const DATACAT_PRIMENG_PRESET = definePreset(Aura, {
         radius: '{borderRadius.lg}',
       },
     },
-    button: {
-      padding: {
-        x: '{padding.lg}',
-        y: '{padding.sm}',
-      },
-      icon: {
-        only: {
-          width: '1.8rem',
-        },
-      },
-    },
+    // button: {
+    //   padding: {
+    //     x: '{padding.lg}',
+    //     y: '{padding.sm}',
+    //   },
+    //   icon: {
+    //     only: {
+    //       width: '1.8rem',
+    //     },
+    //   },
+    // },
     panel: {
       content: {
         padding: '{padding.none}',
@@ -727,10 +727,8 @@ export const DATACAT_PRIMENG_PRESET = definePreset(Aura, {
         },
       },
     },
-    divider: {
-      horizontal: {
-        margin: '0',
-      },
+    fieldset: {
+      padding: '{padding.none} {padding.md}',
     },
   },
 });

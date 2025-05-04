@@ -2,7 +2,6 @@ import { ChannelSettings, NotificationChannelType } from '../../../entities';
 import { NotificationTemplateType } from '../../../entities';
 
 export type NotificationChannel = {
-  id: string;
   type: NotificationChannelType;
   channelSettings: ChannelSettings;
   lastDeliveryAttempt?: number;

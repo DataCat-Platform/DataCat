@@ -1,1 +1,1 @@
-export { CreateAlertService } from './create-alert.service';
+export { CreateAlertButtonComponent } from './create-alert-button.component';

@@ -1,0 +1,9 @@
+.actions-box {
+  display: flex;
+  gap: var(--p-padding-md);
+  justify-content: space-between;
+}
+
+.item {
+  margin-bottom: var(--p-padding-md);
+}

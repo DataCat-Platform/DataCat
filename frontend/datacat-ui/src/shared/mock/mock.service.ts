@@ -7,8 +7,8 @@ import {
   NotificationChannelType,
   NotificationTemplateType,
 } from '../../entities';
-import { AlertInList } from '../../features/alerting/alerts-explorer/alerts-explorer.types';
 import { NotificationTemplate } from '../../features/alerting/notifications-explorer/notifications-explorer.types';
+import { Alert } from '../../entities/alerting';
 
 @Injectable({
   providedIn: 'root',
@@ -71,21 +71,19 @@ export class MockService {
     };
   }
 
-  public getRandomAlertInList(): AlertInList {
-    const statusIndex = Math.floor(
-      Math.random() * Object.values(AlertStatus).length,
-    );
+  public getRandomAlert(): Alert {
+    const statuses = Object.values(AlertStatus);
     return {
-      id: Math.floor(Math.random() * 1000).toString(),
-      description: 'Description',
-      query: 'Query',
-      status: Object.values(AlertStatus)[statusIndex],
-      dataSource: this.getRandomDataSource(),
-      notificationChannel: this.getRandomNotificationChannel(),
-      previousExecutionTime: Math.floor(Math.random() * 1000),
-      nextExecutionTime: Math.floor(Math.random() * 1000),
-      notificationTriggerPeriod: Math.floor(Math.random() * 1000),
-      executionInterval: Math.floor(Math.random() * 1000),
+      id: 'id',
+      description: 'description',
+      query: 'query',
+      status: statuses[Math.floor(Math.random() * statuses.length)],
+      dataSourceId: '0',
+      notificationGroupId: '0',
+      prevExecutionTime: Date.now(),
+      nextExecutionTime: Date.now(),
+      notificationTriggerPeriod: 60,
+      executionInterval: 10,
     };
   }
 }

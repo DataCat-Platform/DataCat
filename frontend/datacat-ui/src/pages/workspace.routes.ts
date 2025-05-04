@@ -1,12 +1,14 @@
 import { Routes } from '@angular/router';
 import { namespaceSelectedGuardFn } from '../shared/guards/namespace-selected.guard';
-import * as urls from '../entities/urls';
+import * as urls from '../shared/common/urls';
 
 export const ROUTES: Routes = [
   {
     path: urls.HOME_URL,
     loadComponent: () =>
-      import('../widgets/home/home.component').then((m) => m.HomeComponent),
+      import('../widgets/workspace/home/home.component').then(
+        (m) => m.HomeComponent,
+      ),
   },
   {
     path: '',
@@ -29,22 +31,29 @@ export const ROUTES: Routes = [
       {
         path: urls.SETTINGS_URL,
         loadComponent: () =>
-          import('../widgets/settings/settings.component').then(
+          import('../processes/settings/settings.component').then(
             (m) => m.SettingsComponent,
           ),
       },
       {
         path: urls.ALERTS_EXPLORER_URL,
         loadComponent: () =>
-          import(
-            '../widgets/alerting/alerts-explorer/alerts-explorer.component'
-          ).then((m) => m.AlertsExplorerComponent),
+          import('../processes/explore-alerts/alerts-explorer.component').then(
+            (m) => m.AlertsExplorerComponent,
+          ),
       },
       {
         path: urls.ALERT_EDIT_URL,
         loadComponent: () =>
-          import('../widgets/alerting/alert-edit/alert-edit.component').then(
-            (m) => m.AlertEditComponent,
+          import('../processes/manage-alert/manage-alert.component').then(
+            (m) => m.ManageAlertComponent,
+          ),
+      },
+      {
+        path: urls.ALERT_VIEW_URL,
+        loadComponent: () =>
+          import('../processes/view-alert/view-alert.component').then(
+            (m) => m.ViewAlertComponent,
           ),
       },
       {
@@ -53,13 +62,6 @@ export const ROUTES: Routes = [
           import(
             '../widgets/alerting/notifications-explorer/notifications-explorer.component'
           ).then((m) => m.NotificationChannelsComponent),
-      },
-      {
-        path: urls.ADMIN_URL,
-        loadComponent: () =>
-          import('../widgets/admin/admin.component').then(
-            (m) => m.AdminComponent,
-          ),
       },
     ],
   },

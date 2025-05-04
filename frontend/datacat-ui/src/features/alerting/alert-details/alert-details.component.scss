@@ -1,0 +1,18 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  padding: var(--p-padding-md);
+  gap: var(--p-padding-md);
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--p-padding-xs);
+  }
+}
+
+.align {
+  display: flex;
+  align-items: center;
+  gap: var(--p-padding-md);
+}
