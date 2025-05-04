@@ -4,4 +4,4 @@ public sealed record SearchDataSourcesQuery(
     int Page, 
     int PageSize, 
     string? Filter)
-    : IRequest<Result<Page<SearchDataSourcesResponse>>>, ISearchQuery, IAuthorizedQuery;
+    : IQuery<Page<SearchDataSourcesResponse>>, ISearchQuery, IAuthorizedQuery;

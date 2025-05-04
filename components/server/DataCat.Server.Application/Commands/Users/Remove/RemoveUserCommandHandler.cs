@@ -1,8 +1,9 @@
 namespace DataCat.Server.Application.Commands.Users.Remove;
 
+[Obsolete("Outdated feature")]
 public sealed class RemoveUserCommandHandler(
     IUserRepository userRepository)
-    : IRequestHandler<RemoveUserCommand, Result>
+    : ICommandHandler<RemoveUserCommand>
 {
     public async Task<Result> Handle(RemoveUserCommand request, CancellationToken token)
     {

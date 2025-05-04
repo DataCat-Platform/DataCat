@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.NotificationDestinations.Get;
 
 public sealed class GetNotificationDestinationQueryHandler(
     IDataSourceTypeRepository dataSourceTypeRepository) 
-    : IRequestHandler<GetNotificationDestinationQuery, Result<GetNotificationDestinationResponse>>
+    : IQueryHandler<GetNotificationDestinationQuery, GetNotificationDestinationResponse>
 {
     public async Task<Result<GetNotificationDestinationResponse>> Handle(GetNotificationDestinationQuery request, CancellationToken cancellationToken)
     {

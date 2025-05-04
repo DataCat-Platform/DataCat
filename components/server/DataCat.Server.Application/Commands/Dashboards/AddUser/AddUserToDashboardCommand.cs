@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.Dashboards.AddUser;
 
-public sealed record AddUserToDashboardCommand : IRequest<Result>, IAuthorizedCommand
+public sealed record AddUserToDashboardCommand : ICommand, IAuthorizedCommand
 {
     public required string DashboardId { get; init; }
 

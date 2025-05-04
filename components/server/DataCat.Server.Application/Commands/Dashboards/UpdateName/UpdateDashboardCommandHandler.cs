@@ -3,7 +3,7 @@ namespace DataCat.Server.Application.Commands.Dashboards.UpdateName;
 public sealed class UpdateDashboardCommandHandler(
     IRepository<Dashboard, Guid> dashboardBaseRepository,
     IDashboardRepository dashboardRepository)
-    : IRequestHandler<UpdateDashboardCommand, Result>
+    : ICommandHandler<UpdateDashboardCommand>
 {
     public async Task<Result> Handle(UpdateDashboardCommand request, CancellationToken cancellationToken)
     {

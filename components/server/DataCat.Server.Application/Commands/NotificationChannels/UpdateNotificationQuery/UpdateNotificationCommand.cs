@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.NotificationChannels.UpdateNotificationQuery;
 
-public sealed record UpdateNotificationCommand : IRequest<Result>, IAdminRequest
+public sealed record UpdateNotificationCommand : ICommand, IAdminRequest
 {
     public required string NotificationChannelId { get; init; }
     

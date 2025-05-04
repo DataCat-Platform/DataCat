@@ -4,7 +4,7 @@ public sealed class UpdateAlertQueryCommandHandler(
     IRepository<Alert, Guid> alertBaseRepository,
     IAlertRepository alertRepository,
     IRepository<DataSource, Guid> dataSourceRepository)
-    : IRequestHandler<UpdateAlertQueryCommand, Result>
+    : ICommandHandler<UpdateAlertQueryCommand>
 {
     public async Task<Result> Handle(UpdateAlertQueryCommand request, CancellationToken cancellationToken)
     {

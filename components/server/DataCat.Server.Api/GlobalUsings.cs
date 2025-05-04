@@ -4,6 +4,7 @@ global using System.Security.Authentication;
 global using System.Text.Json.Serialization;
 global using Asp.Versioning;
 global using Asp.Versioning.ApiExplorer;
+global using DataCat.Aspire.ServiceDefaults;
 global using DataCat.Auth.Keycloak;
 global using DataCat.Export.Metrics.V1;
 global using DataCat.Server.Api;
@@ -24,8 +25,10 @@ global using DataCat.Server.Application.Commands.NotificationDestinations.Remove
 global using DataCat.Server.Application.Commands.Users.Login;
 global using DataCat.Server.Application.Enums;
 global using DataCat.Server.Application.Queries.Common;
+global using DataCat.Server.Application.Queries.Dashboards.GetFullInfo;
 global using DataCat.Server.Application.Queries.DataSources.Get;
 global using DataCat.Server.Application.Queries.DataSourceTypes.Get;
+global using DataCat.Server.Application.Queries.Namespaces.GetByName;
 global using DataCat.Server.Application.Queries.NotificationDestinations.Get;
 global using DataCat.Server.Application.Security;
 global using DataCat.Server.Application.Telemetry.Logs.Models;

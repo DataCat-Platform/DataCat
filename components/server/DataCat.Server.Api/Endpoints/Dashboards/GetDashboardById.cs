@@ -1,3 +1,4 @@
+using DataCat.Server.Application.Queries.Common.Responses;
 using DataCat.Server.Application.Queries.Dashboards.Get;
 
 namespace DataCat.Server.Api.Endpoints.Dashboards;
@@ -17,7 +18,7 @@ public sealed class GetDashboardById : ApiEndpointBase
             })
             .WithTags(ApiTags.Dashboards)
             .HasApiVersion(ApiVersions.V1)
-            .Produces<GetDashboardResponse>()
+            .Produces<DashboardResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 

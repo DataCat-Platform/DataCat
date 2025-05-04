@@ -22,6 +22,14 @@ public sealed class VaultRegisterPlugin : ISecretsPlugin
         
         services.AddSingleton<VaultSecretConnectionOptions>(sp => sp.GetRequiredService<IOptions<VaultSecretConnectionOptions>>().Value);
         
+        services.AddSingleton<VaultMetricsContainer>();
+
+        services.AddOpenTelemetry()
+            .ConfigureResource(configure => configure
+                .AddService(VaultMetricsConstants.ServiceName))
+            .WithMetrics(configure => configure
+                .AddMeter(VaultMetricsConstants.MeterName));
+        
         return services;
     }
 }

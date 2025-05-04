@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Commands.Users.Login;
 
 public sealed class LoginUserCommandHandler(
     IJwtService jwtService)
-    : IRequestHandler<LoginUserCommand, Result<AccessTokenResponse>>
+    : ICommandHandler<LoginUserCommand, AccessTokenResponse>
 {
     public async Task<Result<AccessTokenResponse>> Handle(
         LoginUserCommand request,

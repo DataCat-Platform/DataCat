@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.DataSourceTypes.Get;
 
 public sealed class GetDataSourceTypeQueryHandler(
     IDataSourceTypeRepository dataSourceTypeRepository) 
-    : IRequestHandler<GetDataSourceTypeQuery, Result<GetDataSourceTypeResponse>>
+    : IQueryHandler<GetDataSourceTypeQuery, GetDataSourceTypeResponse>
 {
     public async Task<Result<GetDataSourceTypeResponse>> Handle(GetDataSourceTypeQuery request, CancellationToken cancellationToken)
     {

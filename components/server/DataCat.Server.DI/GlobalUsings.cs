@@ -1,6 +1,7 @@
 // Global using directives
 
 global using System.Reflection;
+global using DataCat.Caching.Redis;
 global using DataCat.Logs.ElasticSearch;
 global using DataCat.Metrics.Prometheus;
 global using DataCat.Notifications.Email;
@@ -19,6 +20,7 @@ global using DataCat.Server.Infrastructure.Migrations;
 global using DataCat.Server.Infrastructure.Options;
 global using DataCat.Server.Infrastructure.Repositories;
 global using DataCat.Server.PDK;
+global using DataCat.Server.Telemetry;
 global using DataCat.Storage.Postgres.Services;
 global using DataCat.Traces.Jaeger;
 global using FluentValidation;
@@ -26,6 +28,7 @@ global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Options;
 global using Quartz;
 global using Serilog;

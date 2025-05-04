@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.Plugins.Search;
 
 public sealed class SearchPluginsQueryHandler(
     IPluginRepository pluginRepository)
-    : IRequestHandler<SearchPluginsQuery, Result<Page<SearchPluginsResponse>>>
+    : IQueryHandler<SearchPluginsQuery, Page<SearchPluginsResponse>>
 {
     public async Task<Result<Page<SearchPluginsResponse>>> Handle(SearchPluginsQuery request, CancellationToken token)
     {

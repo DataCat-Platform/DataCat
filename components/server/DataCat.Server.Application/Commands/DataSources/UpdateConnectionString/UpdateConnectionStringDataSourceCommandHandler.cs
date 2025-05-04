@@ -4,7 +4,7 @@ public sealed class UpdateConnectionStringDataSourceCommandHandler(
     IRepository<DataSource, Guid> dataSourceBaseRepository,
     IDataSourceRepository dataSourceRepository,
     DataSourceContainer container)
-    : IRequestHandler<UpdateConnectionStringDataSourceCommand, Result>
+    : ICommandHandler<UpdateConnectionStringDataSourceCommand>
 {
     public async Task<Result> Handle(UpdateConnectionStringDataSourceCommand request, CancellationToken cancellationToken)
     {

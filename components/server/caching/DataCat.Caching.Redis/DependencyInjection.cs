@@ -18,7 +18,7 @@ public static class DependencyInjection
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        services.ConfigureOptions<ConfigureRedisOptions>();
+        services.ConfigureOptions<ConfigureRedisOptionsSetup>();
         
         services.AddStackExchangeRedisCache(_ => {});
 

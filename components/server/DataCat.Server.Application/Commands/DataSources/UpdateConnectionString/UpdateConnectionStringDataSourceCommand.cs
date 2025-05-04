@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.DataSources.UpdateConnectionString;
 
-public sealed record UpdateConnectionStringDataSourceCommand : IRequest<Result>, IAdminRequest
+public sealed record UpdateConnectionStringDataSourceCommand : ICommand, IAdminRequest
 {
     public required string DataSourceName { get; init; }
 

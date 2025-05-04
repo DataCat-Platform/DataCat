@@ -3,7 +3,8 @@ namespace DataCat.Server.Application.Telemetry;
 public sealed class DataSourceContainerLoaderJob(
     DataSourceContainer container, 
     IServiceProvider serviceProvider, 
-    ILogger<DataSourceContainerLoaderJob> logger) : BaseBackgroundWorker(logger)
+    ILogger<DataSourceContainerLoaderJob> logger,
+    IMetricsContainer metricsContainer) : BaseBackgroundWorker(logger, metricsContainer)
 {
     protected override string JobName => nameof(DataSourceContainerLoaderJob);
 

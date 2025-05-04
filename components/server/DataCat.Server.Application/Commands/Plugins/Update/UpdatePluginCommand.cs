@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.Plugins.Update;
 
-public sealed record UpdatePluginCommand : IRequest<Result>, IAdminRequest
+public sealed record UpdatePluginCommand : ICommand, IAdminRequest
 {
     public required string PluginId { get; init; }
     

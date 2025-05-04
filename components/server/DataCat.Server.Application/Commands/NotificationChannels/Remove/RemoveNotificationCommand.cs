@@ -1,3 +1,3 @@
 namespace DataCat.Server.Application.Commands.NotificationChannels.Remove;
 
-public sealed record RemoveNotificationCommand(string NotificationId) : IRequest<Result>, IAdminRequest;
+public sealed record RemoveNotificationCommand(string NotificationId) : ICommand, IAdminRequest;

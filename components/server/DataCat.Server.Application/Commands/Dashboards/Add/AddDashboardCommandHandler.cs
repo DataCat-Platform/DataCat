@@ -5,7 +5,7 @@ public sealed class AddDashboardCommandHandler(
     IRepository<User, Guid> userRepository,
     IRepository<Namespace, Guid> defaultNamespaceRepository,
     INamespaceRepository namespaceRepository)
-    : IRequestHandler<AddDashboardCommand, Result<Guid>>
+    : ICommandHandler<AddDashboardCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AddDashboardCommand request, CancellationToken cancellationToken)
     {

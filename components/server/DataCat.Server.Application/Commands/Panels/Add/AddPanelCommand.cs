@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.Panels.Add;
 
-public sealed record AddPanelCommand : IRequest<Result<Guid>>, IAuthorizedCommand
+public sealed record AddPanelCommand : ICommand<Guid>, IAuthorizedCommand
 {
     public required string Title { get; init; }
 

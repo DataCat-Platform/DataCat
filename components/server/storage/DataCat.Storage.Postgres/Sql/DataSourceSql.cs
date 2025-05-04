@@ -9,7 +9,6 @@ public static class DataSourceSql
                 COUNT(*)
            FROM {Public.DataSourceTable}
            WHERE {Public.DataSources.Name} ILIKE @p_name
-           LIMIT @limit OFFSET @offset
        """;
         
         public const string SearchDataSources = $"""

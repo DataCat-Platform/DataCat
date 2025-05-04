@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Queries.Dashboards.GetFullInfo;
-
 namespace DataCat.Server.Api.Endpoints.Dashboards;
 
 public sealed class GetFullDashboardInfo : ApiEndpointBase

@@ -3,7 +3,7 @@ namespace DataCat.Server.Application.Commands.Plugins.Add;
 public sealed class AddPluginCommandHandler(
     IRepository<Plugin, Guid> pluginRepository,
     IPluginStorage blobPlugin)
-    : IRequestHandler<AddPluginCommand, Result<Guid>>
+    : ICommandHandler<AddPluginCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AddPluginCommand request, CancellationToken token)
     {

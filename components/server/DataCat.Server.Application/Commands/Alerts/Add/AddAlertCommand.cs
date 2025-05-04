@@ -1,6 +1,6 @@
 namespace DataCat.Server.Application.Commands.Alerts.Add;
 
-public sealed record AddAlertCommand : IRequest<Result<Guid>>, IAuthorizedCommand
+public sealed record AddAlertCommand : ICommand<Guid>, IAuthorizedCommand
 {
     public required string? Description { get; init; }
     

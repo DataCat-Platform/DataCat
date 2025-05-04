@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Queries.Dashboards.Search;
 
 public class SearchDashboardsQueryHandler(
     IDashboardRepository dashboardRepository)
-    : IRequestHandler<SearchDashboardsQuery, Result<Page<SearchDashboardsResponse>>>
+    : IQueryHandler<SearchDashboardsQuery, Page<SearchDashboardsResponse>>
 {
     public async Task<Result<Page<SearchDashboardsResponse>>> Handle(SearchDashboardsQuery request, CancellationToken token)
     {

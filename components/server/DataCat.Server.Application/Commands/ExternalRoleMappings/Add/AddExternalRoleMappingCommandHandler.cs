@@ -3,7 +3,7 @@ namespace DataCat.Server.Application.Commands.ExternalRoleMappings.Add;
 public sealed class AddExternalRoleMappingCommandHandler(
     IExternalRoleMappingRepository externalRoleMappingRepository,
     INamespaceService namespaceService)
-    : IRequestHandler<AddExternalRoleMappingCommand, Result>
+    : ICommandHandler<AddExternalRoleMappingCommand>
 {
     public async Task<Result> Handle(AddExternalRoleMappingCommand request, CancellationToken cancellationToken)
     {

@@ -6,13 +6,20 @@ public sealed class UserRoleSynchronizationJob(
     HttpClient httpClient,
     IUserRepository userRepository,
     IJwtService jwtService,
-    IUnitOfWork<IDbTransaction> unitOfWork)
-    : BaseBackgroundWorker(logger)
+    IUnitOfWork<IDbTransaction> unitOfWork,
+    IMetricsContainer metricsContainer,
+    KeycloakMetricsContainer keycloakMetricsContainer)
+    : BaseBackgroundWorker(logger, metricsContainer)
 {
+    private const string RoleMappingsKeycloakEndpoint = "role-mappings";
+    
     protected override string JobName => nameof(UserRoleSynchronizationJob);
     
     protected override async Task RunAsync(CancellationToken stoppingToken = default)
     {
+        var stopwatch = Stopwatch.StartNew();
+        keycloakMetricsContainer.AddRoleSyncOperation();
+        
         await unitOfWork.StartTransactionAsync(stoppingToken);
         
         var user = await userRepository.GetOldestByUpdatedAtUserAsync(stoppingToken);
@@ -20,6 +27,7 @@ public sealed class UserRoleSynchronizationJob(
         if (user is null)
         {
             logger.LogWarning("[{Job}] No stale users were found to process", nameof(UserRoleSynchronizationJob));
+            keycloakMetricsContainer.AddRoleSyncFailure();
             return;
         }
         
@@ -28,6 +36,7 @@ public sealed class UserRoleSynchronizationJob(
         if (tokenResult.IsFailure)
         {
             logger.LogError("[{Job}] Error was occured. Error: {@Errors}", nameof(UserRoleSynchronizationJob), tokenResult.Errors);
+            keycloakMetricsContainer.AddRoleSyncFailure();
             return;
         }
         
@@ -36,12 +45,20 @@ public sealed class UserRoleSynchronizationJob(
 
         try
         {
+            keycloakMetricsContainer.AddKeycloakApiCall(RoleMappingsKeycloakEndpoint);
+            
+            var apiStopwatch = Stopwatch.StartNew();
             using var response = await httpClient.SendAsync(request, stoppingToken);
-
+            apiStopwatch.Stop();
+            
             if (!response.IsSuccessStatusCode)
             {
                 logger.LogError("[{Job}] Request failed with status code {StatusCode}. Reason: {ReasonPhrase}",
                     nameof(UserSynchronizationJob), response.StatusCode, response.ReasonPhrase);
+                
+                keycloakMetricsContainer.AddKeycloakApiFailure(RoleMappingsKeycloakEndpoint);
+                keycloakMetricsContainer.AddRoleSyncFailure(); 
+                
                 return;
             }
 
@@ -51,6 +68,8 @@ public sealed class UserRoleSynchronizationJob(
             if (realmMappings is null)
             {
                 logger.LogError("[{Job}] Invalid response from Keycloak", nameof(UserRoleSynchronizationJob));
+                keycloakMetricsContainer.AddKeycloakApiFailure(RoleMappingsKeycloakEndpoint);
+                keycloakMetricsContainer.AddRoleSyncFailure();
                 return;
             }
 
@@ -67,12 +86,21 @@ public sealed class UserRoleSynchronizationJob(
             await userRepository.UpdateUserRolesAsync(user, currentUserRolesFromKeycloak, stoppingToken);
 
             await unitOfWork.CommitAsync(stoppingToken);
+            
+            var duration = stopwatch.ElapsedMilliseconds;
+            keycloakMetricsContainer.AddRolesSynced(currentUserRolesFromKeycloak.Count);
+            keycloakMetricsContainer.RecordRoleSyncDuration(duration, isSuccess: true);
+            keycloakMetricsContainer.RecordKeycloakApiDuration("role-mappings", apiStopwatch.ElapsedMilliseconds, isSuccess: true);
 
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "[{Job}] Exception occurred during user synchronization.", nameof(UserRoleSynchronizationJob));
             await unitOfWork.RollbackAsync(stoppingToken);
+            
+            var duration = stopwatch.ElapsedMilliseconds;
+            keycloakMetricsContainer.AddRoleSyncFailure();
+            keycloakMetricsContainer.RecordRoleSyncDuration(duration, isSuccess: false);
         }
     }
 }

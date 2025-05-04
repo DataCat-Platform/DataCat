@@ -3,7 +3,7 @@ namespace DataCat.Server.Application.Commands.Namespaces.Add;
 public sealed class AddNamespaceCommandHandler(
     IRepository<Namespace, Guid> repository,
     INamespaceRepository namespaceRepository)
-    : IRequestHandler<AddNamespaceCommand, Result<Guid>>
+    : ICommandHandler<AddNamespaceCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AddNamespaceCommand request, CancellationToken cancellationToken)
     {

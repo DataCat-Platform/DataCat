@@ -4,7 +4,7 @@ public sealed class UpdatePanelCommandHandler(
     IRepository<Panel, Guid> panelBaseRepository,
     IPanelRepository panelRepository,
     IRepository<DataSource, Guid> dataSourceRepository)
-    : IRequestHandler<UpdatePanelCommand, Result>
+    : ICommand<UpdatePanelCommand>
 {
     public async Task<Result> Handle(UpdatePanelCommand request, CancellationToken cancellationToken)
     {

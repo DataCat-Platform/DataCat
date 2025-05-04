@@ -18,6 +18,7 @@
     </ItemGroup>
     
     <ItemGroup>
+      <ProjectReference Include="..\aspire\DataCat.Aspire.ServiceDefaults\DataCat.Aspire.ServiceDefaults.csproj" />
       <ProjectReference Include="..\auth\DataCat.Auth.Keycloak\DataCat.Auth.Keycloak.csproj" />
       <ProjectReference Include="..\DataCat.Server.DI\DataCat.Server.DI.csproj" />
       <ProjectReference Include="..\DataCat.Server.Metrics\DataCat.Server.Metrics.csproj" />

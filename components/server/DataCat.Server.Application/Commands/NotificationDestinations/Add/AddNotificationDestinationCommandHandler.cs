@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Commands.NotificationDestinations.Add;
 
 public sealed class AddNotificationDestinationCommandHandler(
     INotificationDestinationRepository notificationDestinationRepository)
-    : IRequestHandler<AddNotificationDestinationCommand, Result<int>>
+    : ICommandHandler<AddNotificationDestinationCommand, int>
 {
     public async Task<Result<int>> Handle(AddNotificationDestinationCommand request, CancellationToken cancellationToken)
     {

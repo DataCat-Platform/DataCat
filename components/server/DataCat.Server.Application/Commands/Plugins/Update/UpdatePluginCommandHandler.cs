@@ -3,7 +3,7 @@ namespace DataCat.Server.Application.Commands.Plugins.Update;
 public sealed class UpdatePluginCommandHandler(
     IRepository<Plugin, Guid> pluginBaseRepository,
     IPluginRepository pluginRepository)
-    : IRequestHandler<UpdatePluginCommand, Result>
+    : ICommandHandler<UpdatePluginCommand>
 {
     public async Task<Result> Handle(UpdatePluginCommand request, CancellationToken token)
     {

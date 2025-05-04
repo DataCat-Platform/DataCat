@@ -4,7 +4,7 @@ public sealed class AddPanelCommandHandler(
     IRepository<Panel, Guid> panelRepository,
     IRepository<DataSource, Guid> dataSourceRepository,
     IRepository<Dashboard, Guid> dashboardRepository)
-    : IRequestHandler<AddPanelCommand, Result<Guid>>
+    : ICommandHandler<AddPanelCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AddPanelCommand request, CancellationToken cancellationToken)
     {

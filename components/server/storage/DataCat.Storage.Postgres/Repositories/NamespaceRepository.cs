@@ -27,7 +27,7 @@ public sealed class NamespaceRepository(
         return result?.RestoreFromSnapshot();
     }
     
-    public async ValueTask<Namespace?> GetByNameAsync(string name, CancellationToken token)
+    public async Task<Namespace?> GetByNameAsync(string name, CancellationToken token)
     {
         var parameters = new { p_name = name };
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -49,7 +49,7 @@ public sealed class NamespaceRepository(
         return result?.RestoreFromSnapshot();
     }
 
-    public async ValueTask<Namespace> GetDefaultNamespaceAsync(CancellationToken token)
+    public async Task<Namespace> GetDefaultNamespaceAsync(CancellationToken token)
     {
         return (await GetByNameAsync(ApplicationConstants.DefaultNamespace, token))!;
     }

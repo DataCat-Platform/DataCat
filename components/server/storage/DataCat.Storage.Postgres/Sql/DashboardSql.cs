@@ -114,5 +114,21 @@ public static class DashboardSql
          WHERE d.{Public.Dashboards.Name} ILIKE @p_name
          LIMIT @limit OFFSET @offset
          """;
+     
+     public const string GetDashboardsByNamespaceId =
+        $"""
+         SELECT
+              -- Dashboard Details
+              dashboards.{Public.Dashboards.Id}           {nameof(DashboardSnapshot.Id)},
+              dashboards.{Public.Dashboards.Name}         {nameof(DashboardSnapshot.Name)},
+              dashboards.{Public.Dashboards.Description}  {nameof(DashboardSnapshot.Description)},
+              dashboards.{Public.Dashboards.OwnerId}      {nameof(DashboardSnapshot.OwnerId)},
+              dashboards.{Public.Dashboards.NamespaceId}  {nameof(DashboardSnapshot.NamespaceId)},
+              dashboards.{Public.Dashboards.CreatedAt}    {nameof(DashboardSnapshot.CreatedAt)},
+              dashboards.{Public.Dashboards.UpdatedAt}    {nameof(DashboardSnapshot.UpdatedAt)}
+         FROM
+              {Public.DashboardTable} dashboards
+         WHERE dashboards.{Public.Dashboards.NamespaceId} = @p_namespace_id
+         """;
      }
 }

@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Commands.DataSourceTypes.Add;
 
 public sealed class AddDataSourceTypeCommandHandler(
     IDataSourceTypeRepository dataSourceTypeRepository) 
-    : IRequestHandler<AddDataSourceTypeCommand, Result<int>>
+    : ICommandHandler<AddDataSourceTypeCommand, int>
 {
     public async Task<Result<int>> Handle(AddDataSourceTypeCommand request, CancellationToken cancellationToken)
     {
