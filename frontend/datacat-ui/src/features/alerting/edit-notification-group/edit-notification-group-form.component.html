@@ -1,17 +1,88 @@
+<form class="add-channel-form">
+  <p-inputgroup>
+    <p-select [options]="drivers" [formControl]="driverControl" />
+    <p-button
+      label="Add channel"
+      severity="secondary"
+      (onClick)="addChannel()"
+    />
+  </p-inputgroup>
+</form>
+
 <form class="form" [formGroup]="form">
   <div class="form__item">
     <p class="text-secondary">Group name</p>
     <input pInputText formControlName="name" />
   </div>
-  <div formArrayName="notificationChannels" class="channels-box">
-    <p-button label="Add channel" severity="secondary" (onClick)="addChannel()" />
 
-    @for (control of notificationChannels.controls; track $index) {
-      <div [formGroup]="control" class="channel-form">
-        <input pInputText formControlName="address" placeholder="Email address" />
+  @if (
+    emailChannels.length + webhookChannels.length + telegramChannels.length !==
+    0
+  ) {
+    <p class="text-secondary">Channels</p>
+  }
+
+  <div class="channels-box">
+    @if (emailChannels.length !== 0) {
+      <div formArrayName="emailChannels" class="channels-box">
+        @for (control of emailChannels.controls; track $index) {
+          <div [formGroup]="control" class="channel-form">
+            <i class="pi pi-envelope text-secondary"></i>
+            <input
+              pInputText
+              formControlName="address"
+              placeholder="Email address"
+            />
+            <p-button
+              [text]="true"
+              icon="pi pi-trash text-secondary"
+              severity="secondary"
+              (onClick)="deleteEmailChannel($index)"
+            />
+          </div>
+        }
+      </div>
+    }
+
+    @if (telegramChannels.length !== 0) {
+      <div formArrayName="telegramChannels" class="channels-box">
+        @for (control of telegramChannels.controls; track $index) {
+          <div [formGroup]="control" class="channel-form">
+            <i class="pi pi-telegram text-secondary"></i>
+            <input
+              pInputText
+              formControlName="username"
+              placeholder="Telegram username"
+            />
+            <p-button
+              [text]="true"
+              icon="pi pi-trash text-secondary"
+              severity="secondary"
+              (onClick)="deleteTelegramChannel($index)"
+            />
+          </div>
+        }
+      </div>
+    }
+
+    @if (webhookChannels.length !== 0) {
+      <div formArrayName="webhookChannels" class="channels-box">
+        @for (control of webhookChannels.controls; track $index) {
+          <div [formGroup]="control" class="channel-form">
+            <i class="pi pi-link text-secondary"></i>
+            <input pInputText formControlName="url" placeholder="Url" />
+            <p-button
+              [text]="true"
+              icon="pi pi-trash text-secondary"
+              severity="secondary"
+              (onClick)="deleteWebhookChannel($index)"
+            />
+          </div>
+        }
       </div>
     }
   </div>
+
   <p-button
     [loading]="isSavingInitiated"
     label="Save"

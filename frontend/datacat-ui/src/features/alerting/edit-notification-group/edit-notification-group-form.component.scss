@@ -14,5 +14,16 @@
 .channels-box {
   display: flex;
   flex-direction: column;
-  gap: var(--p-padding-md);
+  gap: var(--p-padding-sm);
+}
+
+.channel-form {
+  display: flex;
+  gap: var(--p-padding-sm);
+  align-items: center;
+}
+
+.add-channel-form {
+  display: inline-block;
+  margin-bottom: var(--p-padding-md);
 }
