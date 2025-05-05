@@ -25,6 +25,16 @@ All notable changes to this project will be documented in this file.
 - *(datacat-ui)* Add dashboard-list page
 - *(datacat-server)* Implement full integration with keycloak provider
 - *(datacat-server)* Complete elasticsearch integration
+- *(datacat-ui)* Erase Tailwind from project
+- *(datacat-ui)* Tune styles a little bit, work on alerts filtering
+- *(datacat-ui)* Trying to implement filtering component
+- *(datacat-ui)* Make unknown path redirect to home
+- *(datacat-ui)* Alerts explore page 'almost' done
+- *(datacat-ui)* Work on notifications and alerts
+- *(datacat-ui)* Finish alerts (API calls are mocked)
+- *(datacat-ui)* Remove dashboards features (better to start over), clear entities; notification channels will be implemented tomorrow
+- *(datacat-ui)* Add notification templates and notification groups explorer
+- *(datacat-ui)* Working on notifications
 - *(datacat-server)* Add prometheus integration
 - *(datacat-server)* Complete jaeger (traces) integration
 - *(datacat-server)* Complete security module
@@ -34,6 +44,9 @@ All notable changes to this project will be documented in this file.
 ### 🚜 Refactor
 
 - *(datacat-ui)* Delete unnecessary imports
+- *(datacat-ui)* Migrate to FSD architecture
+- *(datacat-ui)* Implement settings theme select option in FSD style
+- *(datacat-ui)* Add alerting entities
 
 ### 📚 Documentation
 
