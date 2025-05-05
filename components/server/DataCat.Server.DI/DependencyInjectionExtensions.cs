@@ -1,3 +1,5 @@
+using DataCat.Notifications.Webhook;
+
 namespace DataCat.Server.DI;
 
 public static class DependencyInjectionExtensions
@@ -24,6 +26,7 @@ public static class DependencyInjectionExtensions
         services.AddSingleton<DataSourceContainer>();
 
         services.AddScoped<INamespaceService, NamespaceService>();
+        services.AddScoped<IVariableService, VariableService>();
         
         services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
         
@@ -120,9 +123,11 @@ public static class DependencyInjectionExtensions
 
         var telegramPlugin = new TelegramPlugin();
         var emailPlugin = new EmailPlugin();
+        var webhookPlugin = new WebhookPlugin();
         
         telegramPlugin.RegisterNotificationDestinationLibrary(services, configuration);
         emailPlugin.RegisterNotificationDestinationLibrary(services, configuration);
+        webhookPlugin.RegisterNotificationDestinationLibrary(services, configuration);
         
         return services;
     }

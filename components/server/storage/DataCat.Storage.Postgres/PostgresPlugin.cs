@@ -18,9 +18,15 @@ public sealed class PostgresPlugin : IDatabasePlugin
         
         services.AddScoped<IRepository<Alert, Guid>, AlertRepository>();
         services.AddScoped<IAlertRepository, AlertRepository>();
+        
+        services.AddScoped<IRepository<Variable, Guid>, VariableRepository>();
+        services.AddScoped<IVariableRepository, VariableRepository>();
 
         services.AddScoped<IRepository<NotificationChannel, Guid>, NotificationChannelRepository>();
         services.AddScoped<INotificationChannelRepository, NotificationChannelRepository>();
+        
+        services.AddScoped<IRepository<NotificationChannelGroup, Guid>, NotificationChannelGroupRepository>();
+        services.AddScoped<INotificationChannelGroupRepository, NotificationChannelGroupRepository>();
         
         services.AddScoped<IRepository<Plugin, Guid>, PluginRepository>();
         services.AddScoped<IPluginRepository, PluginRepository>();
@@ -43,7 +49,9 @@ public sealed class PostgresPlugin : IDatabasePlugin
         });
 
         services.AddScoped<IDbConnectionFactory<NpgsqlConnection>, PostgresConnectionFactory>();
+        
         DefaultTypeMap.MatchNamesWithUnderscores = true;
+        SqlMapper.AddTypeHandler(new TagListTypeHandler());
 
         services.AddSingleton<IDatabaseAssemblyScanner, DatabaseAssemblyScanner>();
 

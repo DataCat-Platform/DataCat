@@ -39,18 +39,18 @@ public sealed class AlertChecker(
         {
             try
             {
-                using var metricClient = dataSourceManager.GetMetricsClient(alert.Query.DataSource.Name);
+                using var metricClient = dataSourceManager.GetMetricsClient(alert.ConditionQuery.DataSource.Name);
                 if (metricClient is null)
                 {
                     logger.LogError(
                         "[{Job}] Failed to create metrics client for DataSource '{DataSourceName}'",
                         nameof(AlertChecker),
-                        alert.Query.DataSource.Name
+                        alert.ConditionQuery.DataSource.Name
                     );
                     return;
                 }
                 
-                var isTriggered = await metricClient.CheckAlertTriggerAsync(alert.Query.RawQuery, token);
+                var isTriggered = await metricClient.CheckAlertTriggerAsync(alert.ConditionQuery.RawQuery, token);
                 if (isTriggered)
                 {
                     metricsContainer.AddAlertTriggered();

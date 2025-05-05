@@ -15,6 +15,7 @@ global using DataCat.Server.Application.Alerts;
 global using DataCat.Server.Application.Auth;
 global using DataCat.Server.Application.Auth.Policies;
 global using DataCat.Server.Application.Behaviors;
+global using DataCat.Server.Application.Caching;
 global using DataCat.Server.Application.Commands.Common;
 global using DataCat.Server.Application.Enums;
 global using DataCat.Server.Application.Persistence;

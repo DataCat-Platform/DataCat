@@ -1,14 +1,14 @@
 namespace DataCat.Server.Application.Queries.NotificationChannels.Get;
 
-public class GetNotificationChannelQueryHandler(
+public sealed class GetNotificationChannelQueryHandler(
     IRepository<NotificationChannel, Guid> notificationChannelRepository)
-    : IQueryHandler<GetNotificationChannelQuery, GetNotificationChannelResponse>
+    : IQueryHandler<GetNotificationChannelQuery, NotificationChannelResponse>
 {
-    public async Task<Result<GetNotificationChannelResponse>> Handle(GetNotificationChannelQuery request, CancellationToken token)
+    public async Task<Result<NotificationChannelResponse>> Handle(GetNotificationChannelQuery request, CancellationToken cancellationToken)
     {
-        var entity = await notificationChannelRepository.GetByIdAsync(request.NotificationChannelId, token);
-        return entity is null 
-            ? Result.Fail<GetNotificationChannelResponse>(NotificationChannelError.NotFound(request.NotificationChannelId.ToString())) 
-            : Result<GetNotificationChannelResponse>.Success(entity.ToResponse());
+        var entity = await notificationChannelRepository.GetByIdAsync(request.Id, cancellationToken);
+        return entity is null
+            ? Result.Fail<NotificationChannelResponse>(NotificationChannelError.NotFound(request.Id))
+            : Result.Success(entity.ToResponse());
     }
 }

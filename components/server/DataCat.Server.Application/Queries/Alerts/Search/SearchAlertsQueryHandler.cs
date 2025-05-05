@@ -7,7 +7,7 @@ public sealed class SearchAlertsQueryHandler(
     public async Task<Result<Page<SearchAlertsResponse>>> Handle(SearchAlertsQuery request, CancellationToken token)
     {
         var result = await alertRepository
-            .SearchAsync(request.Filter, request.Page, request.PageSize, token);
+            .SearchAsync(request.Filters, request.Page, request.PageSize, token);
         
         return Result.Success(result.ToResponsePage(SearchAlertsResponse.ToResponse));
     }

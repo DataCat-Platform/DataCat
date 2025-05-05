@@ -5,14 +5,7 @@ public sealed class MuteAlertCommandValidator : AbstractValidator<MuteAlertComma
     public MuteAlertCommandValidator()
     {
         RuleLevelCascadeMode = CascadeMode.Continue;
-        RuleFor(x => x.Id).NotEmpty()
-            .Custom((input, context) =>
-            {
-                if (!Guid.TryParse(input, out _))
-                {
-                    context.AddFailure("Alert Id must be a Guid");
-                }
-            });
+        RuleFor(x => x.Id).NotEmpty().MustBeGuid();
         RuleFor(x => x.NextExecutionTime).GreaterThan(TimeSpan.Zero);
     }
 }

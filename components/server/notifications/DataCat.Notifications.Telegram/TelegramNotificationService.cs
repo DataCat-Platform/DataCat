@@ -7,22 +7,11 @@ public sealed class TelegramNotificationService(TelegramNotificationOption optio
         Console.WriteLine($"[TelegramNotificationService] Sending notification, {option.Settings}");
         var bot = new TelegramBotClient(option.TelegramToken);
         
-        var message = $"""
-                           🔔 *Alert Notification* 🔔
-                       
-                           *ID:* `{alert.Id}`
-                           *Status:* {alert.Status.Name}
-                           *Description:* {EscapeMarkdown(alert.Description ?? "No description")}
-                           *Query:* `{EscapeMarkdown(alert.Query.RawQuery)}`
-                           *Previous Execution:* `{alert.PreviousExecution.DateTime}`
-                           *Next Execution:* `{alert.NextExecution.DateTime}`
-                           *Repeat Interval:* `{alert.RepeatInterval}`
-                           *Wait Time Before Alerting:* `{alert.WaitTimeBeforeAlerting}`
-                       """;
+        var message = AlertTemplateRenderer.Render(alert.Template ?? string.Empty, alert);
 
         await bot.SendMessage(
             chatId: option.ChatId,
-            text: message,
+            text: EscapeMarkdown(message),
             parseMode: ParseMode.MarkdownV2,
             cancellationToken: token
         );

@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Commands.Alerts.Remove;
-
 namespace DataCat.Server.Api.Endpoints.Alerts;
 
 public sealed class RemoveAlert : ApiEndpointBase

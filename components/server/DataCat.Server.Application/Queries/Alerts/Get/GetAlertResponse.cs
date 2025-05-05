@@ -7,7 +7,7 @@ public sealed record GetAlertResponse
     public required string RawQuery { get; init; }
     public required string Status { get; init; }
     public required DataSourceResponse DataSource { get; init; }
-    public required NotificationChannelResponse NotificationChannel { get; init; }
+    public required NotificationChannelGroupResponse NotificationChannelGroup { get; init; }
     public required DateTime PreviousExecutionTime { get; init; }
     public required DateTime NextExecutionTime { get; init; }
     public required TimeSpan WaitTimeBeforeAlerting { get; init; }
@@ -21,13 +21,13 @@ public static class GetAlertResponseExtensions
         return new GetAlertResponse
         {
             Id = alert.Id,
-            Description = alert.Description,
-            RawQuery = alert.Query.RawQuery,
+            Description = alert.Template,
+            RawQuery = alert.ConditionQuery.RawQuery,
             Status = alert.Status.Name,
-            DataSource = alert.Query.DataSource.ToResponse(),
-            NotificationChannel = alert.NotificationChannel.ToResponse(),
-            WaitTimeBeforeAlerting = alert.WaitTimeBeforeAlerting,
-            RepeatInterval = alert.RepeatInterval,
+            DataSource = alert.ConditionQuery.DataSource.ToResponse(),
+            NotificationChannelGroup = alert.NotificationChannelGroup.ToResponse(),
+            WaitTimeBeforeAlerting = alert.Schedule.WaitTimeBeforeAlerting,
+            RepeatInterval = alert.Schedule.RepeatInterval,
             PreviousExecutionTime = alert.PreviousExecution.DateTime,
             NextExecutionTime = alert.NextExecution.DateTime,
         };

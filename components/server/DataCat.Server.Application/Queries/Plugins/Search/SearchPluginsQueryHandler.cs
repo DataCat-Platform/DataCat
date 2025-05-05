@@ -7,7 +7,7 @@ public sealed class SearchPluginsQueryHandler(
     public async Task<Result<Page<SearchPluginsResponse>>> Handle(SearchPluginsQuery request, CancellationToken token)
     {
         var result = await pluginRepository
-            .SearchAsync(request.Filter, request.Page, request.PageSize, token);
+            .SearchAsync(request.Filters, request.Page, request.PageSize, token);
         
         return Result.Success(result.ToResponsePage(SearchPluginsResponse.ToResponse));
     }

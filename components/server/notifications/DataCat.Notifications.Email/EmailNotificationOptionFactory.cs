@@ -48,9 +48,15 @@ public sealed class EmailNotificationOptionFactory : INotificationOptionFactory
         ISecretsProvider secretsProvider,
         CancellationToken cancellationToken = default)
     {
-        await Task.CompletedTask;
-        return notificationOption is not EmailNotificationOption emailNotificationOption 
-            ? Result.Fail<INotificationService>("Unknown notification option type") 
-            : Result.Success<INotificationService>(new EmailNotificationService(emailNotificationOption));
+        if (notificationOption is not EmailNotificationOption emailNotificationOption)
+        {
+            return Result.Fail<INotificationService>("Invalid notification option type");
+        }
+
+        var password = await secretsProvider.GetSecretAsync(emailNotificationOption.PasswordPath, cancellationToken);
+        emailNotificationOption.Password = password;
+        
+        var telegramService = new EmailNotificationService(emailNotificationOption);
+        return Result.Success<INotificationService>(telegramService);
     }
 }

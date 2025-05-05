@@ -67,6 +67,7 @@ public sealed class AddDashboardCommandHandler(
             sharedWith: [user],
             @namespace.Id,
             DateTime.UtcNow,
-            DateTime.UtcNow);
+            DateTime.UtcNow,
+            request.Tags.Select(x => new Tag(x)).ToList());
     }
 }

@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Commands.DataSources.UpdateConnectionString;
-
 namespace DataCat.Server.Api.Endpoints.DataSources;
 
 public sealed record UpdateDataSourceRequest(string ConnectionString);

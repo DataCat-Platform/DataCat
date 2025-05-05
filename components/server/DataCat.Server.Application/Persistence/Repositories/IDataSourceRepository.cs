@@ -7,7 +7,7 @@ public interface IDataSourceRepository
     Task<IReadOnlyCollection<DataSource>> GetAllAsync(CancellationToken token = default);
     
     Task<Page<DataSource>> SearchAsync(
-        string? filter = null,
+        SearchFilters filters,
         int page = 1,
         int pageSize = 10,
         CancellationToken token = default);

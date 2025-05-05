@@ -4,43 +4,51 @@ public class Alert
 {
     private Alert(
         Guid id,
-        string? description,
-        Query query,
+        string template,
+        Query conditionQuery,
         AlertStatus alertStatus,
-        NotificationChannel notificationChannel,
+        NotificationChannelGroup notificationChannelGroup,
         DateTimeUtc previousExecution,
         DateTimeUtc nextExecution,
-        TimeSpan waitTimeBeforeAlerting,
-        TimeSpan repeatInterval)
+        AlertSchedule schedule,
+        List<Tag> tags)
     {
         Id = id;
-        Description = description;
-        Query = query;
+        Template = template;
+        ConditionQuery = conditionQuery;
         Status = alertStatus;
-        NotificationChannel = notificationChannel;
+        NotificationChannelGroup = notificationChannelGroup;
         PreviousExecution = previousExecution;
         NextExecution = nextExecution;
-        WaitTimeBeforeAlerting = waitTimeBeforeAlerting;
-        RepeatInterval = repeatInterval;
+        Schedule = schedule;
+        _tags = tags;
     }
     
     public Guid Id { get; private set; }
     
-    public string? Description { get; private set; }
+    public string? Template { get; private set; }
     
-    public Query Query { get; private set; }
+    public Query ConditionQuery { get; private set; }
     
     public AlertStatus Status { get; private set; }
     
-    public NotificationChannel NotificationChannel { get; private set; }
+    public NotificationChannelGroup NotificationChannelGroup { get; private set; }
     public DateTimeUtc PreviousExecution { get; private set; }
     public DateTimeUtc NextExecution { get; private set; }
-    public TimeSpan WaitTimeBeforeAlerting { get; private set; }
-    public TimeSpan RepeatInterval { get; private set; }
+    public AlertSchedule Schedule { get; private set; }
+    private readonly List<Tag> _tags;
+    public IReadOnlyCollection<Tag> Tags => _tags.AsReadOnly();
 
-    public void ChangeDescription(string? description) => Description = description;
-    public void ChangeWaitTime(TimeSpan waitTimeBeforeAlerting) => WaitTimeBeforeAlerting = waitTimeBeforeAlerting;
-    public void ChangeRepeatInterval(TimeSpan repeatInterval) => RepeatInterval = repeatInterval;
+    public void ChangeDescription(string? description) => Template = description;
+    public void ChangeWaitTime(TimeSpan waitTimeBeforeAlerting)
+    {
+        Schedule = new AlertSchedule(waitTimeBeforeAlerting, Schedule.RepeatInterval);
+    }
+
+    public void ChangeRepeatInterval(TimeSpan repeatInterval)
+    {
+        Schedule = new AlertSchedule(Schedule.WaitTimeBeforeAlerting, repeatInterval);
+    } 
 
     public void ResetAlert()
     {
@@ -57,13 +65,13 @@ public class Alert
     public void SetWarningStatus()
     {
         Status = AlertStatus.Warning;
-        var nextExecution = DateTime.UtcNow.Add(WaitTimeBeforeAlerting);
+        var nextExecution = DateTime.UtcNow.Add(Schedule.WaitTimeBeforeAlerting);
         UpdateExecutionTimes(nextExecution);
     }
 
     public void CommitAlertExecution()
     {
-        var nextExecution = DateTime.UtcNow.Add(RepeatInterval);
+        var nextExecution = DateTime.UtcNow.Add(Schedule.RepeatInterval);
         UpdateExecutionTimes(nextExecution);
     }
 
@@ -90,28 +98,34 @@ public class Alert
         {
             return Result.Fail(new ErrorInfo("Invalid query entity")); 
         }
-        Query = queryEntity;
+        ConditionQuery = queryEntity;
         return Result.Success();
     }
 
     public static Result<Alert> Create(
         Guid id, 
-        string? description, 
+        string? template, 
         Query? query, 
         AlertStatus? alertStatus,
-        NotificationChannel? notificationChannel,
+        NotificationChannelGroup? notificationChannelGroup,
         DateTimeUtc previousExecution,
         DateTimeUtc nextExecution,
         TimeSpan waitTimeBeforeAlerting,
-        TimeSpan repeatInterval)
+        TimeSpan repeatInterval,
+        List<Tag> tags)
     {
         var validationList = new List<Result<Alert>>();
 
         #region Validation
 
-        if (notificationChannel is null)
+        if (notificationChannelGroup is null)
         {
-            validationList.Add(Result.Fail<Alert>(BaseError.FieldIsNull(nameof(notificationChannel))));
+            validationList.Add(Result.Fail<Alert>(BaseError.FieldIsNull(nameof(notificationChannelGroup))));
+        }
+
+        if (string.IsNullOrWhiteSpace(template))
+        {
+            validationList.Add(Result.Fail<Alert>(BaseError.FieldIsNull(nameof(template))));
         }
         
         if (alertStatus is null)
@@ -139,13 +153,13 @@ public class Alert
             ? validationList.FoldResults()! 
             : Result.Success(
                 new Alert(id, 
-                    description, 
+                    template!, 
                     query!, 
                     alertStatus!, 
-                    notificationChannel!,
+                    notificationChannelGroup!,
                     previousExecution,
                     nextExecution,
-                    waitTimeBeforeAlerting,
-                    repeatInterval));
+                    new AlertSchedule(waitTimeBeforeAlerting, repeatInterval),
+                    tags));
     }
 }

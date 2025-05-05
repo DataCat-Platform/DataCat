@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Queries.Panels.Get;
-
 namespace DataCat.Server.Api.Endpoints.Panels;
 
 public sealed class GetPanelById : ApiEndpointBase

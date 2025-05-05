@@ -1,4 +1,3 @@
 namespace DataCat.Server.Application.Queries.NotificationChannels.Get;
 
-public sealed record GetNotificationChannelQuery(Guid NotificationChannelId)
-    : IQuery<GetNotificationChannelResponse>, IAuthorizedQuery;
+public sealed record GetNotificationChannelQuery(Guid Id) : IQuery<NotificationChannelResponse>, IAuthorizedQuery;

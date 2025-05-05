@@ -2,8 +2,6 @@ namespace DataCat.Server.Domain.Core;
 
 public sealed class Namespace
 {
-    private List<Guid> _dashboardIds { get; }
-
     private Namespace(
         Guid id,
         string name,
@@ -16,7 +14,7 @@ public sealed class Namespace
     
     public Guid Id { get; }
     public string Name { get; private set; }
-
+    private List<Guid> _dashboardIds { get; }
     public IReadOnlyCollection<Guid> DashboardIds => _dashboardIds.AsReadOnly();
 
     public static Result<Namespace> Create(

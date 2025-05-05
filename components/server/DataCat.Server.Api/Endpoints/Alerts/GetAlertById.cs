@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Queries.Alerts.Get;
-
 namespace DataCat.Server.Api.Endpoints.Alerts;
 
 public sealed class GetAlertById : ApiEndpointBase

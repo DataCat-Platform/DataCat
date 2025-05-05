@@ -64,22 +64,48 @@ public sealed class PluginRepository(
     }
 
     public async Task<Page<Plugin>> SearchAsync(
-        string? filter = null, 
-        int page = 1, 
-        int pageSize = 1, 
+        SearchFilters filters,
+        int page = 1,
+        int pageSize = 10,
         CancellationToken token = default)
     {
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        
-        var totalQueryArguments = new { p_name = $"{filter}%" };
-        const string totalCountSql = PluginSql.Select.SearchPluginsTotalCount;
-        var totalCount = await connection.QuerySingleAsync<int>(totalCountSql, totalQueryArguments);
-        
+        var parameters = new DynamicParameters();
+
         var offset = (page - 1) * pageSize;
-        var parameters = new { p_name = $"{filter}%", limit = pageSize, offset = offset };
-        const string sql = PluginSql.Select.SearchPlugins;
-        var result = await connection.QueryAsync<PluginSnapshot>(sql, param: parameters, transaction: UnitOfWork.Transaction);
-        
+        parameters.Add("offset", offset);
+        parameters.Add("limit", pageSize);
+
+        var columnMappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["name"] = $"{Public.Plugins.Name}",
+            ["isEnabled"] = $"{Public.Plugins.IsEnabled}"
+        };
+
+        var countSql = new StringBuilder();
+        countSql.AppendLine(PluginSql.Select.SearchPluginsTotalCount);
+        countSql.BuildQuery(parameters, filters, columnMappings);
+
+        var countSqlString = countSql.ToString();
+        var totalCount = await connection.QuerySingleAsync<int>(
+            countSqlString,
+            parameters,
+            transaction: UnitOfWork.Transaction);
+
+        var dataSql = new StringBuilder();
+        dataSql.AppendLine(PluginSql.Select.SearchPlugins);
+        dataSql
+            .BuildQuery(parameters, filters, columnMappings)
+            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: $"{Public.Plugins.Name}"), columnMappings)
+            .ApplyPagination();
+
+        var dataSqlString = dataSql.ToString();
+
+        var result = await connection.QueryAsync<PluginSnapshot>(
+            dataSqlString, 
+            param: parameters, 
+            transaction: UnitOfWork.Transaction);
+
         var items = result.Select(x => x.RestoreFromSnapshot());
         return new Page<Plugin>(items, totalCount, page, pageSize);
     }

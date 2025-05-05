@@ -75,6 +75,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Aspire.ServiceDefau
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Server.Telemetry", "components\server\DataCat.Server.Telemetry\DataCat.Server.Telemetry.csproj", "{7B0DD30D-E12F-4A88-A1F3-AD61DA91726E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataCat.Notifications.Webhook", "components\server\notifications\DataCat.Notifications.Webhook\DataCat.Notifications.Webhook.csproj", "{A6006E26-9E50-436A-BDA7-E70B5AD3C73F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,6 +117,7 @@ Global
 		{23C94A7C-CB44-408D-A937-208F7ED97524} = {DBA04004-391D-4542-BCD1-F7B582BF4DE9}
 		{F93E266F-DAC4-48DE-9A31-6B1B706960EE} = {DBA04004-391D-4542-BCD1-F7B582BF4DE9}
 		{7B0DD30D-E12F-4A88-A1F3-AD61DA91726E} = {7670EE1F-5E02-4470-83A9-9AF0C981298A}
+		{A6006E26-9E50-436A-BDA7-E70B5AD3C73F} = {A1C8675C-1378-4525-9505-B07200A826D7}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1621F9FE-91B0-4532-BF6B-E1BFDE263D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -205,5 +208,9 @@ Global
 		{7B0DD30D-E12F-4A88-A1F3-AD61DA91726E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B0DD30D-E12F-4A88-A1F3-AD61DA91726E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B0DD30D-E12F-4A88-A1F3-AD61DA91726E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6006E26-9E50-436A-BDA7-E70B5AD3C73F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6006E26-9E50-436A-BDA7-E70B5AD3C73F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6006E26-9E50-436A-BDA7-E70B5AD3C73F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6006E26-9E50-436A-BDA7-E70B5AD3C73F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -17,6 +17,13 @@ public sealed record EmailNotificationOption : BaseNotificationOption
         PasswordPath = passwordPath;
         NotificationDestination = destination;
     }
+    
+    private string? _password;
+    public string Password
+    {
+        get => _password ?? throw new InvalidOperationException("Password is not set.");
+        set => _password = value ?? throw new ArgumentNullException(nameof(value), "Password cannot be null.");
+    }
 
     public string DestinationEmail { get; private set; }
     public string SmtpServer { get; private set; }
@@ -71,6 +78,6 @@ public sealed record EmailNotificationOption : BaseNotificationOption
     public override string ToString()
     {
         const string password = "***";
-        return JsonSerializer.Serialize(new { DestinationEmail, SmtpServer, Port, password });
+        return JsonSerializer.Serialize(new { DestinationEmail, SmtpServer, Port, PasswordPath });
     }
 }

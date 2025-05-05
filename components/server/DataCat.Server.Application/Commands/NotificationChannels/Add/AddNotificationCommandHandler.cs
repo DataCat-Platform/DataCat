@@ -3,27 +3,32 @@ namespace DataCat.Server.Application.Commands.NotificationChannels.Add;
 public sealed class AddNotificationCommandHandler(
     INotificationDestinationRepository notificationDestinationRepository,
     IRepository<NotificationChannel, Guid> notificationChannelRepository,
+    INotificationChannelGroupRepository notificationChannelGroupRepository,
     NotificationChannelManager notificationChannelManager)
-    : ICommandHandler<AddNotificationCommand, Guid>
+    : ICommandHandler<AddNotificationCommand, int>
 {
-    public async Task<Result<Guid>> Handle(AddNotificationCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(AddNotificationCommand request, CancellationToken cancellationToken)
     {
         var destination = await notificationDestinationRepository.GetByNameAsync(request.DestinationTypeName, cancellationToken);
         if (destination is null)
-            return Result.Fail<Guid>(NotificationChannelError.DestinationNotSupported);
+            return Result.Fail<int>(NotificationChannelError.DestinationNotSupported);
 
         var factory = notificationChannelManager.GetNotificationChannelFactory(destination);
         
         var notificationOptionResult = factory.Create(destination, request.Settings);
         if (notificationOptionResult.IsFailure)
-            return Result.Fail<Guid>(notificationOptionResult.Errors!);
+            return Result.Fail<int>(notificationOptionResult.Errors!);
+        
+        var notificationChannelGroup = await notificationChannelGroupRepository.GetByName(request.NotificationChannelGroupName, cancellationToken);
+        if (notificationChannelGroup is null)
+            return Result.Fail<int>(NotificationChannelGroupError.NotFound(request.NotificationChannelGroupName));
 
         var notificationResult = NotificationChannel.Create(
-            Guid.NewGuid(),
+            notificationChannelGroup.Id,
             notificationOptionResult.Value);
         
         if (notificationResult.IsFailure)
-            return Result.Fail<Guid>(notificationResult.Errors!);
+            return Result.Fail<int>(notificationResult.Errors!);
         
         await notificationChannelRepository.AddAsync(notificationResult.Value, cancellationToken);
         return Result.Success(notificationResult.Value.Id);

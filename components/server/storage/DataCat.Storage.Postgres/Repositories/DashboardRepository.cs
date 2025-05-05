@@ -58,7 +58,9 @@ public sealed class DashboardRepository(
                 {Public.Dashboards.OwnerId},
                 {Public.Dashboards.NamespaceId},
                 {Public.Dashboards.CreatedAt}, 
-                {Public.Dashboards.UpdatedAt})
+                {Public.Dashboards.UpdatedAt},
+                {Public.Dashboards.Tags}
+            )
             VALUES 
                 (@{nameof(DashboardSnapshot.Id)}, 
                  @{nameof(DashboardSnapshot.Name)}, 
@@ -66,7 +68,8 @@ public sealed class DashboardRepository(
                  @{nameof(DashboardSnapshot.OwnerId)},
                  @{nameof(DashboardSnapshot.NamespaceId)}, 
                  @{nameof(DashboardSnapshot.CreatedAt)}, 
-                 @{nameof(DashboardSnapshot.UpdatedAt)}
+                 @{nameof(DashboardSnapshot.UpdatedAt)},
+                 @{nameof(DashboardSnapshot.Tags)}
             );
             """;
 
@@ -75,26 +78,52 @@ public sealed class DashboardRepository(
     }
 
     public async Task<Page<Dashboard>> SearchAsync(
-        string? filter = null, 
+        SearchFilters filters,
         int page = 1,
-        int pageSize = 10, 
+        int pageSize = 10,
         CancellationToken token = default)
     {
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        
-        var totalQueryArguments = new { p_name = $"{filter}%" };
-        const string totalCountSql = DashboardSql.Select.SearchDashboardsTotalCount;
-        var totalCount = await connection.QuerySingleAsync<int>(totalCountSql, totalQueryArguments);
-        
+        var parameters = new DynamicParameters();
+
         var offset = (page - 1) * pageSize;
-        var parameters = new { p_name = $"{filter}%", offset = offset, limit = pageSize };
-        const string sql = DashboardSql.Select.SearchDashboards;
+        parameters.Add("offset", offset);
+        parameters.Add("limit", pageSize);
+
+        var columnMappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["id"] = $"dashboard.{Public.Dashboards.Id}",
+            ["name"] = $"dashboard.{Public.Dashboards.Name}",
+            ["ownerId"] = $"dashboard.{Public.Dashboards.OwnerId}",
+            ["namespaceId"] = $"dashboard.{Public.Dashboards.NamespaceId}",
+            ["tags"] = $"dashboard.{Public.Dashboards.Tags}",
+        };
+
+        var countSql = new StringBuilder();
+        countSql.AppendLine(DashboardSql.Select.SearchDashboardsTotalCount);
+        countSql.BuildQuery(parameters, filters, columnMappings);
         
+        var countSqlString = countSql.ToString();
+        
+        var totalCount = await connection.QuerySingleAsync<int>(
+            countSqlString,
+            parameters,
+            transaction: UnitOfWork.Transaction);
+
+        var dataSql = new StringBuilder();
+        dataSql.AppendLine(DashboardSql.Select.SearchDashboards);
+        dataSql
+            .BuildQuery(parameters, filters, columnMappings)
+            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: $"dashboard.{Public.Dashboards.Id}"), columnMappings)
+            .ApplyPagination();
+        
+        var dataSqlString = dataSql.ToString();
+
         var dashboardDictionary = new Dictionary<string, DashboardSnapshot>();
-        
+
         await connection
             .QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DataSourceTypeSnapshot, DashboardSnapshot>(
-                sql,
+                dataSqlString,
                 map: (dashboard, userOwner, panel, sharedUser, dataSource, dataSourceType) =>
                 {
                     if (!dashboardDictionary.TryGetValue(dashboard.Id, out var existingDashboard))
@@ -102,7 +131,7 @@ public sealed class DashboardRepository(
                         dashboard.Owner = userOwner;
                         dashboard.Panels = new List<PanelSnapshot>();
                         dashboard.SharedWith = new List<UserSnapshot>();
-                        dashboardDictionary.Add(dashboard.Id, dashboard);
+                        dashboardDictionary[dashboard.Id] = dashboard;
                         existingDashboard = dashboard;
                     }
 
@@ -125,7 +154,7 @@ public sealed class DashboardRepository(
                 transaction: UnitOfWork.Transaction);
 
         var items = dashboardDictionary.Values.Select(x => x.RestoreFromSnapshot());
-        return new Page<Dashboard>(items, totalCount, PageNumber: offset, pageSize);
+        return new Page<Dashboard>(items, totalCount, page, pageSize);
     }
 
     public async Task<IReadOnlyCollection<DashboardResponse>> GetDashboardsByNamespaceId(Guid id, CancellationToken token = default)
@@ -157,7 +186,8 @@ public sealed class DashboardRepository(
             SET 
                 {Public.Dashboards.Name}         = @{nameof(DashboardSnapshot.Name)},
                 {Public.Dashboards.Description}  = @{nameof(DashboardSnapshot.Description)},
-                {Public.Dashboards.UpdatedAt}    = @{nameof(DashboardSnapshot.UpdatedAt)}
+                {Public.Dashboards.UpdatedAt}    = @{nameof(DashboardSnapshot.UpdatedAt)},
+                {Public.Dashboards.Tags}         = @{nameof(DashboardSnapshot.Tags)}
             WHERE {Public.Dashboards.Id} = @{nameof(DashboardSnapshot.Id)}
         """;
 

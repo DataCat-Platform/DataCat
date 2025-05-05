@@ -2,7 +2,8 @@ namespace DataCat.Server.Application.Telemetry.Metrics.Queries.SearchRangeQuery;
 
 public class SearchMetricsRangeQueryHandler(
     IDataSourceRepository dataSourceRepository,
-    DataSourceManager dataSourceManager) : IRequestHandler<SearchMetricsRangeQuery, Result<IEnumerable<TimeSeries>>>
+    DataSourceManager dataSourceManager,
+    IVariableService variableService) : IRequestHandler<SearchMetricsRangeQuery, Result<IEnumerable<TimeSeries>>>
 {
     public async Task<Result<IEnumerable<TimeSeries>>> Handle(SearchMetricsRangeQuery request, CancellationToken cancellationToken)
     {
@@ -14,7 +15,13 @@ public class SearchMetricsRangeQueryHandler(
         if (searchClient is null)
             return Result.Fail<IEnumerable<TimeSeries>>(DataSourceError.NotFoundByName(request.DataSourceName));
         
-        var result = await searchClient.RangeQueryAsync(request.Query,
+        var queryWithoutPlaceholders = await variableService.ResolveQueryVariablesAsync(
+            request.Query,
+            request.NamespaceId,
+            request.DashboardId,
+            cancellationToken); 
+        
+        var result = await searchClient.RangeQueryAsync(queryWithoutPlaceholders,
             request.Start,
             request.End,
             request.Step,

@@ -1,6 +1,3 @@
-using DataCat.Server.Application.Queries.Common.Responses;
-using DataCat.Server.Application.Queries.Dashboards.Get;
-
 namespace DataCat.Server.Api.Endpoints.Dashboards;
 
 public sealed class GetDashboardById : ApiEndpointBase

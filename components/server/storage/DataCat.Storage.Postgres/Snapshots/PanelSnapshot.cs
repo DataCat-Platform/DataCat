@@ -15,7 +15,7 @@ public sealed record PanelSnapshot
     public required string DashboardId { get; init; }
 }
 
-public static class PanelEntitySnapshotMapper
+public static class PanelEntitySnapshotExtensions
 {
     public static PanelSnapshot Save(this Panel panel)
     {

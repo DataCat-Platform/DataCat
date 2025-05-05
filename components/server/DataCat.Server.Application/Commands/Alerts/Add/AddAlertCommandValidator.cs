@@ -6,21 +6,8 @@ public sealed class AddAlertCommandValidator : AbstractValidator<AddAlertCommand
     {
         RuleLevelCascadeMode = CascadeMode.Continue;
         RuleFor(x => x.RawQuery).NotEmpty();
-        RuleFor(x => x.DataSourceId).NotEmpty()
-            .Custom((input, context) =>
-            {
-                if (!Guid.TryParse(input, out _))
-                {
-                    context.AddFailure("DataSource Id must be a Guid");
-                }
-            });
-        RuleFor(x => x.NotificationChannelId).NotEmpty()
-            .Custom((input, context) =>
-            {
-                if (!Guid.TryParse(input, out _))
-                {
-                    context.AddFailure("NotificationChannel Id must be a Guid");
-                }
-            });
+        RuleFor(x => x.NotificationChannelGroupName).NotEmpty();
+        RuleFor(x => x.DataSourceId).NotEmpty().MustBeGuid();
+        RuleFor(x => x.Tags).ForEach(y => y.NotEmpty());
     }
 }

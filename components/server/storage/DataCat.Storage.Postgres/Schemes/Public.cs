@@ -16,8 +16,10 @@ public static class Public
     public const string DataSourceTable = "data_sources";
     public const string DataSourceTypeTable = "data_source_type";
     public const string NotificationDestinationTable = "notification_destination";
-    public const string NotificationTable = "notification_channel";
+    public const string NotificationChannelTable = "notification_channel";
+    public const string NotificationChannelGroupTable = "notification_channel_group";
     public const string PanelTable = "panels";
+    public const string VariableTable = "variables";
     
     public const string DashboardUserLinkTable = "dashboard_user_link";
     public const string UserRoleLinkTable = "user_role_link";
@@ -25,7 +27,7 @@ public static class Public
 
     public static class Plugins
     {
-        public const string Id = "pk_plugin_id";
+        public const string Id = "id";
         public const string Name = "name";
         public const string Version = "version";
         public const string Description = "description";
@@ -38,7 +40,7 @@ public static class Public
     
     public static class Users
     {
-        public const string Id = "pk_user_id";
+        public const string Id = "id";
         public const string IdentityId = "identity_id";
         public const string Email = "email";
         public const string Name = "name";
@@ -48,7 +50,7 @@ public static class Public
 
     public static class Roles
     {
-        public const string Id = "pk_role_id";
+        public const string Id = "id";
         public const string Name = "name";
     }
     
@@ -62,7 +64,7 @@ public static class Public
 
     public static class Permissions
     {
-        public const string Id = "pk_permission_id";
+        public const string Id = "id";
         public const string Name = "name";
     }
 
@@ -76,7 +78,7 @@ public static class Public
 
     public static class Namespaces
     {
-        public const string Id = "pk_namespace_id";
+        public const string Id = "id";
         public const string Name = "name";
     }
 
@@ -96,7 +98,7 @@ public static class Public
     
     public static class DataSources
     {
-        public const string Id = "pk_datasource_id";
+        public const string Id = "id";
         public const string Name = "name";
         public const string TypeId = "type_id";
         public const string ConnectionSettings = "connection_string";
@@ -105,24 +107,25 @@ public static class Public
     
     public static class Dashboards
     {
-        public const string Id = "pk_dashboard_id";
+        public const string Id = "id";
         public const string Name = "name";
         public const string Description = "description";
         public const string OwnerId = "owner_id";
         public const string CreatedAt = "created_at_utc";
         public const string UpdatedAt = "updated_at_utc";
         public const string NamespaceId = "namespace_id";
+        public const string Tags = "tags";
     }
 
     public static class DashboardsUsersLink
     {
-        public const string UserId = "user_id";
+        public const string UserId = "id";
         public const string DashboardId = "dashboard_id";
     }
 
     public static class Panels
     {
-        public const string Id = "pk_panel_id";
+        public const string Id = "id";
         public const string Title = "title";
         public const string TypeId = "type_id";
         public const string RawQuery = "raw_query";
@@ -136,34 +139,51 @@ public static class Public
 
     public static class Alerts
     {
-        public const string Id = "pk_alert_id";
+        public const string Id = "id";
         public const string Description = "description";
         public const string Status = "status";
-        public const string RawQuery = "raw_query";
+        public const string RawQuery = "condition_query";
         public const string DataSourceId = "data_source_id";
-        public const string NotificationChannelId = "notification_channel_id";
+        public const string NotificationChannelGroupId = "notification_channel_group_id";
         public const string PreviousExecution = "previous_execution";
         public const string NextExecution = "next_execution";
         public const string WaitTimeBeforeAlertingInTicks = "wait_time_before_alerting_in_ticks";
         public const string RepeatIntervalInTicks = "repeat_interval_in_ticks";
+        public const string Tags = "tags";
     }
 
     public static class NotificationChannels
     {
-        public const string Id = "pk_notification_id";
+        public const string Id = "id";
         public const string DestinationId = "destination_id";
+        public const string NotificationChannelGroupId = "notification_channel_group_id";
         public const string Settings = "settings";
+    }
+    
+    public static class NotificationChannelGroups
+    {
+        public const string Id = "id";
+        public const string Name = "name";
     }
 
     public static class DataSourceType
     {
-        public const string Id = "pk_data_source_type_id";
+        public const string Id = "id";
         public const string Name = "name";
     }
 
     public static class NotificationDestination
     {
-        public const string Id = "pk_notification_destination_id";
+        public const string Id = "id";
         public const string Name = "name";
+    }
+
+    public static class Variables
+    {
+        public const string Id = "id";
+        public const string Placeholder = "placeholder";
+        public const string Value = "value";
+        public const string NamespaceId = "namespace_id";
+        public const string DashboardId = "dashboard_id";
     }
 }
