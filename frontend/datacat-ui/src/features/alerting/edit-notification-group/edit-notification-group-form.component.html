@@ -1,0 +1,21 @@
+<form class="form" [formGroup]="form">
+  <div class="form__item">
+    <p class="text-secondary">Group name</p>
+    <input pInputText formControlName="name" />
+  </div>
+  <div formArrayName="notificationChannels" class="channels-box">
+    <p-button label="Add channel" severity="secondary" (onClick)="addChannel()" />
+
+    @for (control of notificationChannels.controls; track $index) {
+      <div [formGroup]="control" class="channel-form">
+        <input pInputText formControlName="address" placeholder="Email address" />
+      </div>
+    }
+  </div>
+  <p-button
+    [loading]="isSavingInitiated"
+    label="Save"
+    (onClick)="saveNotificationGroup()"
+    severity="secondary"
+  />
+</form>

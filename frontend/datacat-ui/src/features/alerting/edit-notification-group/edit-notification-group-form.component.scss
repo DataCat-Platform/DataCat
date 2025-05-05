@@ -1,0 +1,18 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-md);
+  align-items: start;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--p-padding-xs);
+  }
+}
+
+.channels-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-md);
+}

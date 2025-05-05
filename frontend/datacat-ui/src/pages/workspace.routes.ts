@@ -50,12 +50,13 @@ export const ROUTES: Routes = [
             (m) => m.ManageNotificationGroupComponent,
           ),
       },
-      // {
-      //   path: urls.NOTIFICATION_TEMPLATE_EDIT_URL,
-      //   loadComponent: () => import('../processes/manage-notification-template').then(
-      //     m => m.Mana
-      //   )
-      // }
+      {
+        path: urls.NOTIFICATION_TEMPLATE_EDIT_URL,
+        loadComponent: () =>
+          import('../processes/manage-notification-template').then(
+            (m) => m.ManageNotificationTemplateComponent,
+          ),
+      },
     ],
   },
   {
