@@ -59,6 +59,8 @@ app.UseRouting();
 
 app.UseLoggingRequests();
 
+app.UseCors("frontend");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -74,7 +76,6 @@ app.MapAspireEndpoints();
 app.UseEndpoints(_ => { });
 
 #if DEBUG
-    app.UseCors("frontend");
     app.UseSpa(cfg =>
     {
         cfg.UseProxyToSpaDevelopmentServer("http://localhost:4200");
