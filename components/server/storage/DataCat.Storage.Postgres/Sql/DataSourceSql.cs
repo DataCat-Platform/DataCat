@@ -8,7 +8,7 @@ public static class DataSourceSql
            SELECT
                 COUNT(*)
            FROM {Public.DataSourceTable}
-           WHERE {Public.DataSources.Name} ILIKE @p_name
+           WHERE 1=1 
        """;
         
         public const string SearchDataSources = $"""
@@ -24,8 +24,7 @@ public static class DataSourceSql
              
              FROM {Public.DataSourceTable} data_source
              JOIN {Public.DataSourceTypeTable} data_source_type ON data_source.{Public.DataSources.TypeId} = data_source_type.{Public.DataSourceType.Id}
-             WHERE data_source.{Public.DataSources.Name} ILIKE @p_name
-             LIMIT @limit OFFSET @offset
+             WHERE 1=1 
          """;
         
         public const string GetByName = $"""

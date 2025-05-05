@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Queries.NotificationChannels.Get;
-
 namespace DataCat.Server.Api.Endpoints.NotificationChannels;
 
 public sealed class GetNotificationChannelById : ApiEndpointBase
@@ -15,9 +13,9 @@ public sealed class GetNotificationChannelById : ApiEndpointBase
                 var result = await mediator.Send(query, token);
                 return HandleCustomResponse(result);
             })
-            .WithTags(ApiTags.NotificationChannels)
+            .WithTags(ApiTags.NotificationChannelGroups)
             .HasApiVersion(ApiVersions.V1)
-            .Produces<GetNotificationChannelResponse>()
+            .Produces<NotificationChannelResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 

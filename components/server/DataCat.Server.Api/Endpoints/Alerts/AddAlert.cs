@@ -1,14 +1,13 @@
-using DataCat.Server.Application.Commands.Alerts.Add;
-
 namespace DataCat.Server.Api.Endpoints.Alerts;
 
 public sealed record AddAlertRequest(
     string? Description,
     string RawQuery,
     string DataSourceId,
-    string NotificationChannelId,
+    string NotificationChannelGroupName,
     TimeSpan WaitTimeBeforeAlerting,
-    TimeSpan RepeatInterval);
+    TimeSpan RepeatInterval,
+    List<string> Tags);
 
 public sealed class AddAlert : ApiEndpointBase
 {
@@ -36,9 +35,10 @@ public sealed class AddAlert : ApiEndpointBase
             Description = request.Description,
             RawQuery = request.RawQuery,
             DataSourceId = request.DataSourceId,
-            NotificationChannelId = request.NotificationChannelId,
+            NotificationChannelGroupName = request.NotificationChannelGroupName,
             WaitTimeBeforeAlerting = request.WaitTimeBeforeAlerting,
-            RepeatInterval = request.RepeatInterval
+            RepeatInterval = request.RepeatInterval,
+            Tags = request.Tags ?? []
         };
     }
 }

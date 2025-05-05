@@ -20,7 +20,7 @@ public sealed class NotificationChannelRepository(
                 notification_destination.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)}
             
             FROM 
-                {Public.NotificationTable} notification
+                {Public.NotificationChannelTable} notification
             JOIN 
                 {Public.NotificationDestinationTable} notification_destination 
                     ON notification.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationChannels.Id} 
@@ -45,16 +45,16 @@ public sealed class NotificationChannelRepository(
         var snapshot = entity.Save();
 
         const string sql = $@"
-            INSERT INTO {Public.NotificationTable} (
-                {Public.NotificationChannels.Id},
+            INSERT INTO {Public.NotificationChannelTable} (
                 {Public.NotificationChannels.DestinationId},
                 {Public.NotificationChannels.Settings}
             )
             VALUES (
-                @{nameof(NotificationChannelSnapshot.Id)},
                 @{nameof(NotificationChannelSnapshot.DestinationId)},
                 @{nameof(NotificationChannelSnapshot.Settings)}
-            )";
+            )
+            RETURNING {Public.NotificationChannels.Id};
+        ";
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, snapshot, transaction: unitOfWork.Transaction);
@@ -65,7 +65,7 @@ public sealed class NotificationChannelRepository(
         var snapshot = entity.Save();
 
         const string sql = $"""
-            UPDATE {Public.NotificationTable}
+            UPDATE {Public.NotificationChannelTable}
             SET 
                 {Public.NotificationChannels.DestinationId} = @{nameof(NotificationChannelSnapshot.DestinationId)},
                 {Public.NotificationChannels.Settings}      = @{nameof(NotificationChannelSnapshot.Settings)}
@@ -81,7 +81,7 @@ public sealed class NotificationChannelRepository(
         var parameters = new { p_notification_channel_id = id.ToString() };
 
         const string sql = $"""
-            DELETE FROM {Public.NotificationTable}
+            DELETE FROM {Public.NotificationChannelTable}
             WHERE {Public.NotificationChannels.Id} = @p_notification_channel_id
         """;
 

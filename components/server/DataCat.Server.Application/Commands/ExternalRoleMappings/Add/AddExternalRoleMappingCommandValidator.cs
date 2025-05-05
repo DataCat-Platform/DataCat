@@ -13,19 +13,6 @@ public sealed class AddExternalRoleMappingCommandValidator : AbstractValidator<A
         });
 
         RuleFor(x => x.ExternalRole).NotEmpty();
-        
-        RuleFor(x => x.NamespaceId)
-            .Custom((input, context) =>
-            {
-                if (input is null)
-                {
-                    return;
-                }
-                
-                if (!Guid.TryParse(input, out _))
-                {
-                    context.AddFailure("Namespace Id must be a Guid");
-                }
-            });
+        RuleFor(x => x.NamespaceId).MustBeGuid();
     }
 }

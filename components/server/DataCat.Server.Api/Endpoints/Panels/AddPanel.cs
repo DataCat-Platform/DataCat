@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Commands.Panels.Add;
-
 namespace DataCat.Server.Api.Endpoints.Panels;
 
 public sealed record AddPanelRequest(

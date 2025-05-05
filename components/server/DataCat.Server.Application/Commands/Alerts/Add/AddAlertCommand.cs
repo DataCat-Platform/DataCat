@@ -8,9 +8,11 @@ public sealed record AddAlertCommand : ICommand<Guid>, IAuthorizedCommand
     
     public required string DataSourceId { get; init; }
     
-    public required string NotificationChannelId { get; init; }
+    public required string NotificationChannelGroupName { get; init; }
     
     public required TimeSpan WaitTimeBeforeAlerting { get; init; }
     
     public required TimeSpan RepeatInterval { get; init; }
+    
+    public required List<string> Tags { get; init; }
 }

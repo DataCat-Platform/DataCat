@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Commands.Dashboards.Remove;
-
 namespace DataCat.Server.Api.Endpoints.Dashboards;
 
 public sealed class RemoveDashboard : ApiEndpointBase

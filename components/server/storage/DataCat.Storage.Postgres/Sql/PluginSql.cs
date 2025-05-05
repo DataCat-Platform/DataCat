@@ -8,7 +8,7 @@ public static class PluginSql
              SELECT
                  COUNT(*)
              FROM {Public.PluginTable}
-             WHERE {Public.Plugins.Name} ILIKE @p_name
+             WHERE 1=1 
          """;
         
         public const string SearchPlugins = $"""
@@ -23,8 +23,7 @@ public static class PluginSql
                 {Public.Plugins.CreatedAt}        {nameof(PluginSnapshot.CreatedAt)},
                 {Public.Plugins.UpdatedAt}        {nameof(PluginSnapshot.UpdatedAt)}
             FROM {Public.PluginTable}
-            WHERE {Public.Plugins.Name} ILIKE @p_name
-            LIMIT @limit OFFSET @offset
+            WHERE 1=1 
         """;
     }
 }

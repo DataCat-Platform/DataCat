@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Commands.Dashboards.Add;
-
 namespace DataCat.Server.Api.Endpoints.Dashboards;
 
 public sealed record AddDashboardRequest(

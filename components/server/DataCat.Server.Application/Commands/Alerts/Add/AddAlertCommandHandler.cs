@@ -3,7 +3,7 @@ namespace DataCat.Server.Application.Commands.Alerts.Add;
 public sealed class AddAlertCommandHandler(
     IRepository<Alert, Guid> alertRepository,
     IRepository<DataSource, Guid> dataSourceRepository,
-    IRepository<NotificationChannel, Guid> notificationChannelRepository)
+    INotificationChannelGroupRepository notificationChannelGroupRepository)
     : ICommandHandler<AddAlertCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AddAlertCommand request, CancellationToken cancellationToken)
@@ -16,20 +16,21 @@ public sealed class AddAlertCommandHandler(
         if (queryResult.IsFailure)
             return Result.Fail<Guid>(queryResult.Errors!);
         
-        var notificationChannel = await notificationChannelRepository.GetByIdAsync(Guid.Parse(request.NotificationChannelId), cancellationToken);
-        if (notificationChannel is null)
-            return Result.Fail<Guid>(NotificationChannelError.NotFound(request.NotificationChannelId));
+        var notificationChannelGroup = await notificationChannelGroupRepository.GetByName(request.NotificationChannelGroupName, cancellationToken);
+        if (notificationChannelGroup is null)
+            return Result.Fail<Guid>(NotificationChannelGroupError.NotFound(request.NotificationChannelGroupName));
 
         var alertResult = Alert.Create(
-            Guid.NewGuid(),
+            id: Guid.NewGuid(),
             request.Description,
             queryResult.Value,
             AlertStatus.InActive,
-            notificationChannel,
+            notificationChannelGroup,
             previousExecution: DateTimeUtc.Init(),
             nextExecution: DateTime.UtcNow.Add(request.RepeatInterval),
             request.WaitTimeBeforeAlerting,
-            request.RepeatInterval);
+            request.RepeatInterval,
+            request.Tags.Select(x => new Tag(x)).ToList());
         
         if (alertResult.IsFailure)
             return Result.Fail<Guid>(alertResult.Errors!);

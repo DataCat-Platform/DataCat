@@ -11,6 +11,7 @@
       <ProjectReference Include="..\DataCat.Server.Telemetry\DataCat.Server.Telemetry.csproj" />
       <ProjectReference Include="..\logs\DataCat.Logs.ElasticSearch\DataCat.Logs.ElasticSearch.csproj" />
       <ProjectReference Include="..\metrics\DataCat.Metrics.Prometheus\DataCat.Metrics.Prometheus.csproj" />
+      <ProjectReference Include="..\notifications\DataCat.Notifications.Webhook\DataCat.Notifications.Webhook.csproj" />
       <ProjectReference Include="..\secrets\DataCat.Secrets.Vault\DataCat.Secrets.Vault.csproj" />
       <ProjectReference Include="..\traces\DataCat.Traces.Jaeger\DataCat.Traces.Jaeger.csproj" />
         

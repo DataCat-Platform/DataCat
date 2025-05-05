@@ -5,13 +5,6 @@ public sealed class RemoveAlertCommandValidator : AbstractValidator<RemoveAlertC
     public RemoveAlertCommandValidator()
     {
         RuleLevelCascadeMode = CascadeMode.Continue;
-        RuleFor(x => x.AlertId).NotEmpty()
-            .Custom((input, context) =>
-            {
-                if (!Guid.TryParse(input, out _))
-                {
-                    context.AddFailure("Alert Id must be a Guid");
-                }
-            });
+        RuleFor(x => x.AlertId).NotEmpty().MustBeGuid();
     }
 }

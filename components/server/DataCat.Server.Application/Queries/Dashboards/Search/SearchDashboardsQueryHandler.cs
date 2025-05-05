@@ -7,7 +7,7 @@ public class SearchDashboardsQueryHandler(
     public async Task<Result<Page<SearchDashboardsResponse>>> Handle(SearchDashboardsQuery request, CancellationToken token)
     {
         var result = await dashboardRepository
-            .SearchAsync(request.Filter, request.Page, request.PageSize, token);
+            .SearchAsync(request.Filters, request.Page, request.PageSize, token);
         return Result.Success(result.ToResponsePage(SearchDashboardsResponse.ToResponse));
     }
 }

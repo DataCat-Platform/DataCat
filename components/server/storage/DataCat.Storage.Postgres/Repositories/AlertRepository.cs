@@ -12,20 +12,42 @@ public sealed class AlertRepository(
         const string sql = AlertSql.Select.GetById;
         
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        var result = await connection.QueryAsync<AlertSnapshot, NotificationChannelSnapshot, DataSourceSnapshot, DataSourceTypeSnapshot, AlertSnapshot>(
+        
+        var alertDictionary = new Dictionary<string, AlertSnapshot>();
+
+        await connection.QueryAsync<
+            AlertSnapshot,
+            NotificationChannelGroupSnapshot,
+            NotificationChannelSnapshot,
+            DataSourceSnapshot,
+            DataSourceTypeSnapshot,
+            AlertSnapshot>(
             sql,
-            map: (alert, notification, dataSource, dataSourceTypeSnapshot) =>
+            map: (alert, group, channel, dataSource, dataSourceType) =>
             {
-                alert.NotificationChannel = notification;
-                dataSource.DataSourceType = dataSourceTypeSnapshot;
-                alert.DataSource = dataSource;
-                return alert;
+                if (!alertDictionary.TryGetValue(alert.Id, out var existingAlert))
+                {
+                    dataSource.DataSourceType = dataSourceType;
+                    alert.DataSource = dataSource;
+
+                    alert.NotificationChannelGroup = group;
+
+                    alertDictionary[alert.Id] = alert;
+                    existingAlert = alert;
+                }
+
+                if (existingAlert.NotificationChannelGroup.Channels.All(c => c.Id != channel.Id))
+                {
+                    existingAlert.NotificationChannelGroup.Channels.Add(channel);
+                }
+
+                return existingAlert;
             },
-            splitOn: $"{nameof(NotificationChannelSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
+            splitOn: $"{nameof(NotificationChannelGroupSnapshot.Id)}, {nameof(NotificationChannelSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
             param: parameters,
             transaction: unitOfWork.Transaction);
 
-        return result.FirstOrDefault()?.RestoreFromSnapshot(notificationChannelManager);
+        return alertDictionary.Values.FirstOrDefault()?.RestoreFromSnapshot(notificationChannelManager);
     }
     
     public async Task AddAsync(Alert entity, CancellationToken token = default)
@@ -39,23 +61,25 @@ public sealed class AlertRepository(
                {Public.Alerts.RawQuery},
                {Public.Alerts.Status},
                {Public.Alerts.DataSourceId},
-               {Public.Alerts.NotificationChannelId},
+               {Public.Alerts.NotificationChannelGroupId},
                {Public.Alerts.PreviousExecution},
                {Public.Alerts.NextExecution},
                {Public.Alerts.RepeatIntervalInTicks},
-               {Public.Alerts.WaitTimeBeforeAlertingInTicks}
+               {Public.Alerts.WaitTimeBeforeAlertingInTicks},
+               {Public.Alerts.Tags}
            )
            VALUES (
                @{nameof(AlertSnapshot.Id)},
                @{nameof(AlertSnapshot.Description)},
-               @{nameof(AlertSnapshot.RawQuery)},
+               @{nameof(AlertSnapshot.ConditionQuery)},
                @{nameof(AlertSnapshot.Status)},
                @{nameof(AlertSnapshot.DataSourceId)},
-               @{nameof(AlertSnapshot.NotificationChannelId)},
+               @{nameof(AlertSnapshot.NotificationChannelGroupId)},
                @{nameof(AlertSnapshot.PreviousExecution)},
                @{nameof(AlertSnapshot.NextExecution)},
                @{nameof(AlertSnapshot.RepeatIntervalInTicks)},
-               @{nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)}
+               @{nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
+               @{nameof(AlertSnapshot.Tags)}
            )";
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -63,35 +87,83 @@ public sealed class AlertRepository(
     }
 
     public async Task<Page<Alert>> SearchAsync(
-        string? filter = null, 
+        SearchFilters filters, 
         int page = 1, 
         int pageSize = 10, 
         CancellationToken token = default)
     {
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        
-        var totalQueryArguments = new { p_description = $"{filter}%" };
-        const string totalCountSql = AlertSql.Select.SearchAlertsTotalCount;
-        var totalCount = await connection.QuerySingleAsync<int>(totalCountSql, totalQueryArguments);
+        var parameters = new DynamicParameters();
         
         var offset = (page - 1) * pageSize;
-        var parameters = new { p_description = $"{filter}%", offset = offset, limit = pageSize };
-        const string sql = AlertSql.Select.SearchAlerts;
+        parameters.Add("offset", offset);
+        parameters.Add("limit", pageSize);
         
-        var result = await connection.QueryAsync<AlertSnapshot, NotificationChannelSnapshot, DataSourceSnapshot, DataSourceTypeSnapshot, AlertSnapshot>(
-            sql,
-            map: (alert, notification, dataSource, dataSourceTypeSnapshot) =>
-            {
-                alert.NotificationChannel = notification;
-                dataSource.DataSourceType = dataSourceTypeSnapshot;
-                alert.DataSource = dataSource;
-                return alert;
-            },
-            splitOn: $"{nameof(NotificationChannelSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}",
-            param: parameters,
+        var columnMappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["id"] = $"alerts.{Public.Alerts.Id}",
+            ["rawQuery"] = $"alert.{Public.Alerts.RawQuery}",
+            ["tags"] = $"alert.{Public.Alerts.Tags}",
+        };
+
+        
+        var countSql = new StringBuilder();
+        countSql.AppendLine(AlertSql.Select.SearchAlertsTotalCount);
+        
+        countSql.BuildQuery(parameters, filters, columnMappings);
+        
+        var countSqlString = countSql.ToString();
+        
+        var totalCount = await connection.QuerySingleAsync<int>(
+            countSqlString,
+            parameters,
             transaction: unitOfWork.Transaction);
         
-        var items = result.Select(x => x.RestoreFromSnapshot(notificationChannelManager));
+        var dataSql = new StringBuilder();
+        dataSql.AppendLine(AlertSql.Select.SearchAlerts);
+        dataSql
+            .BuildQuery(parameters, filters, columnMappings)
+            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: $"alerts.{Public.Alerts.Id}"), columnMappings)
+            .ApplyPagination();
+        
+        var dataSqlString = dataSql.ToString();
+        
+        var alertDictionary = new Dictionary<string, AlertSnapshot>();
+
+        await connection.QueryAsync<
+            AlertSnapshot,
+            NotificationChannelGroupSnapshot,
+            NotificationChannelSnapshot,
+            DataSourceSnapshot,
+            DataSourceTypeSnapshot,
+            AlertSnapshot>(
+            dataSqlString,
+            map: (alert, group, channel, dataSource, dataSourceType) =>
+            {
+                if (!alertDictionary.TryGetValue(alert.Id, out var existingAlert))
+                {
+                    dataSource.DataSourceType = dataSourceType;
+                    alert.DataSource = dataSource;
+                    alert.NotificationChannelGroup = group;
+                    alertDictionary[alert.Id] = alert;
+                    existingAlert = alert;
+                }
+
+                if (existingAlert.NotificationChannelGroup.Channels.All(c => c.Id != channel.Id))
+                {
+                    existingAlert.NotificationChannelGroup.Channels.Add(channel);
+                }
+
+                return existingAlert;
+            },
+            splitOn: $"{nameof(NotificationChannelGroupSnapshot.Id)}, {nameof(NotificationChannelSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
+            param: parameters,
+            transaction: unitOfWork.Transaction);
+
+        var items = alertDictionary
+            .Select(x => x.Value)
+            .Select(x => x.RestoreFromSnapshot(notificationChannelManager));
+
         return new Page<Alert>(items, totalCount, page, pageSize);
     }
 
@@ -104,13 +176,14 @@ public sealed class AlertRepository(
            SET 
                {Public.Alerts.Description}                    = @{nameof(AlertSnapshot.Description)},
                {Public.Alerts.Status}                         = @{nameof(AlertSnapshot.Status)},
-               {Public.Alerts.RawQuery}                       = @{nameof(AlertSnapshot.RawQuery)},
+               {Public.Alerts.RawQuery}                       = @{nameof(AlertSnapshot.ConditionQuery)},
                {Public.Alerts.DataSourceId}                   = @{nameof(AlertSnapshot.DataSourceId)},
-               {Public.Alerts.NotificationChannelId}          = @{nameof(AlertSnapshot.NotificationChannelId)},
+               {Public.Alerts.NotificationChannelGroupId}     = @{nameof(AlertSnapshot.NotificationChannelGroupId)},
                {Public.Alerts.PreviousExecution}              = @{nameof(AlertSnapshot.PreviousExecution)},
                {Public.Alerts.NextExecution}                  = @{nameof(AlertSnapshot.NextExecution)},
                {Public.Alerts.RepeatIntervalInTicks}          = @{nameof(AlertSnapshot.RepeatIntervalInTicks)}, 
-               {Public.Alerts.WaitTimeBeforeAlertingInTicks}  = @{nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)}
+               {Public.Alerts.WaitTimeBeforeAlertingInTicks}  = @{nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
+               {Public.Alerts.Tags}                           = @{nameof(AlertSnapshot.Tags)}
            WHERE {Public.Alerts.Id} = @{nameof(AlertSnapshot.Id)}
            ";
 

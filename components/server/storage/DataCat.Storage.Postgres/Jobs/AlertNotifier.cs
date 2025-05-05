@@ -40,52 +40,67 @@ public sealed class AlertNotifier(
         {
             try
             {
-                using var metricClient = dataSourceManager.GetMetricsClient(alert.Query.DataSource.Name);
+                using var metricClient = dataSourceManager.GetMetricsClient(alert.ConditionQuery.DataSource.Name);
                 if (metricClient is null)
                 {
                     logger.LogError(
                         "[{Job}] Failed to create metrics client for DataSource '{DataSourceName}'",
                         nameof(AlertNotifier),
-                        alert.Query.DataSource.Name
+                        alert.ConditionQuery.DataSource.Name
                     );
                     return;
                 }
                 
-                var isTriggeredYet = await metricClient.CheckAlertTriggerAsync(alert.Query.RawQuery, token);
+                var isTriggeredYet = await metricClient.CheckAlertTriggerAsync(alert.ConditionQuery.RawQuery, token);
                 
                 if (isTriggeredYet)
                 {
                     alert.SetFire();
-                    var notificationOptionFactory = notificationChannelManager.GetNotificationChannelFactory(alert.NotificationChannel.NotificationOption.NotificationDestination);
-                    
-                    var optionResult =
-                        notificationOptionFactory.Create(
-                            alert.NotificationChannel.NotificationOption.NotificationDestination, 
-                            alert.NotificationChannel.NotificationOption.Settings);
 
-                    if (optionResult.IsFailure)
+                    var hasErrors = false;
+                    var allErrors = new List<ErrorInfo>();
+
+                    foreach (var channel in alert.NotificationChannelGroup.NotificationChannels)
                     {
-                        logger.LogError("[{Job}] {Alert} has errors during alerting. Error: {@Errors}", nameof(AlertNotifier), alert.Id, optionResult.Errors);
-                        await alertChannel.Writer.WriteAsync(alert, token);
-                        return;
+                        var notificationOptionFactory = notificationChannelManager
+                            .GetNotificationChannelFactory(channel.NotificationOption.NotificationDestination);
+
+                        var optionResult = notificationOptionFactory.Create(
+                            channel.NotificationOption.NotificationDestination,
+                            channel.NotificationOption.Settings);
+
+                        if (optionResult.IsFailure)
+                        {
+                            hasErrors = true;
+                            allErrors.AddRange(optionResult.Errors!);
+                            continue;
+                        }
+
+                        var notificationServiceResult = await notificationOptionFactory
+                            .CreateNotificationServiceAsync(optionResult.Value, serviceProvider, cancellationToken: token);
+
+                        if (notificationServiceResult.IsFailure)
+                        {
+                            hasErrors = true;
+                            allErrors.AddRange(notificationServiceResult.Errors!);
+                            continue;
+                        }
+
+                        var stopwatch = Stopwatch.StartNew();
+                        await notificationServiceResult.Value.SendNotificationAsync(alert, stoppingToken);
+                        stopwatch.Stop();
+
+                        var destinationName = channel.NotificationOption.NotificationDestination.Name;
+
+                        metricsContainer.AddNotificationSent(destinationName, isSuccess: true);
+                        metricsContainer.AddNotificationDeliveryTime(stopwatch.ElapsedMilliseconds, destinationName);
                     }
 
-                    var notificationServiceResult =
-                        await notificationOptionFactory.CreateNotificationServiceAsync(optionResult.Value, serviceProvider, cancellationToken: token);
-
-                    if (notificationServiceResult.IsFailure)
+                    if (hasErrors)
                     {
-                        logger.LogError("[{Job}] {Alert} has errors during alerting. Errors: {@Errors}", nameof(AlertNotifier), alert.Id, optionResult.Errors);
-                        await alertChannel.Writer.WriteAsync(alert, token);
-                        return;
+                        logger.LogError("[{Job}] {Alert} had errors during alerting. Errors: {@Errors}",
+                            nameof(AlertNotifier), alert.Id, allErrors);
                     }
-
-                    var stopwatch = Stopwatch.StartNew();
-                    await notificationServiceResult.Value.SendNotificationAsync(alert, stoppingToken);
-                    stopwatch.Stop();
-                    
-                    metricsContainer.AddNotificationSent(alert.NotificationChannel.NotificationOption.NotificationDestination.Name, isSuccess: true);
-                    metricsContainer.AddNotificationDeliveryTime(stopwatch.ElapsedMilliseconds, alert.NotificationChannel.NotificationOption.NotificationDestination.Name);
                     
                     logger.LogWarning("[{Job}] Alert: {Alert} is fired", nameof(AlertNotifier), alert.Id);
                 }
@@ -100,8 +115,10 @@ public sealed class AlertNotifier(
             catch (Exception exception)
             {
                 logger.LogError(exception, "{Job} failed", nameof(AlertChecker));
-                metricsContainer.AddNotificationSent(alert.NotificationChannel.NotificationOption.NotificationDestination.Name, isSuccess: false);
-
+                foreach (var channel in alert.NotificationChannelGroup.NotificationChannels)
+                {
+                    metricsContainer.AddNotificationSent(channel.NotificationOption.NotificationDestination.Name, isSuccess: false);
+                }
             }
         });
         

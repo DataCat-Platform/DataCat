@@ -102,28 +102,56 @@ public sealed class DataSourceRepository(
     }
 
     public async Task<Page<DataSource>> SearchAsync(
-        string? filter = null, 
-        int page = 1, 
-        int pageSize = 10, 
+        SearchFilters filters,
+        int page = 1,
+        int pageSize = 10,
         CancellationToken token = default)
     {
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        
-        var totalQueryArguments = new { p_name = $"{filter}%" };
-        const string totalCountSql = DataSourceSql.Select.SearchDataSourcesTotalCount;
-        var totalCount = await connection.QuerySingleAsync<int>(totalCountSql, totalQueryArguments);
-        
+        var parameters = new DynamicParameters();
+
         var offset = (page - 1) * pageSize;
-        var parameters = new { p_name = $"{filter}%", limit = pageSize, offset = offset };
-        const string sql = DataSourceSql.Select.SearchDataSources;
-        var result = await connection.QueryAsync<DataSourceSnapshot, DataSourceTypeSnapshot, DataSourceSnapshot>(sql,
+        parameters.Add("offset", offset);
+        parameters.Add("limit", pageSize);
+
+        var columnMappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["id"] = $"data_source.{Public.DataSources.Id}",
+            ["name"] = $"data_source.{Public.DataSources.Name}",
+            ["typeId"] = $"data_source.{Public.DataSources.TypeId}",
+            ["purpose"] = $"data_source.{Public.DataSources.Purpose}"
+        };
+
+        var countSql = new StringBuilder();
+        countSql.AppendLine(DataSourceSql.Select.SearchDataSourcesTotalCount);
+        countSql.BuildQuery(parameters, filters, columnMappings);
+        
+        var countSqlString = countSql.ToString();
+        
+        var totalCount = await connection.QuerySingleAsync<int>(
+            countSqlString,
+            parameters,
+            transaction: unitOfWork.Transaction);
+        
+
+        var dataSql = new StringBuilder();
+        dataSql.AppendLine(DataSourceSql.Select.SearchDataSources);
+        dataSql
+            .BuildQuery(parameters, filters, columnMappings)
+            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: $"data_source.{Public.DataSources.Id}"), columnMappings)
+            .ApplyPagination();
+        
+        var dataSqlString = dataSql.ToString();
+
+        var result = await connection.QueryAsync<DataSourceSnapshot, DataSourceTypeSnapshot, DataSourceSnapshot>(
+            dataSqlString,
             map: (dataSourceSnapshot, sourceTypeSnapshot) =>
             {
                 dataSourceSnapshot.DataSourceType = sourceTypeSnapshot;
                 return dataSourceSnapshot;
             },
             splitOn: $"{nameof(DataSourceTypeSnapshot.Id)}",
-            param: parameters, 
+            param: parameters,
             transaction: unitOfWork.Transaction);
 
         var items = result.Select(x => x.RestoreFromSnapshot());

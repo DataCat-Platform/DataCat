@@ -7,7 +7,7 @@ public class SearchDataSourcesQueryHandler(
     public async Task<Result<Page<SearchDataSourcesResponse>>> Handle(SearchDataSourcesQuery request, CancellationToken token)
     {
         var result = await dataSourceRepository
-            .SearchAsync(request.Filter, request.Page, request.PageSize, token);
+            .SearchAsync(request.Filters, request.Page, request.PageSize, token);
         
         return Result.Success(result.ToResponsePage(SearchDataSourcesResponse.ToResponse));
     }

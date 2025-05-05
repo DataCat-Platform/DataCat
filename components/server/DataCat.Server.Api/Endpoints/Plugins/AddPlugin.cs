@@ -1,5 +1,3 @@
-using DataCat.Server.Application.Commands.Plugins.Add;
-
 namespace DataCat.Server.Api.Endpoints.Plugins;
 
 public sealed record AddPluginRequest(

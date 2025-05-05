@@ -3,7 +3,7 @@ namespace DataCat.Server.Application.Persistence.Repositories;
 public interface IPluginRepository
 {
     Task<Page<Plugin>> SearchAsync(
-        string? filter = null,
+        SearchFilters filters,
         int page = 1,
         int pageSize = 10,
         CancellationToken token = default);

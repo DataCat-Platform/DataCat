@@ -1,16 +1,19 @@
-namespace DataCat.Server.Domain.Core;
+namespace DataCat.Server.Domain.Core.ValueObjects;
 
-public class NotificationChannel
+public sealed class NotificationChannel
 {
     private NotificationChannel(
-        Guid id,
+        int? id,
+        Guid notificationChannelGroupId,
         BaseNotificationOption notificationOption)
     {
-        Id = id;
+        Id = id ?? 0;
+        NotificationChannelGroupId = notificationChannelGroupId;
         NotificationOption = notificationOption;
     }
 
-    public Guid Id { get; private set; }
+    public int Id { get; private set; }
+    public Guid NotificationChannelGroupId { get; }
 
     public BaseNotificationOption NotificationOption { get; private set; }
 
@@ -19,8 +22,10 @@ public class NotificationChannel
         NotificationOption = settings;
     }
 
-    public static Result<NotificationChannel> Create(Guid id, 
-        BaseNotificationOption? notificationOption)
+    public static Result<NotificationChannel> Create(
+        Guid notificationChannelGroupId,
+        BaseNotificationOption? notificationOption,
+        int? id = null)
     {
         var validationList = new List<Result<NotificationChannel>>();
 
@@ -40,6 +45,6 @@ public class NotificationChannel
 
         return validationList.Count != 0 
             ? validationList.FoldResults()!
-            : Result.Success(new NotificationChannel(id, notificationOption!));
+            : Result.Success(new NotificationChannel(id, notificationChannelGroupId, notificationOption!));
     }
 }

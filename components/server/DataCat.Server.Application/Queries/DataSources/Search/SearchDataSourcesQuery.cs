@@ -3,5 +3,5 @@ namespace DataCat.Server.Application.Queries.DataSources.Search;
 public sealed record SearchDataSourcesQuery(
     int Page, 
     int PageSize, 
-    string? Filter)
+    SearchFilters Filters)
     : IQuery<Page<SearchDataSourcesResponse>>, ISearchQuery, IAuthorizedQuery;
