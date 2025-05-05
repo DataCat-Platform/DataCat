@@ -1,0 +1,22 @@
+.channels-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-md);
+}
+
+.templates-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-md);
+  margin-top: var(--p-padding-md);
+}
+
+.actions-container {
+  margin-bottom: var(--p-padding-md);
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-md);
+}

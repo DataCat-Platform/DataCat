@@ -1,0 +1,13 @@
+<div class="box">
+  @if (alertsCountsByStatus) {
+    @for (entry of alertsCountsByStatus.entries(); track $index) {
+      <p-tag
+        [value]="entry[1] + ' ' + entry[0]"
+        [severity]="getSeverityForStatus(entry[0])"
+      />
+    }
+  } @else {
+    <p-tag value="No info about counts" severity="secondary" />
+  }
+  <i class="pi pi-info-circle text-secondary" pTooltip="Alerts count by status"></i>
+</div>

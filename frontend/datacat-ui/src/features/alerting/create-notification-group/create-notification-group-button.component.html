@@ -1,0 +1,32 @@
+<p-button
+  icon="pi pi-plus"
+  label="Create notification group"
+  severity="secondary"
+  (onClick)="showCreationDialog()"
+/>
+<p-dialog
+  [visible]="isDialogVisible"
+  [closable]="false"
+  [modal]="true"
+  header="Create notification group"
+>
+  <form class="form">
+    <input
+      pInputText
+      placeholder="Enter group name"
+      [formControl]="groupName"
+    />
+    <div class="actions-box">
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        (onClick)="hideCreationDialog()"
+      />
+      <p-button
+        [loading]="isCreationInitiated"
+        label="Create"
+        (onClick)="createNotificationGroup()"
+      />
+    </div>
+  </form>
+</p-dialog>

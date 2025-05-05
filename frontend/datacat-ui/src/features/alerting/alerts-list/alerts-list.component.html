@@ -1,0 +1,59 @@
+<p-table
+  [value]="alerts"
+  stripedRows
+  [paginator]="true"
+  [rows]="5"
+  [rowsPerPageOptions]="[5, 10]"
+  [pageLinks]="12"
+  [alwaysShowPaginator]="false"
+  [lazy]="true"
+  [first]="0"
+  [totalRecords]="totalAlertsCount"
+  [rows]="alertsPerPageCount"
+>
+  <ng-template pTemplate="emptymessage">
+    <div class="empty-box">
+      <p-tag value="No alerts found" severity="secondary" />
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>ID</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th pTooltip="Previous Execution Time" tooltipPosition="top">
+        Previous Execution
+      </th>
+      <th pTooltip="Next Execution Time" tooltipPosition="top">
+        Next Execution
+      </th>
+      <th style="width: 4rem"></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-alert>
+    <tr>
+      <td>
+        {{ alert.id }}
+        <i class="pi pi-clone text-secondary"></i>
+      </td>
+      <td>{{ alert.description }}</td>
+      <td>
+        <p-tag [severity]="getSeverityForStatus(alert.status)">{{
+          alert.status
+        }}</p-tag>
+      </td>
+      <td>{{ alert.prevExecutionTime | date: 'short' }}</td>
+      <td>{{ alert.nextExecutionTime | date: 'short' }}</td>
+      <td>
+        <p-button
+          icon="pi pi-arrow-up-right"
+          label="view"
+          severity="secondary"
+          size="small"
+          variant="text"
+          (onClick)="viewAlert(alert.id)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

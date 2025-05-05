@@ -1,0 +1,12 @@
+<p-panel [style]="{ display: 'block', height: '100%' }">
+  <ng-template pTemplate="header"> Edit notification group {{ notificationGroupId }} </ng-template>
+  <div class="edit-alert-form-box">
+    <datacat-edit-alert-form [alertId]="notificationGroupId" />
+  </div>
+  <p-divider align="left">
+    Danger
+  </p-divider>
+  <div class="delete-alert-button-box">
+    <datacat-delete-alert-button [alertId]="notificationGroupId" />
+  </div>
+</p-panel>

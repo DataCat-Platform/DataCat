@@ -1,0 +1,15 @@
+.channel-container {
+  display: flex;
+  align-items: center;
+  padding-top: var(--p-padding-sm);
+  padding-bottom: var(--p-padding-sm);
+  padding-left: var(--p-padding-md);
+  padding-right: var(--p-padding-md);
+  justify-content: space-between;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: var(--p-padding-sm);
+}

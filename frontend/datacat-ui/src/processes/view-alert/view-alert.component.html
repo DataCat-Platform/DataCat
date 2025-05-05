@@ -1,0 +1,9 @@
+<p-panel [style]="{ display: 'block', height: '100%' }">
+  <ng-template pTemplate="header">
+    <div class="header">
+      <p>Alert {{ alertId }}</p>
+      <datacat-goto-edit-alert-button [alertId]="alertId" />
+    </div>
+  </ng-template>
+  <datacat-alert-details [alertId]="alertId" />
+</p-panel>
