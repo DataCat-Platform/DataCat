@@ -19,6 +19,7 @@ public static class Public
     public const string NotificationChannelTable = "notification_channel";
     public const string NotificationChannelGroupTable = "notification_channel_group";
     public const string PanelTable = "panels";
+    public const string VariableTable = "variables";
     
     public const string DashboardUserLinkTable = "dashboard_user_link";
     public const string UserRoleLinkTable = "user_role_link";
@@ -113,6 +114,7 @@ public static class Public
         public const string CreatedAt = "created_at_utc";
         public const string UpdatedAt = "updated_at_utc";
         public const string NamespaceId = "namespace_id";
+        public const string Tags = "tags";
     }
 
     public static class DashboardsUsersLink
@@ -174,5 +176,14 @@ public static class Public
     {
         public const string Id = "id";
         public const string Name = "name";
+    }
+
+    public static class Variables
+    {
+        public const string Id = "id";
+        public const string Placeholder = "placeholder";
+        public const string Value = "value";
+        public const string NamespaceId = "namespace_id";
+        public const string DashboardId = "dashboard_id";
     }
 }

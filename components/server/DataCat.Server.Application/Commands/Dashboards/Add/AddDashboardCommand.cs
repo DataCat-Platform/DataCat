@@ -6,7 +6,9 @@ public sealed record AddDashboardCommand : ICommand<Guid>, IAuthorizedCommand
 
     public string? Description { get; init; }
 
-    public Guid? NamespaceId { get; set; } = null;
+    public required Guid? NamespaceId { get; set; } = null;
     
     public required string UserId { get; init; }
+    
+    public required List<string> Tags { get; init; } = [];
 }

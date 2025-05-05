@@ -18,4 +18,5 @@ public static class ApiTags
     public const string Secrets = nameof(Secrets);
     public const string Traces = nameof(Traces);
     public const string Users = nameof(Users);
+    public const string Variables = nameof(Variables);
 }

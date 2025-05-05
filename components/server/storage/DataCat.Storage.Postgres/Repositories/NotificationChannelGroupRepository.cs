@@ -12,8 +12,8 @@ public sealed class NotificationChannelGroupRepository(
 
         const string sql = $"""
             SELECT
-                notification_group.{Public.NotificationChannelGroups.Id}{nameof(NotificationChannelGroupSnapshot.Id)},
-                notification_group.{Public.NotificationChannelGroups.Name}{nameof(NotificationChannelGroupSnapshot.Name)},
+                notification_group.{Public.NotificationChannelGroups.Id}            {nameof(NotificationChannelGroupSnapshot.Id)},
+                notification_group.{Public.NotificationChannelGroups.Name}          {nameof(NotificationChannelGroupSnapshot.Name)},
                 
                 notification_channel.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)},
                 notification_channel.{Public.NotificationChannels.DestinationId}    {nameof(NotificationChannelSnapshot.DestinationId)},

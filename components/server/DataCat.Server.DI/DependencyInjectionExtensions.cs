@@ -26,6 +26,7 @@ public static class DependencyInjectionExtensions
         services.AddSingleton<DataSourceContainer>();
 
         services.AddScoped<INamespaceService, NamespaceService>();
+        services.AddScoped<IVariableService, VariableService>();
         
         services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
         

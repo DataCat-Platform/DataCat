@@ -4,7 +4,7 @@ public class Alert
 {
     private Alert(
         Guid id,
-        string Template,
+        string template,
         Query conditionQuery,
         AlertStatus alertStatus,
         NotificationChannelGroup notificationChannelGroup,
@@ -14,7 +14,7 @@ public class Alert
         List<Tag> tags)
     {
         Id = id;
-        this.Template = Template;
+        Template = template;
         ConditionQuery = conditionQuery;
         Status = alertStatus;
         NotificationChannelGroup = notificationChannelGroup;

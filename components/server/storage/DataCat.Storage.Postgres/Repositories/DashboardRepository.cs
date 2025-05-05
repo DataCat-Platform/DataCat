@@ -58,7 +58,9 @@ public sealed class DashboardRepository(
                 {Public.Dashboards.OwnerId},
                 {Public.Dashboards.NamespaceId},
                 {Public.Dashboards.CreatedAt}, 
-                {Public.Dashboards.UpdatedAt})
+                {Public.Dashboards.UpdatedAt},
+                {Public.Dashboards.Tags}
+            )
             VALUES 
                 (@{nameof(DashboardSnapshot.Id)}, 
                  @{nameof(DashboardSnapshot.Name)}, 
@@ -66,7 +68,8 @@ public sealed class DashboardRepository(
                  @{nameof(DashboardSnapshot.OwnerId)},
                  @{nameof(DashboardSnapshot.NamespaceId)}, 
                  @{nameof(DashboardSnapshot.CreatedAt)}, 
-                 @{nameof(DashboardSnapshot.UpdatedAt)}
+                 @{nameof(DashboardSnapshot.UpdatedAt)},
+                 @{nameof(DashboardSnapshot.Tags)}
             );
             """;
 
@@ -93,6 +96,7 @@ public sealed class DashboardRepository(
             ["name"] = $"dashboard.{Public.Dashboards.Name}",
             ["ownerId"] = $"dashboard.{Public.Dashboards.OwnerId}",
             ["namespaceId"] = $"dashboard.{Public.Dashboards.NamespaceId}",
+            ["tags"] = $"dashboard.{Public.Dashboards.Tags}",
         };
 
         var countSql = new StringBuilder();
@@ -182,7 +186,8 @@ public sealed class DashboardRepository(
             SET 
                 {Public.Dashboards.Name}         = @{nameof(DashboardSnapshot.Name)},
                 {Public.Dashboards.Description}  = @{nameof(DashboardSnapshot.Description)},
-                {Public.Dashboards.UpdatedAt}    = @{nameof(DashboardSnapshot.UpdatedAt)}
+                {Public.Dashboards.UpdatedAt}    = @{nameof(DashboardSnapshot.UpdatedAt)},
+                {Public.Dashboards.Tags}         = @{nameof(DashboardSnapshot.Tags)}
             WHERE {Public.Dashboards.Id} = @{nameof(DashboardSnapshot.Id)}
         """;
 

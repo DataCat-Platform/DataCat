@@ -12,6 +12,7 @@ public sealed record DashboardSnapshot
     public required IList<UserSnapshot> SharedWith { get; set; } = [];
     public required DateTime CreatedAt { get; init; }
     public required DateTime UpdatedAt { get; init; }
+    public required List<Tag> Tags { get; init; }
 }
 
 public static class DashboardEntitySnapshotMapper
@@ -28,7 +29,8 @@ public static class DashboardEntitySnapshotMapper
             SharedWith = dashboard.SharedWith.Select(x => x.Save()).ToArray(),
             NamespaceId = dashboard.NamespaceId.ToString(),
             CreatedAt = dashboard.CreatedAt.ToUniversalTime(),
-            UpdatedAt = dashboard.UpdatedAt.ToUniversalTime()
+            UpdatedAt = dashboard.UpdatedAt.ToUniversalTime(),
+            Tags = dashboard.Tags.ToList()
         };
     }
 
@@ -43,7 +45,8 @@ public static class DashboardEntitySnapshotMapper
             snapshot.SharedWith.Select(x => x.RestoreFromSnapshot()).ToList(),
             namespaceId: Guid.Parse(snapshot.NamespaceId),
             snapshot.CreatedAt.ToUniversalTime(),
-            snapshot.UpdatedAt.ToUniversalTime()
+            snapshot.UpdatedAt.ToUniversalTime(),
+            snapshot.Tags.ToList()
         );
 
         return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSource));

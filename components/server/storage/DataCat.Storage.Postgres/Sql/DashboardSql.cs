@@ -15,6 +15,7 @@ public static class DashboardSql
               dashboard.{Public.Dashboards.NamespaceId}          {nameof(DashboardSnapshot.NamespaceId)},
               dashboard.{Public.Dashboards.CreatedAt}            {nameof(DashboardSnapshot.CreatedAt)},
               dashboard.{Public.Dashboards.UpdatedAt}            {nameof(DashboardSnapshot.UpdatedAt)},
+              dashboard.{Public.Dashboards.Tags}                 {nameof(DashboardSnapshot.Tags)},
               
               -- Owner Details
               owner.{Public.Users.Id}        {nameof(UserSnapshot.UserId)},
@@ -74,6 +75,7 @@ public static class DashboardSql
               dashboard.{Public.Dashboards.NamespaceId}          {nameof(DashboardSnapshot.NamespaceId)},
               dashboard.{Public.Dashboards.CreatedAt}            {nameof(DashboardSnapshot.CreatedAt)},
               dashboard.{Public.Dashboards.UpdatedAt}            {nameof(DashboardSnapshot.UpdatedAt)},
+              dashboard.{Public.Dashboards.Tags}                 {nameof(DashboardSnapshot.Tags)},
               
               -- Owner Details
               owner.{Public.Users.Id}                            {nameof(UserSnapshot.UserId)},
@@ -123,7 +125,8 @@ public static class DashboardSql
               dashboards.{Public.Dashboards.OwnerId}                  {nameof(DashboardSnapshot.OwnerId)},
               dashboards.{Public.Dashboards.NamespaceId}              {nameof(DashboardSnapshot.NamespaceId)},
               dashboards.{Public.Dashboards.CreatedAt}                {nameof(DashboardSnapshot.CreatedAt)},
-              dashboards.{Public.Dashboards.UpdatedAt}                {nameof(DashboardSnapshot.UpdatedAt)}
+              dashboards.{Public.Dashboards.UpdatedAt}                {nameof(DashboardSnapshot.UpdatedAt)},
+              dashboards.{Public.Dashboards.Tags}                     {nameof(DashboardSnapshot.Tags)}
          FROM
               {Public.DashboardTable} dashboards
          WHERE dashboards.{Public.Dashboards.NamespaceId} = @p_namespace_id

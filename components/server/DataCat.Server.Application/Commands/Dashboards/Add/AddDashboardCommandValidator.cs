@@ -7,5 +7,9 @@ public sealed class AddDashboardCommandValidator : AbstractValidator<AddDashboar
         RuleLevelCascadeMode = CascadeMode.Continue;
         RuleFor(x => x.Name).NotEmpty();
         RuleFor(x => x.UserId).NotEmpty().MustBeGuid();
+        RuleForEach(x => x.Tags).ChildRules(x =>
+        {
+            x.RuleFor(t => t).NotEmpty();
+        });
     }
 }

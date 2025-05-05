@@ -18,6 +18,9 @@ public sealed class PostgresPlugin : IDatabasePlugin
         
         services.AddScoped<IRepository<Alert, Guid>, AlertRepository>();
         services.AddScoped<IAlertRepository, AlertRepository>();
+        
+        services.AddScoped<IRepository<Variable, Guid>, VariableRepository>();
+        services.AddScoped<IVariableRepository, VariableRepository>();
 
         services.AddScoped<IRepository<NotificationChannel, Guid>, NotificationChannelRepository>();
         services.AddScoped<INotificationChannelRepository, NotificationChannelRepository>();

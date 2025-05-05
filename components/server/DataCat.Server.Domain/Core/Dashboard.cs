@@ -11,8 +11,10 @@ public class Dashboard
         IEnumerable<User> sharedWith,
         Guid namespaceId,
         DateTime createdAt,
-        DateTime updatedAt)
+        DateTime updatedAt,
+        List<Tag> tags)
     {
+        _tags = tags;
         Id = id;
         Name = name;
         Description = description;
@@ -41,6 +43,9 @@ public class Dashboard
 
     public DateTime UpdatedAt { get; private set; }
     
+    private readonly List<Tag> _tags;
+    public IReadOnlyCollection<Tag> Tags => _tags.AsReadOnly();
+    
     public void ChangeName(string name) => Name = name;
     
     public void ChangeDescription(string? description) => Description = description;
@@ -54,7 +59,8 @@ public class Dashboard
         IEnumerable<User>? sharedWith,
         Guid namespaceId,
         DateTime createdAt,
-        DateTime updatedAt)
+        DateTime updatedAt,
+        List<Tag> tags)
     {
         var validationList = new List<Result<Dashboard>>();
 
@@ -86,6 +92,7 @@ public class Dashboard
                 sharedWith,
                 namespaceId,
                 createdAt,
-                updatedAt));
+                updatedAt,
+                tags));
     }
 }

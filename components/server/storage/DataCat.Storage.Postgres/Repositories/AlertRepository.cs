@@ -105,7 +105,6 @@ public sealed class AlertRepository(
             ["rawQuery"] = $"alert.{Public.Alerts.RawQuery}",
             ["tags"] = $"alert.{Public.Alerts.Tags}",
         };
-
         
         var countSql = new StringBuilder();
         countSql.AppendLine(AlertSql.Select.SearchAlertsTotalCount);
