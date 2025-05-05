@@ -6,9 +6,7 @@ export const ROUTES: Routes = [
   {
     path: urls.HOME_URL,
     loadComponent: () =>
-      import('../widgets/workspace/home/home.component').then(
-        (m) => m.HomeComponent,
-      ),
+      import('../widgets/workspace/home').then((m) => m.HomeComponent),
   },
   {
     path: '',
@@ -17,38 +15,47 @@ export const ROUTES: Routes = [
       {
         path: urls.SETTINGS_URL,
         loadComponent: () =>
-          import('../processes/settings/settings.component').then(
-            (m) => m.SettingsComponent,
-          ),
+          import('../processes/settings').then((m) => m.SettingsComponent),
       },
       {
         path: urls.ALERTS_EXPLORER_URL,
         loadComponent: () =>
-          import('../processes/explore-alerts/alerts-explorer.component').then(
+          import('../processes/explore-alerts').then(
             (m) => m.AlertsExplorerComponent,
           ),
       },
       {
         path: urls.ALERT_EDIT_URL,
         loadComponent: () =>
-          import('../processes/manage-alert/manage-alert.component').then(
+          import('../processes/manage-alert').then(
             (m) => m.ManageAlertComponent,
           ),
       },
       {
         path: urls.ALERT_VIEW_URL,
         loadComponent: () =>
-          import('../processes/view-alert/view-alert.component').then(
-            (m) => m.ViewAlertComponent,
+          import('../processes/view-alert').then((m) => m.ViewAlertComponent),
+      },
+      {
+        path: urls.NOTIFICATIONS_EXPLORER_URL,
+        loadComponent: () =>
+          import('../processes/explore-notifications').then(
+            (m) => m.NotificationsExplorerComponent,
           ),
       },
       {
-        path: urls.NOTIFICATION_CHANNELS_URL,
+        path: urls.NOTIFICATION_GROUP_EDIT_URL,
         loadComponent: () =>
-          import(
-            '../processes/explore-notifications/notifications-explorer.component'
-          ).then((m) => m.NotificationsExplorerComponent),
+          import('../processes/manage-notification-group').then(
+            (m) => m.ManageNotificationGroupComponent,
+          ),
       },
+      // {
+      //   path: urls.NOTIFICATION_TEMPLATE_EDIT_URL,
+      //   loadComponent: () => import('../processes/manage-notification-template').then(
+      //     m => m.Mana
+      //   )
+      // }
     ],
   },
   {

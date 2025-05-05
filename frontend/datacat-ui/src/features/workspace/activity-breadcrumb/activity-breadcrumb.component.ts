@@ -6,11 +6,11 @@ import { filter, Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
-  selector: 'datacat-breadcrumb',
-  templateUrl: 'breadcrumb.component.html',
+  selector: 'datacat-activity-breadcrumb',
+  templateUrl: 'activity-breadcrumb.component.html',
   imports: [BreadcrumbModule],
 })
-export class PathToActivityComponent implements OnDestroy {
+export class ActivityBreadcrumbComponent implements OnDestroy {
   constructor(private _router: Router) {
     this.setUpUpdateOnRouteChange();
   }

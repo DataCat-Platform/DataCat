@@ -14,7 +14,7 @@ import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { MenuItem, TreeNode } from 'primeng/api';
 import { Location } from '@angular/common';
-import { PathToActivityComponent } from '../widgets/workspace/breadcrumb/breadcrumb.component';
+import { ActivityBreadcrumbComponent } from '../features/workspace/activity-breadcrumb';
 import * as urls from '../shared/common/urls';
 
 interface TreeMenuNodeData {
@@ -33,7 +33,7 @@ interface TreeMenuNodeData {
     TreeModule,
     SelectModule,
     ButtonModule,
-    PathToActivityComponent,
+    ActivityBreadcrumbComponent,
   ],
 })
 export class WorkspaceComponent {
@@ -60,7 +60,7 @@ export class WorkspaceComponent {
           icon: 'pi pi-envelope',
           label: 'Notifications',
           data: {
-            url: urls.NOTIFICATION_CHANNELS_URL,
+            url: urls.NOTIFICATIONS_EXPLORER_URL,
           },
         },
         {

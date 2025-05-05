@@ -4,20 +4,21 @@ import { ButtonModule } from 'primeng/button';
 import * as urls from '../../../shared/common/urls';
 import { DialogModule } from 'primeng/dialog';
 import { ApiService } from '../../../shared/services/api.service';
+import { timer } from 'rxjs';
 
 @Component({
   standalone: true,
-  selector: 'datacat-delete-alert-button',
-  templateUrl: './delete-alert-button.component.html',
-  styleUrl: './delete-alert-button.component.scss',
+  selector: 'datacat-delete-notification-template-button',
+  templateUrl: './delete-notification-template-button.component.html',
+  styleUrl: './delete-notification-template-button.component.scss',
   imports: [ButtonModule, DialogModule],
 })
-export class DeleteAlertButtonComponent {
+export class DeleteNotificationTemplateButtonComponent {
   protected isDeletionInitiated = false;
   protected isDeletionDialogVisible = false;
   protected isDeletionError = false;
 
-  @Input() alertId?: string;
+  @Input() templateId?: string;
 
   constructor(
     private apiService: ApiService,
@@ -33,12 +34,13 @@ export class DeleteAlertButtonComponent {
     this.isDeletionDialogVisible = false;
   }
 
-  protected deleteAlert() {
+  protected deleteNotificationTemplate() {
     this.isDeletionError = false;
     this.isDeletionInitiated = true;
-    if (this.alertId) {
-      this.apiService.deleteApiV1AlertRemove(this.alertId).subscribe({
-        next: () => this.router.navigateByUrl(urls.ALERTS_EXPLORER_URL),
+    if (this.templateId) {
+      // TODO: call API
+      timer(1000).subscribe({
+        next: () => this.router.navigateByUrl(urls.NOTIFICATION_CHANNELS_URL),
         error: () => {
           // TODO
           this.isDeletionInitiated = false;
