@@ -6,14 +6,8 @@ export interface EmailSettings extends BaseSettings {
   address: string;
 };
 
-export enum WebhookMethod {
-  POST = 'post',
-  GET = 'get',
-};
-
 export interface WebhookSettings extends BaseSettings {
   url: string;
-  method: WebhookMethod;
 }
 
 export interface TelegramSettings extends BaseSettings {

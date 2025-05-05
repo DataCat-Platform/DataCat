@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { TextareaModule } from 'primeng/textarea';
 import * as urls from '../../../shared/common/urls';
 import { ApiService } from '../../../shared/services/api.service';
 import { timer } from 'rxjs';
@@ -10,8 +9,7 @@ import { timer } from 'rxjs';
   standalone: true,
   selector: './datacat-create-alert-button',
   templateUrl: './create-alert-button.component.html',
-  styleUrl: './create-alert-button.component.scss',
-  imports: [ButtonModule, TextareaModule],
+  imports: [ButtonModule],
 })
 export class CreateAlertButtonComponent {
   protected isCreationInitiated = false;
@@ -32,8 +30,7 @@ export class CreateAlertButtonComponent {
       error: () => {
         // TODO
         this.isCreationInitiated = false;
-      }
-    })
-
+      },
+    });
   }
 }

@@ -19,6 +19,10 @@ export const NOTIFICATION_CHANNELS_URL = 'notifications';
 
 export const alertEditUrl = (alertId: string) => `alerts/${alertId}/edit`;
 export const alertViewUrl = (alertId: string) => `alerts/${alertId}/view`;
+export const notificationTemplateEditUrl = (templateId: string) =>
+  `notifications/templates/${templateId}/edit`;
+export const notificationGroupEditUrl = (groupId: string) =>
+  `notifications/groups/${groupId}/edit`;
 
 export const logUrl = (logId: string) => `/logs/${logId}`;
 

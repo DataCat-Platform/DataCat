@@ -1,0 +1,10 @@
+.template-container {
+  margin-bottom: var(--p-padding-md);
+  margin-left: var(--p-padding-md);
+  margin-right: var(--p-padding-md);
+}
+
+.actions-container {
+  display: flex;
+  gap: var(--p-padding-sm);
+}

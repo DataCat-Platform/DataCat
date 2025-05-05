@@ -2,15 +2,15 @@ import { Component, Input } from '@angular/core';
 import { EmailChannelComponent } from '../email-channel/email-channel.component';
 import { WebhookChannelComponent } from '../webhook-channel/webhook-channel.component';
 import { TelegramChannelComponent } from '../telegram-channel/telegram-channel.component';
-import { NotificationChannelDriver, NotificationGroup } from '../../../entities';
+import { NotificationChannelDriver, NotificationGroupExpanded } from '../../../../entities';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
   standalone: true,
-  selector: 'datacat-channels-group',
-  templateUrl: './channels-group.component.html',
-  styleUrl: './channels-group.component.scss',
+  selector: 'datacat-notification-group',
+  templateUrl: './notification-group.component.html',
+  styleUrl: './notification-group.component.scss',
   imports: [
     EmailChannelComponent,
     WebhookChannelComponent,
@@ -19,8 +19,8 @@ import { ButtonModule } from 'primeng/button';
     ButtonModule,
   ],
 })
-export class ChannelsGroupComponent {
+export class NotificationGroupComponent {
   protected NotificationChannelDriver = NotificationChannelDriver;
 
-  @Input() public channelsGroup?: NotificationGroup;
+  @Input() public notificationGroup?: NotificationGroupExpanded;
 }

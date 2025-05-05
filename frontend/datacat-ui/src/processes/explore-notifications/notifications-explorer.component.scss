@@ -14,3 +14,9 @@
 .actions-container {
   margin-bottom: var(--p-padding-md);
 }
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-md);
+}

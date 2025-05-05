@@ -1,13 +1,13 @@
-<p-divider></p-divider>
 <div class="channel-container">
   <div>
     <p class="title">
-      <i class="pi pi-envelope"> </i>
-      Email
+      <i class="pi pi-link"> </i>
+      Webhook
     </p>
     <p class="text-secondary">
-      {{ settingsAsEmailSettings().address }}
+      POST {{ settingsAsWebhookSettings().url }}
     </p>
   </div>
   <p-button size="small" severity="secondary"> Test </p-button>
 </div>
+

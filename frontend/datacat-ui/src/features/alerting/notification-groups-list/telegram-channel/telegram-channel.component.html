@@ -1,13 +1,11 @@
-<p-divider></p-divider>
 <div class="channel-container">
   <div>
     <p class="title">
-      <i class="pi pi-link"> </i>
-      Webhook
+      <i class="pi pi-telegram"> </i>
+      Telegram
     </p>
     <p class="text-secondary">
-      {{ settingsAsWebhookSettings().method }}
-      {{ settingsAsWebhookSettings().url }}
+      {{ settingsAsTelegramSettings().username }}
     </p>
   </div>
   <p-button size="small" severity="secondary"> Test </p-button>

@@ -1,0 +1,13 @@
+<p-panel>
+  <ng-template pTemplate="header">
+    {{ notificationTemplate?.name }}
+  </ng-template>
+  <ng-template pTemplate="icons">
+    <div class="actions-container">
+      <p-button icon="pi pi-pencil" [text]="true" />
+    </div>
+  </ng-template>
+  <div class="template-container text-secondary">
+    {{ notificationTemplate?.template }}
+  </div>
+</p-panel>

@@ -6,6 +6,7 @@ import {
   NotificationChannel,
   NotificationChannelDriver,
   NotificationGroup,
+  NotificationGroupExpanded,
   NotificationTemplate,
   NotificationTemplateSyntax,
 } from '../../entities/alerting';
@@ -62,3 +63,73 @@ FAKE_ALERTS_COUNTS_BY_STATUS.set(AlertStatus.ERROR, 2);
 FAKE_ALERTS_COUNTS_BY_STATUS.set(AlertStatus.FIRING, 2);
 FAKE_ALERTS_COUNTS_BY_STATUS.set(AlertStatus.PENDING, 1);
 FAKE_ALERTS_COUNTS_BY_STATUS.set(AlertStatus.MUTED, 5);
+
+export const getFakeId = (): string => {
+  return Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(4, '0');
+};
+
+export const getFakeNotificationChannel = (): NotificationChannel => {
+  switch (Math.floor(Math.random() * 3)) {
+    case 0:
+      return {
+        id: getFakeId(),
+        driver: NotificationChannelDriver.EMAIL,
+        notificationTemplateId: getFakeId(),
+        settings: {
+          address: 'nvnazarov@edu.hse.ru',
+        },
+      };
+    case 1:
+      return {
+        id: getFakeId(),
+        driver: NotificationChannelDriver.TELEGRAM,
+        notificationTemplateId: getFakeId(),
+        settings: {
+          username: '@nktnazarov',
+        },
+      };
+    default:
+      return {
+        id: getFakeId(),
+        driver: NotificationChannelDriver.WEBHOOK,
+        notificationTemplateId: getFakeId(),
+        settings: {
+          url: 'http://123.456.789.101/webhook',
+        },
+      };
+  }
+};
+
+export const getFakeNotifcationGroupExpanded =
+  (): NotificationGroupExpanded[] => {
+    const groupsCount = 3;
+    const groups: NotificationGroupExpanded[] = [];
+
+    [...Array(groupsCount)].forEach(() => {
+      const group: NotificationGroupExpanded = {
+        id: getFakeId(),
+        name: 'fake group ' + getFakeId(),
+        notificationChannels: [],
+      };
+
+      const channelsCount = Math.floor(Math.random() * 2) + 1;
+      [...Array(channelsCount)].forEach(() => {
+        group.notificationChannels.push(getFakeNotificationChannel());
+      });
+
+      groups.push(group);
+    });
+
+    return groups;
+  };
+
+export const getFakeNotificationTemplate = (): NotificationTemplate => {
+  return {
+    id: getFakeId(),
+    name: 'fake template ' + getFakeId(),
+    syntax: NotificationTemplateSyntax.MARKDOWN,
+    template: 'Alert { .description } is alerting!',
+  };
+};

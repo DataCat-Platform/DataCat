@@ -46,8 +46,8 @@ export const ROUTES: Routes = [
         path: urls.NOTIFICATION_CHANNELS_URL,
         loadComponent: () =>
           import(
-            '../widgets/alerting/notifications-explorer/notifications-explorer.component'
-          ).then((m) => m.NotificationChannelsComponent),
+            '../processes/explore-notifications/notifications-explorer.component'
+          ).then((m) => m.NotificationsExplorerComponent),
       },
     ],
   },
