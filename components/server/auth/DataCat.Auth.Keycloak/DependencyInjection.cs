@@ -18,24 +18,37 @@ public static class DependencyInjection
         services.ConfigureOptions<JwtBearerOptionsSetup>();
         
         services.Configure<KeycloakOptions>(configuration.GetSection("Keycloak"));
+        services.AddSingleton<KeycloakOptions>(sp =>
+        {
+            var option = sp.GetRequiredService<IOptions<KeycloakOptions>>().Value;
+            var adminSecretPath = option.AdminClientSecret;
+            var authClientSecretPath = option.AuthClientSecret;
+
+            var secretsProvider = sp.GetRequiredService<ISecretsProvider>();
+            
+            var adminSecret = secretsProvider.GetSecretAsync(adminSecretPath).GetAwaiter().GetResult();
+            var authClientSecret = secretsProvider.GetSecretAsync(authClientSecretPath).GetAwaiter().GetResult();
+            
+            return option with { AdminClientSecret = adminSecret, AuthClientSecret = authClientSecret };
+        });
         
         services.AddHttpClient<IJwtService, JwtService>((serviceProvider, httpClient) =>
         {
-            var keycloakOptions = serviceProvider.GetRequiredService<IOptions<KeycloakOptions>>().Value;
+            var keycloakOptions = serviceProvider.GetRequiredService<KeycloakOptions>();
 
             httpClient.BaseAddress = new Uri(keycloakOptions.TokenUrl);
         });
         
         services.AddHttpClient<UserSynchronizationJob>((serviceProvider, httpClient) =>
         {
-            var keycloakOptions = serviceProvider.GetRequiredService<IOptions<KeycloakOptions>>().Value;
+            var keycloakOptions = serviceProvider.GetRequiredService<KeycloakOptions>();
 
             httpClient.BaseAddress = new Uri(keycloakOptions.BaseUrl);
         });
         
         services.AddHttpClient<UserRoleSynchronizationJob>((serviceProvider, httpClient) =>
         {
-            var keycloakOptions = serviceProvider.GetRequiredService<IOptions<KeycloakOptions>>().Value;
+            var keycloakOptions = serviceProvider.GetRequiredService<KeycloakOptions>();
 
             httpClient.BaseAddress = new Uri(keycloakOptions.BaseUrl);
         });
@@ -70,6 +83,14 @@ public static class DependencyInjection
             );
             #endregion
         });
+
+        services.AddSingleton<KeycloakMetricsContainer>();
+
+        services.AddOpenTelemetry()
+            .ConfigureResource(configure => configure
+                .AddService(KeycloakMetricsConstants.ServiceName))
+            .WithMetrics(configure => configure
+                .AddMeter(KeycloakMetricsConstants.MeterName));
         
         return services;
     }

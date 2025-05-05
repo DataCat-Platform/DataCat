@@ -6,33 +6,45 @@ public static class AlertSql
     {
         public const string GetById = $@"
              SELECT
-                {Public.Alerts.Id}                                {nameof(AlertSnapshot.Id)},
-                {Public.Alerts.Description}                       {nameof(AlertSnapshot.Description)},
-                {Public.Alerts.Status}                            {nameof(AlertSnapshot.Status)},
-                {Public.Alerts.RawQuery}                          {nameof(AlertSnapshot.RawQuery)},
-                {Public.Alerts.DataSourceId}                      {nameof(AlertSnapshot.DataSourceId)},
-                {Public.Alerts.NotificationChannelId}             {nameof(AlertSnapshot.NotificationChannelId)},
-                {Public.Alerts.PreviousExecution}                 {nameof(AlertSnapshot.PreviousExecution)},
-                {Public.Alerts.NextExecution}                     {nameof(AlertSnapshot.NextExecution)},
-                {Public.Alerts.WaitTimeBeforeAlertingInTicks}     {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
-                {Public.Alerts.RepeatIntervalInTicks}             {nameof(AlertSnapshot.RepeatIntervalInTicks)},
+                alert.{Public.Alerts.Id}                                {nameof(AlertSnapshot.Id)},
+                alert.{Public.Alerts.Description}                       {nameof(AlertSnapshot.Description)},
+                alert.{Public.Alerts.Status}                            {nameof(AlertSnapshot.Status)},
+                alert.{Public.Alerts.RawQuery}                          {nameof(AlertSnapshot.ConditionQuery)},
+                alert.{Public.Alerts.DataSourceId}                      {nameof(AlertSnapshot.DataSourceId)},
+                alert.{Public.Alerts.NotificationChannelGroupId}        {nameof(AlertSnapshot.NotificationChannelGroupId)},
+                alert.{Public.Alerts.PreviousExecution}                 {nameof(AlertSnapshot.PreviousExecution)},
+                alert.{Public.Alerts.NextExecution}                     {nameof(AlertSnapshot.NextExecution)},
+                alert.{Public.Alerts.WaitTimeBeforeAlertingInTicks}     {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
+                alert.{Public.Alerts.RepeatIntervalInTicks}             {nameof(AlertSnapshot.RepeatIntervalInTicks)},
+                alert.{Public.Alerts.Tags}                              {nameof(AlertSnapshot.Tags)},
                 
-                {Public.NotificationChannels.Id}                  {nameof(NotificationChannelSnapshot.Id)},
-                {Public.NotificationChannels.DestinationId}       {nameof(NotificationChannelSnapshot.DestinationId)},
-                {Public.NotificationChannels.Settings}            {nameof(NotificationChannelSnapshot.Settings)},
+                notification_group.{Public.NotificationChannelGroups.Id}                  {nameof(NotificationChannelGroupSnapshot.Id)},
+                notification_group.{Public.NotificationChannelGroups.Name}                {nameof(NotificationChannelGroupSnapshot.Name)},
                 
-                {Public.DataSources.Id}                          {nameof(DataSourceSnapshot.Id)},
-                {Public.DataSources.Name}                        {nameof(DataSourceSnapshot.Name)},
-                {Public.DataSources.TypeId}                      {nameof(DataSourceSnapshot.TypeId)},
-                {Public.DataSources.ConnectionString}            {nameof(DataSourceSnapshot.ConnectionString)}
+                notification_channel.{Public.NotificationChannels.Id}                      {nameof(NotificationChannelSnapshot.Id)},
+                notification_channel.{Public.NotificationChannels.DestinationId}           {nameof(NotificationChannelSnapshot.DestinationId)},
+                notification_channel.{Public.NotificationChannels.Settings}                {nameof(NotificationChannelSnapshot.Settings)},
+                
+                data_source.{Public.DataSources.Id}                            {nameof(DataSourceSnapshot.Id)},
+                data_source.{Public.DataSources.Name}                          {nameof(DataSourceSnapshot.Name)},
+                data_source.{Public.DataSources.TypeId}                        {nameof(DataSourceSnapshot.TypeId)},
+                data_source.{Public.DataSources.ConnectionSettings}            {nameof(DataSourceSnapshot.ConnectionSettings)},
+                data_source.{Public.DataSources.Purpose}                       {nameof(DataSourceSnapshot.Purpose)},
+                
+                data_source_type.{Public.DataSourceType.Id}                        {nameof(DataSourceTypeSnapshot.Id)},
+                data_source_type.{Public.DataSourceType.Name}                      {nameof(DataSourceTypeSnapshot.Name)}
 
              FROM 
-                 {Public.AlertTable} a
+                 {Public.AlertTable} alert
              JOIN
-                 {Public.NotificationTable} n ON a.{Public.Alerts.NotificationChannelId} = n.{Public.NotificationChannels.Id}
+                 {Public.NotificationChannelGroupTable} notification_group ON alert.{Public.Alerts.NotificationChannelGroupId} = notification_group.{Public.NotificationChannelGroups.Id}
              JOIN
-                 {Public.DataSourceTable} d ON a.{Public.Alerts.DataSourceId} = d.{Public.DataSources.Id}
-             WHERE {Public.Alerts.Id} = @p_alert_id
+                 {Public.NotificationChannelTable} notification_channel ON notification_channel.{Public.NotificationChannels.NotificationChannelGroupId} = notification_group.{Public.NotificationChannelGroups.Id}
+             JOIN
+                 {Public.DataSourceTable} data_source ON alert.{Public.Alerts.DataSourceId} = data_source.{Public.DataSources.Id}
+             JOIN
+                 {Public.DataSourceTypeTable} data_source_type ON data_source_type.{Public.DataSourceType.Id} = data_source.{Public.DataSources.TypeId}
+             WHERE alert.{Public.Alerts.Id} = @p_alert_id
              ";
         
         public const string SearchAlertsTotalCount =
@@ -41,40 +53,51 @@ public static class AlertSql
                 COUNT(*)
              FROM 
                  {Public.AlertTable} a
-             WHERE a.{Public.Alerts.Description} ILIKE @p_description
+             WHERE 1=1 
              """;
         
         public const string SearchAlerts =
             $"""
              SELECT
-                {Public.Alerts.Id}                                 {nameof(AlertSnapshot.Id)},
-                {Public.Alerts.Description}                        {nameof(AlertSnapshot.Description)},
-                {Public.Alerts.Status}                             {nameof(AlertSnapshot.Status)},
-                {Public.Alerts.RawQuery}                           {nameof(AlertSnapshot.RawQuery)},
-                {Public.Alerts.DataSourceId}                       {nameof(AlertSnapshot.DataSourceId)},
-                {Public.Alerts.NotificationChannelId}              {nameof(AlertSnapshot.NotificationChannelId)},
-                {Public.Alerts.PreviousExecution}                  {nameof(AlertSnapshot.PreviousExecution)},
-                {Public.Alerts.NextExecution}                      {nameof(AlertSnapshot.NextExecution)},
-                {Public.Alerts.WaitTimeBeforeAlertingInTicks}      {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
-                {Public.Alerts.RepeatIntervalInTicks}              {nameof(AlertSnapshot.RepeatIntervalInTicks)},
-                
-                {Public.NotificationChannels.Id}                   {nameof(NotificationChannelSnapshot.Id)},
-                {Public.NotificationChannels.DestinationId}        {nameof(NotificationChannelSnapshot.DestinationId)},
-                {Public.NotificationChannels.Settings}             {nameof(NotificationChannelSnapshot.Settings)},
-                
-                {Public.DataSources.Id}                            {nameof(DataSourceSnapshot.Id)},
-                {Public.DataSources.Name}                          {nameof(DataSourceSnapshot.Name)},
-                {Public.DataSources.TypeId}                        {nameof(DataSourceSnapshot.TypeId)},
-                {Public.DataSources.ConnectionString}              {nameof(DataSourceSnapshot.ConnectionString)}
+                 alert.{Public.Alerts.Id}                                       {nameof(AlertSnapshot.Id)},
+                 alert.{Public.Alerts.Description}                              {nameof(AlertSnapshot.Description)},
+                 alert.{Public.Alerts.Status}                                   {nameof(AlertSnapshot.Status)},
+                 alert.{Public.Alerts.RawQuery}                                 {nameof(AlertSnapshot.ConditionQuery)},
+                 alert.{Public.Alerts.DataSourceId}                             {nameof(AlertSnapshot.DataSourceId)},
+                 alert.{Public.Alerts.NotificationChannelGroupId}               {nameof(AlertSnapshot.NotificationChannelGroupId)},
+                 alert.{Public.Alerts.PreviousExecution}                        {nameof(AlertSnapshot.PreviousExecution)},
+                 alert.{Public.Alerts.NextExecution}                            {nameof(AlertSnapshot.NextExecution)},
+                 alert.{Public.Alerts.WaitTimeBeforeAlertingInTicks}            {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
+                 alert.{Public.Alerts.RepeatIntervalInTicks}                    {nameof(AlertSnapshot.RepeatIntervalInTicks)},
+                 alert.{Public.Alerts.Tags}                                     {nameof(AlertSnapshot.Tags)},
+                 
+                 notification_group.{Public.NotificationChannelGroups.Id}      {nameof(NotificationChannelGroupSnapshot.Id)},
+                 notification_group.{Public.NotificationChannelGroups.Name}    {nameof(NotificationChannelGroupSnapshot.Name)},
+                 
+                 notification_channel.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)},
+                 notification_channel.{Public.NotificationChannels.DestinationId}    {nameof(NotificationChannelSnapshot.DestinationId)},
+                 notification_channel.{Public.NotificationChannels.Settings}         {nameof(NotificationChannelSnapshot.Settings)},
+                 
+                 data_source.{Public.DataSources.Id}                                 {nameof(DataSourceSnapshot.Id)},
+                 data_source.{Public.DataSources.Name}                               {nameof(DataSourceSnapshot.Name)},
+                 data_source.{Public.DataSources.TypeId}                             {nameof(DataSourceSnapshot.TypeId)},
+                 data_source.{Public.DataSources.ConnectionSettings}                 {nameof(DataSourceSnapshot.ConnectionSettings)},
+                 data_source.{Public.DataSources.Purpose}                            {nameof(DataSourceSnapshot.Purpose)},
+                 
+                 data_source_type.{Public.DataSourceType.Id}        {nameof(DataSourceTypeSnapshot.Id)},
+                 data_source_type.{Public.DataSourceType.Name}      {nameof(DataSourceTypeSnapshot.Name)}
              
              FROM 
-                 {Public.AlertTable} a
+                 {Public.AlertTable} alert
              JOIN
-                 {Public.NotificationTable} n ON a.{Public.Alerts.NotificationChannelId} = n.{Public.NotificationChannels.Id}
+                 {Public.NotificationChannelGroupTable} notification_group ON alert.{Public.Alerts.NotificationChannelGroupId} = notification_group.{Public.NotificationChannelGroups.Id}
              JOIN
-                 {Public.DataSourceTable} d ON a.{Public.Alerts.DataSourceId} = d.{Public.DataSources.Id}
-             WHERE a.{Public.Alerts.Description} ILIKE @p_description
-             LIMIT @limit OFFSET @offset
+                 {Public.NotificationChannelTable} notification_channel ON notification_channel.{Public.NotificationChannels.NotificationChannelGroupId} = notification_group.{Public.NotificationChannelGroups.Id}
+             JOIN
+                 {Public.DataSourceTable} data_source ON alert.{Public.Alerts.DataSourceId} = data_source.{Public.DataSources.Id}
+             JOIN
+                 {Public.DataSourceTypeTable} data_source_type ON data_source_type.{Public.DataSourceType.Id} = data_source.{Public.DataSources.TypeId}
+             WHERE 1=1 
              """;
     }
 }

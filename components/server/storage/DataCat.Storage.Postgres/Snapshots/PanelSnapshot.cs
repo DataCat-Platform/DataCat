@@ -15,28 +15,28 @@ public sealed record PanelSnapshot
     public required string DashboardId { get; init; }
 }
 
-public static class PanelEntitySnapshotMapper
+public static class PanelEntitySnapshotExtensions
 {
-    public static PanelSnapshot Save(this PanelEntity panelEntity)
+    public static PanelSnapshot Save(this Panel panel)
     {
-        var query = panelEntity.QueryEntity.Save();
+        var query = panel.Query.Save();
         
         return new PanelSnapshot
         {
-            Id = panelEntity.Id.ToString(),
-            Title = panelEntity.Title,
-            TypeId = panelEntity.Type.Value,
+            Id = panel.Id.ToString(),
+            Title = panel.Title,
+            TypeId = panel.Type.Value,
             RawQuery = query.PanelRawQuery,
             DataSource = query.DataSource,
-            X = panelEntity.DataCatLayout.X,
-            Y = panelEntity.DataCatLayout.Y,
-            Width = panelEntity.DataCatLayout.Width,
-            Height = panelEntity.DataCatLayout.Height,
-            DashboardId = panelEntity.DashboardId.ToString()
+            X = panel.DataCatLayout.X,
+            Y = panel.DataCatLayout.Y,
+            Width = panel.DataCatLayout.Width,
+            Height = panel.DataCatLayout.Height,
+            DashboardId = panel.DashboardId.ToString()
         };
     }
 
-    public static PanelEntity RestoreFromSnapshot(this PanelSnapshot snapshot)
+    public static Panel RestoreFromSnapshot(this PanelSnapshot snapshot)
     {
         var layout = DataCatLayout.Create(
             snapshot.X,
@@ -46,9 +46,9 @@ public static class PanelEntitySnapshotMapper
 
         var dataSource = snapshot.DataSource.RestoreFromSnapshot();
 
-        var query = QueryEntity.Create(dataSource, snapshot.RawQuery).Value;
+        var query = Query.Create(dataSource, snapshot.RawQuery).Value;
         
-        var result = PanelEntity.Create(
+        var result = Panel.Create(
             Guid.Parse(snapshot.Id),
             snapshot.Title,
             PanelType.FromValue(snapshot.TypeId),
@@ -56,6 +56,6 @@ public static class PanelEntitySnapshotMapper
             layout,
             Guid.Parse(snapshot.DashboardId));
 
-        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSourceEntity));
+        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSource));
     }
 }

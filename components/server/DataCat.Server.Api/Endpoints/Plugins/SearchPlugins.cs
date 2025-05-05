@@ -6,12 +6,12 @@ public sealed class SearchPlugins : ApiEndpointBase
     {
         app.MapGet("api/v{version:apiVersion}/plugin/search", async (
                 [FromServices] IMediator mediator,
-                [FromQuery] string? filter = null,
+                [FromBody] SearchFilters filters,
                 [FromQuery] int page = 1,
                 [FromQuery] int pageSize = 10,
                 CancellationToken token = default) =>
             {
-                var query = ToQuery(filter, page, pageSize);
+                var query = ToQuery(filters, page, pageSize);
                 var result = await mediator.Send(query, token);
                 return HandleCustomResponse(result);
             })
@@ -21,6 +21,6 @@ public sealed class SearchPlugins : ApiEndpointBase
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static SearchPluginsQuery ToQuery(string? filter, int page, int pageSize)
-        => new(page, pageSize, filter);
+    private static SearchPluginsQuery ToQuery(SearchFilters filters, int page, int pageSize)
+        => new(page, pageSize, filters);
 }

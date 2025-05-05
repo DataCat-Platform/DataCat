@@ -2,27 +2,16 @@ namespace DataCat.Notifications.Telegram;
 
 public sealed class TelegramNotificationService(TelegramNotificationOption option) : INotificationService
 {
-    public async Task SendNotificationAsync(AlertEntity alertEntity, CancellationToken token = default)
+    public async Task SendNotificationAsync(Alert alert, CancellationToken token = default)
     {
         Console.WriteLine($"[TelegramNotificationService] Sending notification, {option.Settings}");
         var bot = new TelegramBotClient(option.TelegramToken);
         
-        var message = $"""
-                           🔔 *Alert Notification* 🔔
-                       
-                           *ID:* `{alertEntity.Id}`
-                           *Status:* {alertEntity.Status.Name}
-                           *Description:* {EscapeMarkdown(alertEntity.Description ?? "No description")}
-                           *Query:* `{EscapeMarkdown(alertEntity.QueryEntity.RawQuery)}`
-                           *Previous Execution:* `{alertEntity.PreviousExecution.DateTime}`
-                           *Next Execution:* `{alertEntity.NextExecution.DateTime}`
-                           *Repeat Interval:* `{alertEntity.RepeatInterval}`
-                           *Wait Time Before Alerting:* `{alertEntity.WaitTimeBeforeAlerting}`
-                       """;
+        var message = AlertTemplateRenderer.Render(alert.Template ?? string.Empty, alert);
 
         await bot.SendMessage(
             chatId: option.ChatId,
-            text: message,
+            text: EscapeMarkdown(message),
             parseMode: ParseMode.MarkdownV2,
             cancellationToken: token
         );

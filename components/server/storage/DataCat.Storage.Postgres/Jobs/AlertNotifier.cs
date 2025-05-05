@@ -10,8 +10,9 @@ public sealed class AlertNotifier(
     NotificationChannelManager notificationChannelManager,
     ISecretsProvider serviceProvider,
     UnitOfWork unitOfWork,
-    ILogger<AlertNotifier> logger)
-    : BaseBackgroundWorker(logger)
+    ILogger<AlertNotifier> logger,
+    IMetricsContainer metricsContainer)
+    : BaseBackgroundWorker(logger, metricsContainer)
 {
     protected override string JobName => nameof(AlertNotifier);
 
@@ -21,7 +22,7 @@ public sealed class AlertNotifier(
         
         const int limit = 5;
         var triggeredAlerts = await alertMonitorService.GetTriggeredAlertsAsync(limit, stoppingToken);
-        var alertChannel = Channel.CreateBounded<AlertEntity>(new BoundedChannelOptions(limit)
+        var alertChannel = Channel.CreateBounded<Alert>(new BoundedChannelOptions(limit)
         {
             SingleReader = true,
             SingleWriter = false,
@@ -39,34 +40,68 @@ public sealed class AlertNotifier(
         {
             try
             {
-                var metricClient = dataSourceManager.GetMetricClient(alert.QueryEntity.DataSourceEntity);
-                var isTriggeredYet = await metricClient.CheckAlertTriggerAsync(alert.QueryEntity.RawQuery, token);
+                using var metricClient = dataSourceManager.GetMetricsClient(alert.ConditionQuery.DataSource.Name);
+                if (metricClient is null)
+                {
+                    logger.LogError(
+                        "[{Job}] Failed to create metrics client for DataSource '{DataSourceName}'",
+                        nameof(AlertNotifier),
+                        alert.ConditionQuery.DataSource.Name
+                    );
+                    return;
+                }
+                
+                var isTriggeredYet = await metricClient.CheckAlertTriggerAsync(alert.ConditionQuery.RawQuery, token);
                 
                 if (isTriggeredYet)
                 {
                     alert.SetFire();
-                    var notificationOptionFactory = notificationChannelManager.GetNotificationChannelFactory(alert.NotificationChannelEntity.NotificationOption.NotificationDestination);
-                    var optionResult =
-                        notificationOptionFactory.Create(alert.NotificationChannelEntity.NotificationOption.Settings);
 
-                    if (optionResult.IsFailure)
+                    var hasErrors = false;
+                    var allErrors = new List<ErrorInfo>();
+
+                    foreach (var channel in alert.NotificationChannelGroup.NotificationChannels)
                     {
-                        logger.LogError("[{Job}] {Alert} has errors during alerting. Error: {@Errors}", nameof(AlertNotifier), alert.Id, optionResult.Errors);
-                        await alertChannel.Writer.WriteAsync(alert, token);
-                        return;
+                        var notificationOptionFactory = notificationChannelManager
+                            .GetNotificationChannelFactory(channel.NotificationOption.NotificationDestination);
+
+                        var optionResult = notificationOptionFactory.Create(
+                            channel.NotificationOption.NotificationDestination,
+                            channel.NotificationOption.Settings);
+
+                        if (optionResult.IsFailure)
+                        {
+                            hasErrors = true;
+                            allErrors.AddRange(optionResult.Errors!);
+                            continue;
+                        }
+
+                        var notificationServiceResult = await notificationOptionFactory
+                            .CreateNotificationServiceAsync(optionResult.Value, serviceProvider, cancellationToken: token);
+
+                        if (notificationServiceResult.IsFailure)
+                        {
+                            hasErrors = true;
+                            allErrors.AddRange(notificationServiceResult.Errors!);
+                            continue;
+                        }
+
+                        var stopwatch = Stopwatch.StartNew();
+                        await notificationServiceResult.Value.SendNotificationAsync(alert, stoppingToken);
+                        stopwatch.Stop();
+
+                        var destinationName = channel.NotificationOption.NotificationDestination.Name;
+
+                        metricsContainer.AddNotificationSent(destinationName, isSuccess: true);
+                        metricsContainer.AddNotificationDeliveryTime(stopwatch.ElapsedMilliseconds, destinationName);
                     }
 
-                    var notificationServiceResult =
-                        await notificationOptionFactory.CreateNotificationServiceAsync(optionResult.Value, serviceProvider, cancellationToken: token);
-
-                    if (notificationServiceResult.IsFailure)
+                    if (hasErrors)
                     {
-                        logger.LogError("[{Job}] {Alert} has errors during alerting. Errors: {@Errors}", nameof(AlertNotifier), alert.Id, optionResult.Errors);
-                        await alertChannel.Writer.WriteAsync(alert, token);
-                        return;
+                        logger.LogError("[{Job}] {Alert} had errors during alerting. Errors: {@Errors}",
+                            nameof(AlertNotifier), alert.Id, allErrors);
                     }
-                        
-                    await notificationServiceResult.Value.SendNotificationAsync(alert, stoppingToken);
+                    
                     logger.LogWarning("[{Job}] Alert: {Alert} is fired", nameof(AlertNotifier), alert.Id);
                 }
                 else
@@ -80,6 +115,10 @@ public sealed class AlertNotifier(
             catch (Exception exception)
             {
                 logger.LogError(exception, "{Job} failed", nameof(AlertChecker));
+                foreach (var channel in alert.NotificationChannelGroup.NotificationChannels)
+                {
+                    metricsContainer.AddNotificationSent(channel.NotificationOption.NotificationDestination.Name, isSuccess: false);
+                }
             }
         });
         

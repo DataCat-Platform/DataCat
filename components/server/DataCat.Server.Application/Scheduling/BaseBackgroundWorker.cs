@@ -1,14 +1,16 @@
 namespace DataCat.Server.Application.Scheduling;
 
 public abstract class BaseBackgroundWorker(
-    ILogger<BaseBackgroundWorker> logger)
+    ILogger<BaseBackgroundWorker> logger,
+    IMetricsContainer metricsContainer)
     : IJob
 {
     private readonly Stopwatch StopWatch = new();
-    protected virtual string JobName => nameof(BaseBackgroundWorker);
+    protected abstract string JobName { get; }
     
     public async Task Execute(IJobExecutionContext context)
     {
+        var stopWatch = Stopwatch.StartNew();
         try
         {
             TrackJobStart();
@@ -16,21 +18,23 @@ public abstract class BaseBackgroundWorker(
         }
         catch (OperationCanceledException) when (!context.CancellationToken.IsCancellationRequested)
         {
-            logger.LogWarning("[{Job}] Job was cancelled", GetType().Name);
+            logger.LogWarning("[{Job}] Job was cancelled", JobName);
         }
         finally
         {
             TrackJobEnd();
+            stopWatch.Stop();
+            metricsContainer.AddBackgroundJobExecution(JobName, stopWatch.ElapsedMilliseconds);
         }
     }
 
-    protected void TrackJobStart()
+    private void TrackJobStart()
     {
         logger.LogInformation("[{Job}] Job started", JobName);
         StopWatch.Start();
     }
-    
-    protected void TrackJobEnd()
+
+    private void TrackJobEnd()
     {
         StopWatch.Stop();
         logger.LogInformation("[{Job}] Job finished. Duration: {Duration} ms", JobName, StopWatch.ElapsedMilliseconds);

@@ -20,6 +20,10 @@ public sealed class AddSecret : ApiEndpointBase
                 await secretsProvider.SetSecretAsync(secret.Key, secret.Value, token);
                 return Results.Ok("Secret added");
             })
+            .RequireAuthorization(opt =>
+            {
+                opt.RequireRole(UserRole.Admin.Name);
+            })
             .WithTags(ApiTags.Secrets)
             .HasApiVersion(ApiVersions.V1)
             .Produces<string>()

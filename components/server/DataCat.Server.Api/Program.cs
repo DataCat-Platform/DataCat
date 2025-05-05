@@ -4,7 +4,6 @@ builder.Logging.ClearProviders();
 var configuration = builder.Configuration;
 
 builder.Services.AddGrpc();
-builder.Services.AddMemoryCache();
 
 builder.Services
     .AddApiSetup()
@@ -16,23 +15,16 @@ builder.Services
     .AddNotificationsSetup(configuration)
     .AddRealTimeCommunication(configuration)
     .AddSearchLogsServices(configuration)
-    .AddKeycloakAuth(configuration);
+    .AddSearchMetricsServices(configuration)
+    .AddSearchTracesServices(configuration)
+    .AddKeycloakAuth(configuration)
+    .AddCachingServices(configuration)
+    .AddObservability(configuration, builder.Logging);
 
 builder.Services
     .AddCustomMiddlewares();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(5000, listenOptions =>
-    {
-        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
-    });
-
-    options.ListenAnyIP(5001, listenOptions =>
-    {
-        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
-    });
-});
+builder.AddAspireServiceDefaults();
 
 var app = builder.Build();
 
@@ -76,6 +68,8 @@ app.MapHub<MetricsHub>("/datacat-metrics");
 app.MapGrpcService<ReceiveMetricService>();
 
 app.MapApiEndpoints();
+
+app.MapAspireEndpoints();
 
 app.UseEndpoints(_ => { });
 

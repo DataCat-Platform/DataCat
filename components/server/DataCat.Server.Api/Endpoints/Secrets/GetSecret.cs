@@ -14,6 +14,10 @@ public sealed class GetSecret : ApiEndpointBase
                 var secret = await secretsProvider.GetSecretAsync(key, token);
                 return Results.Ok(secret);
             })
+            .RequireAuthorization(opt =>
+            {
+                opt.RequireRole(UserRole.Admin.Name);
+            })
             .WithTags(ApiTags.Secrets)
             .HasApiVersion(ApiVersions.V1)
             .Produces<string>();

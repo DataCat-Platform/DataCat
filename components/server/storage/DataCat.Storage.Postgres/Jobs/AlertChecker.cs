@@ -8,8 +8,9 @@ public sealed class AlertChecker(
     IAlertRepository alertRepository,
     DataSourceManager dataSourceManager,
     UnitOfWork unitOfWork,
-    ILogger<AlertChecker> logger) 
-    : BaseBackgroundWorker(logger)
+    ILogger<AlertChecker> logger,
+    IMetricsContainer metricsContainer) 
+    : BaseBackgroundWorker(logger, metricsContainer)
 {
     protected override string JobName => nameof(AlertChecker);
 
@@ -20,7 +21,7 @@ public sealed class AlertChecker(
         // TODO: Change hardcoded top argument
         const int limit = 5;
         var alerts = await alertMonitorService.GetAlertsToCheckAsync(limit, stoppingToken);
-        var alertChannel = Channel.CreateBounded<AlertEntity>(new BoundedChannelOptions(limit)
+        var alertChannel = Channel.CreateBounded<Alert>(new BoundedChannelOptions(limit)
         {
             SingleReader = true,
             SingleWriter = false,
@@ -38,10 +39,21 @@ public sealed class AlertChecker(
         {
             try
             {
-                var metricClient = dataSourceManager.GetMetricClient(alert.QueryEntity.DataSourceEntity);
-                var isTriggered = await metricClient.CheckAlertTriggerAsync(alert.QueryEntity.RawQuery, token);
+                using var metricClient = dataSourceManager.GetMetricsClient(alert.ConditionQuery.DataSource.Name);
+                if (metricClient is null)
+                {
+                    logger.LogError(
+                        "[{Job}] Failed to create metrics client for DataSource '{DataSourceName}'",
+                        nameof(AlertChecker),
+                        alert.ConditionQuery.DataSource.Name
+                    );
+                    return;
+                }
+                
+                var isTriggered = await metricClient.CheckAlertTriggerAsync(alert.ConditionQuery.RawQuery, token);
                 if (isTriggered)
                 {
+                    metricsContainer.AddAlertTriggered();
                     alert.SetWarningStatus();
                     logger.LogWarning("[{Job}] Alert: {Alert} switched to the warning status", nameof(AlertChecker), alert.Id);
                 }

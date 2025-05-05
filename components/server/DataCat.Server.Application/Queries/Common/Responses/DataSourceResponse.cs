@@ -10,13 +10,13 @@ public sealed record DataSourceResponse
 
 public static class DataSourceResponseExtensions
 {
-    public static DataSourceResponse ToResponse(this DataSourceEntity dataSource)
+    public static DataSourceResponse ToResponse(this DataSource dataSource)
     {
         return new DataSourceResponse
         {
             Id = dataSource.Id,
             Name = dataSource.Name,
-            ConnectionString = dataSource.ConnectionString,
+            ConnectionString = dataSource.ConnectionSettings,
             Type = dataSource.DataSourceType.Name
         };
     }

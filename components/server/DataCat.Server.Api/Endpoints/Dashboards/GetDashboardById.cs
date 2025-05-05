@@ -15,7 +15,7 @@ public sealed class GetDashboardById : ApiEndpointBase
             })
             .WithTags(ApiTags.Dashboards)
             .HasApiVersion(ApiVersions.V1)
-            .Produces<GetDashboardResponse>()
+            .Produces<DashboardResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 

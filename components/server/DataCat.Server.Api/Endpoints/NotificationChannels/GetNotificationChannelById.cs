@@ -13,9 +13,9 @@ public sealed class GetNotificationChannelById : ApiEndpointBase
                 var result = await mediator.Send(query, token);
                 return HandleCustomResponse(result);
             })
-            .WithTags(ApiTags.NotificationChannels)
+            .WithTags(ApiTags.NotificationChannelGroups)
             .HasApiVersion(ApiVersions.V1)
-            .Produces<GetNotificationChannelResponse>()
+            .Produces<NotificationChannelResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 

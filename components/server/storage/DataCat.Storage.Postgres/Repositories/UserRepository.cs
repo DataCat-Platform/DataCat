@@ -4,9 +4,9 @@ namespace DataCat.Storage.Postgres.Repositories;
 public sealed class UserRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork UnitOfWork)
-    : IRepository<UserEntity, Guid>, IUserRepository
+    : IRepository<User, Guid>, IUserRepository
 {
-    public async Task<UserEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<User?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         var parameters = new { p_user_id = id.ToString() };
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -50,7 +50,7 @@ public sealed class UserRepository(
         return userSnapshot?.RestoreFromSnapshot();
     }
     
-    public async Task<UserEntity?> FindByEmailAsync(string email, CancellationToken token = default)
+    public async Task<User?> FindByEmailAsync(string email, CancellationToken token = default)
     {
         var parameters = new { p_email = email };
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -107,7 +107,7 @@ public sealed class UserRepository(
         return result.Select(x => x.RestoreFromSnapshot()).ToList();
     }
 
-    public async Task<UserEntity?> GetOldestByUpdatedAtUserAsync(CancellationToken token = default)
+    public async Task<User?> GetOldestByUpdatedAtUserAsync(CancellationToken token = default)
     {
         const string sql = UserSql.Select.GetOldestByUpdatedAtUserAsync;
 
@@ -121,7 +121,7 @@ public sealed class UserRepository(
         return user?.RestoreFromSnapshot();
     }
 
-    public async Task UpdateUserRolesAsync(UserEntity user, List<ExternalRoleMappingValue> currentUserRolesFromKeycloak, CancellationToken token)
+    public async Task UpdateUserRolesAsync(User user, List<ExternalRoleMappingValue> currentUserRolesFromKeycloak, CancellationToken token)
     {
         var dataTable = new DataTable();
     
@@ -214,7 +214,7 @@ public sealed class UserRepository(
         await mergeCmd.ExecuteNonQueryAsync(token);
     }
 
-    public async Task AddAsync(UserEntity entity, CancellationToken token = default)
+    public async Task AddAsync(User entity, CancellationToken token = default)
     {
         var userSnapshot = entity.Save();
 
@@ -290,7 +290,7 @@ public sealed class UserRepository(
         await connection.ExecuteAsync(sql, param: parameters, transaction: UnitOfWork.Transaction);
     }
 
-    public async Task BulkInsertAsync(IList<UserEntity> users, CancellationToken token = default)
+    public async Task BulkInsertAsync(IList<User> users, CancellationToken token = default)
     {
         // todo: implement real bulk insert via temp table
         foreach (var user in users)

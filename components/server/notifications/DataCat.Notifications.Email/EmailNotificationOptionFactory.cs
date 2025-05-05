@@ -1,16 +1,21 @@
-using DataCat.Server.Application.Security;
-
 namespace DataCat.Notifications.Email;
 
 public sealed class EmailNotificationOptionFactory : INotificationOptionFactory
 {
-    public NotificationDestination NotificationDestination => NotificationDestination.Email;
+    public bool IsResponsibleFor(string notificationOptionName) 
+        => string.Compare(notificationOptionName, EmailConstants.Email, 
+            StringComparison.InvariantCultureIgnoreCase) == 0;
 
-    public Result<BaseNotificationOption> Create(string settings)
+    public Result<BaseNotificationOption> Create(NotificationDestination? destination, string settings)
     {
         if (string.IsNullOrWhiteSpace(settings))
         {
             return Result.Fail<BaseNotificationOption>(BaseError.FieldIsNull(settings));
+        }
+        
+        if (!EmailDestinationValidator.IsEmailDestination(destination))
+        {
+            Result.Fail<BaseNotificationOption>("Invalid destination type");
         }
         
         try
@@ -30,7 +35,7 @@ public sealed class EmailNotificationOptionFactory : INotificationOptionFactory
             var port = portElement.GetInt32();
             var passwordPath = passwordPathElement.GetString()!;
 
-            return EmailNotificationOption.Create(destinationEmail, smtpServer, port, passwordPath);
+            return EmailNotificationOption.Create(destination, destinationEmail, smtpServer, port, passwordPath);
         }
         catch (JsonException)
         {
@@ -43,9 +48,15 @@ public sealed class EmailNotificationOptionFactory : INotificationOptionFactory
         ISecretsProvider secretsProvider,
         CancellationToken cancellationToken = default)
     {
-        await Task.CompletedTask;
-        return notificationOption is not EmailNotificationOption emailNotificationOption 
-            ? Result.Fail<INotificationService>("Unknown notification option type") 
-            : Result.Success<INotificationService>(new EmailNotificationService(emailNotificationOption));
+        if (notificationOption is not EmailNotificationOption emailNotificationOption)
+        {
+            return Result.Fail<INotificationService>("Invalid notification option type");
+        }
+
+        var password = await secretsProvider.GetSecretAsync(emailNotificationOption.PasswordPath, cancellationToken);
+        emailNotificationOption.Password = password;
+        
+        var telegramService = new EmailNotificationService(emailNotificationOption);
+        return Result.Success<INotificationService>(telegramService);
     }
 }

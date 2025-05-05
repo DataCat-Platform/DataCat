@@ -1,15 +1,16 @@
 namespace DataCat.Server.Api.Endpoints.DataSources;
 
 public sealed record AddDataSourceRequest(
-    string Name,
-    int Type,
-    string ConnectionString);
+    string UniqueName,
+    string DataSourceType,
+    string ConnectionString,
+    DataSourceKind Purpose);
 
 public sealed class AddDataSource : ApiEndpointBase
 {
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/v{version:apiVersion}/datasource/add", async (
+        app.MapPost("api/v{version:apiVersion}/data-source/add", async (
                 [FromServices] IMediator mediator,
                 [FromBody] AddDataSourceRequest request,
                 CancellationToken token = default) =>
@@ -28,9 +29,10 @@ public sealed class AddDataSource : ApiEndpointBase
     {
         return new AddDataSourceCommand
         {
-            Name = request.Name,
+            Name = request.UniqueName,
             ConnectionString = request.ConnectionString,
-            Type = request.Type
+            DataSourceType = request.DataSourceType,
+            Purpose = request.Purpose
         };
     }
 }

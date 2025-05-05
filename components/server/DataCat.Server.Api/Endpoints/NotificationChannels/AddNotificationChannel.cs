@@ -1,7 +1,8 @@
 namespace DataCat.Server.Api.Endpoints.NotificationChannels;
 
 public sealed record AddNotificationChannelRequest(
-    int DestinationId,
+    string NotificationChannelGroupName,
+    string DestinationName,
     string Settings);
 
 public sealed class AddNotificationChannel : ApiEndpointBase
@@ -27,7 +28,8 @@ public sealed class AddNotificationChannel : ApiEndpointBase
     {
         return new AddNotificationCommand
         {
-            DestinationType = request.DestinationId,
+            NotificationChannelGroupName = request.NotificationChannelGroupName,
+            DestinationTypeName = request.DestinationName,
             Settings = request.Settings
         };
     }

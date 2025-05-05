@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\DataCat.Server.Application\DataCat.Server.Application.csproj" />
+      <ProjectReference Include="..\..\DataCat.Server.Telemetry\DataCat.Server.Telemetry.csproj" />
     </ItemGroup>
 
 </Project>

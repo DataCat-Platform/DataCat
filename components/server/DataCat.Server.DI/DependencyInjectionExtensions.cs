@@ -1,3 +1,5 @@
+using DataCat.Notifications.Webhook;
+
 namespace DataCat.Server.DI;
 
 public static class DependencyInjectionExtensions
@@ -10,6 +12,8 @@ public static class DependencyInjectionExtensions
             
             config.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            config.AddOpenBehavior(typeof(CommandMetricsBehavior<,>));
+            config.AddOpenBehavior(typeof(QueryMetricsBehavior<,>));
         });
 
         services.AddValidatorsFromAssembly(ApplicationAssembly.Assembly, includeInternalTypes: true);
@@ -17,12 +21,31 @@ public static class DependencyInjectionExtensions
         services.Configure<PluginStoreOptions>(configuration.GetSection("PluginStoreOptions"));
         services.AddSingleton<PluginStoreOptions>(sp => sp.GetRequiredService<IOptions<PluginStoreOptions>>().Value);
         services.AddSingleton<IPluginStorage, DiskPluginStorage>();
-        services.AddSingleton<DataSourceManager>();
-        services.AddScoped<INamespaceService, NamespaceService>();
         
-        services.AddSingleton<IMetricClient, DataCatDbClient>(); // TODO: Register in another module
+        services.AddSingleton<DataSourceManager>();
+        services.AddSingleton<DataSourceContainer>();
+
+        services.AddScoped<INamespaceService, NamespaceService>();
+        services.AddScoped<IVariableService, VariableService>();
         
         services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+        
+        services.AddQuartz(q =>
+        {
+            #region DataSourceContainerLoaderJob
+            var dataSourceContainerLoaderJob = new JobKey("DataSourceContainerLoaderJob");
+            q.AddJob<DataSourceContainerLoaderJob>(opts => opts.WithIdentity(dataSourceContainerLoaderJob));
+    
+            q.AddTrigger(opts => opts
+                .ForJob(dataSourceContainerLoaderJob)
+                .WithIdentity("DataSourceContainerLoaderJob-trigger")
+                .WithSimpleSchedule(action =>
+                {
+                    action.WithIntervalInMinutes(60).RepeatForever();
+                })
+            );
+            #endregion
+        });
 
         return services;
     }
@@ -54,7 +77,17 @@ public static class DependencyInjectionExtensions
         NullGuard.ThrowIfNullOrWhiteSpace(configuration["DataSourceType"]);
         
         services.Configure<DatabaseOptions>(configuration.GetSection("DatabaseOptions"));
-        services.AddSingleton<DatabaseOptions>(sp => sp.GetRequiredService<IOptions<DatabaseOptions>>().Value);
+        services.AddSingleton<DatabaseOptions>(sp =>
+        {
+            var option = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+            var secretPath = option.ConnectionString;
+
+            var secretsProvider = sp.GetRequiredService<ISecretsProvider>();
+            
+            var connectionString = secretsProvider.GetSecretAsync(secretPath).GetAwaiter().GetResult();
+            
+            return option with { ConnectionString = connectionString };
+        });
         
         PluginLoader.LoadDatabasePlugin(services, configuration["DataSourceType"]!, configuration);
 
@@ -87,35 +120,15 @@ public static class DependencyInjectionExtensions
         IConfiguration configuration)
     {
         services.AddSingleton<NotificationChannelManager>();
+
+        var telegramPlugin = new TelegramPlugin();
+        var emailPlugin = new EmailPlugin();
+        var webhookPlugin = new WebhookPlugin();
         
-        string[] assemblyFiles = ["DataCat.Notifications.Email.dll", "DataCat.Notifications.Telegram.dll"];
-        var pluginDirectory = AppContext.BaseDirectory;
-
-        foreach (var notificationAssemblyName in assemblyFiles)
-        {
-            var assemblyFile = Path.Combine(pluginDirectory, notificationAssemblyName);
-            
-            if (!File.Exists(assemblyFile))
-                throw new Exception($"Plugin assembly not found: {assemblyFile}");
-
-            var assembly = Assembly.LoadFrom(assemblyFile);
-            
-            var pluginType = assembly.GetTypes()
-                .FirstOrDefault(t => typeof(INotificationPlugin).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false });
-
-            if (pluginType == null)
-                throw new Exception($"No implementation of {nameof(INotificationPlugin)} found in {assemblyFile}");
-
-            if (Activator.CreateInstance(pluginType) is INotificationPlugin plugin)
-            {
-                plugin.RegisterNotificationDestinationLibrary(services, configuration);
-            }
-            else
-            {
-                throw new Exception($"Failed to create an instance of {pluginType.FullName}");
-            }
-        }
-
+        telegramPlugin.RegisterNotificationDestinationLibrary(services, configuration);
+        emailPlugin.RegisterNotificationDestinationLibrary(services, configuration);
+        webhookPlugin.RegisterNotificationDestinationLibrary(services, configuration);
+        
         return services;
     }
 
@@ -146,5 +159,41 @@ public static class DependencyInjectionExtensions
         IConfiguration configuration)
     {
         return services.AddElasticSearchLogSearching(configuration);
+    }
+    
+    public static IServiceCollection AddSearchMetricsServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        return services.AddPrometheusMetrics(configuration);
+    }
+    
+    public static IServiceCollection AddSearchTracesServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        return services.AddJaegerTraces(configuration);
+    }
+
+    public static IServiceCollection AddCachingServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddMemoryCache();
+
+        services.AddRedisCaching(configuration);
+        
+        
+        return services;
+    }
+
+    public static IServiceCollection AddObservability(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        ILoggingBuilder loggingBuilder)
+    {
+        services.AddTelemetry(configuration, loggingBuilder);
+        services.AddSingleton<IMetricsContainer, MetricsContainer>();
+        return services;
     }
 }

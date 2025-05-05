@@ -4,53 +4,68 @@ public sealed class NotificationChannelRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork unitOfWork,
     NotificationChannelManager NotificationChannelManager)
-    : IRepository<NotificationChannelEntity, Guid>, INotificationChannelRepository
+    : IRepository<NotificationChannel, Guid>, INotificationChannelRepository
 {
-    public async Task<NotificationChannelEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<NotificationChannel?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         var parameters = new { p_notification_channel_id = id.ToString() };
 
         const string sql = $"""
             SELECT
-                {Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)},
-                {Public.NotificationChannels.DestinationId}    {nameof(NotificationChannelSnapshot.DestinationId)},
-                {Public.NotificationChannels.Settings}         {nameof(NotificationChannelSnapshot.Settings)}
-            FROM {Public.NotificationTable}
+                notification.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)},
+                notification.{Public.NotificationChannels.DestinationId}    {nameof(NotificationChannelSnapshot.DestinationId)},
+                notification.{Public.NotificationChannels.Settings}         {nameof(NotificationChannelSnapshot.Settings)},
+                
+                notification_destination.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)},
+                notification_destination.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)}
+            
+            FROM 
+                {Public.NotificationChannelTable} notification
+            JOIN 
+                {Public.NotificationDestinationTable} notification_destination 
+                    ON notification.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationChannels.Id} 
             WHERE {Public.NotificationChannels.Id} = @p_notification_channel_id
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        var result = await connection.QueryFirstOrDefaultAsync<NotificationChannelSnapshot>(sql, parameters, transaction: unitOfWork.Transaction);
+        var result = await connection.QueryAsync<NotificationChannelSnapshot, NotificationDestinationSnapshot, NotificationChannelSnapshot>(sql,
+            map: (notification, destination) =>
+            {
+                notification.Destination = destination;
+                return notification;
+            }, 
+            param: parameters, 
+            transaction: unitOfWork.Transaction);
 
-        return result?.RestoreFromSnapshot(NotificationChannelManager);
+        return result.FirstOrDefault()?.RestoreFromSnapshot(NotificationChannelManager);
     }
 
-    public async Task AddAsync(NotificationChannelEntity entity, CancellationToken token = default)
+    public async Task AddAsync(NotificationChannel entity, CancellationToken token = default)
     {
         var snapshot = entity.Save();
 
         const string sql = $@"
-            INSERT INTO {Public.NotificationTable} (
-                {Public.NotificationChannels.Id},
+            INSERT INTO {Public.NotificationChannelTable} (
                 {Public.NotificationChannels.DestinationId},
                 {Public.NotificationChannels.Settings}
             )
             VALUES (
-                @{nameof(NotificationChannelSnapshot.Id)},
                 @{nameof(NotificationChannelSnapshot.DestinationId)},
                 @{nameof(NotificationChannelSnapshot.Settings)}
-            )";
+            )
+            RETURNING {Public.NotificationChannels.Id};
+        ";
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, snapshot, transaction: unitOfWork.Transaction);
     }
 
-    public async Task UpdateAsync(NotificationChannelEntity entity, CancellationToken token = default)
+    public async Task UpdateAsync(NotificationChannel entity, CancellationToken token = default)
     {
         var snapshot = entity.Save();
 
         const string sql = $"""
-            UPDATE {Public.NotificationTable}
+            UPDATE {Public.NotificationChannelTable}
             SET 
                 {Public.NotificationChannels.DestinationId} = @{nameof(NotificationChannelSnapshot.DestinationId)},
                 {Public.NotificationChannels.Settings}      = @{nameof(NotificationChannelSnapshot.Settings)}
@@ -66,7 +81,7 @@ public sealed class NotificationChannelRepository(
         var parameters = new { p_notification_channel_id = id.ToString() };
 
         const string sql = $"""
-            DELETE FROM {Public.NotificationTable}
+            DELETE FROM {Public.NotificationChannelTable}
             WHERE {Public.NotificationChannels.Id} = @p_notification_channel_id
         """;
 

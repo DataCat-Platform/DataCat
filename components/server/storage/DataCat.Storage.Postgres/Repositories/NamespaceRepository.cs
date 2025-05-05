@@ -3,9 +3,9 @@ namespace DataCat.Storage.Postgres.Repositories;
 public sealed class NamespaceRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork unitOfWork)
-    : IRepository<NamespaceEntity, Guid>, INamespaceRepository
+    : IRepository<Namespace, Guid>, INamespaceRepository
 {
-    public async Task<NamespaceEntity?> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<Namespace?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         var parameters = new { p_id = id.ToString() };
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -27,7 +27,7 @@ public sealed class NamespaceRepository(
         return result?.RestoreFromSnapshot();
     }
     
-    public async ValueTask<NamespaceEntity?> GetByNameAsync(string name, CancellationToken token)
+    public async Task<Namespace?> GetByNameAsync(string name, CancellationToken token)
     {
         var parameters = new { p_name = name };
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -49,12 +49,12 @@ public sealed class NamespaceRepository(
         return result?.RestoreFromSnapshot();
     }
 
-    public async ValueTask<NamespaceEntity> GetDefaultNamespaceAsync(CancellationToken token)
+    public async Task<Namespace> GetDefaultNamespaceAsync(CancellationToken token)
     {
         return (await GetByNameAsync(ApplicationConstants.DefaultNamespace, token))!;
     }
 
-    public async Task AddAsync(NamespaceEntity entity, CancellationToken token = default)
+    public async Task AddAsync(Namespace entity, CancellationToken token = default)
     {
         var snapshot = entity.Save();
 

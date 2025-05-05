@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Persistence.Repositories;
 
 public interface INamespaceRepository
 {
-    ValueTask<NamespaceEntity?> GetByNameAsync(string name, CancellationToken token);
+    Task<Namespace?> GetByNameAsync(string name, CancellationToken token);
     
-    ValueTask<NamespaceEntity> GetDefaultNamespaceAsync(CancellationToken token);
+    Task<Namespace> GetDefaultNamespaceAsync(CancellationToken token);
 }

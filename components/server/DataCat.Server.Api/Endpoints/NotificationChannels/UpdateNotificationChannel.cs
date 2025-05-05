@@ -1,7 +1,7 @@
 namespace DataCat.Server.Api.Endpoints.NotificationChannels;
 
 public sealed record UpdateNotificationChannelRequest(
-    int DestinationId,
+    string DestinationName,
     string Settings);
 
 public sealed class UpdateNotificationChannel : ApiEndpointBase
@@ -29,7 +29,7 @@ public sealed class UpdateNotificationChannel : ApiEndpointBase
         return new UpdateNotificationCommand
         {
             NotificationChannelId = notificationChannelId,
-            DestinationType = request.DestinationId,
+            DestinationTypeName = request.DestinationName,
             Settings = request.Settings
         };
     }

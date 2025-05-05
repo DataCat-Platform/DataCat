@@ -2,5 +2,5 @@ namespace DataCat.Server.Domain.Core.Services;
 
 public interface INotificationService
 {
-    Task SendNotificationAsync(AlertEntity alertEntity, CancellationToken token = default);
+    Task SendNotificationAsync(Alert alert, CancellationToken token = default);
 }

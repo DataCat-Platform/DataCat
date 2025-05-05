@@ -25,6 +25,11 @@ All notable changes to this project will be documented in this file.
 - *(datacat-ui)* Add dashboard-list page
 - *(datacat-server)* Implement full integration with keycloak provider
 - *(datacat-server)* Complete elasticsearch integration
+- *(datacat-server)* Add prometheus integration
+- *(datacat-server)* Complete jaeger (traces) integration
+- *(datacat-server)* Complete security module
+- *(datacat-server)* Add distributed caching module, fix some security issues
+- *(datacat-server)* Add server custom metrics
 
 ### 🚜 Refactor
 

@@ -1,6 +1,7 @@
 namespace DataCat.Server.Api.Endpoints.Logs;
 
 public sealed record SearchLogsRequest(
+    string DataSourceName,
     string? TraceId = null,
     DateTime? From = null,
     DateTime? To = null,
@@ -34,6 +35,7 @@ public sealed class SearchLogs : ApiEndpointBase
     private static LogSearchQuery ToQuery(SearchLogsRequest request)
     {
         return new LogSearchQuery(
+            request.DataSourceName,
             request.TraceId,
             request.From,
             request.To,
@@ -46,5 +48,4 @@ public sealed class SearchLogs : ApiEndpointBase
             request.SortAscending
         );
     }
-
 }
