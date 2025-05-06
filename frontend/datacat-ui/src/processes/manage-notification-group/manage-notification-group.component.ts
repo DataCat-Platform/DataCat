@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
-import { DeleteAlertButtonComponent } from '../../features/alerting/delete-alert/delete-alert-button.component';
-import { EditAlertFormComponent } from '../../features/alerting/edit-alert/edit-alert-form/edit-alert-form.component';
 import { DividerModule } from 'primeng/divider';
+import { DeleteNotificationGroupButtonComponent } from '../../features/alerting/delete-notification-group';
+import { EditNotificationGroupFormComponent } from '../../features/alerting/edit-notification-group/edit-notification-group-form.component';
 
 @Component({
   standalone: true,
@@ -11,8 +11,8 @@ import { DividerModule } from 'primeng/divider';
   styleUrl: './manage-notification-group.component.scss',
   imports: [
     PanelModule,
-    EditAlertFormComponent,
-    DeleteAlertButtonComponent,
+    EditNotificationGroupFormComponent,
+    DeleteNotificationGroupButtonComponent,
     DividerModule,
   ],
 })
