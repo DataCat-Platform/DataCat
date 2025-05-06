@@ -24,6 +24,7 @@ global using DataCat.Server.Application.Persistence;
 global using DataCat.Server.Application.Persistence.Repositories;
 global using DataCat.Server.Application.Queries.Common;
 global using DataCat.Server.Application.Queries.Common.Responses;
+global using DataCat.Server.Application.Queries.DataSourceTypes.Get;
 global using DataCat.Server.Application.Scheduling;
 global using DataCat.Server.Application.Security;
 global using DataCat.Server.Application.Services;

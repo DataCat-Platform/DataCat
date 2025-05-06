@@ -4,6 +4,20 @@ public sealed class DataSourceTypeRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork UnitOfWork) : IDataSourceTypeRepository
 {
+    public async Task<List<DataSourceType>> GetAllAsync(CancellationToken token = default)
+    {
+        const string sql = $"""
+            SELECT 
+                {Public.DataSourceType.Id}    {nameof(DataSourceTypeSnapshot.Id)},
+                {Public.DataSourceType.Name}  {nameof(DataSourceTypeSnapshot.Name)}
+            FROM {Public.DataSourceTypeTable}
+        """;
+
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+        var result = await connection.QueryAsync<DataSourceTypeSnapshot>(sql, transaction: UnitOfWork.Transaction);
+        return result.Select(x => x.RestoreFromSnapshot()).ToList();
+    }
+
     public async Task<DataSourceType?> GetByNameAsync(string name, CancellationToken token = default)
     {
         const string sql = $"""
