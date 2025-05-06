@@ -6,9 +6,9 @@ public sealed class UpdateDataSource : ApiEndpointBase
 {
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("api/v{version:apiVersion}/data-source/update-connection-string/{dataSourceId}", async (
+        app.MapPut("api/v{version:apiVersion}/data-source/update-connection-string/{dataSourceId:guid}", async (
                 [FromServices] IMediator mediator,
-                [FromRoute] string dataSourceId, 
+                [FromRoute] Guid dataSourceId, 
                 [FromBody] UpdateDataSourceRequest request,
                 CancellationToken token = default) =>
             {
@@ -22,11 +22,11 @@ public sealed class UpdateDataSource : ApiEndpointBase
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static UpdateConnectionStringDataSourceCommand ToCommand(UpdateDataSourceRequest request, string dataSourceId)
+    private static UpdateConnectionStringDataSourceCommand ToCommand(UpdateDataSourceRequest request, Guid dataSourceId)
     {
         return new UpdateConnectionStringDataSourceCommand
         {
-            DataSourceName = dataSourceId,
+            Id = dataSourceId,
             ConnectionString = request.ConnectionString
         };
     }

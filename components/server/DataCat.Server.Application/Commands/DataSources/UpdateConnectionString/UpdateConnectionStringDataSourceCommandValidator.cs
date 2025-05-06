@@ -6,6 +6,6 @@ public sealed class UpdateConnectionStringDataSourceCommandValidator : AbstractV
     {
         RuleLevelCascadeMode = CascadeMode.Continue;
         RuleFor(x => x.ConnectionString).NotEmpty();
-        RuleFor(x => x.DataSourceName).NotEmpty();
+        RuleFor(x => x.Id).NotEmpty();
     }
 }

@@ -61,6 +61,57 @@ public sealed class NotificationChannelGroupRepository(
         return groupDictionary.Values.FirstOrDefault()?.RestoreFromSnapshot(NotificationChannelManager);
     }
 
+    public async Task<List<NotificationChannelGroup>> GetAllAsync(CancellationToken token = default)
+    {
+        const string sql = $"""
+            SELECT
+                notification_group.{Public.NotificationChannelGroups.Id}            {nameof(NotificationChannelGroupSnapshot.Id)},
+                notification_group.{Public.NotificationChannelGroups.Name}          {nameof(NotificationChannelGroupSnapshot.Name)},
+                
+                notification_channel.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)},
+                notification_channel.{Public.NotificationChannels.DestinationId}    {nameof(NotificationChannelSnapshot.DestinationId)},
+                notification_channel.{Public.NotificationChannels.Settings}         {nameof(NotificationChannelSnapshot.Settings)},
+                
+                notification_destination.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)},
+                notification_destination.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)}
+            
+            FROM
+                {Public.NotificationChannelGroupTable} notification_group
+            JOIN
+                {Public.NotificationChannelTable} notification_channel ON notification_channel.{Public.NotificationChannels.NotificationChannelGroupId} = notification_group.{Public.NotificationChannelGroups.Id}
+            JOIN 
+                {Public.NotificationDestinationTable} notification_destination ON notification_channel.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationChannels.Id} 
+        """;
+
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+        
+        var groupDictionary = new Dictionary<string, NotificationChannelGroupSnapshot>();
+
+        await connection.QueryAsync<
+            NotificationChannelGroupSnapshot,
+            NotificationChannelSnapshot,
+            NotificationDestinationSnapshot,
+            NotificationChannelGroupSnapshot>(
+            sql,
+            map: (group, notification, destination) =>
+            {
+                if (!groupDictionary.TryGetValue(group.Id, out var groupEntry))
+                {
+                    groupEntry = group;
+                    groupDictionary.Add(groupEntry.Id, groupEntry);
+                }
+
+                notification.Destination = destination;
+                groupEntry.Channels.Add(notification);
+
+                return groupEntry;
+            },
+            splitOn: $"{nameof(NotificationChannelSnapshot.Id)}, {nameof(NotificationDestinationSnapshot.Id)}",
+            transaction: unitOfWork.Transaction);
+
+        return groupDictionary.Values.Select(x => x.RestoreFromSnapshot(NotificationChannelManager)).ToList();
+    }
+
     public async Task<Page<NotificationChannelGroup>> SearchAsync(SearchFilters filters, int page = 1, int pageSize = 10, CancellationToken token = default)
     {
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -150,7 +201,7 @@ public sealed class NotificationChannelGroupRepository(
 
     public async Task<NotificationChannelGroup?> GetByName(string name, CancellationToken cancellationToken = default)
     {
-                var parameters = new { p_notification_channel_group_name = name };
+        var parameters = new { p_notification_channel_group_name = name };
 
         const string sql = $"""
             SELECT

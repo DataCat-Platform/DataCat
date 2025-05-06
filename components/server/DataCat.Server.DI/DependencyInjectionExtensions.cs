@@ -43,6 +43,7 @@ public static class DependencyInjectionExtensions
                 {
                     action.WithIntervalInMinutes(60).RepeatForever();
                 })
+                .StartAt(DateTimeOffset.UtcNow.AddSeconds(10))
             );
             #endregion
         });

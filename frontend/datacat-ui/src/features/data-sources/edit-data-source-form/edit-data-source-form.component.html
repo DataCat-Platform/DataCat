@@ -5,22 +5,22 @@
     </div>
 
     <div class="form__settings">
-        @switch (form.value.dataSourceType) {
+        @switch (editDataSource.type) {
             @case ('prometheus') {
                 <app-prometheus-settings-form
-                        [form]="form.controls.settings"
+                        [form]="settingsForm"
                         [authType]="settingsForm.value?.authType"
                 />
             }
             @case ('jaeger') {
                 <app-jaeger-settings-form
-                        [form]="form.controls.settings"
+                        [form]="settingsForm"
                         [authType]="settingsForm.value?.authType"
                 />
             }
             @case ('elasticsearch') {
                 <app-elasticsearch-settings-form
-                        [form]="form.controls.settings"
+                        [form]="settingsForm"
                 />
             }
         }
