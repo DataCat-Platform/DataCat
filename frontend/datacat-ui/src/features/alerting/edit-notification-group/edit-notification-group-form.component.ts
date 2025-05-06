@@ -5,16 +5,15 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { from, timer } from 'rxjs';
-import {
-  FAKE_NOTIFICATION_GROUP,
-  getFakeNotificationChannel,
-} from '../../../shared/mock/fakes';
+import { timer } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { NotificationChannelDriver } from '../../../entities';
 import { SelectModule } from 'primeng/select';
 import { InputGroupModule } from 'primeng/inputgroup';
+import { ApiService } from '../../../shared/services/datacat-generated-client';
+import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   standalone: true,
@@ -27,6 +26,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
     ButtonModule,
     SelectModule,
     InputGroupModule,
+    TextareaModule,
   ],
 })
 export class EditNotificationGroupFormComponent {
@@ -44,6 +44,7 @@ export class EditNotificationGroupFormComponent {
 
   protected form = new FormGroup({
     name: new FormControl<string>(''),
+    template: new FormControl<string>(''),
     emailChannels: new FormArray<FormGroup>([]),
     webhookChannels: new FormArray<FormGroup>([]),
     telegramChannels: new FormArray<FormGroup>([]),
@@ -61,22 +62,17 @@ export class EditNotificationGroupFormComponent {
     return this.form.get('telegramChannels') as FormArray<FormGroup>;
   }
 
+  constructor(
+    private apiService: ApiService,
+    private loggerService: ToastLoggerService,
+  ) {}
+
   protected loadEssentials(groupId: string) {
-    from([FAKE_NOTIFICATION_GROUP]).subscribe({
-      next: (group) => {
-        this.form.get('name')?.setValue(group.name);
+    this.apiService.getApiV1NotificationChannelGroup(groupId).subscribe({
+      next: () => {},
+      error: () => {
+        this.loggerService.error('Unable to load notification group');
       },
-      error: () => {},
-    });
-    from([
-      [getFakeNotificationChannel(), getFakeNotificationChannel()],
-    ]).subscribe({
-      next: (notificationChannels) => {
-        notificationChannels.forEach((channel) => {
-          // TODO
-        })
-      },
-      error: () => {},
     });
   }
 

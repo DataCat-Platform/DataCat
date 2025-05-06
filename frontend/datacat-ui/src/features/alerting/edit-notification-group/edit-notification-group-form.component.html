@@ -15,6 +15,11 @@
     <input pInputText formControlName="name" />
   </div>
 
+  <div class="form__item">
+    <p class="text-secondary">Notification template</p>
+    <textarea pTextarea cols="40" rows="3" formControlName="template" />
+  </div>
+
   @if (
     emailChannels.length + webhookChannels.length + telegramChannels.length !==
     0

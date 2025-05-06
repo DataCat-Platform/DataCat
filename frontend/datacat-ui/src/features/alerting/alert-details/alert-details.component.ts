@@ -4,12 +4,9 @@ import { TabsModule } from 'primeng/tabs';
 import {
   Alert,
   DataSource,
-  DataSourceDriver,
-  NotificationChannelDriver,
   NotificationGroup,
 } from '../../../entities/alerting';
-import { BehaviorSubject, from, Observable } from 'rxjs';
-import { AlertStatus } from '../../../entities';
+import { from } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -18,7 +15,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import {
   FAKE_ALERT,
   FAKE_DATASOURCE,
-  FAKE_NOTIFICATION_GROUP,
 } from '../../../shared/mock/fakes';
 
 @Component({
@@ -61,11 +57,11 @@ export class AlertDetailsComponent {
       },
     });
 
-    from([FAKE_NOTIFICATION_GROUP]).subscribe({
-      next: (notificationGroup) => (this.notificationGroup = notificationGroup),
-      error: () => {
-        // TODO
-      },
-    });
+    // from([FAKE_NOTIFICATION_GROUP]).subscribe({
+    //   next: (notificationGroup) => (this.notificationGroup = notificationGroup),
+    //   error: () => {
+    //     // TODO
+    //   },
+    // });
   }
 }

@@ -5,7 +5,6 @@ import {
   DataSourceDriver,
   NotificationChannel,
   NotificationChannelDriver,
-  NotificationGroup,
   NotificationGroupExpanded,
   NotificationTemplate,
   NotificationTemplateSyntax,
@@ -25,12 +24,6 @@ export const FAKE_ALERT: Alert = {
   nextExecutionTime: Date.now(),
 };
 
-export const FAKE_NOTIFICATION_GROUP: NotificationGroup = {
-  id: '0',
-  name: 'fake group',
-  notificationChannelsIds: ['0'],
-};
-
 export const FAKE_NOTIFICATION_CHANNEL: NotificationChannel = {
   id: '0',
   driver: NotificationChannelDriver.EMAIL,
@@ -41,8 +34,6 @@ export const FAKE_NOTIFICATION_CHANNEL: NotificationChannel = {
 };
 
 export const FAKE_NOTIFICATION_TEMPLATE: NotificationTemplate = {
-  id: '0',
-  name: 'fake template',
   syntax: NotificationTemplateSyntax.MARKDOWN,
   template: 'Alert { .id } is alerting!',
 };
@@ -102,7 +93,7 @@ export const getFakeNotificationChannel = (): NotificationChannel => {
   }
 };
 
-export const getFakeNotifcationGroupExpanded =
+export const getFakeNotificationGroupsExpanded =
   (): NotificationGroupExpanded[] => {
     const groupsCount = 3;
     const groups: NotificationGroupExpanded[] = [];
@@ -111,6 +102,7 @@ export const getFakeNotifcationGroupExpanded =
       const group: NotificationGroupExpanded = {
         id: getFakeId(),
         name: 'fake group ' + getFakeId(),
+        notificationTemplate: getFakeNotificationTemplate(),
         notificationChannels: [],
       };
 
@@ -127,8 +119,6 @@ export const getFakeNotifcationGroupExpanded =
 
 export const getFakeNotificationTemplate = (): NotificationTemplate => {
   return {
-    id: getFakeId(),
-    name: 'fake template ' + getFakeId(),
     syntax: NotificationTemplateSyntax.MARKDOWN,
     template: 'Alert { .description } is alerting!',
   };

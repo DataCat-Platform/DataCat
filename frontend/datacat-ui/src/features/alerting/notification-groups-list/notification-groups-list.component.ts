@@ -4,8 +4,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DataViewModule } from 'primeng/dataview';
 import { NotificationGroupExpanded } from '../../../entities';
 import { from } from 'rxjs';
-import { getFakeNotifcationGroupExpanded } from '../../../shared/mock/fakes';
 import { NotificationGroupComponent } from './notification-group/notification-group.component';
+import { ApiService } from '../../../shared/services/datacat-generated-client';
+import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 
 @Component({
   standalone: true,
@@ -24,7 +25,10 @@ export class NotificationGroupsListComponent {
 
   protected notificationGroups?: NotificationGroupExpanded[];
 
-  constructor() {
+  constructor(
+    private apiService: ApiService,
+    private loggerService: ToastLoggerService,
+  ) {
     this.groupName.valueChanges.subscribe(() => {
       this.refreshNotificationGroups();
     });
@@ -32,12 +36,12 @@ export class NotificationGroupsListComponent {
   }
 
   private refreshNotificationGroups() {
-    from([getFakeNotifcationGroupExpanded()]).subscribe({
+    from([]).subscribe({
       next: (notificationGroups) => {
         this.notificationGroups = notificationGroups;
       },
       error: () => {
-        // TODO
+        this.loggerService.error('Unable to load notification groups')
       },
     });
   }
