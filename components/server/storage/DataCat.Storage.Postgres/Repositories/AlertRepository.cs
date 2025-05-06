@@ -18,12 +18,13 @@ public sealed class AlertRepository(
         await connection.QueryAsync<
             AlertSnapshot,
             NotificationChannelGroupSnapshot,
-            NotificationChannelSnapshot,
+            NotificationChannelSnapshot?,
+            NotificationDestinationSnapshot?,
             DataSourceSnapshot,
             DataSourceTypeSnapshot,
             AlertSnapshot>(
             sql,
-            map: (alert, group, channel, dataSource, dataSourceType) =>
+            map: (alert, group, channel, destination, dataSource, dataSourceType) =>
             {
                 if (!alertDictionary.TryGetValue(alert.Id, out var existingAlert))
                 {
@@ -36,14 +37,15 @@ public sealed class AlertRepository(
                     existingAlert = alert;
                 }
 
-                if (existingAlert.NotificationChannelGroup.Channels.All(c => c.Id != channel.Id))
+                if (channel is not null && existingAlert.NotificationChannelGroup.Channels.All(c => c.Id != channel.Id))
                 {
+                    channel.Destination = destination!;
                     existingAlert.NotificationChannelGroup.Channels.Add(channel);
                 }
 
                 return existingAlert;
             },
-            splitOn: $"{nameof(NotificationChannelGroupSnapshot.Id)}, {nameof(NotificationChannelSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
+            splitOn: $"{nameof(NotificationChannelGroupSnapshot.Id)}, {nameof(NotificationChannelSnapshot.Id)},  {nameof(NotificationDestinationSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
             param: parameters,
             transaction: unitOfWork.Transaction);
 
@@ -102,8 +104,8 @@ public sealed class AlertRepository(
         var columnMappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             ["id"] = $"alerts.{Public.Alerts.Id}",
-            ["rawQuery"] = $"alert.{Public.Alerts.RawQuery}",
-            ["tags"] = $"alert.{Public.Alerts.Tags}",
+            ["rawQuery"] = $"alerts.{Public.Alerts.RawQuery}",
+            ["tags"] = $"alerts.{Public.Alerts.Tags}",
         };
         
         var countSql = new StringBuilder();
@@ -132,12 +134,13 @@ public sealed class AlertRepository(
         await connection.QueryAsync<
             AlertSnapshot,
             NotificationChannelGroupSnapshot,
-            NotificationChannelSnapshot,
+            NotificationChannelSnapshot?,
+            NotificationDestinationSnapshot?,
             DataSourceSnapshot,
             DataSourceTypeSnapshot,
             AlertSnapshot>(
             dataSqlString,
-            map: (alert, group, channel, dataSource, dataSourceType) =>
+            map: (alert, group, channel, destination, dataSource, dataSourceType) =>
             {
                 if (!alertDictionary.TryGetValue(alert.Id, out var existingAlert))
                 {
@@ -148,14 +151,15 @@ public sealed class AlertRepository(
                     existingAlert = alert;
                 }
 
-                if (existingAlert.NotificationChannelGroup.Channels.All(c => c.Id != channel.Id))
+                if (channel is not null && existingAlert.NotificationChannelGroup.Channels.All(c => c.Id != channel.Id))
                 {
+                    channel.Destination = destination!;
                     existingAlert.NotificationChannelGroup.Channels.Add(channel);
                 }
 
                 return existingAlert;
             },
-            splitOn: $"{nameof(NotificationChannelGroupSnapshot.Id)}, {nameof(NotificationChannelSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
+            splitOn: $"{nameof(NotificationChannelGroupSnapshot.Id)}, {nameof(NotificationChannelSnapshot.Id)},  {nameof(NotificationDestinationSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
             param: parameters,
             transaction: unitOfWork.Transaction);
 

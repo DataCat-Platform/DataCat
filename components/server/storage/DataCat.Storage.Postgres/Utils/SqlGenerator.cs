@@ -138,14 +138,22 @@ internal static class SqlGenerator
             case SearchFieldType.Array:
                 var arrayParamName = $"{filter.Key}_contains_array";
 
-                if (filter.Value is not IEnumerable<object> containsValues)
+                if (filter.Value is JsonElement { ValueKind: JsonValueKind.Array } jsonElement)
                 {
-                    throw new InvalidOperationException("Array field must be IEnumerable for Contains");
+                    var containsValues = new List<string>();
+                    foreach (var item in jsonElement.EnumerateArray())
+                    {
+                        var value = item.GetString() ?? "";
+                        containsValues.Add(value);
+                    }
+        
+                    conditions.Add($"{sqlField} && @{arrayParamName}");
+                    parameters.Add(arrayParamName, containsValues.ToArray());
                 }
-
-                // PostgreSQL array overlap: column && ARRAY[...]
-                conditions.Add($"{sqlField} && @{arrayParamName}");
-                parameters.Add($"@{arrayParamName}", containsValues.ToArray());
+                else
+                {
+                    throw new InvalidOperationException("Array field must be a JSON array for Contains operation");
+                }
                 break;
 
             default:
