@@ -1,7 +1,7 @@
 namespace DataCat.Storage.Postgres.Factories;
 
 public class PostgresConnectionFactory(DatabaseOptions DbOptions)
-    : IDbConnectionFactory<NpgsqlConnection>, IDisposable
+    : IDbConnectionFactory<NpgsqlConnection>
 {
     private NpgsqlConnection? _connection;
     private bool _isDisposed;
