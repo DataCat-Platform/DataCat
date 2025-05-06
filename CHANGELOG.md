@@ -40,6 +40,8 @@ All notable changes to this project will be documented in this file.
 - *(datacat-server)* Complete security module
 - *(datacat-server)* Add distributed caching module, fix some security issues
 - *(datacat-server)* Add server custom metrics
+- *(datacat-ui)* Finish notification template, need to figure out notification group editing
+- *(datacat-ui)* MVP notifications done
 
 ### 🚜 Refactor
 
