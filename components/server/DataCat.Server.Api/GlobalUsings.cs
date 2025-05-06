@@ -60,6 +60,7 @@ global using DataCat.Server.Application.Queries.Dashboards.Search;
 global using DataCat.Server.Application.Queries.DataSources.Get;
 global using DataCat.Server.Application.Queries.DataSources.Search;
 global using DataCat.Server.Application.Queries.DataSourceTypes.Get;
+global using DataCat.Server.Application.Queries.DataSourceTypes.GetAll;
 global using DataCat.Server.Application.Queries.Namespaces.GetByName;
 global using DataCat.Server.Application.Queries.NotificationChannelGroups.Get;
 global using DataCat.Server.Application.Queries.NotificationChannels.Get;

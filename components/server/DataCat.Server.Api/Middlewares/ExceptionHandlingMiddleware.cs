@@ -18,10 +18,11 @@ public sealed class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddlew
                     Type = "ValidationFailure",
                     Title = "Validation error",
                     Detail = "One or more validation errors occurred",
-                    Extensions =
-                    {
-                        ["errors"] = validationException.Failures
-                    }
+                    Instance = validationException.Message
+                    // Extensions =
+                    // {
+                        // ["errors"] = validationException.Failures
+                    // }
                 };
                 break;
             case FileNotFoundException fileNotFoundException:
@@ -32,10 +33,11 @@ public sealed class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddlew
                     Type = "FileNotFound",
                     Title = "File Not Found",
                     Detail = $"Disk problem. Cannot find file with name {fileNotFoundException.Message}",
-                    Extensions =
-                    {
-                        ["errors"] = fileNotFoundException.Message
-                    }
+                    Instance = fileNotFoundException.Message
+                    // Extensions =
+                    // {
+                        // ["errors"] = fileNotFoundException.Message
+                    // }
                 };
                 break;
             case DirectoryNotFoundException directoryNotFoundException:
@@ -46,10 +48,12 @@ public sealed class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddlew
                     Type = "FileNotFound",
                     Title = "File Not Found",
                     Detail = $"Disk problem. Cannot directory file with name {directoryNotFoundException.Message}",
-                    Extensions =
-                    {
-                        ["errors"] = directoryNotFoundException.Message
-                    }
+                    Instance = directoryNotFoundException.Message
+
+                    // Extensions =
+                    // {
+                        // ["errors"] = directoryNotFoundException.Message
+                    // }
                 };
                 break;
             case AuthenticationException authenticationException:
@@ -60,10 +64,11 @@ public sealed class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddlew
                     Type = "AuthenticationFailure",
                     Title = "Authentication failed",
                     Detail = authenticationException.Message,
-                    Extensions =
-                    {
-                        ["errors"] = authenticationException.Message
-                    }
+                    Instance = authenticationException.Message
+                    // Extensions =
+                    // {
+                        // ["errors"] = authenticationException.Message
+                    // }
                 };
                 break;
             case ForbiddenException forbiddenException:
@@ -74,10 +79,12 @@ public sealed class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddlew
                     Type = "Forbidden",
                     Title = "Forbidden",
                     Detail = forbiddenException.Message,
-                    Extensions =
-                    {
-                        ["errors"] = forbiddenException.Message
-                    }
+                    Instance = forbiddenException.Message
+
+                    // Extensions =
+                    // {
+                        // ["errors"] = forbiddenException.Message
+                    // }
                 };
                 break;
             default:
@@ -88,10 +95,11 @@ public sealed class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddlew
                     Type = "ServerError",
                     Title = "Internal Server Error",
                     Detail = "Some server error. Please try later",
-                    Extensions =
-                    {
-                        ["errors"] = exception.Message
-                    }
+                    Instance = exception.Message
+                    // Extensions =
+                    // {
+                        // ["errors"] = exception.Message
+                    // }
                 };
                 break;
         }
