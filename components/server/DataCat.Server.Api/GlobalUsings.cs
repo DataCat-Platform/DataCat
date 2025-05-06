@@ -1,6 +1,7 @@
 // Global using directives
 
 global using System.Security.Authentication;
+global using System.Text.Json;
 global using System.Text.Json.Serialization;
 global using Asp.Versioning;
 global using Asp.Versioning.ApiExplorer;
@@ -47,6 +48,7 @@ global using DataCat.Server.Application.Commands.Variables.Add;
 global using DataCat.Server.Application.Commands.Variables.Remove;
 global using DataCat.Server.Application.Commands.Variables.Update;
 global using DataCat.Server.Application.Enums;
+global using DataCat.Server.Application.Exceptions;
 global using DataCat.Server.Application.Queries.Alerts.Get;
 global using DataCat.Server.Application.Queries.Alerts.GetAvailableTemplateVariables;
 global using DataCat.Server.Application.Queries.Alerts.Search;
@@ -96,4 +98,5 @@ global using Microsoft.Extensions.Options;
 global using Microsoft.OpenApi.Models;
 global using Newtonsoft.Json;
 global using Swashbuckle.AspNetCore.SwaggerGen;
+global using JsonSerializer = System.Text.Json.JsonSerializer;
 global using Type = System.Type;

@@ -1,16 +1,16 @@
 namespace DataCat.Server.Api.Endpoints.Users;
 
-public sealed record LoginUserRequest(
+public sealed record LoginUserByPasswordRequest(
     string Email,
     string Password);
 
-public sealed class LoginUser : ApiEndpointBase
+public sealed class LoginUserByPassword : ApiEndpointBase
 {
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("api/v{version:apiVersion}/user/login", async (
                 [FromServices] IMediator mediator,
-                [AsParameters] LoginUserRequest request,
+                [AsParameters] LoginUserByPasswordRequest request,
                 CancellationToken token = default) =>
             {
                 var query = ToCommand(request);
@@ -23,6 +23,6 @@ public sealed class LoginUser : ApiEndpointBase
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static LoginUserCommand ToCommand(LoginUserRequest request) 
+    private static LoginUserCommand ToCommand(LoginUserByPasswordRequest request) 
         => new(request.Email, request.Password);
 }

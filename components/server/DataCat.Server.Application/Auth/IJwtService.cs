@@ -8,4 +8,8 @@ public interface IJwtService
         CancellationToken cancellationToken = default);
 
     Task<Result<string>> GetServerAccessTokenAsync(CancellationToken cancellationToken = default);
+    
+    Task<Result<string>> GetAccessTokenByAuthorizationCodeAsync(
+        string code,
+        CancellationToken cancellationToken = default);
 }

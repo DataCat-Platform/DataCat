@@ -39,4 +39,23 @@ public sealed class KeycloakRequestBuilder(KeycloakOptions keycloakOptions)
         
         return authRequestParameters;
     }
+    
+    /// <summary>
+    /// Builds the request parameters for obtaining an access token using the authorization code flow.
+    /// </summary>
+    /// <param name="code">The authorization code received from the identity provider after user consent.</param>
+    /// <returns>An array of key-value pairs representing the token request parameters for the authorization code grant.</returns>
+    public KeyValuePair<string, string>[] BuildAuthorizationCodeRequestParameters(string code)
+    {
+        var authRequestParameters = new KeyValuePair<string, string>[]
+        {
+            new("grant_type", "authorization_code"),
+            new("code", code),
+            new("redirect_uri", keycloakOptions.RedirectUri),
+            new("client_id", keycloakOptions.AuthClientId),
+            new("client_secret", keycloakOptions.AuthClientSecret),
+        };
+        
+        return authRequestParameters;
+    }
 }

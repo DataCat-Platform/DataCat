@@ -1,5 +1,3 @@
-using System.Text.Json;
-
 namespace DataCat.Server.Api;
 
 public static class DependencyInjection
