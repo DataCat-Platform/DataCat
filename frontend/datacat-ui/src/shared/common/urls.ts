@@ -3,7 +3,7 @@ export const ALERT_EDIT_URL = 'alerts/:alertId/edit';
 export const ALERT_VIEW_URL = 'alerts/:alertId/view';
 export const NOTIFICATIONS_EXPLORER_URL = 'notifications';
 export const NOTIFICATION_GROUP_EDIT_URL =
-    'notifications/templates/:templateId/edit';
+  'notifications/groups/:groupId/edit';
 export const NOTIFICATION_TEMPLATE_EDIT_URL =
     'notifications/templates/:templateId/edit';
 export const DASHBOARDS_EXPLORER_URL = 'dashboards';

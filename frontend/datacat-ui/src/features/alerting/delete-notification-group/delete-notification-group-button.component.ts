@@ -40,7 +40,7 @@ export class DeleteNotificationGroupButtonComponent {
     if (this.groupId) {
       // TODO: call API
       timer(1000).subscribe({
-        next: () => this.router.navigateByUrl(urls.NOTIFICATION_CHANNELS_URL),
+        next: () => this.router.navigateByUrl(urls.NOTIFICATIONS_EXPLORER_URL),
         error: () => {
           // TODO
           this.isDeletionInitiated = false;

@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { NotificationTemplate } from '../../../../entities';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
+import { Router } from '@angular/router';
+import * as urls from '../../../../shared/common/urls';
 
 @Component({
   standalone: true,
@@ -12,4 +14,14 @@ import { ButtonModule } from 'primeng/button';
 })
 export class NotificationTemplateComponent {
   @Input() public notificationTemplate?: NotificationTemplate;
+
+  constructor(private router: Router) {}
+
+  protected editNotificationTemplate() {
+    if (this.notificationTemplate) {
+      this.router.navigateByUrl(
+        urls.notificationTemplateEditUrl(this.notificationTemplate.id),
+      );
+    }
+  }
 }
