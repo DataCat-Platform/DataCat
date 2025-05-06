@@ -7,6 +7,8 @@ import {PRIMENG_CONFIG} from '../shared/primeng/primeng.config';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {apiInterceptor} from '../shared/interceptors/api.interceptor';
 import {authInterceptor} from "../shared/interceptors/auth.interceptor";
+import {DialogService} from "primeng/dynamicdialog";
+import {MessageService} from "primeng/api";
 
 export const APP_CONFIG: ApplicationConfig = {
     providers: [
@@ -18,5 +20,7 @@ export const APP_CONFIG: ApplicationConfig = {
             authInterceptor
         ])),
         providePrimeNG(PRIMENG_CONFIG),
+        DialogService,
+        MessageService
     ],
 };

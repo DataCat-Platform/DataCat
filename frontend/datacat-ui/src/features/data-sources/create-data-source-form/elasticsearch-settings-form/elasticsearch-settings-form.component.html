@@ -1,0 +1,32 @@
+<div [formGroup]="form" class="settings-group">
+
+    <div class="form__item">
+        <p class="text-secondary">Cluster URL</p>
+        <input formControlName="clusterUrl" pInputText placeholder="https://"/>
+    </div>
+
+    <div class="form__item">
+        <p class="text-secondary">Index Pattern</p>
+        <input formControlName="indexPattern" pInputText placeholder="logstash-*"/>
+    </div>
+
+    <div class="form__item">
+        <p class="text-secondary">Request Timeout (seconds)</p>
+        <p-inputNumber
+                [max]="86400"
+                [min]="1"
+                [showButtons]="true"
+                formControlName="requestTimeout"
+        />
+    </div>
+
+    <div class="form__item">
+        <p class="text-secondary">Username</p>
+        <input formControlName="userName" pInputText/>
+    </div>
+
+    <div class="form__item">
+        <p class="text-secondary">Password</p>
+        <input formControlName="password" pInputText type="password"/>
+    </div>
+</div>

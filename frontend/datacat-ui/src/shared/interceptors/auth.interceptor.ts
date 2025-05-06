@@ -19,15 +19,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             },
             error: (error) => {
                 if (error.status === 401) {
-                    const alreadyRedirected = localStorage.getItem('login_redirected');
+                    const loginAttempted = localStorage.getItem('login_attempted');
 
-                    if (alreadyRedirected) {
-                        window.location.href = "/forbidden";
-                        localStorage.removeItem('login_redirected'); // todo: think about how to handle double auth 401/403 case
-                    } else {
-                        localStorage.setItem("login_redirected", "true");
-                        const version = "v1";
+                    if (!loginAttempted) {
+                        localStorage.setItem('login_attempted', 'true');
+                        const version = 'v1';
                         window.location.href = `/api/${version}/user/login-code-flow`;
+                    } else {
+                        window.location.href = '/forbidden';
                     }
                 }
             }
@@ -35,7 +34,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     );
 };
 
-function getAccessTokenFromCookie(): string | null {
+export function getAccessTokenFromCookie(): string | null {
     const match = document.cookie.match(/(?:^| )access_token=([^;]+)/);
     return match ? match[1] : null;
 }
