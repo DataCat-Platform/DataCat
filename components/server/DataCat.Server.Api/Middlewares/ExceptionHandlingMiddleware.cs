@@ -66,6 +66,20 @@ public sealed class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddlew
                     }
                 };
                 break;
+            case ForbiddenException forbiddenException:
+                statusCode = StatusCodes.Status403Forbidden;
+                problemDetails = new ProblemDetails
+                {
+                    Status = statusCode,
+                    Type = "Forbidden",
+                    Title = "Forbidden",
+                    Detail = forbiddenException.Message,
+                    Extensions =
+                    {
+                        ["errors"] = forbiddenException.Message
+                    }
+                };
+                break;
             default:
                 statusCode = StatusCodes.Status500InternalServerError;
                 problemDetails = new ProblemDetails

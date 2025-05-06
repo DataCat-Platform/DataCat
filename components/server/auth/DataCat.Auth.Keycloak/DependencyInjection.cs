@@ -13,6 +13,8 @@ public static class DependencyInjection
         services.AddScoped<IIdentity, KeycloakIdentity>();
 
         services.AddSingleton<KeycloakRequestBuilder>();
+
+        services.AddScoped<IOidcRedirectService, KeycloakOidcRedirectService>();
         
         services.Configure<AuthenticationOptions>(configuration.GetSection("Authentication"));
         services.ConfigureOptions<JwtBearerOptionsSetup>();

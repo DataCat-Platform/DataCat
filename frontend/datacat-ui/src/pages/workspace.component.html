@@ -1,62 +1,64 @@
 <div class="screen">
-  <p-splitter
-    [panelSizes]="[15, 85]"
-    [minSizes]="[15, 50]"
-    [gutterSize]="2"
-    [style]="{ height: '100%' }"
-  >
-    <!-- Navigation panel. -->
-    <ng-template pTemplate>
-      <div class="navigation">
-        <p-select
-          placeholder="Select a namespace"
-          size="small"
-          variant="outlined"
-        >
-          <ng-template #dropdownicon />
-        </p-select>
-        <p-tree
-          [value]="treeMenuRootNode"
-          selectionMode="single"
-          class="w-full"
-          (onNodeSelect)="onTreeMenuNodeSelect($event)"
-        />
-        <div class="navigation__settings-button">
-          <p-button
-            icon="pi pi-cog"
-            [text]="true"
-            severity="secondary"
-            (onClick)="openSettings()"
-            [rounded]="true"
-          />
-        </div>
-      </div>
-    </ng-template>
+    <p-splitter
+            [gutterSize]="2"
+            [minSizes]="[15, 50]"
+            [panelSizes]="[15, 85]"
+            [style]="{ height: '100%' }"
+    >
+        <!-- Navigation panel. -->
+        <ng-template pTemplate>
+            <div class="navigation">
+                <p-select
+                        placeholder="Select a namespace"
+                        size="small"
+                        variant="outlined"
+                >
+                    <ng-template #dropdownicon/>
+                </p-select>
+                <p-tree
+                        (onNodeSelect)="onTreeMenuNodeSelect($event)"
+                        [value]="treeMenuRootNode"
+                        class="w-full"
+                        selectionMode="single"
+                />
+                <div class="navigation__settings-button">
+                    <p-button
+                            (onClick)="openSettings()"
+                            [rounded]="true"
+                            [text]="true"
+                            icon="pi pi-cog"
+                            severity="secondary"
+                    />
+                </div>
+            </div>
+        </ng-template>
 
-    <!-- Content panel. -->
-    <ng-template pTemplate>
-      <div class="content">
-        <div class="content__nav">
-          <p-button
-            icon="pi pi-arrow-left"
-            [text]="true"
-            severity="secondary"
-            (onClick)="goToPreviousActivity()"
-          />
-          <p-button
-            icon="pi pi-arrow-right"
-            [text]="true"
-            severity="secondary"
-            (onClick)="goToNextActivity()"
-          />
-          <div class="activity-path-items">
-            <datacat-activity-breadcrumb />
-          </div>
-        </div>
-        <div class="content__view">
-          <router-outlet />
-        </div>
-      </div>
-    </ng-template>
-  </p-splitter>
+        <!-- Content panel. -->
+        <ng-template pTemplate>
+            <div class="content">
+                <div class="content__nav">
+                    <p-button
+                            (onClick)="goToPreviousActivity()"
+                            [text]="true"
+                            icon="pi pi-arrow-left"
+                            severity="secondary"
+                    />
+                    <p-button
+                            (onClick)="goToNextActivity()"
+                            [text]="true"
+                            icon="pi pi-arrow-right"
+                            severity="secondary"
+                    />
+                    <div class="activity-path-items">
+                        <datacat-activity-breadcrumb/>
+                    </div>
+                </div>
+                <div class="content__view">
+                    <router-outlet/>
+                </div>
+            </div>
+        </ng-template>
+    </p-splitter>
 </div>
+
+

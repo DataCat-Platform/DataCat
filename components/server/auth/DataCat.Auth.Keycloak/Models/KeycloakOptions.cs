@@ -7,6 +7,10 @@ public sealed record KeycloakOptions
     public string AdminUrl { get; init; } = string.Empty;
 
     public string TokenUrl { get; init; } = string.Empty;
+    
+    public string AuthUrl { get; init; } = string.Empty;
+    
+    public string RedirectUri  { get; init; } = string.Empty;
 
     public string AdminClientId { get; init; } = string.Empty;
 
