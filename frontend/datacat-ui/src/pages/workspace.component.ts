@@ -5,7 +5,7 @@
  */
 
 import {Component} from '@angular/core';
-import {Router, RouterModule} from '@angular/router';
+import {NavigationEnd, Router, RouterModule} from '@angular/router';
 
 import {SplitterModule} from 'primeng/splitter';
 import {BreadcrumbModule} from 'primeng/breadcrumb';
@@ -13,10 +13,12 @@ import {TreeModule, TreeNodeSelectEvent} from 'primeng/tree';
 import {SelectModule} from 'primeng/select';
 import {ButtonModule} from 'primeng/button';
 import {MenuItem, TreeNode} from 'primeng/api';
-import {Location, NgIf} from '@angular/common';
+import {Location} from '@angular/common';
 import {ActivityBreadcrumbComponent} from '../features/workspace/activity-breadcrumb';
 import * as urls from '../shared/common/urls';
-import {ForbiddenComponent} from "./forbidden";
+import {filter} from "rxjs";
+import {getAccessTokenFromCookie} from "../shared/interceptors/auth.interceptor";
+import {Toast} from "primeng/toast";
 
 interface TreeMenuNodeData {
     url?: string;
@@ -35,12 +37,11 @@ interface TreeMenuNodeData {
         SelectModule,
         ButtonModule,
         ActivityBreadcrumbComponent,
-        ForbiddenComponent,
-        NgIf,
+        Toast,
+
     ],
 })
 export class WorkspaceComponent {
-    isForbidden = false;
     protected activityPathItems: MenuItem[] = [];
     protected readonly treeMenuRootNode: TreeNode<TreeMenuNodeData>[] = [
         {
@@ -78,6 +79,14 @@ export class WorkspaceComponent {
                         url: urls.ADMIN_URL,
                     },
                 },
+                {
+                    type: 'url',
+                    icon: 'pi pi-prime',
+                    label: 'Data Sources',
+                    data: {
+                        url: urls.DATA_SOURCES_EXPLORER_URL,
+                    },
+                },
             ],
         },
     ];
@@ -86,7 +95,17 @@ export class WorkspaceComponent {
         private router: Router,
         private location: Location,
     ) {
-        this.isForbidden = this.router.url.includes('/forbidden');
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd)
+        ).subscribe(() => {
+            const token = getAccessTokenFromCookie();
+            const loginAttempted = localStorage.getItem('login_attempted');
+
+            if (token && loginAttempted) {
+                localStorage.removeItem('login_attempted');
+                console.log('Login attempt reset after successful navigation');
+            }
+        });
     }
 
     protected onTreeMenuNodeSelect(event: TreeNodeSelectEvent) {

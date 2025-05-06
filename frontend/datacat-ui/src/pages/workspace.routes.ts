@@ -55,6 +55,20 @@ export const ROUTES: Routes = [
                         (m) => m.ManageNotificationGroupComponent,
                     ),
             },
+            {
+                path: urls.DATA_SOURCES_EXPLORER_URL,
+                loadComponent: () =>
+                    import('../processes/explore-data-sources').then(
+                        (m) => m.ExploreDataSourcesComponent,
+                    ),
+            },
+            {
+                path: urls.DATA_SOURCES_EDIT_URL,
+                loadComponent: () =>
+                    import('../processes/manage-data-sources/manage-data-sources.component').then(
+                        (m) => m.ManageDataSourcesComponent,
+                    ),
+            },
             // {
             //   path: urls.NOTIFICATION_TEMPLATE_EDIT_URL,
             //   loadComponent: () => import('../processes/manage-notification-template').then(
