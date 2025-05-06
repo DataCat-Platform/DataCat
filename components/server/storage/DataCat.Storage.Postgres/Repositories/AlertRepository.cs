@@ -122,7 +122,7 @@ public sealed class AlertRepository(
         dataSql.AppendLine(AlertSql.Select.SearchAlerts);
         dataSql
             .BuildQuery(parameters, filters, columnMappings)
-            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: $"alerts.{Public.Alerts.Id}"), columnMappings)
+            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: "id"), columnMappings)
             .ApplyPagination();
         
         var dataSqlString = dataSql.ToString();

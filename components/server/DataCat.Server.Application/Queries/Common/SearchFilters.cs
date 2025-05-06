@@ -2,8 +2,8 @@ namespace DataCat.Server.Application.Queries.Common;
 
 public sealed record SearchFilters
 {
-    public required IReadOnlyCollection<SearchFilter> Filters { get; init; } = [];
-    public required Sort? Sort { get; init; } = null;
+    public IReadOnlyCollection<SearchFilter> Filters { get; init; } = [];
+    public Sort? Sort { get; init; } = null;
 }
 
 public sealed record SearchFilter(

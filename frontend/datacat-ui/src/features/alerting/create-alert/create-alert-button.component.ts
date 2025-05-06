@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {ButtonModule} from 'primeng/button';
 import * as urls from '../../../shared/common/urls';
-import {ApiService} from '../../../shared/services/api.service';
 import {timer} from 'rxjs';
+import {ApiService} from "../../../shared/services/datacat-generated-client";
 
 @Component({
     standalone: true,

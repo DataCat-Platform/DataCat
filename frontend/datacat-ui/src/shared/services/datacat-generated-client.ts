@@ -7164,6 +7164,7 @@ export class SearchDataSourcesResponse implements ISearchDataSourcesResponse {
     id?: string;
     name?: string;
     type?: string;
+    purpose?: string;
     connectionString?: string;
 
     constructor(data?: ISearchDataSourcesResponse) {
@@ -7187,6 +7188,7 @@ export class SearchDataSourcesResponse implements ISearchDataSourcesResponse {
             this.id = _data["id"];
             this.name = _data["name"];
             this.type = _data["type"];
+            this.purpose = _data["purpose"];
             this.connectionString = _data["connectionString"];
         }
     }
@@ -7196,6 +7198,7 @@ export class SearchDataSourcesResponse implements ISearchDataSourcesResponse {
         data["id"] = this.id;
         data["name"] = this.name;
         data["type"] = this.type;
+        data["purpose"] = this.purpose;
         data["connectionString"] = this.connectionString;
         return data;
     }
@@ -7212,6 +7215,7 @@ export interface ISearchDataSourcesResponse {
     id?: string;
     name?: string;
     type?: string;
+    purpose?: string;
     connectionString?: string;
 }
 

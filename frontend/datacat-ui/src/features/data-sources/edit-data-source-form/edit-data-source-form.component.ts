@@ -1,46 +1,39 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {ButtonModule} from "primeng/button";
-import {InputTextModule} from "primeng/inputtext";
-import {SelectModule} from "primeng/select";
-
-import {PrometheusSettingsFormComponent} from "./prometheus-settings-form/prometheus-settings-form.component";
-import {catchError, finalize, tap} from "rxjs";
-import {ToastLoggerService} from "../../../shared/services/toast-logger.service";
-import {JaegerSettingsFormComponent} from "./jaeger-settings-form/jaeger-settings-form.component";
-import {ElasticsearchSettingsFormComponent} from "./elasticsearch-settings-form/elasticsearch-settings-form.component";
+import {Component} from '@angular/core';
+import {Button} from "primeng/button";
 import {
-    ApiService,
-    DataSourceKind,
-    IAddDataSourceRequest,
-    IGetDataSourceTypeResponse
-} from "../../../shared/services/datacat-generated-client";
+    ElasticsearchSettingsFormComponent
+} from "../create-data-source-form/elasticsearch-settings-form/elasticsearch-settings-form.component";
+import {InputText} from "primeng/inputtext";
+import {
+    JaegerSettingsFormComponent
+} from "../create-data-source-form/jaeger-settings-form/jaeger-settings-form.component";
+import {
+    PrometheusSettingsFormComponent
+} from "../create-data-source-form/prometheus-settings-form/prometheus-settings-form.component";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {ApiService, IAddDataSourceRequest} from "../../../shared/services/datacat-generated-client";
+import {ToastLoggerService} from "../../../shared/services/toast-logger.service";
+import {catchError, finalize, tap} from "rxjs";
 
 @Component({
-    selector: 'app-create-data-source-form',
+    selector: 'app-edit-data-source-form',
     standalone: true,
     imports: [
-        ReactiveFormsModule,
-        ButtonModule,
-        InputTextModule,
-        SelectModule,
-        PrometheusSettingsFormComponent,
+        Button,
+        ElasticsearchSettingsFormComponent,
+        InputText,
         JaegerSettingsFormComponent,
-        ElasticsearchSettingsFormComponent
+        PrometheusSettingsFormComponent,
+        ReactiveFormsModule
     ],
-    templateUrl: './create-data-source-form.component.html',
-    styleUrl: './create-data-source-form.component.scss'
+    templateUrl: './edit-data-source-form.component.html',
+    styleUrl: './edit-data-source-form.component.scss'
 })
-export class CreateDataSourceFormComponent implements OnInit {
+export class EditDataSourceFormComponent {
     isBusy = false;
-
-    dataSourceTypes: IGetDataSourceTypeResponse[] = [];
-    dataSourcePurposes = Object.values(DataSourceKind);
 
     form = this.fb.group({
         name: ['', Validators.required],
-        dataSourceType: ['', Validators.required],
-        purpose: [null as DataSourceKind | null, Validators.required],
         settings: this.fb.group({})
     });
 
@@ -57,21 +50,6 @@ export class CreateDataSourceFormComponent implements OnInit {
 
     ngOnInit() {
         this.isBusy = true;
-
-        this.apiService.getApiV1DataSourceTypeGetAll().pipe(
-            finalize(() => this.isBusy = false),
-            tap(res => {
-                this.dataSourceTypes = res;
-            }),
-            catchError((err) => {
-                this.toastLoggerService.error(err);
-                return err;
-            })
-        ).subscribe();
-
-        this.form.get('dataSourceType')?.valueChanges.subscribe(type => {
-            this.updateSettingsForm(type!);
-        });
     }
 
     saveDataSource() {
@@ -82,8 +60,6 @@ export class CreateDataSourceFormComponent implements OnInit {
 
         const request: any = {
             uniqueName: formValue.name!,
-            dataSourceType: formValue.dataSourceType!,
-            purpose: formValue.purpose!,
             connectionString: JSON.stringify(connectionSettings)
         } as IAddDataSourceRequest;
 

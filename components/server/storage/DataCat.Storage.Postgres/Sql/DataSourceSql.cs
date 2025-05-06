@@ -7,7 +7,7 @@ public static class DataSourceSql
         public const string SearchDataSourcesTotalCount = $"""
            SELECT
                 COUNT(*)
-           FROM {Public.DataSourceTable}
+           FROM {Public.DataSourceTable} data_source
            WHERE 1=1 
        """;
         

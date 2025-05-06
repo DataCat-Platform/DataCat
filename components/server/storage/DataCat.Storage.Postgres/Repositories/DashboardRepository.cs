@@ -114,7 +114,7 @@ public sealed class DashboardRepository(
         dataSql.AppendLine(DashboardSql.Select.SearchDashboards);
         dataSql
             .BuildQuery(parameters, filters, columnMappings)
-            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: $"dashboard.{Public.Dashboards.Id}"), columnMappings)
+            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: "id"), columnMappings)
             .ApplyPagination();
         
         var dataSqlString = dataSql.ToString();

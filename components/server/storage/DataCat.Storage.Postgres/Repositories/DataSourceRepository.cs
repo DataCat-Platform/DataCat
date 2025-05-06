@@ -22,7 +22,7 @@ public sealed class DataSourceRepository(
             
             FROM {Public.DataSourceTable} data_source 
             JOIN {Public.DataSourceTypeTable} data_source_type ON data_source.{Public.DataSources.TypeId} = data_source_type.{Public.DataSourceType.Id} 
-            WHERE {Public.DataSources.Id} = @p_data_source_id
+            WHERE data_source.{Public.DataSources.Id} = @p_data_source_id
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -132,13 +132,12 @@ public sealed class DataSourceRepository(
             countSqlString,
             parameters,
             transaction: unitOfWork.Transaction);
-        
 
         var dataSql = new StringBuilder();
         dataSql.AppendLine(DataSourceSql.Select.SearchDataSources);
         dataSql
             .BuildQuery(parameters, filters, columnMappings)
-            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: $"data_source.{Public.DataSources.Id}"), columnMappings)
+            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: "id"), columnMappings)
             .ApplyPagination();
         
         var dataSqlString = dataSql.ToString();
