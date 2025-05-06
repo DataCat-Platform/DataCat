@@ -24,9 +24,9 @@ public sealed class NotificationChannelGroupRepository(
             
             FROM
                 {Public.NotificationChannelGroupTable} notification_group
-            JOIN
+            LEFT JOIN
                 {Public.NotificationChannelTable} notification_channel ON notification_channel.{Public.NotificationChannels.NotificationChannelGroupId} = notification_group.{Public.NotificationChannelGroups.Id}
-            JOIN 
+            LEFT JOIN 
                 {Public.NotificationDestinationTable} notification_destination ON notification_channel.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationChannels.Id} 
             WHERE notification_group.{Public.NotificationChannelGroups.Id} = @p_notification_channel_group_id
         """;
@@ -37,8 +37,8 @@ public sealed class NotificationChannelGroupRepository(
 
         await connection.QueryAsync<
             NotificationChannelGroupSnapshot,
-            NotificationChannelSnapshot,
-            NotificationDestinationSnapshot,
+            NotificationChannelSnapshot?,
+            NotificationDestinationSnapshot?,
             NotificationChannelGroupSnapshot>(
             sql,
             map: (group, notification, destination) =>
@@ -48,9 +48,12 @@ public sealed class NotificationChannelGroupRepository(
                     groupEntry = group;
                     groupDictionary.Add(groupEntry.Id, groupEntry);
                 }
-
-                notification.Destination = destination;
-                groupEntry.Channels.Add(notification);
+                
+                if (notification is not null)
+                {
+                    notification.Destination = destination!;
+                    groupEntry.Channels.Add(notification);
+                }
 
                 return groupEntry;
             },
@@ -77,9 +80,9 @@ public sealed class NotificationChannelGroupRepository(
             
             FROM
                 {Public.NotificationChannelGroupTable} notification_group
-            JOIN
+            LEFT JOIN
                 {Public.NotificationChannelTable} notification_channel ON notification_channel.{Public.NotificationChannels.NotificationChannelGroupId} = notification_group.{Public.NotificationChannelGroups.Id}
-            JOIN 
+            LEFT JOIN 
                 {Public.NotificationDestinationTable} notification_destination ON notification_channel.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationChannels.Id} 
         """;
 
@@ -89,8 +92,8 @@ public sealed class NotificationChannelGroupRepository(
 
         await connection.QueryAsync<
             NotificationChannelGroupSnapshot,
-            NotificationChannelSnapshot,
-            NotificationDestinationSnapshot,
+            NotificationChannelSnapshot?,
+            NotificationDestinationSnapshot?,
             NotificationChannelGroupSnapshot>(
             sql,
             map: (group, notification, destination) =>
@@ -101,8 +104,11 @@ public sealed class NotificationChannelGroupRepository(
                     groupDictionary.Add(groupEntry.Id, groupEntry);
                 }
 
-                notification.Destination = destination;
-                groupEntry.Channels.Add(notification);
+                if (notification is not null)
+                {
+                    notification.Destination = destination!;
+                    groupEntry.Channels.Add(notification);
+                }
 
                 return groupEntry;
             },

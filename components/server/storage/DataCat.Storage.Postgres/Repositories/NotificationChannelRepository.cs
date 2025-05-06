@@ -24,7 +24,7 @@ public sealed class NotificationChannelRepository(
             JOIN 
                 {Public.NotificationDestinationTable} notification_destination 
                     ON notification.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationChannels.Id} 
-            WHERE {Public.NotificationChannels.Id} = @p_notification_channel_id
+            WHERE notification.{Public.NotificationChannels.Id} = @p_notification_channel_id
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
