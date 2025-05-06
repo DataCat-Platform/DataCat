@@ -1,8 +1,14 @@
 <p-panel [style]="{ display: 'block', height: '100%' }">
-    @if (isLoading) {
-        <ng-template pTemplate="header">
+    <ng-template pTemplate="header">
+        @if (isLoading) {
             Loading Data Source...
-        </ng-template>
+        } @else {
+            Edit Data Source {{ dataSourceId }} <br>
+            Type {{ dataSource.type | uppercase }}
+        }
+    </ng-template>
+
+    @if (isLoading) {
         <div class="loading-container">
             <p-progressBar mode="indeterminate"></p-progressBar>
             <p class="loading-message">
@@ -11,13 +17,9 @@
             </p>
         </div>
     } @else {
-        <ng-template pTemplate="header">
-            Edit Data Source {{ dataSourceId }}
-        </ng-template>
-
-        <!--        <div class="edit-data-source-form-box">-->
-                <!--            <app-edit-data-source-form></app-edit-data-source-form>-->
-                <!--        </div>-->
+        <div class="edit-data-source-form-box">
+            <app-edit-data-source-form [editDataSource]="editDataSource"></app-edit-data-source-form>
+        </div>
 
         <p-divider align="left">
             <span class="danger-section-title">Danger Zone</span>

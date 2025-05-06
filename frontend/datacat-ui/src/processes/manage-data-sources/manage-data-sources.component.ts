@@ -10,6 +10,11 @@ import {ProgressBar} from "primeng/progressbar";
 import {
     DeleteDataSourceButtonComponent
 } from "../../features/data-sources/delete-data-source-button/delete-data-source-button.component";
+import {
+    EditDataSourceFormComponent
+} from "../../features/data-sources/edit-data-source-form/edit-data-source-form.component";
+import {EditDataSource} from "../../entities/data-sources/edit-data-source";
+import {UpperCasePipe} from "@angular/common";
 
 @Component({
     selector: 'app-manage-data-sources',
@@ -19,7 +24,9 @@ import {
         Divider,
         PrimeTemplate,
         ProgressBar,
-        DeleteDataSourceButtonComponent
+        DeleteDataSourceButtonComponent,
+        EditDataSourceFormComponent,
+        UpperCasePipe
     ],
     templateUrl: './manage-data-sources.component.html',
     styleUrl: './manage-data-sources.component.scss'
@@ -34,6 +41,15 @@ export class ManageDataSourcesComponent implements OnInit {
         private apiService: ApiService,
         private toastLogger: ToastLoggerService
     ) {
+    }
+
+    get editDataSource() {
+        return {
+            id: this.dataSource.id,
+            name: this.dataSource.name,
+            type: this.dataSource.type,
+            connectionString: this.dataSource.connectionString,
+        } as EditDataSource;
     }
 
     ngOnInit(): void {

@@ -1084,11 +1084,38 @@ export class ApiService extends ClientBaseService {
         }));
     }
 
-    getApiV1NotificationChannelGroup(name: string): Observable<NotificationChannelResponse> {
-        let url_ = this.baseUrl + "/api/v1/notification-channel-group/{name}";
-        if (name === undefined || name === null)
-            throw new Error("The parameter 'name' must be defined.");
-        url_ = url_.replace("{name}", encodeURIComponent("" + name));
+    getApiV1NotificationChannelGroupGetAll(): Observable<NotificationChannelResponse[]> {
+        let url_ = this.baseUrl + "/api/v1/notification-channel-group/get-all";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_: any) => {
+            return this.processGetApiV1NotificationChannelGroupGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetApiV1NotificationChannelGroupGetAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<NotificationChannelResponse[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<NotificationChannelResponse[]>;
+        }));
+    }
+
+    getApiV1NotificationChannelGroup(id: string): Observable<NotificationChannelResponse> {
+        let url_ = this.baseUrl + "/api/v1/notification-channel-group/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: any = {
@@ -3269,6 +3296,46 @@ export class ApiService extends ClientBaseService {
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
 
+                return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+                let result400: any = null;
+                let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result400 = ProblemDetails.fromJS(resultData400);
+                return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    protected processGetApiV1NotificationChannelGroupGetAll(response: HttpResponseBase): Observable<NotificationChannelResponse[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+                (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {};
+        if (response.headers) {
+            for (let key of response.headers.keys()) {
+                _headers[key] = response.headers.get(key);
+            }
+        }
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                if (Array.isArray(resultData200)) {
+                    result200 = [] as any;
+                    for (let item of resultData200)
+                        result200!.push(NotificationChannelResponse.fromJS(item));
+                } else {
+                    result200 = <any>null;
+                }
                 return _observableOf(result200);
             }));
         } else if (status === 400) {

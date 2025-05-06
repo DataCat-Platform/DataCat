@@ -4,9 +4,9 @@ public sealed class RemoveDataSource : ApiEndpointBase
 {
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete("api/v{version:apiVersion}/data-source/remove/{dataSourceId}", async (
+        app.MapDelete("api/v{version:apiVersion}/data-source/remove/{dataSourceId:guid}", async (
                 [FromServices] IMediator mediator,
-                [FromRoute] string dataSourceId,
+                [FromRoute] Guid dataSourceId,
                 CancellationToken token = default) =>
             {
                 var query = ToCommand(dataSourceId);
@@ -19,5 +19,5 @@ public sealed class RemoveDataSource : ApiEndpointBase
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static RemoveDataSourceCommand ToCommand(string dataSourceId) => new(dataSourceId);
+    private static RemoveDataSourceCommand ToCommand(Guid dataSourceId) => new(dataSourceId);
 }
