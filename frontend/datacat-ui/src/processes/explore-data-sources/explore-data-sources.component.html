@@ -5,5 +5,10 @@
     <div class="slot">
         <app-create-data-source-button></app-create-data-source-button>
     </div>
-
+    <div class="slot">
+        <app-data-sources-filtering (filter)="onFilterChange($event)"></app-data-sources-filtering>
+    </div>
+    <div class="slot">
+        <app-data-sources-list [filter]="filter"></app-data-sources-list>
+    </div>
 </p-panel>

@@ -1,0 +1,47 @@
+<p-table
+        (onPage)="loadData($event)"
+        [lazy]="true"
+        [loading]="loading"
+        [paginator]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [rows]="rows"
+        [totalRecords]="totalRecords"
+        [value]="dataSources"
+        styleClass="p-datatable-striped"
+>
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Purpose</th>
+            <th style="width: 100px">Actions</th>
+        </tr>
+    </ng-template>
+    <ng-template let-dataSource pTemplate="body">
+        <tr>
+            <td>{{ dataSource.name }}</td>
+            <td>{{ dataSource.type }}</td>
+            <td>
+                <p-tag [severity]="getSeverity(dataSource.purpose)" [value]="dataSource.purpose"></p-tag>
+            </td>
+            <td>
+                <div class="actions">
+                    <p-button
+                            (click)="editDataSource(dataSource.id)"
+                            icon="pi pi-pencil"
+                            pTooltip="Edit"
+                            styleClass="p-button-sm p-button-text"
+                            tooltipPosition="top"
+                    ></p-button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td class="text-center" colspan="5">
+                No data sources found
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

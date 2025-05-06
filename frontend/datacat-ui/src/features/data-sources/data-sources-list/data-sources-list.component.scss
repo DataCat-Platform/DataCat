@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  margin-top: 1rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.p-tag {
+  text-transform: capitalize;
+}
+
+.text-center {
+  text-align: center;
+}

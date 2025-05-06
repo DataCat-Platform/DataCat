@@ -101,8 +101,9 @@ internal static class SqlGenerator
                 break;
 
             case SearchFieldType.Number:
+                var value = double.Parse(filter.Value.ToString()!);
                 conditions.Add($"{sqlField} = {paramName}");
-                parameters.Add(paramName, Convert.ToDouble(filter.Value));
+                parameters.Add(paramName, value);
                 break;
 
             case SearchFieldType.Boolean:

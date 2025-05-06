@@ -76,7 +76,7 @@
       "templateDirectory": "nswagTemplates",
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../../../frontend/datacat-ui/src/app/core/services/datacat-generated-client.ts",
+      "output": "../../../frontend/datacat-ui/src/shared/services/datacat-generated-client.ts",
       "newLineBehavior": "Auto"
     }
   }

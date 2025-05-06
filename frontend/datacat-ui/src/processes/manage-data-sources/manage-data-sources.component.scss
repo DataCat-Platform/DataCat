@@ -1,0 +1,66 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.loading-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  .loading-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-color-secondary);
+  }
+}
+
+.error-container {
+  padding: 1rem;
+
+  .error-content {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+
+    i {
+      font-size: 1.5rem;
+      margin-top: 0.2rem;
+    }
+
+    .error-details {
+      font-size: 0.9rem;
+      color: var(--text-color-secondary);
+      margin: 0.5rem 0;
+    }
+  }
+}
+
+.edit-data-source-form-box {
+  padding: 1rem;
+}
+
+.danger-actions-box {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .danger-action-item {
+    &:not(:first-child) {
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+.p-divider {
+  margin: 1rem 0;
+
+  .danger-section-title {
+    color: var(--red-500);
+    font-weight: 500;
+  }
+}

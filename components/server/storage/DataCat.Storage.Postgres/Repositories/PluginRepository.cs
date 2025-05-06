@@ -96,7 +96,7 @@ public sealed class PluginRepository(
         dataSql.AppendLine(PluginSql.Select.SearchPlugins);
         dataSql
             .BuildQuery(parameters, filters, columnMappings)
-            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: $"{Public.Plugins.Name}"), columnMappings)
+            .ApplyOrderBy(filters.Sort ?? new Sort(FieldName: "name"), columnMappings)
             .ApplyPagination();
 
         var dataSqlString = dataSql.ToString();
