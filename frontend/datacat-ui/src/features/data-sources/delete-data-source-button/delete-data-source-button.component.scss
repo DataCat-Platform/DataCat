@@ -1,9 +1,16 @@
 .actions-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 1rem;
   margin-top: var(--p-padding-md);
+  flex-wrap: wrap;
+
+  button {
+    min-width: 6rem;
+  }
 }
 
 .error {
+  font-weight: 500;
   margin-top: var(--p-padding-sm);
 }
