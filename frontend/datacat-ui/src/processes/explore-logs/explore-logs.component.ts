@@ -8,6 +8,12 @@ import {
 } from "../../shared/services/datacat-generated-client";
 import {LogsFilterComponent} from "../../features/logs/logs-filter/logs-filter.component";
 import {LogsListComponent} from "../../features/logs/logs-list/logs-list.component";
+import {DropdownModule} from "primeng/dropdown";
+import {FormsModule} from "@angular/forms";
+import {ToastLoggerService} from "../../shared/services/toast-logger.service";
+import {
+    LogsDataSourceSelectorComponent
+} from "../../features/logs/logs-data-source-selector/logs-data-source-selector.component";
 
 @Component({
     selector: 'app-explore-logs',
@@ -15,7 +21,10 @@ import {LogsListComponent} from "../../features/logs/logs-list/logs-list.compone
     imports: [
         Panel,
         LogsFilterComponent,
-        LogsListComponent
+        LogsListComponent,
+        DropdownModule,
+        FormsModule,
+        LogsDataSourceSelectorComponent
     ],
     templateUrl: './explore-logs.component.html',
     styleUrl: './explore-logs.component.scss'
@@ -36,7 +45,9 @@ export class ExploreLogsComponent {
         totalPages: 0
     };
 
-    constructor(private apiService: ApiService) {
+    constructor(
+        private apiService: ApiService,
+        private toastLoggerService: ToastLoggerService) {
     }
 
     ngOnInit() {
@@ -56,6 +67,11 @@ export class ExploreLogsComponent {
     onSortChange(sort: { field: string; ascending: boolean }) {
         this.currentFilter.sortField = sort.field;
         this.currentFilter.sortAscending = sort.ascending;
+        this.loadLogs();
+    }
+
+    onDataSourceChange() {
+        this.currentFilter.page = 1;
         this.loadLogs();
     }
 

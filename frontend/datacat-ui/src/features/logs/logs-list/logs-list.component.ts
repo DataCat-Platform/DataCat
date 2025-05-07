@@ -3,7 +3,6 @@ import {LogEntry} from "../../../shared/services/datacat-generated-client";
 import {TableModule} from "primeng/table";
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {Tag} from "primeng/tag";
-import {ButtonDirective} from "primeng/button";
 
 @Component({
     selector: 'app-logs-list',
@@ -13,7 +12,6 @@ import {ButtonDirective} from "primeng/button";
         DatePipe,
         Tag,
         NgForOf,
-        ButtonDirective,
         NgIf
     ],
     templateUrl: './logs-list.component.html',
@@ -28,6 +26,12 @@ export class LogsListComponent {
     currentSortField = '';
     sortAscending = false;
 
+    onPageChange(event: any) {
+        const newPage = (event.first / event.rows) + 1;
+        this.pageChange.emit(newPage);
+    }
+
+    // Остальные методы без изменений
     onSort(field: string) {
         if (this.currentSortField === field) {
             this.sortAscending = !this.sortAscending;
@@ -36,10 +40,6 @@ export class LogsListComponent {
             this.sortAscending = true;
         }
         this.sortChange.emit({field: this.currentSortField, ascending: this.sortAscending});
-    }
-
-    onPageChange(page: number) {
-        this.pageChange.emit(page);
     }
 
     getSeverityClass(severity: string): 'success' | 'info' | 'warn' | 'danger' {

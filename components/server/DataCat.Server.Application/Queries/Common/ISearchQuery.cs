@@ -31,7 +31,7 @@ public sealed class SearchQueryValidator : AbstractValidator<ISearchQuery>
                 {
                     return input.FieldType switch
                     {
-                        SearchFieldType.String => matchMode is MatchMode.Equals or MatchMode.StartsWith,
+                        SearchFieldType.String => matchMode is MatchMode.Equals or MatchMode.StartsWith or MatchMode.Contains,
                         SearchFieldType.Number => matchMode == MatchMode.Equals,
                         SearchFieldType.Boolean => matchMode == MatchMode.Equals,
                         SearchFieldType.Array => matchMode == MatchMode.Contains,

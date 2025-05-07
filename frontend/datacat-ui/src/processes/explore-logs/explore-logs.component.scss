@@ -11,3 +11,21 @@
   margin-left: var(--p-padding-md);
   margin-right: var(--p-padding-md);
 }
+
+.data-source-selector {
+  margin-bottom: 1.5rem;
+
+  .p-field {
+    max-width: 300px;
+
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+
+    p-dropdown {
+      width: 100%;
+    }
+  }
+}

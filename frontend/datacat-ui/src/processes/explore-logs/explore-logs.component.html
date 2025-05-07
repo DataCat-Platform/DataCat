@@ -2,6 +2,14 @@
     <div class="description-container">
         <p class="text-secondary">Explore and analyze system logs in real-time</p>
     </div>
+
+    <div class="slot">
+        <app-logs-data-source-selector
+                (selectedDataSourceChange)="onDataSourceChange()"
+                [(selectedDataSource)]="currentFilter.dataSourceName">
+        </app-logs-data-source-selector>
+    </div>
+
     <div class="slot">
         <app-logs-filter
                 (filterChange)="onFilterChange($event)"

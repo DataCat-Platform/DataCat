@@ -16,6 +16,7 @@ import {Button} from "primeng/button";
 import {Tooltip} from "primeng/tooltip";
 import {ToastLoggerService} from "../../../shared/services/toast-logger.service";
 import {Tag} from "primeng/tag";
+import {capitalizeFirstLetter} from "../../../shared/utils/capitalizeFirstLetter";
 
 @Component({
     selector: 'app-data-sources-list',
@@ -132,16 +133,12 @@ export class DataSourcesListComponent implements OnInit {
         if (filter?.purpose) {
             request.filters!.push({
                 key: 'purpose',
-                value: this.capitalizeFirstLetter(filter.purpose),
+                value: capitalizeFirstLetter(filter.purpose),
                 matchMode: MatchMode.Equals,
                 fieldType: SearchFieldType.String
             } as SearchFilter);
         }
 
         return request as SearchFilters;
-    }
-
-    private capitalizeFirstLetter(value: string): string {
-        return value.charAt(0).toUpperCase() + value.slice(1);
     }
 }
