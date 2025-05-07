@@ -44,6 +44,7 @@ All notable changes to this project will be documented in this file.
 - *(datacat-ui)* Finish notification template, need to figure out notification group editing
 - *(datacat-ui)* MVP notifications done
 - *(datacat-ui)* Add logs visualization
+- *(datacat-ui)* Add logs visualization
 
 ### 🚜 Refactor
 
