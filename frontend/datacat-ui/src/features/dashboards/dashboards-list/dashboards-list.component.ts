@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { Alert, AlertStatus, DataSource } from '../../../entities';
+import { Dashboard } from '../../../entities';
 import { TagModule } from 'primeng/tag';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -23,9 +23,9 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 @Component({
   standalone: true,
-  selector: './datacat-alerts-list',
-  templateUrl: './alerts-list.component.html',
-  styleUrl: './alerts-list.component.scss',
+  selector: './datacat-dashboards-list',
+  templateUrl: './dashboards-list.component.html',
+  styleUrl: './dashboards-list.component.scss',
   imports: [
     TableModule,
     TagModule,
@@ -40,7 +40,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     InputTextModule,
   ],
 })
-export class AlertsListComponent {
+export class DashboardsListComponent {
   protected addTagControl = new FormControl<string>('');
 
   protected get tagToAdd(): string {
@@ -48,41 +48,27 @@ export class AlertsListComponent {
   }
 
   protected filtersForm = new FormGroup({
-    status: new FormControl<AlertStatus | null>(null),
-    dataSourceId: new FormControl<string | null>(null),
     tags: new FormControl<string[]>([]),
   });
-
-  protected get filtersFormStatus(): AlertStatus | null {
-    return this.filtersForm.get('status')?.value || null;
-  }
-
-  protected get dataSourceId(): string | null {
-    return this.filtersForm.get('dataSourceId')?.value || null;
-  }
 
   protected get filtersFormTags(): string[] {
     return this.filtersForm.get('tags')?.value || [];
   }
 
-  protected possibleAlertStatuses = Object.values(AlertStatus);
-  protected possibleDataSources: DataSource[] = [];
-
   protected hasNextPage = false;
   protected hasPreviousPage = false;
   protected totalPagesCount = 0;
-  protected totalAlertsCount = 0;
-  protected alertsPerPageCount = 5;
-  protected currentPage = 1;
-  protected alerts: Alert[] = [];
+  protected totalDashboardsCount = 0;
+  protected dashboardsPerPageCount = 5;
+  protected currentPage = 0;
+  protected dashboards: Dashboard[] = [];
 
   constructor(
     private router: Router,
     private apiService: ApiService,
     private loggerService: ToastLoggerService,
   ) {
-    this.refreshAlerts();
-    this.refreshPossibleDataSources();
+    this.refreshDashboards();
   }
 
   protected addFilterTag(tag: string) {
@@ -99,33 +85,8 @@ export class AlertsListComponent {
       ?.setValue(previousTags.filter((t) => t !== tag));
   }
 
-  protected viewAlert(alertId: string) {
-    this.router.navigateByUrl(urls.alertViewUrl(alertId));
-  }
-
-  protected getSeverityForStatus(
-    status: AlertStatus,
-  ): 'success' | 'danger' | 'secondary' | 'info' {
-    {
-      switch (status) {
-        case AlertStatus.OK: {
-          return 'success';
-        }
-        case AlertStatus.FIRING:
-        case AlertStatus.ERROR: {
-          return 'danger';
-        }
-        case AlertStatus.PENDING: {
-          return 'info';
-        }
-        case AlertStatus.MUTED: {
-          return 'secondary';
-        }
-        default: {
-          return 'secondary';
-        }
-      }
-    }
+  protected viewDashboard(dashboardId: string) {
+    this.router.navigateByUrl(urls.dashboardUrl(dashboardId));
   }
 
   protected get searchFilters(): SearchFilters {
@@ -136,13 +97,13 @@ export class AlertsListComponent {
     } as any;
   }
 
-  protected refreshAlerts() {
+  protected refreshDashboards() {
     this.filtersForm.disable();
     this.apiService
-      .postApiV1AlertSearch(
+      .postApiV1DashboardSearch(
         this.searchFilters,
         this.currentPage,
-        this.alertsPerPageCount,
+        this.dashboardsPerPageCount,
       )
       .pipe(
         finalize(() => {
@@ -151,20 +112,20 @@ export class AlertsListComponent {
       )
       .subscribe({
         next: (data) => {
-          this.totalAlertsCount = data.totalCount || 0;
+          console.log(data);
+          this.totalDashboardsCount = data.totalCount || 0;
           this.totalPagesCount = data.totalPages || 0;
           this.hasNextPage = data.hasNextPage || false;
           this.hasPreviousPage = data.hasPreviousPage || false;
           this.currentPage = data.pageNumber || 0;
-          this.alerts = [];
+          this.dashboards = [];
         },
         error: (e) => {
+          console.log(e);
           this.loggerService.error(e);
         },
       });
   }
 
-  protected refreshPossibleDataSources() {
-    // TODO
-  }
+  protected loadPage(event: any) {}
 }

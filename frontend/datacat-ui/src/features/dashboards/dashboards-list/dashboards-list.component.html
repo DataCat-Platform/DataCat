@@ -1,0 +1,93 @@
+<div class="layout">
+  <form class="filters" [formGroup]="filtersForm">
+    <div class="filters__item">
+      <p>Dashboards Tags</p>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <p-button
+            icon="pi pi-plus"
+            label="Add"
+            severity="secondary"
+            [disabled]="filtersForm.disabled"
+            (onClick)="addFilterTag(tagToAdd)"
+          />
+        </p-inputgroup-addon>
+        <input pInputText placeholder="tag..." [formControl]="addTagControl" />
+      </p-inputgroup>
+    </div>
+  </form>
+  @if (filtersFormTags.length !== 0) {
+    <div class="tags">
+      @for (tag of filtersFormTags; track tag) {
+        <p-chip
+          [removable]="true"
+          [label]="tag"
+          (onRemove)="removeFilterTag(tag)"
+        />
+      }
+    </div>
+  }
+  <div class="filters__actions">
+    <p-button
+      icon="pi pi-sync"
+      label="Apply"
+      severity="secondary"
+      [loading]="filtersForm.disabled"
+      (onClick)="refreshDashboards()"
+    />
+  </div>
+  <p-table
+    [value]="dashboards"
+    stripedRows
+    [paginator]="true"
+    [rows]="5"
+    [rowsPerPageOptions]="[5, 10]"
+    [pageLinks]="12"
+    [alwaysShowPaginator]="false"
+    [lazy]="true"
+    [first]="0"
+    [totalRecords]="totalDashboardsCount"
+    [rows]="dashboardsPerPageCount"
+    (onPage)="loadPage($event)"
+  >
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" [style]="{ textAlign: 'center' }">
+          <p-tag value="No dashboards found" severity="info" />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Owner ID</th>
+        <th>Last Updated At</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-dashboard>
+      <tr>
+        <td>
+          {{ dashboard.id }}
+          <i class="pi pi-clone text-secondary"></i>
+        </td>
+        <td>{{ dashboard.name }}</td>
+        <td>{{ dashboard.description }}</td>
+        <td>{{ dashboard.ownerId }}</td>
+        <td>{{ dashboard.lastUpdatedAt | date: 'short' }}</td>
+        <td>
+          <p-button
+            icon="pi pi-arrow-up-right"
+            label="View"
+            severity="secondary"
+            size="small"
+            variant="text"
+            (onClick)="viewDashboard(dashboard.id)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

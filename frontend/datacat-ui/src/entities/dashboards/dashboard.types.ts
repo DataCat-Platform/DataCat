@@ -7,6 +7,4 @@ export type Dashboard = {
   panels: Panel[];
   ownerId: string;
   lastUpdatedAt: number;
-  tags: string[];
-  isFavorite: boolean;
 };
