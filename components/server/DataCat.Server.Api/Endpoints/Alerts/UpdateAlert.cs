@@ -2,6 +2,7 @@ namespace DataCat.Server.Api.Endpoints.Alerts;
 
 public sealed record UpdateAlertRequest(
     string? Description,
+    string Template,
     string RawQuery,
     string DataSourceId,
     string NotificationChannelId);
@@ -32,6 +33,7 @@ public sealed class UpdateAlert : ApiEndpointBase
         {
             AlertId = alertId,
             Description = request.Description,
+            Template = request.Template,
             RawQuery = request.RawQuery,
             DataSourceId = request.DataSourceId,
             NotificationChannelId = request.NotificationChannelId

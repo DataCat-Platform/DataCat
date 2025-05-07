@@ -4,6 +4,7 @@ public class Alert
 {
     private Alert(
         Guid id,
+        string? description,
         string template,
         Query conditionQuery,
         AlertStatus alertStatus,
@@ -14,6 +15,7 @@ public class Alert
         List<Tag> tags)
     {
         Id = id;
+        Description = description;
         Template = template;
         ConditionQuery = conditionQuery;
         Status = alertStatus;
@@ -25,8 +27,9 @@ public class Alert
     }
     
     public Guid Id { get; private set; }
-    
-    public string? Template { get; private set; }
+    public string? Description { get; private set; }
+
+    public string Template { get; private set; }
     
     public Query ConditionQuery { get; private set; }
     
@@ -39,7 +42,9 @@ public class Alert
     private readonly List<Tag> _tags;
     public IReadOnlyCollection<Tag> Tags => _tags.AsReadOnly();
 
-    public void ChangeDescription(string? description) => Template = description;
+    public void ChangeDescription(string? description) => Description = description;
+    public void ChangeTemplate(string template) => Template = template;
+
     public void ChangeWaitTime(TimeSpan waitTimeBeforeAlerting)
     {
         Schedule = new AlertSchedule(waitTimeBeforeAlerting, Schedule.RepeatInterval);
@@ -104,6 +109,7 @@ public class Alert
 
     public static Result<Alert> Create(
         Guid id, 
+        string? description,
         string? template, 
         Query? query, 
         AlertStatus? alertStatus,
@@ -153,6 +159,7 @@ public class Alert
             ? validationList.FoldResults()! 
             : Result.Success(
                 new Alert(id, 
+                    description,
                     template!, 
                     query!, 
                     alertStatus!, 

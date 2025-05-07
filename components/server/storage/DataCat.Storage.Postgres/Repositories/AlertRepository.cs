@@ -60,6 +60,7 @@ public sealed class AlertRepository(
            INSERT INTO {Public.AlertTable} (
                {Public.Alerts.Id},
                {Public.Alerts.Description},
+               {Public.Alerts.Template},
                {Public.Alerts.RawQuery},
                {Public.Alerts.Status},
                {Public.Alerts.DataSourceId},
@@ -73,6 +74,7 @@ public sealed class AlertRepository(
            VALUES (
                @{nameof(AlertSnapshot.Id)},
                @{nameof(AlertSnapshot.Description)},
+               @{nameof(AlertSnapshot.Template)},
                @{nameof(AlertSnapshot.ConditionQuery)},
                @{nameof(AlertSnapshot.Status)},
                @{nameof(AlertSnapshot.DataSourceId)},
@@ -178,6 +180,7 @@ public sealed class AlertRepository(
            UPDATE {Public.AlertTable}
            SET 
                {Public.Alerts.Description}                    = @{nameof(AlertSnapshot.Description)},
+               {Public.Alerts.Template}                       = @{nameof(AlertSnapshot.Template)},
                {Public.Alerts.Status}                         = @{nameof(AlertSnapshot.Status)},
                {Public.Alerts.RawQuery}                       = @{nameof(AlertSnapshot.ConditionQuery)},
                {Public.Alerts.DataSourceId}                   = @{nameof(AlertSnapshot.DataSourceId)},

@@ -2,6 +2,7 @@ namespace DataCat.Server.Api.Endpoints.Alerts;
 
 public sealed record AddAlertRequest(
     string? Description,
+    string Template,
     string RawQuery,
     string DataSourceId,
     string NotificationChannelGroupName,
@@ -33,6 +34,7 @@ public sealed class AddAlert : ApiEndpointBase
         return new AddAlertCommand
         {
             Description = request.Description,
+            Template = request.Template,
             RawQuery = request.RawQuery,
             DataSourceId = request.DataSourceId,
             NotificationChannelGroupName = request.NotificationChannelGroupName,

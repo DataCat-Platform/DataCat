@@ -4,6 +4,7 @@ public sealed record AlertSnapshot
 {
     public required string Id { get; init; }
     public required string? Description { get; init; }
+    public required string? Template { get; init; }
     public required int Status { get; init; }
     public required string ConditionQuery { get; init; }
     public required DataSourceSnapshot DataSource { get; set; }
@@ -25,6 +26,7 @@ public static class AlertSnapshotExtensions
         {
             Id = alert.Id.ToString(),
             Description = alert.Template,
+            Template = alert.Template,
             Status = alert.Status.Value,
             ConditionQuery = alert.ConditionQuery.RawQuery,
             DataSource = alert.ConditionQuery.DataSource.Save(),
@@ -42,6 +44,7 @@ public static class AlertSnapshotExtensions
         var result = Alert.Create(
             id: Guid.Parse(snapshot.Id),
             snapshot.Description,
+            snapshot.Template,
             Query.Create(snapshot.DataSource.RestoreFromSnapshot(), snapshot.ConditionQuery).Value,
             AlertStatus.FromValue(snapshot.Status),
             snapshot.NotificationChannelGroup.RestoreFromSnapshot(notificationChannelManager),
