@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Commands.NotificationChannels.UpdateNotific
 
 public sealed record UpdateNotificationCommand : ICommand, IAdminRequest
 {
-    public required string NotificationChannelId { get; init; }
+    public required int NotificationChannelId { get; init; }
     
     public required string DestinationTypeName { get; init; }
     

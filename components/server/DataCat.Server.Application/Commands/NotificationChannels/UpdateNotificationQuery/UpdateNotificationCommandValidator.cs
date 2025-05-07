@@ -5,7 +5,6 @@ public sealed class UpdateNotificationCommandValidator : AbstractValidator<Updat
     public UpdateNotificationCommandValidator()
     {
         RuleLevelCascadeMode = CascadeMode.Continue;
-        RuleFor(x => x.NotificationChannelId).NotEmpty().MustBeGuid();
         RuleFor(x => x.Settings).NotEmpty().NotNull();
         RuleFor(x => x.DestinationTypeName).NotEmpty();
     }
