@@ -2,6 +2,8 @@ namespace DataCat.Traces.Jaeger.Core;
 
 public sealed class JaegerClientFactory : ITracesClientFactory
 {
+    private static readonly JsonSerializerOptions serializationOptions = new() { PropertyNameCaseInsensitive = true };
+    
     public bool CanCreate(DataSource dataSource)
     {
         return dataSource.Purpose == DataSourcePurpose.Traces
@@ -18,7 +20,7 @@ public sealed class JaegerClientFactory : ITracesClientFactory
         JaegerSettings settings;
         try
         {
-            settings = JsonSerializer.Deserialize<JaegerSettings>(dataSource.ConnectionSettings)
+            settings = JsonSerializer.Deserialize<JaegerSettings>(dataSource.ConnectionSettings, serializationOptions)
                        ?? throw new InvalidOperationException("JaegerSettings deserialized as null");
         }
         catch (JsonException ex)

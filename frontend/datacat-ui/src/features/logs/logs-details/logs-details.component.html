@@ -1,0 +1,15 @@
+<div class="details-content">
+    <div *ngIf="!data || objectKeys(data).length === 0" class="no-data">
+        No additional fields available
+    </div>
+
+    <div *ngFor="let item of objectKeys(data)" class="detail-row">
+        <div class="field-name">
+            <span class="dot"></span>
+            <span>{{ item }}</span>
+        </div>
+        <div class="field-value">
+            <code>{{ data[item] | json }}</code>
+        </div>
+    </div>
+</div>

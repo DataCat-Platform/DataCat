@@ -128,7 +128,6 @@ export class CreateDataSourceFormComponent implements OnInit {
             case 'elasticsearch':
                 this.settingsForm.addControl('clusterUrl', this.fb.control('https://', [Validators.required, urlPattern, urlPattern_2]));
                 this.settingsForm.addControl('indexPattern', this.fb.control('', Validators.required));
-                this.settingsForm.addControl('requestTimeout', this.fb.control(30, [Validators.min(1), Validators.max(86400)]));
                 this.settingsForm.addControl('userName', this.fb.control('', []));
                 this.settingsForm.addControl('password', this.fb.control('', []));
                 this.settingsForm.addControl('enableDebugLogging', this.fb.control(false));
@@ -161,7 +160,6 @@ export class CreateDataSourceFormComponent implements OnInit {
                 return {
                     clusterUrl: settings.clusterUrl,
                     indexPattern: settings.indexPattern,
-                    requestTimeout: settings.requestTimeout,
                     userName: settings.userName,
                     password: settings.password,
                     enableDebugLogging: settings.enableDebugLogging

@@ -1,0 +1,74 @@
+.details-content {
+  padding: 1.5rem;
+  background-color: var(--surface-ground);
+
+  .no-data {
+    text-align: center;
+    color: var(--text-secondary-color);
+    padding: 2rem;
+    font-style: italic;
+  }
+
+  .detail-row {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    align-items: start;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--surface-border);
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 150%;
+      height: 100%;
+      background: linear-gradient(
+                      90deg,
+                      transparent,
+                      rgba(255, 255, 255, 0.05),
+                      transparent
+      );
+      animation: shine 1s forwards;
+    }
+
+    .field-name {
+      font-weight: 600;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        background-color: var(--primary-color);
+        border-radius: 50%;
+      }
+    }
+
+    .field-value {
+      code {
+        display: block;
+        background-color: var(--surface-section);
+        padding: 0.5rem;
+        border-radius: 6px;
+        color: var(--text-color);
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-family: var(--font-family-monospace, 'Courier New', monospace);
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+@keyframes shine {
+  100% {
+    left: 100%;
+  }
+}

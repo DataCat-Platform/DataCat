@@ -88,6 +88,14 @@ export class WorkspaceComponent {
                         url: urls.DATA_SOURCES_EXPLORER_URL,
                     },
                 },
+                {
+                    type: 'url',
+                    icon: 'pi pi-file',
+                    label: 'Logs',
+                    data: {
+                        url: urls.LOGS_EXPLORER_URL,
+                    },
+                },
             ],
         },
     ];
