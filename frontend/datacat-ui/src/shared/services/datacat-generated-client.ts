@@ -2136,7 +2136,7 @@ export class ApiService {
         return _observableOf(null as any);
     }
 
-    getApiV1NotificationChannelGroup(id: string): Observable<NotificationChannelResponse> {
+    getApiV1NotificationChannelGroup(id: string): Observable<NotificationChannelGroupResponse> {
         let url_ = this.baseUrl + "/api/v1/notification-channel-group/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -2159,14 +2159,14 @@ export class ApiService {
                 try {
                     return this.processGetApiV1NotificationChannelGroup(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<NotificationChannelResponse>;
+                    return _observableThrow(e) as any as Observable<NotificationChannelGroupResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<NotificationChannelResponse>;
+                return _observableThrow(response_) as any as Observable<NotificationChannelGroupResponse>;
         }));
     }
 
-    protected processGetApiV1NotificationChannelGroup(response: HttpResponseBase): Observable<NotificationChannelResponse> {
+    protected processGetApiV1NotificationChannelGroup(response: HttpResponseBase): Observable<NotificationChannelGroupResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2177,7 +2177,7 @@ export class ApiService {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = NotificationChannelResponse.fromJS(resultData200);
+            result200 = NotificationChannelGroupResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
