@@ -142,6 +142,7 @@ public static class Public
     {
         public const string Id = "id";
         public const string Description = "description";
+        public const string Template = "template";
         public const string Status = "status";
         public const string RawQuery = "condition_query";
         public const string DataSourceId = "data_source_id";

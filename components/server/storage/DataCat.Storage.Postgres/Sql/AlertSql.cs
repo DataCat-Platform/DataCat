@@ -8,6 +8,7 @@ public static class AlertSql
              SELECT
                 alert.{Public.Alerts.Id}                                {nameof(AlertSnapshot.Id)},
                 alert.{Public.Alerts.Description}                       {nameof(AlertSnapshot.Description)},
+                alert.{Public.Alerts.Template}                          {nameof(AlertSnapshot.Template)},
                 alert.{Public.Alerts.Status}                            {nameof(AlertSnapshot.Status)},
                 alert.{Public.Alerts.RawQuery}                          {nameof(AlertSnapshot.ConditionQuery)},
                 alert.{Public.Alerts.DataSourceId}                      {nameof(AlertSnapshot.DataSourceId)},
@@ -66,6 +67,7 @@ public static class AlertSql
              SELECT
                  alerts.{Public.Alerts.Id}                                       {nameof(AlertSnapshot.Id)},
                  alerts.{Public.Alerts.Description}                              {nameof(AlertSnapshot.Description)},
+                 alerts.{Public.Alerts.Template}                                 {nameof(AlertSnapshot.Template)},
                  alerts.{Public.Alerts.Status}                                   {nameof(AlertSnapshot.Status)},
                  alerts.{Public.Alerts.RawQuery}                                 {nameof(AlertSnapshot.ConditionQuery)},
                  alerts.{Public.Alerts.DataSourceId}                             {nameof(AlertSnapshot.DataSourceId)},

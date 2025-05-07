@@ -7500,6 +7500,7 @@ export interface IUpdateDashboardRequest {
 
 export class AddAlertRequest implements IAddAlertRequest {
     description?: string | undefined;
+    template?: string;
     rawQuery?: string;
     dataSourceId?: string;
     notificationChannelGroupName?: string;
@@ -7519,6 +7520,7 @@ export class AddAlertRequest implements IAddAlertRequest {
     init(_data?: any) {
         if (_data) {
             this.description = _data["description"];
+            this.template = _data["template"];
             this.rawQuery = _data["rawQuery"];
             this.dataSourceId = _data["dataSourceId"];
             this.notificationChannelGroupName = _data["notificationChannelGroupName"];
@@ -7542,6 +7544,7 @@ export class AddAlertRequest implements IAddAlertRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["description"] = this.description;
+        data["template"] = this.template;
         data["rawQuery"] = this.rawQuery;
         data["dataSourceId"] = this.dataSourceId;
         data["notificationChannelGroupName"] = this.notificationChannelGroupName;
@@ -7565,6 +7568,7 @@ export class AddAlertRequest implements IAddAlertRequest {
 
 export interface IAddAlertRequest {
     description?: string | undefined;
+    template?: string;
     rawQuery?: string;
     dataSourceId?: string;
     notificationChannelGroupName?: string;
@@ -7576,6 +7580,7 @@ export interface IAddAlertRequest {
 export class GetAlertResponse implements IGetAlertResponse {
     id?: string;
     description?: string | undefined;
+    template?: string;
     rawQuery?: string;
     status?: string;
     dataSource?: DataSourceResponse;
@@ -7598,6 +7603,7 @@ export class GetAlertResponse implements IGetAlertResponse {
         if (_data) {
             this.id = _data["id"];
             this.description = _data["description"];
+            this.template = _data["template"];
             this.rawQuery = _data["rawQuery"];
             this.status = _data["status"];
             this.dataSource = _data["dataSource"] ? DataSourceResponse.fromJS(_data["dataSource"]) : <any>undefined;
@@ -7620,6 +7626,7 @@ export class GetAlertResponse implements IGetAlertResponse {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["description"] = this.description;
+        data["template"] = this.template;
         data["rawQuery"] = this.rawQuery;
         data["status"] = this.status;
         data["dataSource"] = this.dataSource ? this.dataSource.toJSON() : <any>undefined;
@@ -7642,6 +7649,7 @@ export class GetAlertResponse implements IGetAlertResponse {
 export interface IGetAlertResponse {
     id?: string;
     description?: string | undefined;
+    template?: string;
     rawQuery?: string;
     status?: string;
     dataSource?: DataSourceResponse;
@@ -7730,6 +7738,7 @@ export interface IPageOfSearchAlertsResponse {
 export class SearchAlertsResponse implements ISearchAlertsResponse {
     id?: string;
     description?: string | undefined;
+    template?: string;
     rawQuery?: string;
     status?: string;
     dataSource?: DataSourceResponse;
@@ -7752,6 +7761,7 @@ export class SearchAlertsResponse implements ISearchAlertsResponse {
         if (_data) {
             this.id = _data["id"];
             this.description = _data["description"];
+            this.template = _data["template"];
             this.rawQuery = _data["rawQuery"];
             this.status = _data["status"];
             this.dataSource = _data["dataSource"] ? DataSourceResponse.fromJS(_data["dataSource"]) : <any>undefined;
@@ -7774,6 +7784,7 @@ export class SearchAlertsResponse implements ISearchAlertsResponse {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["description"] = this.description;
+        data["template"] = this.template;
         data["rawQuery"] = this.rawQuery;
         data["status"] = this.status;
         data["dataSource"] = this.dataSource ? this.dataSource.toJSON() : <any>undefined;
@@ -7796,6 +7807,7 @@ export class SearchAlertsResponse implements ISearchAlertsResponse {
 export interface ISearchAlertsResponse {
     id?: string;
     description?: string | undefined;
+    template?: string;
     rawQuery?: string;
     status?: string;
     dataSource?: DataSourceResponse;
@@ -7808,6 +7820,7 @@ export interface ISearchAlertsResponse {
 
 export class UpdateAlertRequest implements IUpdateAlertRequest {
     description?: string | undefined;
+    template?: string;
     rawQuery?: string;
     dataSourceId?: string;
     notificationChannelId?: string;
@@ -7824,6 +7837,7 @@ export class UpdateAlertRequest implements IUpdateAlertRequest {
     init(_data?: any) {
         if (_data) {
             this.description = _data["description"];
+            this.template = _data["template"];
             this.rawQuery = _data["rawQuery"];
             this.dataSourceId = _data["dataSourceId"];
             this.notificationChannelId = _data["notificationChannelId"];
@@ -7840,6 +7854,7 @@ export class UpdateAlertRequest implements IUpdateAlertRequest {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["description"] = this.description;
+        data["template"] = this.template;
         data["rawQuery"] = this.rawQuery;
         data["dataSourceId"] = this.dataSourceId;
         data["notificationChannelId"] = this.notificationChannelId;
@@ -7856,6 +7871,7 @@ export class UpdateAlertRequest implements IUpdateAlertRequest {
 
 export interface IUpdateAlertRequest {
     description?: string | undefined;
+    template?: string;
     rawQuery?: string;
     dataSourceId?: string;
     notificationChannelId?: string;

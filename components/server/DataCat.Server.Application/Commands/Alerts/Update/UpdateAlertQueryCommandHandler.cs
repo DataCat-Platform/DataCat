@@ -22,6 +22,7 @@ public sealed class UpdateAlertQueryCommandHandler(
         
         alert.ChangeAlertQuery(queryResult.Value);
         alert.ChangeDescription(request.Description);
+        alert.ChangeTemplate(request.Template);
         
         await alertRepository.UpdateAsync(alert, cancellationToken);
         return Result.Success();

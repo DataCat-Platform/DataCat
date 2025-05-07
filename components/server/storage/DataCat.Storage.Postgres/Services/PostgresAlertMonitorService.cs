@@ -13,6 +13,7 @@ public class PostgresAlertMonitorService(
            SELECT 
                alert.{Public.Alerts.Id}                                          {nameof(AlertSnapshot.Id)},
                alert.{Public.Alerts.Description}                                 {nameof(AlertSnapshot.Description)},
+               alert.{Public.Alerts.Template}                                    {nameof(AlertSnapshot.Template)},
                alert.{Public.Alerts.Status}                                      {nameof(AlertSnapshot.Status)},
                alert.{Public.Alerts.RawQuery}                                    {nameof(AlertSnapshot.ConditionQuery)},
                alert.{Public.Alerts.DataSourceId}                                {nameof(AlertSnapshot.DataSourceId)},
@@ -21,6 +22,7 @@ public class PostgresAlertMonitorService(
                alert.{Public.Alerts.NextExecution}                               {nameof(AlertSnapshot.NextExecution)},
                alert.{Public.Alerts.WaitTimeBeforeAlertingInTicks}               {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
                alert.{Public.Alerts.RepeatIntervalInTicks}                       {nameof(AlertSnapshot.RepeatIntervalInTicks)},
+               alert.{Public.Alerts.Tags}                                        {nameof(AlertSnapshot.Tags)},
    
                data_source.{Public.DataSources.Id}                                    {nameof(DataSourceSnapshot.Id)},
                data_source.{Public.DataSources.Name}                                  {nameof(DataSourceSnapshot.Name)},
@@ -94,6 +96,7 @@ public class PostgresAlertMonitorService(
             SELECT 
                 alert.{Public.Alerts.Id}                                  {nameof(AlertSnapshot.Id)},
                 alert.{Public.Alerts.Description}                         {nameof(AlertSnapshot.Description)},
+                alert.{Public.Alerts.Template}                            {nameof(AlertSnapshot.Template)},
                 alert.{Public.Alerts.Status}                              {nameof(AlertSnapshot.Status)},
                 alert.{Public.Alerts.RawQuery}                            {nameof(AlertSnapshot.ConditionQuery)},
                 alert.{Public.Alerts.DataSourceId}                        {nameof(AlertSnapshot.DataSourceId)},

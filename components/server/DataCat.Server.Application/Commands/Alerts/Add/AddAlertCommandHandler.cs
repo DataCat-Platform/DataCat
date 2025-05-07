@@ -23,6 +23,7 @@ public sealed class AddAlertCommandHandler(
         var alertResult = Alert.Create(
             id: Guid.NewGuid(),
             request.Description,
+            request.Template,
             queryResult.Value,
             AlertStatus.InActive,
             notificationChannelGroup,
