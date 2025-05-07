@@ -1,0 +1,74 @@
+<div class="filter-container p-fluid">
+    <div class="filter-row">
+        <div class="p-field">
+            <label for="traceId">Trace ID</label>
+            <input [(ngModel)]="filter.traceId" class="uniform-height" id="traceId" pInputText/>
+        </div>
+
+        <div class="p-field">
+            <label for="serviceName">Service Name</label>
+            <input [(ngModel)]="filter.serviceName" class="uniform-height" id="serviceName" pInputText/>
+        </div>
+
+        <div class="p-field">
+            <label for="severity">Severity</label>
+            <p-dropdown [(ngModel)]="filter.severity" [options]="severityLevels"
+                        [showClear]="true" id="severity" styleClass="uniform-height"></p-dropdown>
+        </div>
+    </div>
+
+    <div class="custom-filters-toggle">
+        <button
+                (click)="showCustomFilters = !showCustomFilters"
+                [icon]="showCustomFilters ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+                [label]="showCustomFilters ? 'Hide Custom Filters' : 'Show Custom Filters'"
+                class="p-button-text"
+                pButton
+                type="button">
+        </button>
+    </div>
+
+    @if (showCustomFilters) {
+        <div class="date-range-row">
+            <div class="p-field date-range-field">
+                <label for="from">From</label>
+                <p-calendar
+                        [(ngModel)]="filter.from"
+                        [showTime]="true"
+                        dateFormat="yy-mm-dd"
+                        id="from"
+                        styleClass="uniform-height">
+                </p-calendar>
+            </div>
+
+            <div class="p-field date-range-field">
+                <label for="to">To</label>
+                <p-calendar
+                        [(ngModel)]="filter.to"
+                        [showTime]="true"
+                        dateFormat="yy-mm-dd"
+                        id="to"
+                        styleClass="uniform-height">
+                </p-calendar>
+            </div>
+        </div>
+
+        <div class="custom-filters">
+            <h4>Custom Filters</h4>
+            <div *ngFor="let filter of customFilters; let i = index" class="custom-filter-item">
+                <input [(ngModel)]="filter.key" class="uniform-height" pInputText placeholder="Key"/>
+                <input [(ngModel)]="filter.value" class="uniform-height" pInputText placeholder="Value"/>
+                <button (click)="removeCustomFilter(i)" class="p-button-danger" icon="pi pi-times"
+                        pButton type="button"></button>
+            </div>
+            <button (click)="addCustomFilter()" class="p-button-secondary" icon="pi pi-plus"
+                    pButton type="button">Add Custom Filter
+            </button>
+        </div>
+    }
+
+    <div class="filter-actions">
+        <button (click)="applyFilters()" class="p-button-primary" label="Apply Filters"
+                pButton type="button"></button>
+    </div>
+</div>

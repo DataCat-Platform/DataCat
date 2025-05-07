@@ -1,0 +1,41 @@
+.logs-table-container {
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  .p-datatable {
+    width: 100%;
+
+    th {
+      cursor: pointer;
+      user-select: none;
+
+      i {
+        margin-left: 0.25rem;
+      }
+    }
+
+    .message-cell {
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-width: 400px;
+    }
+  }
+
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 1rem;
+
+    .page-info {
+      font-weight: 500;
+    }
+
+    button {
+      min-width: 2rem;
+      height: 2rem;
+    }
+  }
+}

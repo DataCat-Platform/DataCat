@@ -1,0 +1,100 @@
+.filter-container {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    .p-field {
+      flex: 1 1 200px;
+
+      label {
+        display: block;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .date-range-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    .date-range-field {
+      flex: 1 1 calc(50% - 0.5rem);
+
+      label {
+        display: block;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .custom-filters {
+    margin-top: 1rem;
+
+    h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .custom-filter-item {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      align-items: center;
+
+      input {
+        flex: 1 1 auto;
+      }
+    }
+
+    .p-button-secondary {
+      margin-top: 0.5rem;
+    }
+  }
+
+  .filter-actions {
+    margin-top: 1rem;
+    text-align: right;
+  }
+
+  .uniform-height {
+    height: 2.5rem;
+
+    &.p-dropdown {
+      display: flex;
+      align-items: center;
+    }
+
+    &.p-calendar {
+      .p-inputtext {
+        height: 2.5rem;
+      }
+    }
+
+    &.p-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  input, p-dropdown, p-calendar {
+    width: 100%;
+  }
+}
+
+.custom-filters-toggle {
+  margin-bottom: 0.5rem;
+
+  .p-button {
+    font-weight: 500;
+  }
+}
