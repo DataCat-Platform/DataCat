@@ -1,71 +1,86 @@
-@if (alert) {
-  <form class="form" [formGroup]="form">
-    <div class="form__item">
-      <p class="text-secondary">Description</p>
-      <textarea pTextarea [cols]="40" formControlName="description"></textarea>
-    </div>
-    <div class="form__item">
-      <p class="text-secondary align">Query</p>
-      <textarea pTextarea [cols]="40" formControlName="query"></textarea>
-    </div>
-    <div class="form__item">
-      <p class="text-secondary align">
-        Execution Interval
-        <i
-          class="pi pi-info-circle"
-          [pTooltip]="
-            'Alert is executed every ' + executionInterval + ' seconds'
-          "
-        ></i>
-      </p>
+@switch (loadingState) {
+  @case (LoadingState.Loading) {
+    <p-tag value="Loading" severity="secondary" />
+  }
+  @case (LoadingState.Error) {
+    <p-tag value="Unable to load edit form" severity="secondary" />
+  }
+  @case (LoadingState.Success) {
+    <form class="form" [formGroup]="form">
       <div class="form__item">
-        <p-inputgroup>
-          <p-inputnumber formControlName="executionInterval" />
-          <p-inputgroup-addon> seconds </p-inputgroup-addon>
-        </p-inputgroup>
+        <p class="text-secondary">Description</p>
+        <textarea
+          pTextarea
+          [cols]="40"
+          formControlName="description"
+        ></textarea>
       </div>
-    </div>
-    <div class="form__item">
-      <p class="text-secondary align">
-        Notification Trigger Period
-        <i
-          class="pi pi-info-circle"
-          [pTooltip]="
-            'Notification will be sent only if alert is alerting for ' +
-            notificationTriggerPeriod +
-            ' seconds straight'
-          "
-        ></i>
-      </p>
-      <div class="inline">
-        <p-inputgroup>
-          <p-inputnumber formControlName="notificationTriggerPeriod" />
-          <p-inputgroup-addon> seconds </p-inputgroup-addon>
-        </p-inputgroup>
+      <div class="form__item">
+        <p class="text-secondary align">Query</p>
+        <textarea pTextarea [cols]="40" formControlName="query"></textarea>
       </div>
-    </div>
-    <div class="form__item">
-      <p class="text-secondary">Data Source</p>
-      <p-select
-        placeholder="Data source"
-        formControlName="dataSourceId"
-        [options]="dataSources"
-        optionLabel="name"
-        optionValue="id"
+      <div class="form__item">
+        <p class="text-secondary align">
+          Execution Interval
+          <i
+            class="pi pi-info-circle"
+            [pTooltip]="
+              'Alert is executed every ' + executionInterval + ' seconds'
+            "
+          ></i>
+        </p>
+        <div class="form__item">
+          <p-inputgroup>
+            <p-inputnumber formControlName="executionInterval" />
+            <p-inputgroup-addon> seconds </p-inputgroup-addon>
+          </p-inputgroup>
+        </div>
+      </div>
+      <div class="form__item">
+        <p class="text-secondary align">
+          Notification Trigger Period
+          <i
+            class="pi pi-info-circle"
+            [pTooltip]="
+              'Notification will be sent only if alert is alerting for ' +
+              notificationTriggerPeriod +
+              ' seconds straight'
+            "
+          ></i>
+        </p>
+        <div class="inline">
+          <p-inputgroup>
+            <p-inputnumber formControlName="notificationTriggerPeriod" />
+            <p-inputgroup-addon> seconds </p-inputgroup-addon>
+          </p-inputgroup>
+        </div>
+      </div>
+      <div class="form__item">
+        <p class="text-secondary">Data Source</p>
+        <p-select
+          placeholder="Data source"
+          formControlName="dataSourceId"
+          [options]="dataSources"
+          optionLabel="name"
+          optionValue="id"
+        />
+      </div>
+      <div class="form__item">
+        <p class="text-secondary">Notification Group</p>
+        <p-select
+          placeholder="Notification group"
+          formControlName="notificationGroupId"
+          [options]="notificationGroups"
+          optionLabel="name"
+          optionValue="id"
+        />
+      </div>
+      <p-button
+        [loading]="isSaving"
+        label="Save"
+        severity="secondary"
+        (onClick)="save()"
       />
-    </div>
-    <div class="form__item">
-      <p class="text-secondary">Notification Group</p>
-      <p-select
-        placeholder="Notification group"
-        formControlName="notificationGroupId"
-        [options]="notificationGroups"
-        optionLabel="name"
-        optionValue="id"
-      />
-    </div>
-    <p-button [loading]="isSaving" label="Save" severity="secondary" (onClick)="save()" />
-  </form>
-} @else {
-  <p-tag value="Loading" severity="secondary" />
+    </form>
+  }
 }

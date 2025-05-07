@@ -1,29 +1,38 @@
-.form {
+.attributes-box {
   display: flex;
   flex-direction: column;
   gap: var(--p-padding-md);
-  align-items: start;
 
-  &__item {
+  &__attribute {
     display: flex;
     flex-direction: column;
     gap: var(--p-padding-xs);
   }
+
+  &__channels {
+    display: flex;
+    flex-direction: column;
+    gap: var(--p-padding-sm);
+    align-items: start;
+  }
 }
 
-.channels-box {
+.dialog {
   display: flex;
   flex-direction: column;
-  gap: var(--p-padding-sm);
-}
+  gap: var(--p-padding-md);
 
-.channel-form {
-  display: flex;
-  gap: var(--p-padding-sm);
-  align-items: center;
-}
+  &__settings {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--p-padding-md);
+    margin-bottom: var(--p-padding-md);
+  }
 
-.add-channel-form {
-  display: inline-block;
-  margin-bottom: var(--p-padding-md);
+  &__actions {
+    display: flex;
+    justify-content: end;
+    gap: var(--p-padding-md);
+  }
 }

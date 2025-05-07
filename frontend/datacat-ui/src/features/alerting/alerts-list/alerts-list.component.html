@@ -1,59 +1,119 @@
-<p-table
-  [value]="alerts"
-  stripedRows
-  [paginator]="true"
-  [rows]="5"
-  [rowsPerPageOptions]="[5, 10]"
-  [pageLinks]="12"
-  [alwaysShowPaginator]="false"
-  [lazy]="true"
-  [first]="0"
-  [totalRecords]="totalAlertsCount"
-  [rows]="alertsPerPageCount"
->
-  <ng-template pTemplate="emptymessage">
-    <div class="empty-box">
-      <p-tag value="No alerts found" severity="secondary" />
+<div class="layout">
+  <form class="filters" [formGroup]="filtersForm">
+    <div class="filters__item">
+      <p>Alert Status</p>
+      <p-selectbutton
+        [options]="possibleAlertStatuses"
+        formControlName="status"
+      />
     </div>
-  </ng-template>
-  <ng-template pTemplate="header">
-    <tr>
-      <th>ID</th>
-      <th>Description</th>
-      <th>Status</th>
-      <th pTooltip="Previous Execution Time" tooltipPosition="top">
-        Previous Execution
-      </th>
-      <th pTooltip="Next Execution Time" tooltipPosition="top">
-        Next Execution
-      </th>
-      <th style="width: 4rem"></th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-alert>
-    <tr>
-      <td>
-        {{ alert.id }}
-        <i class="pi pi-clone text-secondary"></i>
-      </td>
-      <td>{{ alert.description }}</td>
-      <td>
-        <p-tag [severity]="getSeverityForStatus(alert.status)">{{
-          alert.status
-        }}</p-tag>
-      </td>
-      <td>{{ alert.prevExecutionTime | date: 'short' }}</td>
-      <td>{{ alert.nextExecutionTime | date: 'short' }}</td>
-      <td>
-        <p-button
-          icon="pi pi-arrow-up-right"
-          label="view"
-          severity="secondary"
-          size="small"
-          variant="text"
-          (onClick)="viewAlert(alert.id)"
+    <div class="filters__item">
+      <p>Data Source</p>
+      <p-select
+        [showClear]="true"
+        [options]="possibleDataSources"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Select data source"
+        emptyMessage="No data sources found"
+        formControlName="dataSourceId"
+      />
+    </div>
+    <div class="filters__item">
+      <p>Alert Tags</p>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <p-button
+            icon="pi pi-plus"
+            label="Add"
+            severity="secondary"
+            [disabled]="filtersForm.disabled"
+            (onClick)="addFilterTag(tagToAdd)"
+          />
+        </p-inputgroup-addon>
+        <input pInputText placeholder="tag..." [formControl]="addTagControl" />
+      </p-inputgroup>
+    </div>
+  </form>
+  @if (filtersFormTags.length !== 0) {
+    <div class="tags">
+      @for (tag of filtersFormTags; track tag) {
+        <p-chip
+          [removable]="true"
+          [label]="tag"
+          (onRemove)="removeFilterTag(tag)"
         />
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
+      }
+    </div>
+  }
+  <div class="filters__actions">
+    <p-button
+      icon="pi pi-sync"
+      label="Apply"
+      severity="secondary"
+      [loading]="filtersForm.disabled"
+      (onClick)="refreshAlerts()"
+    />
+  </div>
+  <p-table
+    [value]="alerts"
+    stripedRows
+    [paginator]="true"
+    [rows]="5"
+    [rowsPerPageOptions]="[5, 10]"
+    [pageLinks]="12"
+    [alwaysShowPaginator]="false"
+    [lazy]="true"
+    [first]="0"
+    [totalRecords]="totalAlertsCount"
+    [rows]="alertsPerPageCount"
+  >
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" [style]="{ textAlign: 'center' }">
+          <p-tag value="No alerts found" severity="info" />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th pTooltip="Previous Execution Time" tooltipPosition="top">
+          Previous Execution
+        </th>
+        <th pTooltip="Next Execution Time" tooltipPosition="top">
+          Next Execution
+        </th>
+        <th style="width: 4rem"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-alert>
+      <tr>
+        <td>
+          {{ alert.id }}
+          <i class="pi pi-clone text-secondary"></i>
+        </td>
+        <td>{{ alert.description }}</td>
+        <td>
+          <p-tag [severity]="getSeverityForStatus(alert.status)">{{
+            alert.status
+          }}</p-tag>
+        </td>
+        <td>{{ alert.prevExecutionTime | date: 'short' }}</td>
+        <td>{{ alert.nextExecutionTime | date: 'short' }}</td>
+        <td>
+          <p-button
+            icon="pi pi-arrow-up-right"
+            label="view"
+            severity="secondary"
+            size="small"
+            variant="text"
+            (onClick)="viewAlert(alert.id)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

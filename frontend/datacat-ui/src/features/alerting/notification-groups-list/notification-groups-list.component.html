@@ -4,11 +4,11 @@
     <input
       pInputText
       placeholder="Enter group name"
-      [formControl]="groupName"
+      [formControl]="groupNameControl"
     />
   </div>
 </form>
-<p-dataview [value]="notificationGroups">
+<p-dataview [value]="filteredNotificationGroups">
   <ng-template #list let-groups>
     <div class="groups-box">
       @for (group of groups; track $index) {

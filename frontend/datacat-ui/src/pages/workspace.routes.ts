@@ -76,12 +76,6 @@ export const ROUTES: Routes = [
                         (m) => m.ExploreLogsComponent,
                     ),
             },
-            // {
-            //   path: urls.NOTIFICATION_TEMPLATE_EDIT_URL,
-            //   loadComponent: () => import('../processes/manage-notification-template').then(
-            //     m => m.Mana
-            //   )
-            // }
         ],
     },
     {

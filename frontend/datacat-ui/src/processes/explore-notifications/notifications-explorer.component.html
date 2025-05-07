@@ -1,23 +1,7 @@
 <p-panel [style]="{ display: 'block', height: '100%' }">
   <ng-template #header> Notifications </ng-template>
-  <p-tabs value="0">
-    <p-tablist>
-      <p-tab value="0">Groups</p-tab>
-      <p-tab value="1">Templates</p-tab>
-    </p-tablist>
-    <p-tabpanels>
-      <p-tabpanel value="0">
-        <div class="box">
-          <datacat-create-notification-group-button />
-          <datacat-notification-groups-list />
-        </div>
-      </p-tabpanel>
-      <p-tabpanel value="1">
-        <div class="box">
-          <datacat-create-notification-template-button />
-          <datacat-notification-templates-list />
-        </div>
-      </p-tabpanel>
-    </p-tabpanels>
-  </p-tabs>
+  <div class="box">
+    <datacat-create-notification-group-button />
+    <datacat-notification-groups-list />
+  </div>
 </p-panel>

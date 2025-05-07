@@ -5,12 +5,21 @@ import {
   DataSourceDriver,
   NotificationChannel,
   NotificationChannelDriver,
-  NotificationGroup,
   NotificationGroupExpanded,
   NotificationTemplate,
   NotificationTemplateSyntax,
 } from '../../entities/alerting';
 import { AlertsCountsByStatus } from '../../features/alerting/alerts-counts-by-status/alerts-counts-by-status.types';
+
+export const getFakeNotificationChannel = (): NotificationChannel => {
+  return {
+    id: 0,
+    driver: NotificationChannelDriver.WEBHOOK,
+    settings: {
+      Url: 'http://...',
+    },
+  };
+};
 
 export const FAKE_ALERT: Alert = {
   id: '0',
@@ -25,24 +34,10 @@ export const FAKE_ALERT: Alert = {
   nextExecutionTime: Date.now(),
 };
 
-export const FAKE_NOTIFICATION_GROUP: NotificationGroup = {
-  id: '0',
-  name: 'fake group',
-  notificationChannelsIds: ['0'],
-};
-
-export const FAKE_NOTIFICATION_CHANNEL: NotificationChannel = {
-  id: '0',
-  driver: NotificationChannelDriver.EMAIL,
-  notificationTemplateId: '0',
-  settings: {
-    address: '',
-  },
-};
+export const FAKE_NOTIFICATION_CHANNEL: NotificationChannel =
+  getFakeNotificationChannel();
 
 export const FAKE_NOTIFICATION_TEMPLATE: NotificationTemplate = {
-  id: '0',
-  name: 'fake template',
   syntax: NotificationTemplateSyntax.MARKDOWN,
   template: 'Alert { .id } is alerting!',
 };
@@ -70,39 +65,7 @@ export const getFakeId = (): string => {
     .padStart(4, '0');
 };
 
-export const getFakeNotificationChannel = (): NotificationChannel => {
-  switch (Math.floor(Math.random() * 3)) {
-    case 0:
-      return {
-        id: getFakeId(),
-        driver: NotificationChannelDriver.EMAIL,
-        notificationTemplateId: getFakeId(),
-        settings: {
-          address: 'nvnazarov@edu.hse.ru',
-        },
-      };
-    case 1:
-      return {
-        id: getFakeId(),
-        driver: NotificationChannelDriver.TELEGRAM,
-        notificationTemplateId: getFakeId(),
-        settings: {
-          username: '@nktnazarov',
-        },
-      };
-    default:
-      return {
-        id: getFakeId(),
-        driver: NotificationChannelDriver.WEBHOOK,
-        notificationTemplateId: getFakeId(),
-        settings: {
-          url: 'http://123.456.789.101/webhook',
-        },
-      };
-  }
-};
-
-export const getFakeNotifcationGroupExpanded =
+export const getFakeNotificationGroupsExpanded =
   (): NotificationGroupExpanded[] => {
     const groupsCount = 3;
     const groups: NotificationGroupExpanded[] = [];
@@ -127,8 +90,6 @@ export const getFakeNotifcationGroupExpanded =
 
 export const getFakeNotificationTemplate = (): NotificationTemplate => {
   return {
-    id: getFakeId(),
-    name: 'fake template ' + getFakeId(),
     syntax: NotificationTemplateSyntax.MARKDOWN,
     template: 'Alert { .description } is alerting!',
   };

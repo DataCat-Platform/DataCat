@@ -1,0 +1,11 @@
+<form>
+  <p-inputgroup>
+    <p-button icon="pi pi-ban" label="Mute" (onClick)="muteAlert()" />
+    <p-inputgroup-addon> alert for </p-inputgroup-addon>
+    <input
+      pTextInput
+      [formControl]="muteTime"
+      placeholder="duration (1m, 2h)"
+    />
+  </p-inputgroup>
+</form>
