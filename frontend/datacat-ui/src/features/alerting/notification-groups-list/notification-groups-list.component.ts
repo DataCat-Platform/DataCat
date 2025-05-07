@@ -3,7 +3,6 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DataViewModule } from 'primeng/dataview';
 import { NotificationGroupExpanded } from '../../../entities';
-import { from } from 'rxjs';
 import { NotificationGroupComponent } from './notification-group/notification-group.component';
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
@@ -36,12 +35,19 @@ export class NotificationGroupsListComponent {
   }
 
   private refreshNotificationGroups() {
-    from([]).subscribe({
+    this.apiService.getApiV1NotificationChannelGroupGetAll().subscribe({
       next: (notificationGroups) => {
-        this.notificationGroups = notificationGroups;
+        this.notificationGroups =
+          notificationGroups.map<NotificationGroupExpanded>((group: any) => {
+            return {
+              id: group.id,
+              name: group.destinationName,
+              notificationChannels: group.notificationChannels,
+            };
+          });
       },
-      error: () => {
-        this.loggerService.error('Unable to load notification groups')
+      error: (e) => {
+        this.loggerService.error(e);
       },
     });
   }

@@ -14,6 +14,8 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { TextareaModule } from 'primeng/textarea';
+import { LoadingState } from '../../../shared/common/enums';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   standalone: true,
@@ -27,12 +29,18 @@ import { TextareaModule } from 'primeng/textarea';
     SelectModule,
     InputGroupModule,
     TextareaModule,
+    TagModule,
   ],
 })
 export class EditNotificationGroupFormComponent {
   @Input() public set groupId(id: string) {
-    this.loadEssentials(id);
+    if (id) {
+      this.loadEssentials(id);
+    }
   }
+
+  protected LoadingState = LoadingState;
+  protected loadingState = LoadingState.Loading;
 
   protected drivers = Object.values(NotificationChannelDriver);
 
@@ -44,7 +52,6 @@ export class EditNotificationGroupFormComponent {
 
   protected form = new FormGroup({
     name: new FormControl<string>(''),
-    template: new FormControl<string>(''),
     emailChannels: new FormArray<FormGroup>([]),
     webhookChannels: new FormArray<FormGroup>([]),
     telegramChannels: new FormArray<FormGroup>([]),
@@ -69,9 +76,19 @@ export class EditNotificationGroupFormComponent {
 
   protected loadEssentials(groupId: string) {
     this.apiService.getApiV1NotificationChannelGroup(groupId).subscribe({
-      next: () => {},
-      error: () => {
-        this.loggerService.error('Unable to load notification group');
+      next: (group) => {
+        console.log(group);
+        this.form.setValue({
+          name: group.destinationName || null,
+          emailChannels: [],
+          webhookChannels: [],
+          telegramChannels: [],
+        });
+        this.loadingState = LoadingState.Success;
+      },
+      error: (e) => {
+        this.loggerService.error(e);
+        this.loadingState = LoadingState.Error;
       },
     });
   }

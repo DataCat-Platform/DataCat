@@ -102,7 +102,6 @@ export const getFakeNotificationGroupsExpanded =
       const group: NotificationGroupExpanded = {
         id: getFakeId(),
         name: 'fake group ' + getFakeId(),
-        notificationTemplate: getFakeNotificationTemplate(),
         notificationChannels: [],
       };
 

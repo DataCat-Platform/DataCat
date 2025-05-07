@@ -12,13 +12,11 @@ export type NotificationTemplate = {
 export type NotificationGroup = {
   id: string;
   name: string;
-  notificationTemplate: NotificationTemplate;
   notificationChannelsIds: string[];
 };
 
 export type NotificationGroupExpanded = {
   id: string;
   name: string;
-  notificationTemplate: NotificationTemplate;
   notificationChannels: NotificationChannel[];
 };
