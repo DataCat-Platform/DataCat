@@ -19,15 +19,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             },
             error: (error) => {
                 if (error.status === 401) {
-                    const loginAttempted = localStorage.getItem('login_attempted');
-
-                    if (!loginAttempted) {
-                        localStorage.setItem('login_attempted', 'true');
-                        const version = 'v1';
-                        window.location.href = `/api/${version}/user/login-code-flow`;
-                    } else {
-                        window.location.href = '/forbidden';
-                    }
+                    window.location.href = `/api/v1/user/login-code-flow`;
+                    // const alreadyTriedLogin = localStorage.getItem('login_attempted');
+                    //
+                    // if (!alreadyTriedLogin) {
+                    //     localStorage.setItem('login_attempted', 'true');
+                    //     window.location.href = `/api/v1/user/login-code-flow`;
+                    // } else {
+                    //     localStorage.removeItem('login_attempted'); // Сброс для будущих попыток
+                    //     window.location.href = '/forbidden';
+                    // }
                 }
             }
         })

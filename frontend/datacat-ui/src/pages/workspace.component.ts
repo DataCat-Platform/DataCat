@@ -19,6 +19,7 @@ import * as urls from '../shared/common/urls';
 import {filter} from "rxjs";
 import {getAccessTokenFromCookie} from "../shared/interceptors/auth.interceptor";
 import {Toast} from "primeng/toast";
+import {ThemeSelectionService} from "../features/appearence/select-theme/select-theme.service";
 
 interface TreeMenuNodeData {
     url?: string;
@@ -94,6 +95,7 @@ export class WorkspaceComponent {
     constructor(
         private router: Router,
         private location: Location,
+        private themeService: ThemeSelectionService
     ) {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd)

@@ -21,15 +21,16 @@ public static class DashboardSql
               owner.{Public.Users.Id}        {nameof(UserSnapshot.UserId)},
               
               -- PanelX Details
-              panel.{Public.Panels.Id}              {nameof(PanelSnapshot.Id)},
-              panel.{Public.Panels.Title}           {nameof(PanelSnapshot.Title)},
-              panel.{Public.Panels.TypeId}          {nameof(PanelSnapshot.TypeId)},
-              panel.{Public.Panels.RawQuery}        {nameof(PanelSnapshot.RawQuery)},
-              panel.{Public.Panels.X}               {nameof(PanelSnapshot.X)},
-              panel.{Public.Panels.Y}               {nameof(PanelSnapshot.Y)},
-              panel.{Public.Panels.Width}           {nameof(PanelSnapshot.Width)},
-              panel.{Public.Panels.Height}          {nameof(PanelSnapshot.Height)},
-              panel.{Public.Panels.DashboardId}     {nameof(PanelSnapshot.DashboardId)},
+              panel.{Public.Panels.Id}                       {nameof(PanelSnapshot.Id)},
+              panel.{Public.Panels.Title}                    {nameof(PanelSnapshot.Title)},
+              panel.{Public.Panels.TypeId}                   {nameof(PanelSnapshot.TypeId)},
+              panel.{Public.Panels.RawQuery}                 {nameof(PanelSnapshot.RawQuery)},
+              panel.{Public.Panels.X}                        {nameof(PanelSnapshot.X)},
+              panel.{Public.Panels.Y}                        {nameof(PanelSnapshot.Y)},
+              panel.{Public.Panels.Width}                    {nameof(PanelSnapshot.Width)},
+              panel.{Public.Panels.Height}                   {nameof(PanelSnapshot.Height)},
+              panel.{Public.Panels.DashboardId}              {nameof(PanelSnapshot.DashboardId)},
+              panel.{Public.Panels.StylingConfiguration}     {nameof(PanelSnapshot.StyleConfiguration)},
               
               -- SharedWith 
               shared_with.{Public.Users.Id}             {nameof(UserSnapshot.UserId)},
@@ -90,6 +91,7 @@ public static class DashboardSql
               panel.{Public.Panels.Width}                        {nameof(PanelSnapshot.Width)},
               panel.{Public.Panels.Height}                       {nameof(PanelSnapshot.Height)},
               panel.{Public.Panels.DashboardId}                  {nameof(PanelSnapshot.DashboardId)},
+              panel.{Public.Panels.StylingConfiguration}         {nameof(PanelSnapshot.StyleConfiguration)},
               
               -- SharedWith 
               shared_with.{Public.Users.Id}                      {nameof(UserSnapshot.UserId)},
