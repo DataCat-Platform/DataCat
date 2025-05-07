@@ -4,7 +4,7 @@ public sealed record NotificationChannelGroupSnapshot
 {
     public required string Id { get; init; }
     public required string Name { get; init; }
-    public required List<NotificationChannelSnapshot> Channels { get; init; } = [];
+    public List<NotificationChannelSnapshot> Channels { get; init; } = [];
 }
 
 public static class NotificationChannelGroupSnapshotExtensions

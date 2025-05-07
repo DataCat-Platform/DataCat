@@ -5,9 +5,9 @@ public sealed class AddNotificationCommandHandler(
     IRepository<NotificationChannel, int> notificationChannelRepository,
     INotificationChannelGroupRepository notificationChannelGroupRepository,
     NotificationChannelManager notificationChannelManager)
-    : ICommandHandler<AddNotificationCommand, int>
+    : ICommandHandler<AddNotificationCommand>
 {
-    public async Task<Result<int>> Handle(AddNotificationCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(AddNotificationCommand request, CancellationToken cancellationToken)
     {
         var destination = await notificationDestinationRepository.GetByNameAsync(request.DestinationTypeName, cancellationToken);
         if (destination is null)
@@ -31,6 +31,6 @@ public sealed class AddNotificationCommandHandler(
             return Result.Fail<int>(notificationResult.Errors!);
         
         await notificationChannelRepository.AddAsync(notificationResult.Value, cancellationToken);
-        return Result.Success(notificationResult.Value.Id);
+        return Result.Success();
     }
 }

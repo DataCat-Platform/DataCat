@@ -13,6 +13,7 @@ public sealed record GetAlertResponse
     public required DateTime NextExecutionTime { get; init; }
     public required TimeSpan WaitTimeBeforeAlerting { get; init; }
     public required TimeSpan RepeatInterval { get; init; }
+    public required List<string> Tags { get; init; }
 }
 
 public static class GetAlertResponseExtensions
@@ -32,6 +33,7 @@ public static class GetAlertResponseExtensions
             RepeatInterval = alert.Schedule.RepeatInterval,
             PreviousExecutionTime = alert.PreviousExecution.DateTime,
             NextExecutionTime = alert.NextExecution.DateTime,
+            Tags = alert.Tags.Select(x => x.Value).OrderBy(x => x).ToList(),
         };
     }
 }

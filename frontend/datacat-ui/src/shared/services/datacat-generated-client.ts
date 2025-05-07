@@ -5761,6 +5761,8 @@ export interface IAddNotificationDestinationRequest {
 }
 
 export class GetNotificationDestinationResponse implements IGetNotificationDestinationResponse {
+    id?: number;
+    name?: string;
 
     constructor(data?: IGetNotificationDestinationResponse) {
         if (data) {
@@ -5772,6 +5774,10 @@ export class GetNotificationDestinationResponse implements IGetNotificationDesti
     }
 
     init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
     }
 
     static fromJS(data: any): GetNotificationDestinationResponse {
@@ -5783,6 +5789,8 @@ export class GetNotificationDestinationResponse implements IGetNotificationDesti
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
         return data;
     }
 
@@ -5795,6 +5803,8 @@ export class GetNotificationDestinationResponse implements IGetNotificationDesti
 }
 
 export interface IGetNotificationDestinationResponse {
+    id?: number;
+    name?: string;
 }
 
 export class AddNotificationChannelRequest implements IAddNotificationChannelRequest {
@@ -7589,6 +7599,7 @@ export class GetAlertResponse implements IGetAlertResponse {
     nextExecutionTime?: Date;
     waitTimeBeforeAlerting?: string;
     repeatInterval?: string;
+    tags?: string[];
 
     constructor(data?: IGetAlertResponse) {
         if (data) {
@@ -7612,6 +7623,11 @@ export class GetAlertResponse implements IGetAlertResponse {
             this.nextExecutionTime = _data["nextExecutionTime"] ? new Date(_data["nextExecutionTime"].toString()) : <any>undefined;
             this.waitTimeBeforeAlerting = _data["waitTimeBeforeAlerting"];
             this.repeatInterval = _data["repeatInterval"];
+            if (Array.isArray(_data["tags"])) {
+                this.tags = [] as any;
+                for (let item of _data["tags"])
+                    this.tags!.push(item);
+            }
         }
     }
 
@@ -7635,6 +7651,11 @@ export class GetAlertResponse implements IGetAlertResponse {
         data["nextExecutionTime"] = this.nextExecutionTime ? this.nextExecutionTime.toISOString() : <any>undefined;
         data["waitTimeBeforeAlerting"] = this.waitTimeBeforeAlerting;
         data["repeatInterval"] = this.repeatInterval;
+        if (Array.isArray(this.tags)) {
+            data["tags"] = [];
+            for (let item of this.tags)
+                data["tags"].push(item);
+        }
         return data;
     }
 
@@ -7658,6 +7679,7 @@ export interface IGetAlertResponse {
     nextExecutionTime?: Date;
     waitTimeBeforeAlerting?: string;
     repeatInterval?: string;
+    tags?: string[];
 }
 
 export class PageOfSearchAlertsResponse implements IPageOfSearchAlertsResponse {
@@ -7747,6 +7769,7 @@ export class SearchAlertsResponse implements ISearchAlertsResponse {
     nextExecutionTime?: Date;
     waitTimeBeforeAlerting?: string;
     repeatInterval?: string;
+    tags?: string[];
 
     constructor(data?: ISearchAlertsResponse) {
         if (data) {
@@ -7770,6 +7793,11 @@ export class SearchAlertsResponse implements ISearchAlertsResponse {
             this.nextExecutionTime = _data["nextExecutionTime"] ? new Date(_data["nextExecutionTime"].toString()) : <any>undefined;
             this.waitTimeBeforeAlerting = _data["waitTimeBeforeAlerting"];
             this.repeatInterval = _data["repeatInterval"];
+            if (Array.isArray(_data["tags"])) {
+                this.tags = [] as any;
+                for (let item of _data["tags"])
+                    this.tags!.push(item);
+            }
         }
     }
 
@@ -7793,6 +7821,11 @@ export class SearchAlertsResponse implements ISearchAlertsResponse {
         data["nextExecutionTime"] = this.nextExecutionTime ? this.nextExecutionTime.toISOString() : <any>undefined;
         data["waitTimeBeforeAlerting"] = this.waitTimeBeforeAlerting;
         data["repeatInterval"] = this.repeatInterval;
+        if (Array.isArray(this.tags)) {
+            data["tags"] = [];
+            for (let item of this.tags)
+                data["tags"].push(item);
+        }
         return data;
     }
 
@@ -7816,6 +7849,7 @@ export interface ISearchAlertsResponse {
     nextExecutionTime?: Date;
     waitTimeBeforeAlerting?: string;
     repeatInterval?: string;
+    tags?: string[];
 }
 
 export class UpdateAlertRequest implements IUpdateAlertRequest {
@@ -7823,7 +7857,6 @@ export class UpdateAlertRequest implements IUpdateAlertRequest {
     template?: string;
     rawQuery?: string;
     dataSourceId?: string;
-    notificationChannelId?: string;
 
     constructor(data?: IUpdateAlertRequest) {
         if (data) {
@@ -7840,7 +7873,6 @@ export class UpdateAlertRequest implements IUpdateAlertRequest {
             this.template = _data["template"];
             this.rawQuery = _data["rawQuery"];
             this.dataSourceId = _data["dataSourceId"];
-            this.notificationChannelId = _data["notificationChannelId"];
         }
     }
 
@@ -7857,7 +7889,6 @@ export class UpdateAlertRequest implements IUpdateAlertRequest {
         data["template"] = this.template;
         data["rawQuery"] = this.rawQuery;
         data["dataSourceId"] = this.dataSourceId;
-        data["notificationChannelId"] = this.notificationChannelId;
         return data;
     }
 
@@ -7874,7 +7905,6 @@ export interface IUpdateAlertRequest {
     template?: string;
     rawQuery?: string;
     dataSourceId?: string;
-    notificationChannelId?: string;
 }
 
 export class ApiException extends Error {

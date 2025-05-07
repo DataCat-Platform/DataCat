@@ -4,8 +4,7 @@ public sealed record UpdateAlertRequest(
     string? Description,
     string Template,
     string RawQuery,
-    string DataSourceId,
-    string NotificationChannelId);
+    string DataSourceId);
 
 public sealed class UpdateAlert : ApiEndpointBase
 {
@@ -36,7 +35,6 @@ public sealed class UpdateAlert : ApiEndpointBase
             Template = request.Template,
             RawQuery = request.RawQuery,
             DataSourceId = request.DataSourceId,
-            NotificationChannelId = request.NotificationChannelId
         };
     }
 }

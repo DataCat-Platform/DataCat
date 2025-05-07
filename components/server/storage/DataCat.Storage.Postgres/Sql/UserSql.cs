@@ -27,7 +27,7 @@ public static class UserSql
               {Public.UserRoleLinkTable} url ON url.{Public.UsersRolesLink.UserId} = u.{Public.Users.Id}
           LEFT JOIN
               {Public.UserPermissionLinkTable} upl ON upl.{Public.UsersPermissionsLink.UserId} = u.{Public.Users.Id}
-          WHERE {Public.Users.Id} = @p_user_id
+          WHERE u.{Public.Users.Id} = @p_user_id
         """;
         
         public const string FindByEmail = $"""
@@ -53,7 +53,7 @@ public static class UserSql
                {Public.UserRoleLinkTable} url ON url.{Public.UsersRolesLink.UserId} = u.{Public.Users.Id}
            LEFT JOIN
                {Public.UserPermissionLinkTable} upl ON upl.{Public.UsersPermissionsLink.UserId} = u.{Public.Users.Id}
-           WHERE {Public.Users.Email} = @p_email
+           WHERE u.{Public.Users.Email} = @p_email
         """;
         
         public const string GetExternalRolesMappings = $"""
