@@ -1,15 +1,14 @@
 <p-panel header="Alerts" [style]="{ display: 'block', height: '100%' }">
-  <div class="description-container">
-    <p class="text-secondary">Explore, create and edit alerts</p>
+  <div class="layout">
+    <div class="layout__mg">
+      <p class="text-secondary">Explore, create and edit alerts</p>
+    </div>
+    <div class="layout__mg">
+      <datacat-create-alert-button />
+    </div>
+    <div class="layout__mg">
+      <datacat-alerts-counts-by-status />
+    </div>
+    <datacat-alerts-list />
   </div>
-  <div class="slot">
-    <datacat-create-alert-button />
-  </div>
-  <div class="slot">
-    <datacat-alerts-counts-by-status />
-  </div>
-  <div class="slot">
-    <datacat-alerts-filtering-form (filter)="applyFilter($event)" />
-  </div>
-  <datacat-alerts-list [filter]="filter" />
 </p-panel>
