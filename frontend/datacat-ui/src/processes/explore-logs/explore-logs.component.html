@@ -5,7 +5,7 @@
 
     <div class="slot">
         <app-logs-data-source-selector
-                (selectedDataSourceChange)="onDataSourceChange()"
+                (selectedDataSourceChange)="onDataSourceChange($event)"
                 [(selectedDataSource)]="currentFilter.dataSourceName">
         </app-logs-data-source-selector>
     </div>

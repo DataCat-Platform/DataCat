@@ -10,9 +10,6 @@ public sealed class ElasticSettings
     [Required, MinLength(1)]
     public string IndexPattern { get; set; } = null!;
 
-    [Range(typeof(TimeSpan), "00:00:01", "1.00:00:00", ErrorMessage = "RequestTimeout must be between 1 second and 1 day")]
-    public TimeSpan RequestTimeout { get; set; }
-
     [Required]
     public string UserName { get; set; } = null!;
 

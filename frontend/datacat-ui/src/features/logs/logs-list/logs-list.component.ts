@@ -59,4 +59,17 @@ export class LogsListComponent {
         if (this.logs.length === 0) return [];
         return Object.keys(this.logs[0].additionalFields || {});
     }
+
+    sanitizeMessage(message: string): string {
+        try {
+            if ((message.startsWith('"') && message.endsWith('"')) ||
+                (message.startsWith('\"') && message.endsWith('\"'))) {
+                message = message.slice(1, -1);
+            }
+
+            return JSON.parse(`"${message}"`);
+        } catch {
+            return message;
+        }
+    }
 }

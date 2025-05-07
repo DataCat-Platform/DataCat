@@ -31,7 +31,7 @@ import {
 })
 export class ExploreLogsComponent {
     currentFilter: ISearchLogsRequest = {
-        dataSourceName: 'default',
+        dataSourceName: '',
         pageSize: 100,
         page: 1,
         sortAscending: false
@@ -70,12 +70,17 @@ export class ExploreLogsComponent {
         this.loadLogs();
     }
 
-    onDataSourceChange() {
+    onDataSourceChange(dataSourceName: string) {
+        this.currentFilter.dataSourceName = dataSourceName;
         this.currentFilter.page = 1;
         this.loadLogs();
     }
 
     private loadLogs() {
+        if (!this.currentFilter.dataSourceName) {
+            return;
+        }
+
         this.apiService.postApiV1LogsSearch(this.currentFilter as SearchLogsRequest).subscribe({
             next: (page) => {
                 this.logs = page.items!;
