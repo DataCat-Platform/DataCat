@@ -1,6 +1,6 @@
 .groups-box {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: var(--p-padding-md);
 }
 
@@ -13,4 +13,9 @@
     gap: var(--p-padding-xs);
     align-items: start;
   }
+}
+
+.search-box {
+  display: flex;
+  gap: var(--p-padding-md);
 }

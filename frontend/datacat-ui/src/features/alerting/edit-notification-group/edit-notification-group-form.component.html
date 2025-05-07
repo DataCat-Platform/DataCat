@@ -1,67 +1,47 @@
 @switch (loadingState) {
   @case (LoadingState.Loading) {
-    <div class="add-channel-form">
-      <p-inputgroup>
-        <p-select [options]="drivers" [formControl]="driverControl" />
-        <p-button label="Add channel" severity="secondary" />
-      </p-inputgroup>
+    <div class="group-name">
+      <p class="text-secondary">Group name</p>
+      <p-skeleton width="20rem" height="1.34rem" />
     </div>
-    <div class="form">
-      <div class="form__item">
-        <p class="text-secondary">Group name</p>
-        <p-skeleton width="20rem" height="1.5rem" />
-      </div>
-      <p-button
-        [disabled]="true"
-        label="Save"
-        (onClick)="saveNotificationGroup()"
-        severity="secondary"
-      />
-    </div>
+    <form class="form">
+      <p class="text-secondary">Channels</p>
+      <p-button label="Add channel" severity="secondary" />
+      <p-skeleton width="20rem" height="1.34rem" />
+      <p-skeleton width="20rem" height="1.34rem" />
+      <p-skeleton width="20rem" height="1.34rem" />
+    </form>
   }
   @case (LoadingState.Error) {
     <p-tag value="Unable to load edit form" severity="secondary" />
   }
   @case (LoadingState.Success) {
-    <form class="add-channel-form">
-      <p-inputgroup>
-        <p-select [options]="drivers" [formControl]="driverControl" />
-        <p-button
-          label="Add channel"
-          severity="secondary"
-          (onClick)="addChannel()"
-        />
-      </p-inputgroup>
-    </form>
+    <div class="group-name">
+      <p class="text-secondary">Group name</p>
+      <p>{{ groupName }}</p>
+    </div>
 
-    <form class="form" [formGroup]="form">
-      <div class="form__item">
-        <p class="text-secondary">Group name</p>
-        <input pInputText formControlName="name" />
-      </div>
-
-      <!-- <div class="form__item">
-        <p class="text-secondary">Notification template</p>
-        <textarea
-          pTextarea
-          cols="40"
-          rows="3"
-          formControlName="template"
-        ></textarea>
-      </div> -->
+    <!-- <form class="form" [formGroup]="form">
+      <p class="text-secondary">Channels</p>
+      <p-button
+        label="Add channel"
+        severity="secondary"
+        (onClick)="showChannelCreationDialog()"
+        [disabled]="form.disabled"
+      />
 
       @if (
         emailChannels.length +
           webhookChannels.length +
-          telegramChannels.length !==
+          telegramChannels.length ===
         0
       ) {
-        <p class="text-secondary">Channels</p>
+        <p-tag value="No channels yet" severity="info" />
       }
 
       <div class="channels-box">
         @if (emailChannels.length !== 0) {
-          <div formArrayName="emailChannels" class="channels-box">
+          <ng-container formArrayName="emailChannels">
             @for (control of emailChannels.controls; track $index) {
               <div [formGroup]="control" class="channel-form">
                 <i class="pi pi-envelope text-secondary"></i>
@@ -78,11 +58,11 @@
                 />
               </div>
             }
-          </div>
+          </ng-container>
         }
 
         @if (telegramChannels.length !== 0) {
-          <div formArrayName="telegramChannels" class="channels-box">
+          <ng-container formArrayName="telegramChannels">
             @for (control of telegramChannels.controls; track $index) {
               <div [formGroup]="control" class="channel-form">
                 <i class="pi pi-telegram text-secondary"></i>
@@ -99,11 +79,11 @@
                 />
               </div>
             }
-          </div>
+          </ng-container>
         }
 
         @if (webhookChannels.length !== 0) {
-          <div formArrayName="webhookChannels" class="channels-box">
+          <ng-container formArrayName="webhookChannels">
             @for (control of webhookChannels.controls; track $index) {
               <div [formGroup]="control" class="channel-form">
                 <i class="pi pi-link text-secondary"></i>
@@ -116,16 +96,31 @@
                 />
               </div>
             }
-          </div>
+          </ng-container>
         }
       </div>
-
-      <p-button
-        [loading]="isSavingInitiated"
-        label="Save"
-        (onClick)="saveNotificationGroup()"
-        severity="secondary"
-      />
-    </form>
+    </form> -->
   }
 }
+
+<p-dialog
+  header="Add notification channel"
+  [(visible)]="isChannelCreationDialogVisible"
+  [modal]="true"
+>
+  <form class="dialog" [formGroup]="addChannelForm">
+    <p-select
+      [options]="drivers"
+      formControlName="driver"
+      placeholder="Select driver"
+    />
+    <div class="dialog__actions">
+      <p-button
+        severity="secondary"
+        label="Cancel"
+        (onClick)="hideChannelCreationDialog()"
+      />
+      <p-button label="Add" (onClick)="addChannel()" />
+    </div>
+  </form>
+</p-dialog>

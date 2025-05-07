@@ -5,18 +5,25 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { timer } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { NotificationChannelDriver } from '../../../entities';
+import {
+  NotificationChannel,
+  NotificationChannelDriver,
+} from '../../../entities';
 import { SelectModule } from 'primeng/select';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { ApiService } from '../../../shared/services/datacat-generated-client';
+import {
+  ApiService,
+  IAddNotificationChannelRequest,
+  NotificationChannelResponse,
+} from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { TextareaModule } from 'primeng/textarea';
 import { LoadingState } from '../../../shared/common/enums';
 import { TagModule } from 'primeng/tag';
 import { SkeletonModule } from 'primeng/skeleton';
+import { DialogModule } from 'primeng/dialog';
+import { finalize } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -28,10 +35,10 @@ import { SkeletonModule } from 'primeng/skeleton';
     InputTextModule,
     ButtonModule,
     SelectModule,
-    InputGroupModule,
     TextareaModule,
     TagModule,
     SkeletonModule,
+    DialogModule,
   ],
 })
 export class EditNotificationGroupFormComponent {
@@ -41,6 +48,9 @@ export class EditNotificationGroupFormComponent {
     }
   }
 
+  protected isChannelCreationDialogVisible = false;
+  protected groupName: string = '';
+
   protected LoadingState = LoadingState;
   protected loadingState = LoadingState.Loading;
 
@@ -48,28 +58,16 @@ export class EditNotificationGroupFormComponent {
 
   protected isSavingInitiated = false;
 
-  protected driverControl = new FormControl<NotificationChannelDriver>(
-    NotificationChannelDriver.EMAIL,
-  );
+  protected notificationChannels: NotificationChannel[] = [];
 
-  protected form = new FormGroup({
-    name: new FormControl<string>(''),
-    emailChannels: new FormArray<FormGroup>([]),
-    webhookChannels: new FormArray<FormGroup>([]),
-    telegramChannels: new FormArray<FormGroup>([]),
+  protected editChannelForm = new FormGroup({});
+
+  protected addChannelForm = new FormGroup({
+    driver: new FormControl<NotificationChannelDriver>(
+      NotificationChannelDriver.EMAIL,
+    ),
+    settings: new FormGroup({}),
   });
-
-  protected get emailChannels(): FormArray<FormGroup> {
-    return this.form.get('emailChannels') as FormArray<FormGroup>;
-  }
-
-  protected get webhookChannels(): FormArray<FormGroup> {
-    return this.form.get('webhookChannels') as FormArray<FormGroup>;
-  }
-
-  protected get telegramChannels(): FormArray<FormGroup> {
-    return this.form.get('telegramChannels') as FormArray<FormGroup>;
-  }
 
   constructor(
     private apiService: ApiService,
@@ -77,78 +75,58 @@ export class EditNotificationGroupFormComponent {
   ) {}
 
   protected loadEssentials(groupId: string) {
-    this.apiService.getApiV1NotificationChannelGroup(groupId).subscribe({
-      next: (group) => {
-        this.form.setValue({
-          name: group.name || null,
-          emailChannels: [],
-          webhookChannels: [],
-          telegramChannels: [],
-        });
-        this.loadingState = LoadingState.Success;
-      },
-      error: (e) => {
-        this.loggerService.error(e);
-        this.loadingState = LoadingState.Error;
-      },
-    });
+    // this.apiService.getApiV1NotificationChannelGroup(groupId).subscribe({
+    //   next: (group) => {
+    //     this.groupName = group.name || '';
+    //     this.form.setValue({
+    //       emailChannels: [],
+    //       webhookChannels: [],
+    //       telegramChannels: [],
+    //     });
+    //     this.loadingState = LoadingState.Success;
+    //   },
+    //   error: (e) => {
+    //     this.loggerService.error(e);
+    //     this.loadingState = LoadingState.Error;
+    //   },
+    // });
   }
 
-  protected saveNotificationGroup() {
-    this.form.disable();
-    this.isSavingInitiated = true;
+  protected showChannelCreationDialog() {
+    this.isChannelCreationDialogVisible = true;
+  }
 
-    timer(1000).subscribe({
-      next: () => {
-        this.isSavingInitiated = false;
-        this.form.enable();
-      },
-      error: () => {
-        this.isSavingInitiated = false;
-        this.form.enable();
-      },
-    });
+  protected hideChannelCreationDialog() {
+    this.isChannelCreationDialogVisible = false;
   }
 
   protected addChannel() {
-    const driver = this.driverControl.value;
-    switch (driver) {
-      case NotificationChannelDriver.EMAIL: {
-        this.emailChannels.push(
-          new FormGroup({
-            address: new FormControl<string>(''),
-          }),
-        );
-        break;
-      }
-      case NotificationChannelDriver.TELEGRAM: {
-        this.telegramChannels.push(
-          new FormGroup({
-            username: new FormControl<string>(''),
-          }),
-        );
-        break;
-      }
-      case NotificationChannelDriver.WEBHOOK: {
-        this.webhookChannels.push(
-          new FormGroup({
-            url: new FormControl<string>(''),
-          }),
-        );
-        break;
-      }
-    }
+    this.addChannelForm.disable();
+
+    const request: any = {
+      notificationChannelGroupName: this.groupName,
+      destinationName: this.addChannelForm.get('driver')?.value,
+      settings: this.addChannelForm.get('settings')?.value,
+    } as IAddNotificationChannelRequest;
+
+    this.apiService
+      .postApiV1NotificationChannelAdd(request)
+      .pipe(
+        finalize(() => {
+          this.addChannelForm.enable();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.loadEssentials(this.groupId);
+        },
+        error: (e) => {
+          this.loggerService.error(e);
+        },
+      });
   }
 
-  protected deleteEmailChannel(index: number) {
-    this.emailChannels.removeAt(index);
-  }
+  protected deleteChannel(chanel: NotificationChannel) {
 
-  protected deleteWebhookChannel(index: number) {
-    this.webhookChannels.removeAt(index);
-  }
-
-  protected deleteTelegramChannel(index: number) {
-    this.telegramChannels.removeAt(index);
   }
 }

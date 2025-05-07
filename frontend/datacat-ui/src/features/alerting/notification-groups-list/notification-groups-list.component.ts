@@ -7,9 +7,14 @@ import {
   NotificationChannelDriver,
   NotificationGroupExpanded,
 } from '../../../entities';
-import { NotificationGroupComponent } from './notification-group/notification-group.component';
-import { ApiService, NotificationChannelResponse } from '../../../shared/services/datacat-generated-client';
+import {
+  ApiService,
+  NotificationChannelResponse,
+} from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
+import { ButtonModule } from 'primeng/button';
+import { ListboxModule } from 'primeng/listbox';
+import { NotificationGroupComponent } from './notification-group/notification-group.component';
 
 @Component({
   standalone: true,
@@ -20,11 +25,19 @@ import { ToastLoggerService } from '../../../shared/services/toast-logger.servic
     InputTextModule,
     ReactiveFormsModule,
     DataViewModule,
+    ButtonModule,
+    ListboxModule,
     NotificationGroupComponent,
   ],
 })
 export class NotificationGroupsListComponent {
-  protected groupName = new FormControl<string>('');
+  protected isRefreshing = false;
+
+  protected groupNameControl = new FormControl<string>('');
+
+  protected get groupName() {
+    return this.groupNameControl.value || undefined;
+  }
 
   protected notificationGroups?: NotificationGroupExpanded[];
 
@@ -32,16 +45,12 @@ export class NotificationGroupsListComponent {
     private apiService: ApiService,
     private loggerService: ToastLoggerService,
   ) {
-    this.groupName.valueChanges.subscribe(() => {
-      this.refreshNotificationGroups();
-    });
     this.refreshNotificationGroups();
   }
 
   private refreshNotificationGroups() {
     this.apiService.getApiV1NotificationChannelGroupGetAll().subscribe({
       next: (notificationGroups) => {
-        console.log(notificationGroups);
         this.notificationGroups =
           notificationGroups.map<NotificationGroupExpanded>((group) => {
             return {
@@ -49,13 +58,15 @@ export class NotificationGroupsListComponent {
               name: group.name || '',
               notificationChannels: (
                 group.notificationChannels || []
-              ).map<NotificationChannel>((channel: NotificationChannelResponse) => {
-                return {
-                  id: channel.id || 0,
-                  driver: NotificationChannelDriver.EMAIL,
-                  settings: JSON.parse(channel.settings || ''),
-                };
-              }),
+              ).map<NotificationChannel>(
+                (channel: NotificationChannelResponse) => {
+                  return {
+                    id: channel.id || 0,
+                    driver: NotificationChannelDriver.EMAIL,
+                    settings: JSON.parse(channel.settings || ''),
+                  };
+                },
+              ),
             };
           });
       },
