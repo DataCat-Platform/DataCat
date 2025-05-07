@@ -20,7 +20,7 @@ public sealed class AddNotificationChannel : ApiEndpointBase
             })
             .WithTags(ApiTags.NotificationChannels)
             .HasApiVersion(ApiVersions.V1)
-            .Produces<Guid>()
+            .Produces<int>()
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
     

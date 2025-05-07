@@ -4,6 +4,8 @@ namespace DataCat.Logs.ElasticSearch.Searching;
 
 public sealed class ElasticClientFactory : ILogsClientFactory, IDisposable
 {
+    private static readonly JsonSerializerOptions serializationOptions = new() { PropertyNameCaseInsensitive = true };
+    
     public bool CanCreate(DataSource dataSource)
     {
         return dataSource.Purpose == DataSourcePurpose.Logs
@@ -20,7 +22,7 @@ public sealed class ElasticClientFactory : ILogsClientFactory, IDisposable
         ElasticSettings settings;
         try
         {
-            settings = JsonSerializer.Deserialize<ElasticSettings>(dataSource.ConnectionSettings)
+            settings = JsonSerializer.Deserialize<ElasticSettings>(dataSource.ConnectionSettings, serializationOptions)
                        ?? throw new InvalidOperationException("ElasticSettings deserialized as null");
         }
         catch (JsonException ex)
@@ -33,7 +35,7 @@ public sealed class ElasticClientFactory : ILogsClientFactory, IDisposable
 
         var config = new ElasticsearchClientSettings(pool)
             // .Authentication(new BasicAuthentication(settings.UserName, settings.Password))
-            .RequestTimeout(settings.RequestTimeout)
+            .RequestTimeout(TimeSpan.FromSeconds(15))
             .EnableDebugMode(settings.EnableDebugLogging ? OnRequestCompleted : null!);
 
         var elasticClient = new ElasticsearchClient(config);

@@ -22,7 +22,7 @@ public sealed class PostgresPlugin : IDatabasePlugin
         services.AddScoped<IRepository<Variable, Guid>, VariableRepository>();
         services.AddScoped<IVariableRepository, VariableRepository>();
 
-        services.AddScoped<IRepository<NotificationChannel, Guid>, NotificationChannelRepository>();
+        services.AddScoped<IRepository<NotificationChannel, int>, NotificationChannelRepository>();
         services.AddScoped<INotificationChannelRepository, NotificationChannelRepository>();
         
         services.AddScoped<IRepository<NotificationChannelGroup, Guid>, NotificationChannelGroupRepository>();

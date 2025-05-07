@@ -9,13 +9,13 @@ public sealed record NotificationChannelResponse
 
 public static class NotificationChannelResponseExtensions
 {
-    public static NotificationChannelResponse ToResponse(this NotificationChannel notificationChannelGroup)
+    public static NotificationChannelResponse ToResponse(this NotificationChannel notificationChannel)
     {
         return new NotificationChannelResponse
         {
-            Id = notificationChannelGroup.Id,
-            DestinationName = notificationChannelGroup.NotificationOption.NotificationDestination.Name,
-            Settings = notificationChannelGroup.NotificationOption.Settings
+            Id = notificationChannel.Id,
+            DestinationName = notificationChannel.NotificationOption.NotificationDestination.Name,
+            Settings = notificationChannel.NotificationOption.Settings
         };
     }
 }

@@ -69,6 +69,13 @@ export const ROUTES: Routes = [
                         (m) => m.ManageDataSourcesComponent,
                     ),
             },
+            {
+                path: urls.LOGS_EXPLORER_URL,
+                loadComponent: () =>
+                    import('../processes/explore-logs').then(
+                        (m) => m.ExploreLogsComponent,
+                    ),
+            },
         ],
     },
     {

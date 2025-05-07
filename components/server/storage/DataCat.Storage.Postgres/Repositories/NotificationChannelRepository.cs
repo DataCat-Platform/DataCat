@@ -4,11 +4,11 @@ public sealed class NotificationChannelRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork unitOfWork,
     NotificationChannelManager NotificationChannelManager)
-    : IRepository<NotificationChannel, Guid>, INotificationChannelRepository
+    : IRepository<NotificationChannel, int>, INotificationChannelRepository
 {
-    public async Task<NotificationChannel?> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<NotificationChannel?> GetByIdAsync(int id, CancellationToken token = default)
     {
-        var parameters = new { p_notification_channel_id = id.ToString() };
+        var parameters = new { p_notification_channel_id = id };
 
         const string sql = $"""
             SELECT
@@ -76,9 +76,9 @@ public sealed class NotificationChannelRepository(
         await connection.ExecuteAsync(sql, snapshot, transaction: unitOfWork.Transaction);
     }
 
-    public async Task DeleteAsync(Guid id, CancellationToken token = default)
+    public async Task DeleteAsync(int id, CancellationToken token = default)
     {
-        var parameters = new { p_notification_channel_id = id.ToString() };
+        var parameters = new { p_notification_channel_id = id };
 
         const string sql = $"""
             DELETE FROM {Public.NotificationChannelTable}

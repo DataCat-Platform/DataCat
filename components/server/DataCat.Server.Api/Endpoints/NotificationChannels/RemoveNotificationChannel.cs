@@ -4,9 +4,9 @@ public sealed class RemoveNotificationChannel : ApiEndpointBase
 {
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete("api/v{version:apiVersion}/notification-channel/remove/{notificationChannelId}", async (
+        app.MapDelete("api/v{version:apiVersion}/notification-channel/remove/{notificationChannelId:int}", async (
                 [FromServices] IMediator mediator,
-                [FromRoute] string notificationChannelId,
+                [FromRoute] int notificationChannelId,
                 CancellationToken token = default) =>
             {
                 var query = ToCommand(notificationChannelId);
@@ -19,5 +19,5 @@ public sealed class RemoveNotificationChannel : ApiEndpointBase
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static RemoveNotificationCommand ToCommand(string dataSourceId) => new(dataSourceId);
+    private static RemoveNotificationCommand ToCommand(int notificationChannelId) => new(notificationChannelId);
 }

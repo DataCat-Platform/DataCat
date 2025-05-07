@@ -2,6 +2,8 @@ namespace DataCat.Metrics.Prometheus.Core;
 
 public sealed class PrometheusClientFactory : IMetricsClientFactory
 {
+    private static readonly JsonSerializerOptions serializationOptions = new() { PropertyNameCaseInsensitive = true };
+    
     public bool CanCreate(DataSource dataSource)
     {
         return dataSource.Purpose == DataSourcePurpose.Metrics
@@ -18,7 +20,7 @@ public sealed class PrometheusClientFactory : IMetricsClientFactory
         PrometheusSettings settings;
         try
         {
-            settings = JsonSerializer.Deserialize<PrometheusSettings>(dataSource.ConnectionSettings)
+            settings = JsonSerializer.Deserialize<PrometheusSettings>(dataSource.ConnectionSettings, serializationOptions)
                        ?? throw new InvalidOperationException("PrometheusSettings deserialized as null");
         }
         catch (JsonException ex)

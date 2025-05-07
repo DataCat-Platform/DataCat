@@ -8,9 +8,9 @@ public sealed class UpdateNotificationChannel : ApiEndpointBase
 {
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("api/v{version:apiVersion}/notification-channel/{notificationChannelId}", async (
+        app.MapPut("api/v{version:apiVersion}/notification-channel/{notificationChannelId:int}", async (
                 [FromServices] IMediator mediator,
-                [FromRoute] string notificationChannelId, 
+                [FromRoute] int notificationChannelId, 
                 [FromBody] UpdateNotificationChannelRequest request,
                 CancellationToken token = default) =>
             {
@@ -24,7 +24,7 @@ public sealed class UpdateNotificationChannel : ApiEndpointBase
             .ProducesProblem(StatusCodes.Status400BadRequest);
     }
 
-    private static UpdateNotificationCommand ToCommand(UpdateNotificationChannelRequest request, string notificationChannelId)
+    private static UpdateNotificationCommand ToCommand(UpdateNotificationChannelRequest request, int notificationChannelId)
     {
         return new UpdateNotificationCommand
         {
