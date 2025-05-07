@@ -6,8 +6,7 @@ public sealed class RemoveNotificationCommandHandler(
 {
     public async Task<Result> Handle(RemoveNotificationCommand request, CancellationToken cancellationToken)
     {
-        var id = Guid.Parse(request.NotificationId);
-        await notificationRepository.DeleteAsync(id, cancellationToken);
+        await notificationRepository.DeleteAsync(request.NotificationId, cancellationToken);
         return Result.Success();
     }
 }

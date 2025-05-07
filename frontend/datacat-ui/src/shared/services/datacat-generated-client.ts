@@ -1778,7 +1778,7 @@ export class ApiService {
         return _observableOf(null as any);
     }
 
-    postApiV1NotificationChannelAdd(request: AddNotificationChannelRequest): Observable<string> {
+    postApiV1NotificationChannelAdd(request: AddNotificationChannelRequest): Observable<number> {
         let url_ = this.baseUrl + "/api/v1/notification-channel/add";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1802,14 +1802,14 @@ export class ApiService {
                 try {
                     return this.processPostApiV1NotificationChannelAdd(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<string>;
+                    return _observableThrow(e) as any as Observable<number>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<string>;
+                return _observableThrow(response_) as any as Observable<number>;
         }));
     }
 
-    protected processPostApiV1NotificationChannelAdd(response: HttpResponseBase): Observable<string> {
+    protected processPostApiV1NotificationChannelAdd(response: HttpResponseBase): Observable<number> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1839,7 +1839,7 @@ export class ApiService {
         return _observableOf(null as any);
     }
 
-    getApiV1NotificationChannel(id: string): Observable<NotificationChannelResponse> {
+    getApiV1NotificationChannel(id: number): Observable<NotificationChannelResponse> {
         let url_ = this.baseUrl + "/api/v1/notification-channel/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1898,7 +1898,7 @@ export class ApiService {
         return _observableOf(null as any);
     }
 
-    deleteApiV1NotificationChannelRemove(notificationChannelId: string): Observable<void> {
+    deleteApiV1NotificationChannelRemove(notificationChannelId: number): Observable<void> {
         let url_ = this.baseUrl + "/api/v1/notification-channel/remove/{notificationChannelId}";
         if (notificationChannelId === undefined || notificationChannelId === null)
             throw new Error("The parameter 'notificationChannelId' must be defined.");
@@ -1953,7 +1953,7 @@ export class ApiService {
         return _observableOf(null as any);
     }
 
-    putApiV1NotificationChannel(notificationChannelId: string, request: UpdateNotificationChannelRequest): Observable<void> {
+    putApiV1NotificationChannel(notificationChannelId: number, request: UpdateNotificationChannelRequest): Observable<void> {
         let url_ = this.baseUrl + "/api/v1/notification-channel/{notificationChannelId}";
         if (notificationChannelId === undefined || notificationChannelId === null)
             throw new Error("The parameter 'notificationChannelId' must be defined.");

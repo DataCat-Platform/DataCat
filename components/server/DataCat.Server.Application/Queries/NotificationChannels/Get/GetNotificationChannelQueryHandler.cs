@@ -1,7 +1,7 @@
 namespace DataCat.Server.Application.Queries.NotificationChannels.Get;
 
 public sealed class GetNotificationChannelQueryHandler(
-    IRepository<NotificationChannel, Guid> notificationChannelRepository)
+    IRepository<NotificationChannel, int> notificationChannelRepository)
     : IQueryHandler<GetNotificationChannelQuery, NotificationChannelResponse>
 {
     public async Task<Result<NotificationChannelResponse>> Handle(GetNotificationChannelQuery request, CancellationToken cancellationToken)

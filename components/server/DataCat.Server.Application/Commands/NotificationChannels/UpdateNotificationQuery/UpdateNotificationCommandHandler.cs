@@ -1,7 +1,7 @@
 namespace DataCat.Server.Application.Commands.NotificationChannels.UpdateNotificationQuery;
 
 public sealed class UpdateNotificationCommandHandler(
-    IRepository<NotificationChannel, Guid> notificationBaseRepository,
+    IRepository<NotificationChannel, int> notificationBaseRepository,
     INotificationDestinationRepository notificationDestinationRepository,
     INotificationChannelRepository notificationRepository,
     NotificationChannelManager notificationChannelManager)
@@ -9,7 +9,7 @@ public sealed class UpdateNotificationCommandHandler(
 {
     public async Task<Result> Handle(UpdateNotificationCommand request, CancellationToken token)
     {
-        var notification = await notificationBaseRepository.GetByIdAsync(Guid.Parse(request.NotificationChannelId), token);
+        var notification = await notificationBaseRepository.GetByIdAsync(request.NotificationChannelId, token);
         if (notification is null)
             return Result.Fail(NotificationChannelError.NotFound(request.NotificationChannelId));
 
