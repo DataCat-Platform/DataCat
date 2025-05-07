@@ -8,6 +8,5 @@ public sealed class UpdateAlertQueryCommandValidator : AbstractValidator<UpdateA
         RuleFor(x => x.AlertId).NotEmpty().MustBeGuid();
         RuleFor(x => x.RawQuery).NotEmpty();
         RuleFor(x => x.DataSourceId).NotEmpty().MustBeGuid();
-        RuleFor(x => x.NotificationChannelId).NotEmpty().MustBeGuid();
     }
 }

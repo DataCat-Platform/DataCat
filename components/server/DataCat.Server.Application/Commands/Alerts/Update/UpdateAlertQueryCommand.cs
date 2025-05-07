@@ -11,6 +11,4 @@ public sealed record UpdateAlertQueryCommand : ICommand, IAuthorizedCommand
     public required string RawQuery { get; init; }
 
     public required string DataSourceId { get; init; }
-    
-    public required string NotificationChannelId { get; init; }
 }

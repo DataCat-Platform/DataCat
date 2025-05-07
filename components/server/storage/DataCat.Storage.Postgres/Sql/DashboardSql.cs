@@ -48,11 +48,11 @@ public static class DashboardSql
          FROM
               {Public.DashboardTable} dashboard
          JOIN {Public.UserTable} owner ON dashboard.{Public.Dashboards.OwnerId} = owner.{Public.Users.Id}
-         JOIN {Public.PanelTable} panel ON dashboard.{Public.Dashboards.Id} = panel.{Public.Panels.DashboardId}
-         JOIN {Public.DataSourceTable} data_source on panel.{Public.Panels.DataSourceId} = data_source.{Public.DataSources.Id}
-         JOIN {Public.DataSourceTypeTable} data_source_type ON data_source_type.{Public.DataSourceType.Id} = data_source.{Public.DataSources.TypeId} 
-         JOIN {Public.DashboardUserLinkTable} dul ON dashboard.{Public.Dashboards.Id} = dul.{Public.Dashboards.Id}
-         JOIN {Public.UserTable} shared_with ON dul.{Public.Users.Id} = shared_with.{Public.Users.Id}
+         LEFT JOIN {Public.PanelTable} panel ON dashboard.{Public.Dashboards.Id} = panel.{Public.Panels.DashboardId}
+         LEFT JOIN {Public.DataSourceTable} data_source on panel.{Public.Panels.DataSourceId} = data_source.{Public.DataSources.Id}
+         LEFT JOIN {Public.DataSourceTypeTable} data_source_type ON data_source_type.{Public.DataSourceType.Id} = data_source.{Public.DataSources.TypeId} 
+         LEFT JOIN {Public.DashboardUserLinkTable} dul ON dashboard.{Public.Dashboards.Id} = dul.{Public.Dashboards.Id}
+         LEFT JOIN {Public.UserTable} shared_with ON dul.{Public.Users.Id} = shared_with.{Public.Users.Id}
          WHERE dashboard.{Public.Dashboards.Id} = @p_dashboard_id
          """;
           
@@ -61,7 +61,7 @@ public static class DashboardSql
            SELECT
                 COUNT(*)
            FROM
-                {Public.DashboardTable} d
+                {Public.DashboardTable} dashboard
            WHERE 1=1 
            """;
     
@@ -109,11 +109,11 @@ public static class DashboardSql
          FROM
               {Public.DashboardTable} dashboard
          JOIN {Public.UserTable} owner ON dashboard.{Public.Dashboards.OwnerId} = owner.{Public.Users.Id}
-         JOIN {Public.PanelTable} panel ON dashboard.{Public.Dashboards.Id} = panel.{Public.Panels.DashboardId}
-         JOIN {Public.DataSourceTable} data_source on panel.{Public.Panels.DataSourceId} = data_source.{Public.DataSources.Id}
-         JOIN {Public.DataSourceTypeTable} data_source_type ON data_source_type.{Public.DataSourceType.Id} = data_source.{Public.DataSources.TypeId}
-         JOIN {Public.DashboardUserLinkTable} dul ON dashboard.{Public.Dashboards.Id} = dul.{Public.Dashboards.Id}
-         JOIN {Public.UserTable} shared_with ON dul.{Public.Users.Id} = shared_with.{Public.Users.Id}
+         LEFT JOIN {Public.PanelTable} panel ON dashboard.{Public.Dashboards.Id} = panel.{Public.Panels.DashboardId}
+         LEFT JOIN {Public.DataSourceTable} data_source on panel.{Public.Panels.DataSourceId} = data_source.{Public.DataSources.Id}
+         LEFT JOIN {Public.DataSourceTypeTable} data_source_type ON data_source_type.{Public.DataSourceType.Id} = data_source.{Public.DataSources.TypeId}
+         LEFT JOIN {Public.DashboardUserLinkTable} dul ON dashboard.{Public.Dashboards.Id} = dul.{Public.Dashboards.Id}
+         LEFT JOIN {Public.UserTable} shared_with ON dul.{Public.Users.Id} = shared_with.{Public.Users.Id}
          WHERE 1=1 
          """;
      

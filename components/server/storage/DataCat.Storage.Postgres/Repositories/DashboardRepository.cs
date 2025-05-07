@@ -12,7 +12,14 @@ public sealed class DashboardRepository(
         const string sql = DashboardSql.Select.FindDashboard;
         
         var dashboardDictionary = new Dictionary<string, DashboardSnapshot>();
-        await connection.QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DataSourceTypeSnapshot, DashboardSnapshot>(
+        await connection.QueryAsync<
+            DashboardSnapshot,
+            UserSnapshot,
+            PanelSnapshot?,
+            UserSnapshot?,
+            DataSourceSnapshot?,
+            DataSourceTypeSnapshot?,
+            DashboardSnapshot>(
             sql,
             map: (dashboard, userOwner, panel, sharedUser, dataSource, dataSourceType) =>
             {
@@ -27,7 +34,7 @@ public sealed class DashboardRepository(
 
                 if (panel is not null && existingDashboard.Panels.All(p => p.Id != panel.Id))
                 {
-                    dataSource.DataSourceType = dataSourceType;
+                    dataSource!.DataSourceType = dataSourceType!;
                     panel.DataSource = dataSource;
                     existingDashboard.Panels.Add(panel);
                 }
@@ -39,7 +46,7 @@ public sealed class DashboardRepository(
 
                 return existingDashboard;
             },
-            splitOn: $"{nameof(UserSnapshot.UserId)}, {nameof(PanelSnapshot.Id)}, {nameof(UserSnapshot.UserId)}, {nameof(DataSourceSnapshot.Id)}",
+            splitOn: $"{nameof(UserSnapshot.UserId)}, {nameof(PanelSnapshot.Id)}, {nameof(UserSnapshot.UserId)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
             param: parameters, 
             transaction: UnitOfWork.Transaction);
 
@@ -121,8 +128,14 @@ public sealed class DashboardRepository(
 
         var dashboardDictionary = new Dictionary<string, DashboardSnapshot>();
 
-        await connection
-            .QueryAsync<DashboardSnapshot, UserSnapshot, PanelSnapshot?, UserSnapshot?, DataSourceSnapshot, DataSourceTypeSnapshot, DashboardSnapshot>(
+        await connection.QueryAsync<
+                DashboardSnapshot, 
+                UserSnapshot, 
+                PanelSnapshot?, 
+                UserSnapshot?, 
+                DataSourceSnapshot?, 
+                DataSourceTypeSnapshot?, 
+                DashboardSnapshot>(
                 dataSqlString,
                 map: (dashboard, userOwner, panel, sharedUser, dataSource, dataSourceType) =>
                 {
@@ -137,7 +150,7 @@ public sealed class DashboardRepository(
 
                     if (panel is not null && existingDashboard.Panels.All(p => p.Id != panel.Id))
                     {
-                        dataSource.DataSourceType = dataSourceType;
+                        dataSource!.DataSourceType = dataSourceType!;
                         panel.DataSource = dataSource;
                         existingDashboard.Panels.Add(panel);
                     }
@@ -149,7 +162,7 @@ public sealed class DashboardRepository(
 
                     return existingDashboard;
                 },
-                splitOn: $"{nameof(UserSnapshot.UserId)}, {nameof(PanelSnapshot.Id)}, {nameof(UserSnapshot.UserId)}, {nameof(DataSourceSnapshot.Id)}",
+                splitOn: $"{nameof(UserSnapshot.UserId)}, {nameof(PanelSnapshot.Id)}, {nameof(UserSnapshot.UserId)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
                 param: parameters,
                 transaction: UnitOfWork.Transaction);
 

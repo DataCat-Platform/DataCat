@@ -2,7 +2,7 @@ namespace DataCat.Notifications.Telegram;
 
 public sealed record TelegramNotificationOption : BaseNotificationOption
 {
-    public new string Settings => ToString();
+    public override string Settings => ToString();
     private TelegramNotificationOption(NotificationDestination destination, string telegramTokenPath, string chatId)
     {
         TelegramTokenPath = telegramTokenPath;
