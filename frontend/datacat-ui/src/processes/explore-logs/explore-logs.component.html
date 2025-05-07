@@ -17,11 +17,18 @@
         </app-logs-filter>
     </div>
     <div class="slot mt-4">
-        <app-logs-list
-                (pageChange)="onPageChange($event)"
-                (sortChange)="onSortChange($event)"
-                [logs]="logs"
-                [pagination]="pagination">
-        </app-logs-list>
+        @if (isLoading) {
+            <div class="spinner-overlay">
+                <p-progressSpinner styleClass="custom-spinner"></p-progressSpinner>
+                <p class="spinner-text">Loading logs...</p>
+            </div>
+        } @else {
+            <app-logs-list
+                    (pageChange)="onPageChange($event)"
+                    (sortChange)="onSortChange($event)"
+                    [logs]="logs"
+                    [pagination]="pagination">
+            </app-logs-list>
+        }
     </div>
 </p-panel>

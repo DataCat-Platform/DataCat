@@ -23,9 +23,9 @@ public static class ElasticSearchDocumentExtensions
             Timestamp: doc.Timestamp,
             Message: doc.Message,
             Severity: doc.Level,
-            ServiceName: doc.Fields.TryGetValue("Host", out var host) && host is not null ? host.ToString()! : "unknown",
+            ServiceName: doc.Fields.TryGetValue("Host", out var host) && host is not null ? host.ToString()! : string.Empty,
             AdditionalFields: doc.Fields.ToDictionary(x => x.Key, x => x.Value),
-            TraceId: doc.Fields.TryGetValue("TraceId", out var traceId) && traceId is not null ? traceId.ToString()! : "unknown"
+            TraceId: doc.Fields.TryGetValue("TraceId", out var traceId) && traceId is not null ? traceId.ToString()! : string.Empty
         );
     }
 }

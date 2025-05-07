@@ -14,6 +14,8 @@ import {ToastLoggerService} from "../../shared/services/toast-logger.service";
 import {
     LogsDataSourceSelectorComponent
 } from "../../features/logs/logs-data-source-selector/logs-data-source-selector.component";
+import {catchError, finalize, tap} from "rxjs";
+import {ProgressSpinner} from "primeng/progressspinner";
 
 @Component({
     selector: 'app-explore-logs',
@@ -24,12 +26,15 @@ import {
         LogsListComponent,
         DropdownModule,
         FormsModule,
-        LogsDataSourceSelectorComponent
+        LogsDataSourceSelectorComponent,
+        ProgressSpinner
     ],
     templateUrl: './explore-logs.component.html',
     styleUrl: './explore-logs.component.scss'
 })
 export class ExploreLogsComponent {
+    isLoading = false;
+
     currentFilter: ISearchLogsRequest = {
         dataSourceName: '',
         pageSize: 100,
@@ -55,7 +60,12 @@ export class ExploreLogsComponent {
     }
 
     onFilterChange(filter: ISearchLogsRequest) {
-        this.currentFilter = {...filter, page: 1};
+        const currentDataSource = this.currentFilter.dataSourceName;
+        this.currentFilter = {
+            ...filter,
+            dataSourceName: currentDataSource,
+            page: 1
+        };
         this.loadLogs();
     }
 
@@ -81,8 +91,11 @@ export class ExploreLogsComponent {
             return;
         }
 
-        this.apiService.postApiV1LogsSearch(this.currentFilter as SearchLogsRequest).subscribe({
-            next: (page) => {
+        this.isLoading = true;
+
+        this.apiService.postApiV1LogsSearch(this.currentFilter as SearchLogsRequest).pipe(
+            finalize(() => this.isLoading = false),
+            tap(page => {
                 this.logs = page.items!;
                 this.pagination = {
                     page: page.pageNumber!,
@@ -90,8 +103,11 @@ export class ExploreLogsComponent {
                     totalCount: page.totalCount!,
                     totalPages: page.totalPages!
                 };
-            },
-            error: (err) => console.error('Error loading logs:', err)
-        });
+            }),
+            catchError(error => {
+                this.toastLoggerService.error(error.message);
+                return error;
+            })
+        ).subscribe()
     }
 }

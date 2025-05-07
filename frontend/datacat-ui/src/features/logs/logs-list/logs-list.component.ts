@@ -1,8 +1,11 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {LogEntry} from "../../../shared/services/datacat-generated-client";
 import {TableModule} from "primeng/table";
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
 import {Tag} from "primeng/tag";
+import {Button} from "primeng/button";
+import {AppDialogService} from "../../../shared/services/app-dialog.service";
+import {LogsDetailsComponent} from "../logs-details/logs-details.component";
 
 @Component({
     selector: 'app-logs-list',
@@ -11,8 +14,8 @@ import {Tag} from "primeng/tag";
         TableModule,
         DatePipe,
         Tag,
-        NgForOf,
-        NgIf
+        NgIf,
+        Button
     ],
     templateUrl: './logs-list.component.html',
     styleUrl: './logs-list.component.scss'
@@ -25,6 +28,11 @@ export class LogsListComponent {
 
     currentSortField = '';
     sortAscending = false;
+
+    constructor(
+        private appDialogService: AppDialogService,
+    ) {
+    }
 
     onPageChange(event: any) {
         const newPage = (event.first / event.rows) + 1;
@@ -55,9 +63,11 @@ export class LogsListComponent {
         }
     }
 
-    getAdditionalFields(): string[] {
-        if (this.logs.length === 0) return [];
-        return Object.keys(this.logs[0].additionalFields || {});
+    showDetails(additionalFields: any) {
+        this.appDialogService.showDialog(LogsDetailsComponent,
+            'Additional Fields',
+            additionalFields || {}
+        )
     }
 
     sanitizeMessage(message: string): string {

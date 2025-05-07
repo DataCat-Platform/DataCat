@@ -126,15 +126,15 @@ public sealed partial class ElasticClient : ILogsClient
 
         if (!string.IsNullOrEmpty(query.Severity))
         {
-            queries.Add(new TermQuery(LogFields.Severity!) { Value = query.Severity });
+            queries.Add(new TermQuery(LogFields.Level!) { Value = query.Severity });
         }
 
         if (!string.IsNullOrEmpty(query.ServiceName))
         {
-            queries.Add(new TermQuery(LogFields.ServiceName!) { Value = query.ServiceName });
+            queries.Add(new TermQuery(LogFields.Host!) { Value = query.ServiceName });
         }
 
-        if (query.From.HasValue || query.To.HasValue)
+        if (query is { From: not null, To: not null }) // todo
         {
             queries.Add(new DateRangeQuery(LogFields.Timestamp!)
             {

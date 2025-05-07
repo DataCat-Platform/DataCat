@@ -28,10 +28,10 @@ export class LogsFilterComponent {
     filter: ISearchLogsRequest;
     customFilters: { key: string; value: string }[] = [];
     severityLevels = [
-        {label: 'Error', value: 'ERROR'},
-        {label: 'Warning', value: 'WARNING'},
-        {label: 'Info', value: 'INFO'},
-        {label: 'Debug', value: 'DEBUG'}
+        {label: 'Error', value: 'Error'},
+        {label: 'Warning', value: 'Warning'},
+        {label: 'Info', value: 'Information'},
+        {label: 'Debug', value: 'Debug'}
     ];
 
     showCustomFilters = false;

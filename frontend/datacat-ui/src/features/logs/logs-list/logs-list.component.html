@@ -29,7 +29,7 @@
                     </th>
                     <th>Message</th>
                     <th>Trace ID</th>
-                    <!--                    <th *ngFor="let key of getAdditionalFields()">{{ key }}</th>-->
+                    <th>Details</th>
                 </tr>
             </ng-template>
             <ng-template let-log pTemplate="body">
@@ -42,9 +42,12 @@
                     <td>{{ log.serviceName }}</td>
                     <td class="message-cell">{{ sanitizeMessage(log.message) }}</td>
                     <td>{{ log.traceId }}</td>
-                    <!--                    <td *ngFor="let key of getAdditionalFields()">-->
-                    <!--                        {{ log.additionalFields?.[key] || '-' }}-->
-                    <!--                    </td>-->
+                    <td>
+                        <p-button
+                                (click)="showDetails(log.additionalFields)"
+                                class="p-button-rounded p-button-text"
+                                icon="pi pi-info-circle"></p-button>
+                    </td>
                 </tr>
             </ng-template>
         </p-table>
