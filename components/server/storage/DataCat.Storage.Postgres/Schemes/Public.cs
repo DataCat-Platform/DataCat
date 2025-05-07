@@ -135,6 +135,7 @@ public static class Public
         public const string Width = "width";
         public const string Height = "height";
         public const string DashboardId = "dashboard_id";
+        public const string StylingConfiguration = "style_configuration";
     }
 
     public static class Alerts

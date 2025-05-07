@@ -9,7 +9,7 @@ public sealed record UpdatePanelRequest(
     int PanelY,
     int Width,
     int Height,
-    string DashboardId);
+    string StyleConfiguration);
 
 public sealed class UpdatePanel : ApiEndpointBase
 {
@@ -44,6 +44,7 @@ public sealed class UpdatePanel : ApiEndpointBase
             PanelX = request.PanelX,
             PanelY = request.PanelY,
             RawQuery = request.RawQuery,
+            StyleConfiguration = request.StyleConfiguration
         };
     }
 }

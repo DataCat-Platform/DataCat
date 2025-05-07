@@ -19,4 +19,6 @@ public sealed record AddPanelCommand : ICommand<Guid>, IAuthorizedCommand
     public required int Height { get; init; }
 
     public required string DashboardId { get; init; }
+    
+    public required string StyleConfiguration { get; init; }
 }

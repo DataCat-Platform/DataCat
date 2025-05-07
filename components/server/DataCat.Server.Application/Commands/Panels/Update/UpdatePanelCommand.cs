@@ -19,4 +19,6 @@ public sealed record UpdatePanelCommand : ICommand, IAuthorizedCommand
     public required int Width { get; init; }
     
     public required int Height { get; init; }
+    
+    public required string StyleConfiguration { get; init; }
 }
