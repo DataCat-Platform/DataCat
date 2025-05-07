@@ -35,17 +35,23 @@ export class NotificationGroupsListComponent {
 
   protected groupNameControl = new FormControl<string>('');
 
-  protected get groupName() {
-    return this.groupNameControl.value || undefined;
-  }
-
-  protected notificationGroups?: NotificationGroupExpanded[];
+  protected filteredNotificationGroups: NotificationGroupExpanded[] = [];
+  protected notificationGroups: NotificationGroupExpanded[] = [];
 
   constructor(
     private apiService: ApiService,
     private loggerService: ToastLoggerService,
   ) {
     this.refreshNotificationGroups();
+    this.groupNameControl.valueChanges.subscribe((value) =>
+      this.updateFilteredNotificationGroups(value),
+    );
+  }
+
+  private updateFilteredNotificationGroups(groupName: string | null) {
+    this.filteredNotificationGroups = this.notificationGroups.filter((group) =>
+      group.name.includes(groupName || ''),
+    );
   }
 
   private refreshNotificationGroups() {
@@ -69,6 +75,7 @@ export class NotificationGroupsListComponent {
               ),
             };
           });
+        this.updateFilteredNotificationGroups(this.groupNameControl.value);
       },
       error: (e) => {
         this.loggerService.error(e);

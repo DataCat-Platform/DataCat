@@ -1,105 +1,40 @@
 @switch (loadingState) {
   @case (LoadingState.Loading) {
-    <div class="group-name">
-      <p class="text-secondary">Group name</p>
-      <p-skeleton width="20rem" height="1.34rem" />
+    <div class="attributes-box">
+      <div class="attributes-box__attribute">
+        <p class="text-secondary">Group name</p>
+        <p-skeleton width="20rem" height="1.34rem" />
+      </div>
+      <div class="attributes-box__channels">
+        <p class="text-secondary">Channels</p>
+        <p-button label="Add channel" severity="secondary" />
+        <p-skeleton width="20rem" height="1.34rem" />
+        <p-skeleton width="20rem" height="1.34rem" />
+        <p-skeleton width="20rem" height="1.34rem" />
+      </div>
     </div>
-    <form class="form">
-      <p class="text-secondary">Channels</p>
-      <p-button label="Add channel" severity="secondary" />
-      <p-skeleton width="20rem" height="1.34rem" />
-      <p-skeleton width="20rem" height="1.34rem" />
-      <p-skeleton width="20rem" height="1.34rem" />
-    </form>
   }
   @case (LoadingState.Error) {
     <p-tag value="Unable to load edit form" severity="secondary" />
   }
   @case (LoadingState.Success) {
-    <div class="group-name">
-      <p class="text-secondary">Group name</p>
-      <p>{{ groupName }}</p>
-    </div>
-
-    <!-- <form class="form" [formGroup]="form">
-      <p class="text-secondary">Channels</p>
-      <p-button
-        label="Add channel"
-        severity="secondary"
-        (onClick)="showChannelCreationDialog()"
-        [disabled]="form.disabled"
-      />
-
-      @if (
-        emailChannels.length +
-          webhookChannels.length +
-          telegramChannels.length ===
-        0
-      ) {
-        <p-tag value="No channels yet" severity="info" />
-      }
-
-      <div class="channels-box">
-        @if (emailChannels.length !== 0) {
-          <ng-container formArrayName="emailChannels">
-            @for (control of emailChannels.controls; track $index) {
-              <div [formGroup]="control" class="channel-form">
-                <i class="pi pi-envelope text-secondary"></i>
-                <input
-                  pInputText
-                  formControlName="address"
-                  placeholder="Email address"
-                />
-                <p-button
-                  [text]="true"
-                  icon="pi pi-trash text-secondary"
-                  severity="secondary"
-                  (onClick)="deleteEmailChannel($index)"
-                />
-              </div>
-            }
-          </ng-container>
-        }
-
-        @if (telegramChannels.length !== 0) {
-          <ng-container formArrayName="telegramChannels">
-            @for (control of telegramChannels.controls; track $index) {
-              <div [formGroup]="control" class="channel-form">
-                <i class="pi pi-telegram text-secondary"></i>
-                <input
-                  pInputText
-                  formControlName="username"
-                  placeholder="Telegram username"
-                />
-                <p-button
-                  [text]="true"
-                  icon="pi pi-trash text-secondary"
-                  severity="secondary"
-                  (onClick)="deleteTelegramChannel($index)"
-                />
-              </div>
-            }
-          </ng-container>
-        }
-
-        @if (webhookChannels.length !== 0) {
-          <ng-container formArrayName="webhookChannels">
-            @for (control of webhookChannels.controls; track $index) {
-              <div [formGroup]="control" class="channel-form">
-                <i class="pi pi-link text-secondary"></i>
-                <input pInputText formControlName="url" placeholder="Url" />
-                <p-button
-                  [text]="true"
-                  icon="pi pi-trash text-secondary"
-                  severity="secondary"
-                  (onClick)="deleteWebhookChannel($index)"
-                />
-              </div>
-            }
-          </ng-container>
-        }
+    <div class="attributes-box">
+      <div class="attributes-box__attribute">
+        <p class="text-secondary">Group name</p>
+        <p>{{ groupName }}</p>
       </div>
-    </form> -->
+      <div class="attributes-box__channels">
+        <p class="text-secondary">Channels</p>
+        <p-button
+          label="Add channel"
+          severity="secondary"
+          (onClick)="showChannelCreationDialog()"
+        />
+        @if (notificationChannels.length === 0) {
+          <p-tag value="No channels yet" severity="info" />
+        } @else {}
+      </div>
+    </div>
   }
 }
 
@@ -109,11 +44,47 @@
   [modal]="true"
 >
   <form class="dialog" [formGroup]="addChannelForm">
+    <p class="text-secondary">Channel driver</p>
     <p-select
       [options]="drivers"
       formControlName="driver"
       placeholder="Select driver"
+      (onChange)="switchAddChannelFormSettingsDriver(addChannelFormDriver)"
     />
+    <p class="text-secondary">Channel settings</p>
+    <div class="dialog__settings" formGroupName="settings">
+      @switch (addChannelFormDriver) {
+        @case (NotificationChannelDriver.EMAIL) {
+          <input
+            pInputText
+            formControlName="DestinationEmail"
+            placeholder="Destination address"
+          />
+          <input
+            pInputText
+            formControlName="SmtpServer"
+            placeholder="SMTP server"
+          />
+          <p-inputnumber formControlName="Port" placeholder="Port" />
+          <input
+            pInputText
+            formControlName="PasswordPath"
+            placeholder="Password path"
+          />
+        }
+        @case (NotificationChannelDriver.TELEGRAM) {
+          <input
+            pInputText
+            formControlName="TelegramTokenPath"
+            placeholder="Telegram token path"
+          />
+          <input pInputText formControlName="ChatId" placeholder="Chat ID" />
+        }
+        @case (NotificationChannelDriver.WEBHOOK) {
+          <input pInputText formControlName="Url" placeholder="Url" />
+        }
+      }
+    </div>
     <div class="dialog__actions">
       <p-button
         severity="secondary"

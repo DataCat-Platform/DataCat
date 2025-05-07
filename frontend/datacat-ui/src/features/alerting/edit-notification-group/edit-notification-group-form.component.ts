@@ -1,10 +1,5 @@
 import { Component, Input } from '@angular/core';
-import {
-  FormArray,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import {
@@ -15,7 +10,7 @@ import { SelectModule } from 'primeng/select';
 import {
   ApiService,
   IAddNotificationChannelRequest,
-  NotificationChannelResponse,
+  NotificationChannelGroupResponse,
 } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { TextareaModule } from 'primeng/textarea';
@@ -24,6 +19,7 @@ import { TagModule } from 'primeng/tag';
 import { SkeletonModule } from 'primeng/skeleton';
 import { DialogModule } from 'primeng/dialog';
 import { finalize } from 'rxjs';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @Component({
   standalone: true,
@@ -39,6 +35,7 @@ import { finalize } from 'rxjs';
     TagModule,
     SkeletonModule,
     DialogModule,
+    InputNumberModule,
   ],
 })
 export class EditNotificationGroupFormComponent {
@@ -50,6 +47,8 @@ export class EditNotificationGroupFormComponent {
 
   protected isChannelCreationDialogVisible = false;
   protected groupName: string = '';
+
+  protected NotificationChannelDriver = NotificationChannelDriver;
 
   protected LoadingState = LoadingState;
   protected loadingState = LoadingState.Loading;
@@ -66,30 +65,79 @@ export class EditNotificationGroupFormComponent {
     driver: new FormControl<NotificationChannelDriver>(
       NotificationChannelDriver.EMAIL,
     ),
-    settings: new FormGroup({}),
+    settings: new FormGroup<any>({}),
   });
+
+  protected get addChannelFormDriver() {
+    return (
+      this.addChannelForm.get('driver')?.value ||
+      NotificationChannelDriver.EMAIL
+    );
+  }
 
   constructor(
     private apiService: ApiService,
     private loggerService: ToastLoggerService,
-  ) {}
+  ) {
+    this.switchAddChannelFormSettingsDriver(NotificationChannelDriver.EMAIL);
+  }
 
   protected loadEssentials(groupId: string) {
-    // this.apiService.getApiV1NotificationChannelGroup(groupId).subscribe({
-    //   next: (group) => {
-    //     this.groupName = group.name || '';
-    //     this.form.setValue({
-    //       emailChannels: [],
-    //       webhookChannels: [],
-    //       telegramChannels: [],
-    //     });
-    //     this.loadingState = LoadingState.Success;
-    //   },
-    //   error: (e) => {
-    //     this.loggerService.error(e);
-    //     this.loadingState = LoadingState.Error;
-    //   },
-    // });
+    this.apiService.getApiV1NotificationChannelGroup(groupId).subscribe({
+      next: (group) => {
+        this.groupName = group.name || '';
+        this.parseNotificationGroupChannels(group);
+        this.loadingState = LoadingState.Success;
+      },
+      error: (e) => {
+        this.loggerService.error(e);
+        this.loadingState = LoadingState.Error;
+      },
+    });
+  }
+
+  protected switchAddChannelFormSettingsDriver(
+    driver: NotificationChannelDriver,
+  ) {
+    switch (driver) {
+      case NotificationChannelDriver.EMAIL: {
+        this.addChannelForm.setControl(
+          'settings',
+          new FormGroup({
+            DestinationEmail: new FormControl<string>(''),
+            SmtpServer: new FormControl<string>(''),
+            Port: new FormControl<number>(80),
+            PasswordPath: new FormControl<string>(''),
+          }),
+        );
+        break;
+      }
+      case NotificationChannelDriver.TELEGRAM: {
+        this.addChannelForm.setControl(
+          'settings',
+          new FormGroup({
+            TelegramTokenPath: new FormControl<string>(''),
+            PasswordPath: new FormControl<string>(''),
+          }),
+        );
+        break;
+      }
+      case NotificationChannelDriver.WEBHOOK: {
+        this.addChannelForm.setControl(
+          'settings',
+          new FormGroup({
+            Url: new FormControl<string>(''),
+          }),
+        );
+        break;
+      }
+    }
+  }
+
+  protected parseNotificationGroupChannels(
+    group: NotificationChannelGroupResponse,
+  ) {
+    this.notificationChannels = [];
   }
 
   protected showChannelCreationDialog() {
@@ -106,8 +154,10 @@ export class EditNotificationGroupFormComponent {
     const request: any = {
       notificationChannelGroupName: this.groupName,
       destinationName: this.addChannelForm.get('driver')?.value,
-      settings: this.addChannelForm.get('settings')?.value,
+      settings: JSON.stringify(this.addChannelForm.get('settings')?.value),
     } as IAddNotificationChannelRequest;
+
+    console.log(request);
 
     this.apiService
       .postApiV1NotificationChannelAdd(request)
@@ -126,7 +176,5 @@ export class EditNotificationGroupFormComponent {
       });
   }
 
-  protected deleteChannel(chanel: NotificationChannel) {
-
-  }
+  protected deleteChannel(chanel: NotificationChannel) {}
 }

@@ -12,7 +12,6 @@ import { EditNotificationGroupFormComponent } from '../../features/alerting/edit
   imports: [
     PanelModule,
     EditNotificationGroupFormComponent,
-    DeleteNotificationGroupButtonComponent,
     DividerModule,
   ],
 })

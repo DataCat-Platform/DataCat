@@ -8,7 +8,7 @@
     />
   </div>
 </form>
-<p-dataview [value]="notificationGroups" [filterBy]="groupName">
+<p-dataview [value]="filteredNotificationGroups">
   <ng-template #list let-groups>
     <div class="groups-box">
       @for (group of groups; track $index) {
