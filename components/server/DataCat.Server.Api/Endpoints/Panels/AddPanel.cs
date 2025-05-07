@@ -9,7 +9,8 @@ public sealed record AddPanelRequest(
     int PanelY,
     int Width,
     int Height,
-    string DashboardId);
+    string DashboardId,
+    string StyleConfiguration);
 
 public sealed class AddPanel : ApiEndpointBase
 {
@@ -43,6 +44,7 @@ public sealed class AddPanel : ApiEndpointBase
             PanelX = request.PanelX,
             PanelY = request.PanelY,
             RawQuery = request.RawQuery,
+            StyleConfiguration = request.StyleConfiguration
         };
     }
 }

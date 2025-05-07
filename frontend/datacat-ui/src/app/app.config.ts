@@ -9,6 +9,8 @@ import {apiInterceptor} from '../shared/interceptors/api.interceptor';
 import {authInterceptor} from "../shared/interceptors/auth.interceptor";
 import {DialogService} from "primeng/dynamicdialog";
 import {MessageService} from "primeng/api";
+import {ApiService} from "../shared/services/datacat-generated-client";
+import {ThemeSelectionService} from "../features/appearence/select-theme/select-theme.service";
 
 export const APP_CONFIG: ApplicationConfig = {
     providers: [
@@ -21,6 +23,8 @@ export const APP_CONFIG: ApplicationConfig = {
         ])),
         providePrimeNG(PRIMENG_CONFIG),
         DialogService,
-        MessageService
+        MessageService,
+        ApiService,
+        ThemeSelectionService
     ],
 };

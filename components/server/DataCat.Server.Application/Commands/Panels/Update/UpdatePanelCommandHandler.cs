@@ -33,6 +33,7 @@ public sealed class UpdatePanelCommandHandler(
             return layoutResult;
 
         panel.UpdateLayout(layoutResult.Value);
+        panel.UpdateStyleConfiguration(request.StyleConfiguration);
 
         await panelRepository.UpdateAsync(panel, cancellationToken);
         return Result.Success();

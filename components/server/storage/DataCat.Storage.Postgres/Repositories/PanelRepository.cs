@@ -11,16 +11,17 @@ public sealed class PanelRepository(
 
         const string sql = $"""
             SELECT
-                p.{Public.Panels.Id}                   {nameof(PanelSnapshot.Id)},
-                p.{Public.Panels.Title}                {nameof(PanelSnapshot.Title)},
-                p.{Public.Panels.TypeId}               {nameof(PanelSnapshot.TypeId)},
-                p.{Public.Panels.RawQuery}             {nameof(PanelSnapshot.RawQuery)},
-                p.{Public.Panels.DataSourceId}         {nameof(PanelSnapshot.DataSourceId)},
-                p.{Public.Panels.X}                    {nameof(PanelSnapshot.X)},
-                p.{Public.Panels.Y}                    {nameof(PanelSnapshot.Y)},
-                p.{Public.Panels.Width}                {nameof(PanelSnapshot.Width)},
-                p.{Public.Panels.Height}               {nameof(PanelSnapshot.Height)},
-                p.{Public.Panels.DashboardId}          {nameof(PanelSnapshot.DashboardId)},
+                p.{Public.Panels.Id}                         {nameof(PanelSnapshot.Id)},
+                p.{Public.Panels.Title}                      {nameof(PanelSnapshot.Title)},
+                p.{Public.Panels.TypeId}                     {nameof(PanelSnapshot.TypeId)},
+                p.{Public.Panels.RawQuery}                   {nameof(PanelSnapshot.RawQuery)},
+                p.{Public.Panels.DataSourceId}               {nameof(PanelSnapshot.DataSourceId)},
+                p.{Public.Panels.X}                          {nameof(PanelSnapshot.X)},
+                p.{Public.Panels.Y}                          {nameof(PanelSnapshot.Y)},
+                p.{Public.Panels.Width}                      {nameof(PanelSnapshot.Width)},
+                p.{Public.Panels.Height}                     {nameof(PanelSnapshot.Height)},
+                p.{Public.Panels.DashboardId}                {nameof(PanelSnapshot.DashboardId)},
+                p.{Public.Panels.StylingConfiguration}       {nameof(PanelSnapshot.StyleConfiguration)},
                 
                 ds.{Public.DataSources.Id}                   {nameof(DataSourceSnapshot.Id)},
                 ds.{Public.DataSources.Name}                 {nameof(DataSourceSnapshot.Name)},
@@ -70,7 +71,8 @@ public sealed class PanelRepository(
                 {Public.Panels.Y},
                 {Public.Panels.Width},
                 {Public.Panels.Height},
-                {Public.Panels.DashboardId}
+                {Public.Panels.DashboardId},
+                {Public.Panels.StylingConfiguration}
             )
             VALUES (
                 @{nameof(PanelSnapshot.Id)},
@@ -82,7 +84,8 @@ public sealed class PanelRepository(
                 @{nameof(PanelSnapshot.Y)},
                 @{nameof(PanelSnapshot.Width)},
                 @{nameof(PanelSnapshot.Height)},
-                @{nameof(PanelSnapshot.DashboardId)}
+                @{nameof(PanelSnapshot.DashboardId)},
+                @{nameof(PanelSnapshot.StyleConfiguration)}
             )
         """;
 
@@ -97,14 +100,15 @@ public sealed class PanelRepository(
         const string sql = $"""
             UPDATE {Public.PanelTable}
             SET 
-                {Public.Panels.Title}        = @{nameof(PanelSnapshot.Title)},
-                {Public.Panels.TypeId}       = @{nameof(PanelSnapshot.TypeId)},
-                {Public.Panels.RawQuery}     = @{nameof(PanelSnapshot.RawQuery)},
-                {Public.Panels.DataSourceId} = @{nameof(PanelSnapshot.DataSourceId)},
-                {Public.Panels.X}            = @{nameof(PanelSnapshot.X)},
-                {Public.Panels.Y}            = @{nameof(PanelSnapshot.Y)},
-                {Public.Panels.Width}        = @{nameof(PanelSnapshot.Width)},
-                {Public.Panels.Height}       = @{nameof(PanelSnapshot.Height)}
+                {Public.Panels.Title}                      = @{nameof(PanelSnapshot.Title)},
+                {Public.Panels.TypeId}                     = @{nameof(PanelSnapshot.TypeId)},
+                {Public.Panels.RawQuery}                   = @{nameof(PanelSnapshot.RawQuery)},
+                {Public.Panels.DataSourceId}               = @{nameof(PanelSnapshot.DataSourceId)},
+                {Public.Panels.X}                          = @{nameof(PanelSnapshot.X)},
+                {Public.Panels.Y}                          = @{nameof(PanelSnapshot.Y)},
+                {Public.Panels.Width}                      = @{nameof(PanelSnapshot.Width)},
+                {Public.Panels.Height}                     = @{nameof(PanelSnapshot.Height)},
+                {Public.Panels.StylingConfiguration}       = @{nameof(PanelSnapshot.StyleConfiguration)}
             WHERE {Public.Panels.Id} = @{nameof(PanelSnapshot.Id)}
         """;
 

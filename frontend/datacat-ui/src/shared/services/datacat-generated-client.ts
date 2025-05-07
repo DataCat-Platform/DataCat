@@ -15,21 +15,13 @@ import {HttpClient, HttpHeaders, HttpResponse, HttpResponseBase} from '@angular/
 
 export const DATACAT_API_BASE_URL = new InjectionToken<string>('DATACAT_API_BASE_URL');
 
-class ClientBaseService {
-    constructor() {
-    }
-}
-
-@Injectable({
-    providedIn: 'root',
-})
-export class ApiService extends ClientBaseService {
+@Injectable()
+export class ApiService {
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
     private http: HttpClient;
     private baseUrl: string;
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(DATACAT_API_BASE_URL) baseUrl?: string) {
-        super();
         this.http = http;
         this.baseUrl = baseUrl ?? "";
     }
@@ -5672,6 +5664,7 @@ export class AddPanelRequest implements IAddPanelRequest {
     width?: number;
     height?: number;
     dashboardId?: string;
+    styleConfiguration?: string;
 
     constructor(data?: IAddPanelRequest) {
         if (data) {
@@ -5700,6 +5693,7 @@ export class AddPanelRequest implements IAddPanelRequest {
             this.width = _data["width"];
             this.height = _data["height"];
             this.dashboardId = _data["dashboardId"];
+            this.styleConfiguration = _data["styleConfiguration"];
         }
     }
 
@@ -5714,6 +5708,7 @@ export class AddPanelRequest implements IAddPanelRequest {
         data["width"] = this.width;
         data["height"] = this.height;
         data["dashboardId"] = this.dashboardId;
+        data["styleConfiguration"] = this.styleConfiguration;
         return data;
     }
 
@@ -5735,6 +5730,7 @@ export interface IAddPanelRequest {
     width?: number;
     height?: number;
     dashboardId?: string;
+    styleConfiguration?: string;
 }
 
 export class GetPanelResponse implements IGetPanelResponse {
@@ -5744,6 +5740,7 @@ export class GetPanelResponse implements IGetPanelResponse {
     query?: RawQueryResponse;
     layout?: DataCatLayoutResponse;
     dashboardId?: string;
+    styleConfiguration?: string | undefined;
 
     constructor(data?: IGetPanelResponse) {
         if (data) {
@@ -5769,6 +5766,7 @@ export class GetPanelResponse implements IGetPanelResponse {
             this.query = _data["query"] ? RawQueryResponse.fromJS(_data["query"]) : <any>undefined;
             this.layout = _data["layout"] ? DataCatLayoutResponse.fromJS(_data["layout"]) : <any>undefined;
             this.dashboardId = _data["dashboardId"];
+            this.styleConfiguration = _data["styleConfiguration"];
         }
     }
 
@@ -5780,6 +5778,7 @@ export class GetPanelResponse implements IGetPanelResponse {
         data["query"] = this.query ? this.query.toJSON() : <any>undefined;
         data["layout"] = this.layout ? this.layout.toJSON() : <any>undefined;
         data["dashboardId"] = this.dashboardId;
+        data["styleConfiguration"] = this.styleConfiguration;
         return data;
     }
 
@@ -5798,6 +5797,7 @@ export interface IGetPanelResponse {
     query?: RawQueryResponse;
     layout?: DataCatLayoutResponse;
     dashboardId?: string;
+    styleConfiguration?: string | undefined;
 }
 
 export class RawQueryResponse implements IRawQueryResponse {
@@ -5966,7 +5966,7 @@ export class UpdatePanelRequest implements IUpdatePanelRequest {
     panelY?: number;
     width?: number;
     height?: number;
-    dashboardId?: string;
+    styleConfiguration?: string;
 
     constructor(data?: IUpdatePanelRequest) {
         if (data) {
@@ -5994,7 +5994,7 @@ export class UpdatePanelRequest implements IUpdatePanelRequest {
             this.panelY = _data["panelY"];
             this.width = _data["width"];
             this.height = _data["height"];
-            this.dashboardId = _data["dashboardId"];
+            this.styleConfiguration = _data["styleConfiguration"];
         }
     }
 
@@ -6008,7 +6008,7 @@ export class UpdatePanelRequest implements IUpdatePanelRequest {
         data["panelY"] = this.panelY;
         data["width"] = this.width;
         data["height"] = this.height;
-        data["dashboardId"] = this.dashboardId;
+        data["styleConfiguration"] = this.styleConfiguration;
         return data;
     }
 
@@ -6029,7 +6029,7 @@ export interface IUpdatePanelRequest {
     panelY?: number;
     width?: number;
     height?: number;
-    dashboardId?: string;
+    styleConfiguration?: string;
 }
 
 export class AddNotificationDestinationRequest implements IAddNotificationDestinationRequest {

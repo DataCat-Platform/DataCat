@@ -8,6 +8,7 @@ public sealed record GetPanelResponse
     public required RawQueryResponse Query { get; init; }
     public required DataCatLayoutResponse Layout { get; init; }
     public required Guid DashboardId { get; init; }
+    public required string? StyleConfiguration { get; init; }
 }
 
 public static class GetPanelResponseExtensions
@@ -21,7 +22,8 @@ public static class GetPanelResponseExtensions
             TypeName = panel.Type.Name,
             Query = panel.Query.ToResponse(),
             Layout = panel.DataCatLayout.ToResponse(),
-            DashboardId = panel.DashboardId
+            DashboardId = panel.DashboardId,
+            StyleConfiguration = panel.StyleConfiguration,
         };
     }
 }
