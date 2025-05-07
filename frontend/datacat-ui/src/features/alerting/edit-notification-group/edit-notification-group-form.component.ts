@@ -16,6 +16,7 @@ import { ToastLoggerService } from '../../../shared/services/toast-logger.servic
 import { TextareaModule } from 'primeng/textarea';
 import { LoadingState } from '../../../shared/common/enums';
 import { TagModule } from 'primeng/tag';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   standalone: true,
@@ -30,6 +31,7 @@ import { TagModule } from 'primeng/tag';
     InputGroupModule,
     TextareaModule,
     TagModule,
+    SkeletonModule,
   ],
 })
 export class EditNotificationGroupFormComponent {
@@ -77,9 +79,8 @@ export class EditNotificationGroupFormComponent {
   protected loadEssentials(groupId: string) {
     this.apiService.getApiV1NotificationChannelGroup(groupId).subscribe({
       next: (group) => {
-        console.log(group);
         this.form.setValue({
-          name: group.destinationName || null,
+          name: group.name || null,
           emailChannels: [],
           webhookChannels: [],
           telegramChannels: [],

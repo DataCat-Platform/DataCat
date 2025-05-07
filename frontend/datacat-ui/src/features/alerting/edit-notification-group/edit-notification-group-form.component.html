@@ -1,6 +1,23 @@
 @switch (loadingState) {
   @case (LoadingState.Loading) {
-    <p-tag value="Loading" severity="secondary" />
+    <div class="add-channel-form">
+      <p-inputgroup>
+        <p-select [options]="drivers" [formControl]="driverControl" />
+        <p-button label="Add channel" severity="secondary" />
+      </p-inputgroup>
+    </div>
+    <div class="form">
+      <div class="form__item">
+        <p class="text-secondary">Group name</p>
+        <p-skeleton width="20rem" height="1.5rem" />
+      </div>
+      <p-button
+        [disabled]="true"
+        label="Save"
+        (onClick)="saveNotificationGroup()"
+        severity="secondary"
+      />
+    </div>
   }
   @case (LoadingState.Error) {
     <p-tag value="Unable to load edit form" severity="secondary" />

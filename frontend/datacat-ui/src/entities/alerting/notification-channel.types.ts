@@ -1,17 +1,20 @@
 export interface BaseSettings {
-  // retries: number;
 };
 
 export interface EmailSettings extends BaseSettings {
-  address: string;
+  DestinationEmail: string;
+  SmtpServer: string;
+  Port: string;
+  PasswordPath: string;
 };
 
 export interface WebhookSettings extends BaseSettings {
-  url: string;
+  Url: string;
 }
 
 export interface TelegramSettings extends BaseSettings {
-  username: string;
+  TelegramTokenPath: string;
+  ChatId: string;
 }
 
 export enum NotificationChannelDriver {
@@ -23,11 +26,7 @@ export enum NotificationChannelDriver {
 export type NotificationChannelSettings = EmailSettings | WebhookSettings | TelegramSettings;
 
 export type NotificationChannel = {
-  id: string;
+  id: number;
   driver: NotificationChannelDriver;
   settings: NotificationChannelSettings;
-  notificationTemplateId: string;
-
-  // lastDeliveryAt: number;
-  // lastDeliveryResult: any;
 };
