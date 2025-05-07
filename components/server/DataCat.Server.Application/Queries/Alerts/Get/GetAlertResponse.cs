@@ -4,6 +4,7 @@ public sealed record GetAlertResponse
 {
     public required Guid Id { get; init; }
     public required string? Description { get; init; }
+    public required string Template { get; init; }
     public required string RawQuery { get; init; }
     public required string Status { get; init; }
     public required DataSourceResponse DataSource { get; init; }
@@ -21,7 +22,8 @@ public static class GetAlertResponseExtensions
         return new GetAlertResponse
         {
             Id = alert.Id,
-            Description = alert.Template,
+            Description = alert.Description,
+            Template = alert.Template,
             RawQuery = alert.ConditionQuery.RawQuery,
             Status = alert.Status.Name,
             DataSource = alert.ConditionQuery.DataSource.ToResponse(),
