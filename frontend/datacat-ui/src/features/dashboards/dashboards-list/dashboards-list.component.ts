@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
-import { TableModule } from 'primeng/table';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Dashboard } from '../../../entities';
 import { TagModule } from 'primeng/tag';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
-import * as urls from '../../../shared/common/urls';
 import { finalize } from 'rxjs';
 import {
   ApiService,
-  ISearchFilter,
+  ISearchFilters,
+  MatchMode,
+  SearchFieldType,
+  SearchFilter,
   SearchFilters,
 } from '../../../shared/services/datacat-generated-client';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -20,6 +22,9 @@ import { ToastLoggerService } from '../../../shared/services/toast-logger.servic
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
+import * as urls from '../../../shared/common/urls';
 
 @Component({
   standalone: true,
@@ -38,14 +43,15 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     InputGroupModule,
     InputGroupAddonModule,
     InputTextModule,
+    TooltipModule,
+    DialogModule,
   ],
 })
 export class DashboardsListComponent {
-  protected addTagControl = new FormControl<string>('');
+  protected isDashboardViewDialogVisible = false;
+  protected viewedDashboard?: Dashboard;
 
-  protected get tagToAdd(): string {
-    return this.addTagControl.value || '';
-  }
+  protected addTagControl = new FormControl<string>('');
 
   protected filtersForm = new FormGroup({
     tags: new FormControl<string[]>([]),
@@ -60,7 +66,7 @@ export class DashboardsListComponent {
   protected totalPagesCount = 0;
   protected totalDashboardsCount = 0;
   protected dashboardsPerPageCount = 5;
-  protected currentPage = 0;
+  protected currentPage = 1;
   protected dashboards: Dashboard[] = [];
 
   constructor(
@@ -71,7 +77,8 @@ export class DashboardsListComponent {
     this.refreshDashboards();
   }
 
-  protected addFilterTag(tag: string) {
+  protected addFilterTag() {
+    const tag = this.addTagControl.value;
     const previousTags = this.filtersForm.get('tags')?.value || [];
     if (tag && !previousTags.includes(tag)) {
       this.filtersForm.get('tags')?.setValue([...previousTags, tag]);
@@ -85,16 +92,39 @@ export class DashboardsListComponent {
       ?.setValue(previousTags.filter((t) => t !== tag));
   }
 
-  protected viewDashboard(dashboardId: string) {
-    this.router.navigateByUrl(urls.dashboardUrl(dashboardId));
+  protected viewDashboard(dashboard: Dashboard) {
+    this.isDashboardViewDialogVisible = true;
+    this.viewedDashboard = dashboard;
+  }
+
+  protected editDashboard(dashboard: Dashboard) {
+    this.router.navigateByUrl(urls.dashboardUrl(dashboard.id));
   }
 
   protected get searchFilters(): SearchFilters {
-    const filters: ISearchFilter[] = [];
+    const filters = {
+      filters: [],
+      sort: undefined,
+    } as ISearchFilters;
 
-    return {
-      filters: filters as any,
-    } as any;
+    if (this.filtersFormTags.length !== 0) {
+      filters.filters!.push({
+        key: 'tags',
+        value: this.filtersFormTags,
+        matchMode: MatchMode.Contains,
+        fieldType: SearchFieldType.Array,
+      } as SearchFilter);
+    }
+
+    return filters as SearchFilters;
+  }
+
+  protected onLazyLoad(event: TableLazyLoadEvent) {
+    if (event.first !== undefined && event.rows) {
+      this.currentPage = Math.floor(event.first / event.rows) + 1;
+      this.dashboardsPerPageCount = event.rows;
+      this.refreshDashboards();
+    }
   }
 
   protected refreshDashboards() {
@@ -112,20 +142,26 @@ export class DashboardsListComponent {
       )
       .subscribe({
         next: (data) => {
-          console.log(data);
           this.totalDashboardsCount = data.totalCount || 0;
           this.totalPagesCount = data.totalPages || 0;
           this.hasNextPage = data.hasNextPage || false;
           this.hasPreviousPage = data.hasPreviousPage || false;
           this.currentPage = data.pageNumber || 0;
-          this.dashboards = [];
+          this.dashboards =
+            data.items?.map<Dashboard>((item) => {
+              return {
+                id: item.id || '',
+                name: item.name || '',
+                description: item.description || '',
+                panels: [],
+                createdAt: item.createdAt,
+                lastUpdatedAt: item.updatedAt,
+              };
+            }) || [];
         },
         error: (e) => {
-          console.log(e);
           this.loggerService.error(e);
         },
       });
   }
-
-  protected loadPage(event: any) {}
 }

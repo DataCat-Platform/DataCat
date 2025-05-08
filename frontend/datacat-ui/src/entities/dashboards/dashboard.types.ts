@@ -5,6 +5,6 @@ export type Dashboard = {
   name: string;
   description: string;
   panels: Panel[];
-  ownerId: string;
-  lastUpdatedAt: number;
+  createdAt?: Date;
+  lastUpdatedAt?: Date;
 };

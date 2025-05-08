@@ -1,7 +1,7 @@
 <div class="layout">
   <form class="filters" [formGroup]="filtersForm">
     <div class="filters__item">
-      <p>Dashboards Tags</p>
+      <p>Dashboard Tags</p>
       <p-inputgroup>
         <p-inputgroup-addon>
           <p-button
@@ -9,7 +9,7 @@
             label="Add"
             severity="secondary"
             [disabled]="filtersForm.disabled"
-            (onClick)="addFilterTag(tagToAdd)"
+            (onClick)="addFilterTag()"
           />
         </p-inputgroup-addon>
         <input pInputText placeholder="tag..." [formControl]="addTagControl" />
@@ -30,7 +30,7 @@
   <div class="filters__actions">
     <p-button
       icon="pi pi-sync"
-      label="Apply"
+      label="Refresh"
       severity="secondary"
       [loading]="filtersForm.disabled"
       (onClick)="refreshDashboards()"
@@ -39,21 +39,22 @@
   <p-table
     [value]="dashboards"
     stripedRows
+    (onLazyLoad)="onLazyLoad($event)"
     [paginator]="true"
-    [rows]="5"
-    [rowsPerPageOptions]="[5, 10]"
-    [pageLinks]="12"
-    [alwaysShowPaginator]="false"
+    [scrollable]="true"
+    scrollHeight="30.5rem"
+    [rowsPerPageOptions]="[5, 10, 20]"
     [lazy]="true"
     [first]="0"
     [totalRecords]="totalDashboardsCount"
     [rows]="dashboardsPerPageCount"
-    (onPage)="loadPage($event)"
+    [loading]="filtersForm.disabled"
+    paginatorPosition="top"
   >
     <ng-template pTemplate="emptymessage">
       <tr>
         <td colspan="6" [style]="{ textAlign: 'center' }">
-          <p-tag value="No dashboards found" severity="info" />
+          <p-tag value="No alerts found" severity="info" />
         </td>
       </tr>
     </ng-template>
@@ -62,7 +63,7 @@
         <th>ID</th>
         <th>Name</th>
         <th>Description</th>
-        <th>Owner ID</th>
+        <th>Created At</th>
         <th>Last Updated At</th>
         <th>Actions</th>
       </tr>
@@ -70,24 +71,65 @@
     <ng-template pTemplate="body" let-dashboard>
       <tr>
         <td>
-          {{ dashboard.id }}
-          <i class="pi pi-clone text-secondary"></i>
+          {{ dashboard.id | slice: 0 : 6
+          }}<span class="text-secondary" [pTooltip]="dashboard.id">...</span>
         </td>
-        <td>{{ dashboard.name }}</td>
+        <td>
+          {{ dashboard.description }}
+        </td>
         <td>{{ dashboard.description }}</td>
-        <td>{{ dashboard.ownerId }}</td>
+        <td>{{ dashboard.createdAt | date: 'short' }}</td>
         <td>{{ dashboard.lastUpdatedAt | date: 'short' }}</td>
         <td>
-          <p-button
-            icon="pi pi-arrow-up-right"
-            label="View"
-            severity="secondary"
-            size="small"
-            variant="text"
-            (onClick)="viewDashboard(dashboard.id)"
-          />
+          <div class="actions">
+            <p-button
+              icon="pi pi-eye"
+              label="View"
+              size="small"
+              severity="secondary"
+              variant="outlined"
+              (onClick)="viewDashboard(dashboard)"
+            />
+            <p-button
+              icon="pi pi-pencil"
+              label="Edit"
+              size="small"
+              severity="secondary"
+              variant="outlined"
+              (onClick)="editDashboard(dashboard)"
+            />
+          </div>
         </td>
       </tr>
     </ng-template>
   </p-table>
 </div>
+
+<p-dialog
+  header="Dashboard Details"
+  [modal]="true"
+  [(visible)]="isDashboardViewDialogVisible"
+>
+  <div class="view-dashboard">
+    <div class="view-dashboard__attribute">
+      <p>Dashboard ID</p>
+      <div>{{ viewedDashboard?.id }}</div>
+    </div>
+    <div class="view-dashboard__attribute">
+      <p>Name</p>
+      <div>{{ viewedDashboard?.name }}</div>
+    </div>
+    <div class="view-dashboard__attribute">
+      <p>Description</p>
+      <div>{{ viewedDashboard?.description }}</div>
+    </div>
+    <div class="view-dashboard__attribute">
+      <p>Created At</p>
+      <div>{{ viewedDashboard?.createdAt | date: 'short' }}</div>
+    </div>
+    <div class="view-dashboard__attribute">
+      <p>Last Updated At</p>
+      <div>{{ viewedDashboard?.lastUpdatedAt | date: 'short' }}</div>
+    </div>
+  </div>
+</p-dialog>
