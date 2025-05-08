@@ -16,12 +16,21 @@
     padding: 1rem 0.75rem;
     font-weight: 600;
     border-bottom: 2px solid #ccc;
+    border-top: 2px solid #ccc;
   }
 
   .service-header,
   .timeline-header,
   .actions-header {
     border-right: 1px solid #ccc;
+  }
+
+  .service-header,
+  .actions-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
   }
 
   .actions-header {
@@ -38,7 +47,7 @@
 
   > div {
     display: flex;
-    align-items: center; /* Центрирует контент по вертикали */
+    align-items: center;
     padding: 0.75rem;
     border-bottom: 1px solid #e5e5e5;
   }
@@ -102,11 +111,13 @@
 
 .service-name {
   font-weight: bold;
-  display: block;
+  font-size: 1em;
 }
 
 .operation-name {
-  font-size: 0.9em;
+  font-size: 0.5em;
+  margin-left: 5px;
+  color: gray;
 }
 
 .actions-cell {

@@ -27,7 +27,7 @@
                 @for (span of trace.spans; track span) {
                     <div class="span-row">
                         <div class="service-cell">
-                            <span class="service-name">{{ getServiceName(span.processId!) }}</span>
+                            <span class="service-name">{{ getServiceName(span.processId!) }}</span><br>
                             <span class="operation-name">{{ span.operationName }}</span>
                         </div>
 
@@ -36,7 +36,7 @@
                                 <div class="span-track">
                                     <div class="span-bar"
                                          [style.left.%]="getSpanOffset(span)"
-                                         [style.width.%]="getSpanWidth(span)">
+                                         [style.width.%]="getSpanWidth(span) - 2">
                                         <span class="span-label">
                                             {{ formatTime(parseDuration(span.duration!)) }}
                                         </span>

@@ -168,6 +168,7 @@ public class JaegerClient : ITracesClient
             SpanId = span.SpanId,
             OperationName = span.OperationName,
             StartTime = FromMicroseconds(span.StartTime),
+            Timestamp = span.StartTime,
             Duration = TimeSpan.FromMilliseconds(span.Duration / 1000),
             Tags = MapTags(span.Tags),
             References = span.References.Select(MapReference).ToList(),

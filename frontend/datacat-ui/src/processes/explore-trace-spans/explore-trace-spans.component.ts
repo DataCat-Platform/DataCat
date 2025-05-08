@@ -50,14 +50,25 @@ export class ExploreTraceSpansComponent implements OnInit {
         this.apiService.getApiV1Traces(this.traceId, this.dataSourceName).pipe(
             finalize(() => this.isLoading = false),
             tap(trace => {
-                this.trace = trace;
+                const processedSpans = trace.spans!
+                    .filter(s => s.timestamp !== undefined && s.duration !== undefined)
+                    .sort((a, b) => {
+                            return a.timestamp! - b.timestamp!
+                        }
+                    );
+
+                this.trace = {
+                    ...trace,
+                    spans: processedSpans
+                } as TraceEntry;
+
                 this.calculateTimeMetrics();
             }),
             catchError(error => {
                 this.toastLoggerService.error(error.message);
                 return error;
             })
-        ).subscribe()
+        ).subscribe();
     }
 
     getSpanWidth(span: SpanEntry): number {
@@ -74,7 +85,7 @@ export class ExploreTraceSpansComponent implements OnInit {
     }
 
     formatTime(ms: number): string {
-        if (this.totalDurationMs >= 1000) { // Показывать в секундах если общее время > 1s
+        if (this.totalDurationMs >= 1000) {
             const totalSeconds = ms / 1000;
             return `${totalSeconds.toFixed(2)}s`;
         }
@@ -82,7 +93,7 @@ export class ExploreTraceSpansComponent implements OnInit {
     }
 
     parseDuration(duration: string): number {
-        // Пример входной строки: "00:00:00.3090000"
+        // example of input: "00:00:00.3090000"
         const parts = duration.split(':');
         const secondsPart = parts[2].split('.');
 
@@ -106,28 +117,14 @@ export class ExploreTraceSpansComponent implements OnInit {
 
         const spans = this.trace.spans;
 
-        // Фильтруем спаны с валидным startTime
-        const validSpans = spans.filter(s => s.startTime !== undefined && s.duration !== undefined);
-
-        if (validSpans.length === 0) return;
-
-        // Конвертируем startTime в timestamp
-        const startTimestamps = validSpans.map(s => {
-            const date = new Date(s.startTime!);
-            return date.getTime();
-        });
-
+        const startTimestamps = spans.map(s => new Date(s.startTime!).getTime());
         this.startTime = Math.min(...startTimestamps);
 
-        // Вычисляем endTime для каждого спана
-        const endTimestamps = validSpans.map(s => {
-            const start = new Date(s.startTime!).getTime();
-            return start + this.parseDuration(s.duration!);
-        });
-
+        const endTimestamps = spans.map(s =>
+            new Date(s.startTime!).getTime() + this.parseDuration(s.duration!)
+        );
         this.totalDurationMs = Math.max(...endTimestamps) - this.startTime;
 
-        // Генерируем метки времени (4 деления)
         this.timeMarkers = Array.from({length: 5}, (_, i) =>
             Math.round(this.startTime + (this.totalDurationMs * i) / 4)
         );
