@@ -96,6 +96,14 @@ export class WorkspaceComponent {
                         url: urls.LOGS_EXPLORER_URL,
                     },
                 },
+                {
+                    type: 'url',
+                    icon: 'pi pi-sliders-h',
+                    label: 'Traces',
+                    data: {
+                        url: urls.TRACES_EXPLORER_URL,
+                    },
+                },
             ],
         },
     ];

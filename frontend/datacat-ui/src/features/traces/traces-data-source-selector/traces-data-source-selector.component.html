@@ -1,0 +1,17 @@
+<div class="data-source-selector">
+    <label>Data Source</label>
+    <p-dropdown (onChange)="onDataSourceChange()" (onFilter)="onSearch($event)"
+                [(ngModel)]="selectedDataSource" [filter]="true" [loading]="loading"
+                [options]="dataSources" [showClear]="true"
+                filterBy="name" optionLabel="name"
+                optionValue="name"
+                placeholder="Select data source...">
+        @if (loading) {
+            <ng-template pTemplate="footer">
+                <div class="p-d-flex p-jc-center p-ai-center p-p-2">
+                    <p-progressSpinner [style]="{width: '20px', height: '20px'}"></p-progressSpinner>
+                </div>
+            </ng-template>
+        }
+    </p-dropdown>
+</div>

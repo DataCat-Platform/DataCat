@@ -1,0 +1,56 @@
+<p-panel [style]="{ display: 'flex', flexDirection: 'column', height: '100%' }" header="Traces Details">
+    <div class="trace-container">
+        <!-- Header -->
+        <div class="header-row">
+            <div class="service-header">Service & Operation</div>
+            <div class="timeline-header">
+                @for (marker of timeMarkers; track marker; let i = $index; let last = $last; let first = $first) {
+                    <div
+                            class="time-marker"
+                            [style.left.%]="i * 25"
+                            [style.transform]="first ? 'none' : last ? 'translateX(-100%)' : 'translateX(-50%)'"
+                            [ngStyle]="{
+                                'margin-left.px': first ? 5 : null,
+                                'margin-right.px': last ? 5 : null
+                              }"
+                    >
+                        {{ formatTime(marker - startTime) }}
+                    </div>
+                }
+            </div>
+            <div class="actions-header">Actions</div>
+        </div>
+
+        <!-- Spans -->
+        @if (trace) {
+            <div class="spans-container">
+                @for (span of trace.spans; track span) {
+                    <div class="span-row">
+                        <div class="service-cell">
+                            <span class="service-name">{{ getServiceName(span.processId!) }}</span><br>
+                            <span class="operation-name">{{ span.operationName }}</span>
+                        </div>
+
+                        <div class="timeline-cell">
+                            <div class="timeline-scroll-wrapper">
+                                <div class="span-track">
+                                    <div class="span-bar"
+                                         [style.left.%]="getSpanOffset(span)"
+                                         [style.width.%]="getSpanWidth(span) - 2">
+                                        <span class="span-label">
+                                            {{ formatTime(parseDuration(span.duration!)) }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="actions-cell">
+                            <p-button icon="pi pi-ellipsis-v"></p-button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</p-panel>
