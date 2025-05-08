@@ -5,10 +5,7 @@ public sealed record AddPanelRequest(
     int Type,
     string RawQuery,
     string DataSourceId,
-    int PanelX,
-    int PanelY,
-    int Width,
-    int Height,
+    string Layout,
     string DashboardId,
     string StyleConfiguration);
 
@@ -39,10 +36,7 @@ public sealed class AddPanel : ApiEndpointBase
             Type = request.Type,
             DashboardId = request.DashboardId,
             DataSourceId = request.DataSourceId,
-            Height = request.Height,
-            Width = request.Width,
-            PanelX = request.PanelX,
-            PanelY = request.PanelY,
+            Layout = request.Layout,
             RawQuery = request.RawQuery,
             StyleConfiguration = request.StyleConfiguration
         };

@@ -1,20 +1,22 @@
 export enum AlertStatus {
-  OK = 'ok',
-  FIRING = 'firing',
-  ERROR = 'error',
-  PENDING = 'pending',
-  MUTED = 'muted',
+  OK = 'Ok',
+  FIRING = 'Fire',
+  ERROR = 'Error',
+  MUTED = 'Muted',
 }
 
 export type Alert = {
   id: string;
+  template: string;
   description: string;
   query: string;
-  status: string;
+  status: AlertStatus;
   dataSourceId: string;
   notificationGroupId: string;
-  prevExecutionTime: number;
-  nextExecutionTime: number;
-  notificationTriggerPeriod: number;
-  executionInterval: number;
+  prevExecutionTime?: Date;
+  nextExecutionTime?: Date;
+  notificationTriggerPeriod: string;
+  executionInterval: string;
 };
+
+export type AlertExpanded = {};

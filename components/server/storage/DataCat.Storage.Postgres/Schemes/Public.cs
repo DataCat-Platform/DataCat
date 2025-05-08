@@ -21,7 +21,6 @@ public static class Public
     public const string PanelTable = "panels";
     public const string VariableTable = "variables";
     
-    public const string DashboardUserLinkTable = "dashboard_user_link";
     public const string UserRoleLinkTable = "user_role_link";
     public const string UserPermissionLinkTable = "user_permission_link";
 
@@ -110,17 +109,10 @@ public static class Public
         public const string Id = "id";
         public const string Name = "name";
         public const string Description = "description";
-        public const string OwnerId = "owner_id";
         public const string CreatedAt = "created_at_utc";
         public const string UpdatedAt = "updated_at_utc";
         public const string NamespaceId = "namespace_id";
         public const string Tags = "tags";
-    }
-
-    public static class DashboardsUsersLink
-    {
-        public const string UserId = "id";
-        public const string DashboardId = "dashboard_id";
     }
 
     public static class Panels
@@ -130,10 +122,7 @@ public static class Public
         public const string TypeId = "type_id";
         public const string RawQuery = "raw_query";
         public const string DataSourceId = "data_source_id";
-        public const string X = "x";
-        public const string Y = "y";
-        public const string Width = "width";
-        public const string Height = "height";
+        public const string LayoutConfiguration = "layout_configuration";
         public const string DashboardId = "dashboard_id";
         public const string StylingConfiguration = "style_configuration";
     }

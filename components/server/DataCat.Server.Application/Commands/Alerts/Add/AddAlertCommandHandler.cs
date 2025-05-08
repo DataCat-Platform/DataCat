@@ -25,7 +25,7 @@ public sealed class AddAlertCommandHandler(
             request.Description,
             request.Template,
             queryResult.Value,
-            AlertStatus.InActive,
+            AlertStatus.Ok,
             notificationChannelGroup,
             previousExecution: DateTimeUtc.Init(),
             nextExecution: DateTime.UtcNow.Add(request.RepeatInterval),

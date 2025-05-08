@@ -7,8 +7,6 @@ public class Dashboard
         string name,
         string? description,
         IEnumerable<Panel> panels,
-        User owner,
-        IEnumerable<User> sharedWith,
         Guid namespaceId,
         DateTime createdAt,
         DateTime updatedAt,
@@ -19,8 +17,6 @@ public class Dashboard
         Name = name;
         Description = description;
         Panels = panels;
-        Owner = owner;
-        SharedWith = sharedWith;
         NamespaceId = namespaceId;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
@@ -34,9 +30,6 @@ public class Dashboard
 
     public IEnumerable<Panel> Panels { get; private set; }
 
-    public User Owner { get; private set; }
-
-    public IEnumerable<User> SharedWith { get; private set; }
     public Guid NamespaceId { get; }
 
     public DateTime CreatedAt { get; private set; }
@@ -55,8 +48,6 @@ public class Dashboard
         string name,
         string? description,
         IEnumerable<Panel>? panels,
-        User? owner,
-        IEnumerable<User>? sharedWith,
         Guid namespaceId,
         DateTime createdAt,
         DateTime updatedAt,
@@ -71,15 +62,9 @@ public class Dashboard
             validationList.Add(Result.Fail<Dashboard>(BaseError.FieldIsNull(nameof(name))));
         }
 
-        if (owner is null)
-        {
-            validationList.Add(Result.Fail<Dashboard>(BaseError.FieldIsNull(nameof(owner))));
-        }
-        
         #endregion
 
         panels ??= Array.Empty<Panel>();
-        sharedWith ??= Array.Empty<User>();
 
         return validationList.Count != 0
             ? validationList.FoldResults()!
@@ -88,11 +73,9 @@ public class Dashboard
                 name,
                 description,
                 panels,
-                owner!,
-                sharedWith,
                 namespaceId,
                 createdAt,
                 updatedAt,
-                tags));
+                tags ?? []));
     }
 }

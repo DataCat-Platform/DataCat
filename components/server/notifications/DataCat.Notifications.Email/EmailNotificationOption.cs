@@ -2,7 +2,7 @@ namespace DataCat.Notifications.Email;
 
 public sealed record EmailNotificationOption : BaseNotificationOption
 {
-    public new string Settings => ToString();
+    public override string Settings => ToString();
 
     private EmailNotificationOption(
         NotificationDestination destination,

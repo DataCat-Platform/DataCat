@@ -17,8 +17,8 @@ public sealed class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddlew
                     Status = statusCode,
                     Type = "ValidationFailure",
                     Title = "Validation error",
-                    Detail = "One or more validation errors occurred",
-                    Instance = validationException.Message
+                    Detail = validationException.Message,
+                    Instance = string.Join(Environment.NewLine, validationException.Failures.Select(failure => failure.ErrorMessage)),
                     // Extensions =
                     // {
                         // ["errors"] = validationException.Failures

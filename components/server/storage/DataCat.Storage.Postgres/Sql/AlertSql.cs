@@ -22,9 +22,10 @@ public static class AlertSql
                 notification_group.{Public.NotificationChannelGroups.Id}                  {nameof(NotificationChannelGroupSnapshot.Id)},
                 notification_group.{Public.NotificationChannelGroups.Name}                {nameof(NotificationChannelGroupSnapshot.Name)},
                 
-                notification_channel.{Public.NotificationChannels.Id}                      {nameof(NotificationChannelSnapshot.Id)},
-                notification_channel.{Public.NotificationChannels.DestinationId}           {nameof(NotificationChannelSnapshot.DestinationId)},
-                notification_channel.{Public.NotificationChannels.Settings}                {nameof(NotificationChannelSnapshot.Settings)},
+                notification_channel.{Public.NotificationChannels.Id}                            {nameof(NotificationChannelSnapshot.Id)},
+                notification_channel.{Public.NotificationChannels.NotificationChannelGroupId}    {nameof(NotificationChannelSnapshot.NotificationChannelGroupId)},
+                notification_channel.{Public.NotificationChannels.DestinationId}                 {nameof(NotificationChannelSnapshot.DestinationId)},
+                notification_channel.{Public.NotificationChannels.Settings}                      {nameof(NotificationChannelSnapshot.Settings)},
                 
                 notification_destination.{Public.NotificationDestination.Id}                  {nameof(NotificationDestinationSnapshot.Id)},
                 notification_destination.{Public.NotificationDestination.Name}                {nameof(NotificationDestinationSnapshot.Name)},
@@ -81,9 +82,10 @@ public static class AlertSql
                  notification_group.{Public.NotificationChannelGroups.Id}      {nameof(NotificationChannelGroupSnapshot.Id)},
                  notification_group.{Public.NotificationChannelGroups.Name}    {nameof(NotificationChannelGroupSnapshot.Name)},
                  
-                 notification_channel.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)},
-                 notification_channel.{Public.NotificationChannels.DestinationId}    {nameof(NotificationChannelSnapshot.DestinationId)},
-                 notification_channel.{Public.NotificationChannels.Settings}         {nameof(NotificationChannelSnapshot.Settings)},
+                 notification_channel.{Public.NotificationChannels.Id}                           {nameof(NotificationChannelSnapshot.Id)},
+                 notification_channel.{Public.NotificationChannels.NotificationChannelGroupId}   {nameof(NotificationChannelSnapshot.NotificationChannelGroupId)},
+                 notification_channel.{Public.NotificationChannels.DestinationId}                {nameof(NotificationChannelSnapshot.DestinationId)},
+                 notification_channel.{Public.NotificationChannels.Settings}                     {nameof(NotificationChannelSnapshot.Settings)},
                  
                  notification_destination.{Public.NotificationDestination.Id}        {nameof(NotificationDestinationSnapshot.Id)},
                  notification_destination.{Public.NotificationDestination.Name}      {nameof(NotificationDestinationSnapshot.Name)},

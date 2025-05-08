@@ -2,7 +2,7 @@ namespace DataCat.Server.Application.Commands.NotificationChannels.Add;
 
 public sealed class AddNotificationCommandHandler(
     INotificationDestinationRepository notificationDestinationRepository,
-    IRepository<NotificationChannel, int> notificationChannelRepository,
+    INotificationChannelRepository notificationChannelRepository,
     INotificationChannelGroupRepository notificationChannelGroupRepository,
     NotificationChannelManager notificationChannelManager)
     : ICommandHandler<AddNotificationCommand, int>
@@ -30,7 +30,7 @@ public sealed class AddNotificationCommandHandler(
         if (notificationResult.IsFailure)
             return Result.Fail<int>(notificationResult.Errors!);
         
-        await notificationChannelRepository.AddAsync(notificationResult.Value, cancellationToken);
-        return Result.Success(notificationResult.Value.Id);
+        var id = await notificationChannelRepository.AddReturningIdAsync(notificationResult.Value, cancellationToken);
+        return Result.Success(id);
     }
 }

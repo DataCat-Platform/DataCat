@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
-import { TableModule } from 'primeng/table';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Alert, AlertStatus, DataSource } from '../../../entities';
 import { TagModule } from 'primeng/tag';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
-import * as urls from '../../../shared/common/urls';
 import { finalize } from 'rxjs';
 import {
   ApiService,
-  ISearchFilter,
+  ISearchFilters,
+  MatchMode,
+  SearchFieldType,
+  SearchFilter,
   SearchFilters,
 } from '../../../shared/services/datacat-generated-client';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -20,6 +22,11 @@ import { ToastLoggerService } from '../../../shared/services/toast-logger.servic
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
+import { DataSourceSelectComponent } from '../../../shared/ui/data-source-select/data-source-select.component';
+import * as urls from '../../../shared/common/urls';
+import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   standalone: true,
@@ -38,14 +45,16 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     InputGroupModule,
     InputGroupAddonModule,
     InputTextModule,
+    TooltipModule,
+    DialogModule,
+    DataSourceSelectComponent,
   ],
 })
 export class AlertsListComponent {
-  protected addTagControl = new FormControl<string>('');
+  protected isAlertViewDialogVisible = false;
+  protected viewedAlert?: Alert;
 
-  protected get tagToAdd(): string {
-    return this.addTagControl.value || '';
-  }
+  protected addTagControl = new FormControl<string>('');
 
   protected filtersForm = new FormGroup({
     status: new FormControl<AlertStatus | null>(null),
@@ -57,7 +66,7 @@ export class AlertsListComponent {
     return this.filtersForm.get('status')?.value || null;
   }
 
-  protected get dataSourceId(): string | null {
+  protected get filtersFormDataSourceId(): string | null {
     return this.filtersForm.get('dataSourceId')?.value || null;
   }
 
@@ -66,7 +75,6 @@ export class AlertsListComponent {
   }
 
   protected possibleAlertStatuses = Object.values(AlertStatus);
-  protected possibleDataSources: DataSource[] = [];
 
   protected hasNextPage = false;
   protected hasPreviousPage = false;
@@ -82,10 +90,10 @@ export class AlertsListComponent {
     private loggerService: ToastLoggerService,
   ) {
     this.refreshAlerts();
-    this.refreshPossibleDataSources();
   }
 
-  protected addFilterTag(tag: string) {
+  protected addFilterTag() {
+    const tag = this.addTagControl.value;
     const previousTags = this.filtersForm.get('tags')?.value || [];
     if (tag && !previousTags.includes(tag)) {
       this.filtersForm.get('tags')?.setValue([...previousTags, tag]);
@@ -99,12 +107,17 @@ export class AlertsListComponent {
       ?.setValue(previousTags.filter((t) => t !== tag));
   }
 
-  protected viewAlert(alertId: string) {
-    this.router.navigateByUrl(urls.alertViewUrl(alertId));
+  protected viewAlert(alert: Alert) {
+    this.isAlertViewDialogVisible = true;
+    this.viewedAlert = alert;
+  }
+
+  protected editAlert(alert: Alert) {
+    this.router.navigateByUrl(urls.alertEditUrl(alert.id));
   }
 
   protected getSeverityForStatus(
-    status: AlertStatus,
+    status?: AlertStatus,
   ): 'success' | 'danger' | 'secondary' | 'info' {
     {
       switch (status) {
@@ -114,9 +127,6 @@ export class AlertsListComponent {
         case AlertStatus.FIRING:
         case AlertStatus.ERROR: {
           return 'danger';
-        }
-        case AlertStatus.PENDING: {
-          return 'info';
         }
         case AlertStatus.MUTED: {
           return 'secondary';
@@ -129,11 +139,47 @@ export class AlertsListComponent {
   }
 
   protected get searchFilters(): SearchFilters {
-    const filters: ISearchFilter[] = [];
+    const filters = {
+      filters: [],
+      sort: undefined,
+    } as ISearchFilters;
 
-    return {
-      filters: filters as any,
-    } as any;
+    if (this.filtersFormStatus) {
+      filters.filters!.push({
+        key: 'status',
+        value: this.filtersFormStatus,
+        matchMode: MatchMode.Equals,
+        fieldType: SearchFieldType.String,
+      } as SearchFilter);
+    }
+
+    if (this.filtersFormTags.length !== 0) {
+      filters.filters!.push({
+        key: 'tags',
+        value: this.filtersFormTags,
+        matchMode: MatchMode.Contains,
+        fieldType: SearchFieldType.Array,
+      } as SearchFilter);
+    }
+
+    if (this.filtersFormDataSourceId) {
+      filters.filters!.push({
+        key: 'dataSourceId',
+        value: this.filtersFormDataSourceId,
+        matchMode: MatchMode.Equals,
+        fieldType: SearchFieldType.String,
+      } as SearchFilter);
+    }
+
+    return filters as SearchFilters;
+  }
+
+  protected onLazyLoad(event: TableLazyLoadEvent) {
+    if (event.first !== undefined && event.rows) {
+      this.currentPage = Math.floor(event.first / event.rows) + 1;
+      this.alertsPerPageCount = event.rows;
+      this.refreshAlerts();
+    }
   }
 
   protected refreshAlerts() {
@@ -156,15 +202,27 @@ export class AlertsListComponent {
           this.hasNextPage = data.hasNextPage || false;
           this.hasPreviousPage = data.hasPreviousPage || false;
           this.currentPage = data.pageNumber || 0;
-          this.alerts = [];
+          this.alerts =
+            data.items?.map<Alert>((item) => {
+              console.log(item);
+              return {
+                id: item.id || '',
+                template: item.template || '',
+                description: item.description || '',
+                query: item.rawQuery || '',
+                status: (item.status as AlertStatus) || AlertStatus.OK,
+                dataSourceId: item.dataSource?.id || '',
+                notificationGroupId: item.notificationChannelGroup?.id || '',
+                prevExecutionTime: item.previousExecutionTime,
+                nextExecutionTime: item.nextExecutionTime,
+                notificationTriggerPeriod: item.waitTimeBeforeAlerting || '',
+                executionInterval: item.repeatInterval || '',
+              };
+            }) || [];
         },
         error: (e) => {
           this.loggerService.error(e);
         },
       });
-  }
-
-  protected refreshPossibleDataSources() {
-    // TODO
   }
 }

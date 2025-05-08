@@ -43,6 +43,12 @@ All notable changes to this project will be documented in this file.
 - *(datacat-ui)* Add keycloak ui integration
 - *(datacat-ui)* Finish notification template, need to figure out notification group editing
 - *(datacat-ui)* MVP notifications done
+- *(datacat-ui)* Start fixing alerts and notifications
+- *(datacat-ui)* Check before pulling
+- *(datacat-ui)* Commit before merging
+- *(datacat-ui)* Commit before merge
+- *(datacat-ui)* Notifications can't be fixed until backend is fixed
+- *(datacat-ui)* Fix alerts filtering
 - *(datacat-ui)* Add logs visualization
 - *(datacat-ui)* Add logs visualization
 

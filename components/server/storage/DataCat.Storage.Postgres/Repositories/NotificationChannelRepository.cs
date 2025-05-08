@@ -12,12 +12,13 @@ public sealed class NotificationChannelRepository(
 
         const string sql = $"""
             SELECT
-                notification.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)},
-                notification.{Public.NotificationChannels.DestinationId}    {nameof(NotificationChannelSnapshot.DestinationId)},
-                notification.{Public.NotificationChannels.Settings}         {nameof(NotificationChannelSnapshot.Settings)},
+                notification.{Public.NotificationChannels.Id}                             {nameof(NotificationChannelSnapshot.Id)},
+                notification.{Public.NotificationChannels.DestinationId}                  {nameof(NotificationChannelSnapshot.DestinationId)},
+                notification.{Public.NotificationChannels.Settings}                       {nameof(NotificationChannelSnapshot.Settings)},
+                notification.{Public.NotificationChannels.NotificationChannelGroupId}     {nameof(NotificationChannelSnapshot.NotificationChannelGroupId)},
                 
-                notification_destination.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)},
-                notification_destination.{Public.NotificationChannels.Id}               {nameof(NotificationChannelSnapshot.Id)}
+                notification_destination.{Public.NotificationDestination.Id}                 {nameof(NotificationDestinationSnapshot.Id)},
+                notification_destination.{Public.NotificationDestination.Name}               {nameof(NotificationDestinationSnapshot.Name)}
             
             FROM 
                 {Public.NotificationChannelTable} notification
@@ -42,14 +43,21 @@ public sealed class NotificationChannelRepository(
 
     public async Task AddAsync(NotificationChannel entity, CancellationToken token = default)
     {
-        var snapshot = entity.Save();
+        await AddReturningIdAsync(entity, token);
+    }
+
+    public async Task<int> AddReturningIdAsync(NotificationChannel notificationChannel, CancellationToken token = default)
+    {
+        var snapshot = notificationChannel.Save();
 
         const string sql = $@"
             INSERT INTO {Public.NotificationChannelTable} (
+                {Public.NotificationChannels.NotificationChannelGroupId},
                 {Public.NotificationChannels.DestinationId},
                 {Public.NotificationChannels.Settings}
             )
             VALUES (
+                @{nameof(NotificationChannelSnapshot.NotificationChannelGroupId)},
                 @{nameof(NotificationChannelSnapshot.DestinationId)},
                 @{nameof(NotificationChannelSnapshot.Settings)}
             )
@@ -57,7 +65,8 @@ public sealed class NotificationChannelRepository(
         ";
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        await connection.ExecuteAsync(sql, snapshot, transaction: unitOfWork.Transaction);
+        var id = await connection.ExecuteScalarAsync<int>(sql, snapshot, transaction: unitOfWork.Transaction);
+        return id;
     }
 
     public async Task UpdateAsync(NotificationChannel entity, CancellationToken token = default)
@@ -67,8 +76,9 @@ public sealed class NotificationChannelRepository(
         const string sql = $"""
             UPDATE {Public.NotificationChannelTable}
             SET 
-                {Public.NotificationChannels.DestinationId} = @{nameof(NotificationChannelSnapshot.DestinationId)},
-                {Public.NotificationChannels.Settings}      = @{nameof(NotificationChannelSnapshot.Settings)}
+                {Public.NotificationChannels.NotificationChannelGroupId} = @{nameof(NotificationChannelSnapshot.NotificationChannelGroupId)},
+                {Public.NotificationChannels.DestinationId}              = @{nameof(NotificationChannelSnapshot.DestinationId)},
+                {Public.NotificationChannels.Settings}                   = @{nameof(NotificationChannelSnapshot.Settings)}
             WHERE {Public.NotificationChannels.Id} = @{nameof(NotificationChannelSnapshot.Id)}
         """;
 

@@ -2,7 +2,7 @@ namespace DataCat.Notifications.Webhook;
 
 public sealed record WebhookNotificationOption : BaseNotificationOption
 {
-    public new string Settings => ToString();
+    public override string Settings => ToString();
     
     private WebhookNotificationOption(NotificationDestination destination, string url)
     {

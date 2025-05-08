@@ -1,6 +1,6 @@
 namespace DataCat.Server.Postgres.Migrations;
 
-[Migration(7)]
+[Migration(5)]
 public class CreateAlertAndNotificationChannelTable : Migration 
 {
     public static readonly string UpSql = null!;
