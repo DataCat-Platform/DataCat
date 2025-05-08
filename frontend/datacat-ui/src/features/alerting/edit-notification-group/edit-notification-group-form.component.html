@@ -44,11 +44,22 @@
                           <i class="pi pi-envelope text-secondary"></i>
                           <p>Email</p>
                         </div>
-                        <p-button
-                          icon="pi pi-pencil"
-                          [text]="true"
-                          label="Edit"
-                        />
+                        <div class="card-header__actions">
+                          <p-button
+                            icon="pi pi-pencil"
+                            (onClick)="editChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Edit"
+                          />
+                          <p-button
+                            icon="pi pi-trash"
+                            (onClick)="deleteChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Delete"
+                          />
+                        </div>
                       </div>
                     </ng-template>
                     <div class="channel-attributes">
@@ -99,11 +110,22 @@
                           <i class="pi pi-telegram text-secondary"></i>
                           <p>Telegram</p>
                         </div>
-                        <p-button
-                          icon="pi pi-pencil"
-                          [text]="true"
-                          label="Edit"
-                        />
+                        <div class="card-header__actions">
+                          <p-button
+                            icon="pi pi-pencil"
+                            (onClick)="editChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Edit"
+                          />
+                          <p-button
+                            icon="pi pi-trash"
+                            (onClick)="deleteChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Delete"
+                          />
+                        </div>
                       </div>
                     </ng-template>
                     <div class="channel-attributes">
@@ -137,11 +159,22 @@
                           <i class="pi pi-link text-secondary"></i>
                           <p>Webhook</p>
                         </div>
-                        <p-button
-                          icon="pi pi-pencil"
-                          [text]="true"
-                          label="Edit"
-                        />
+                        <div class="card-header__actions">
+                          <p-button
+                            icon="pi pi-pencil"
+                            (onClick)="editChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Edit"
+                          />
+                          <p-button
+                            icon="pi pi-trash"
+                            (onClick)="deleteChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Delete"
+                          />
+                        </div>
                       </div>
                     </ng-template>
                     <div class="channel-attributes">
@@ -228,5 +261,38 @@
   [(visible)]="isChannelEditDialogVisible"
   [modal]="true"
 >
-
+  <form [formGroup]="editChannelForm" class="dialog__settings">
+    @switch (editedChannel?.driver) {
+      @case (NotificationChannelDriver.EMAIL) {
+        <input
+          pInputText
+          formControlName="DestinationEmail"
+          placeholder="Destination address"
+        />
+        <input
+          pInputText
+          formControlName="SmtpServer"
+          placeholder="SMTP server"
+        />
+        <p-inputnumber formControlName="Port" placeholder="Port" />
+        <input
+          pInputText
+          formControlName="PasswordPath"
+          placeholder="Password path"
+        />
+      }
+      @case (NotificationChannelDriver.TELEGRAM) {
+        <input
+          pInputText
+          formControlName="TelegramTokenPath"
+          placeholder="Telegram token path"
+        />
+        <input pInputText formControlName="ChatId" placeholder="Chat ID" />
+      }
+      @case (NotificationChannelDriver.WEBHOOK) {
+        <input pInputText formControlName="Url" placeholder="Url" />
+      }
+    }
+    <p-button label="Save" (onClick)="saveEditedChannel()" />
+  </form>
 </p-dialog>

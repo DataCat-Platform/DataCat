@@ -45,13 +45,16 @@ import { CardModule } from 'primeng/card';
   ],
 })
 export class EditNotificationGroupFormComponent {
+  private _groupId?: string;
+
   @Input() public set groupId(id: string) {
-    if (id) {
-      this.loadEssentials(id);
-    }
+    this._groupId = id;
+    this.refresh();
   }
 
   protected isChannelEditDialogVisible = false;
+  protected editedChannel?: NotificationChannel;
+
   protected isChannelCreationDialogVisible = false;
   protected groupName: string = '';
 
@@ -66,7 +69,7 @@ export class EditNotificationGroupFormComponent {
 
   protected notificationChannels: NotificationChannel[] = [];
 
-  protected editChannelForm = new FormGroup({});
+  protected editChannelForm = new FormGroup<any>({});
 
   protected addChannelForm = new FormGroup({
     driver: new FormControl<NotificationChannelDriver>(
@@ -89,10 +92,12 @@ export class EditNotificationGroupFormComponent {
     this.switchAddChannelFormSettingsDriver(NotificationChannelDriver.EMAIL);
   }
 
-  protected loadEssentials(groupId: string) {
-    const groupObservable =
-      this.apiService.getApiV1NotificationChannelGroup(groupId);
-    groupObservable.subscribe({
+  protected refresh() {
+    if (!this._groupId) {
+      return;
+    }
+
+    this.apiService.getApiV1NotificationChannelGroup(this._groupId).subscribe({
       next: (group) => {
         this.groupName = group.name || '';
         this.parseNotificationGroupChannels(group);
@@ -103,7 +108,6 @@ export class EditNotificationGroupFormComponent {
         this.loadingState = LoadingState.Error;
       },
     });
-    return groupObservable;
   }
 
   protected switchAddChannelFormSettingsDriver(
@@ -150,7 +154,7 @@ export class EditNotificationGroupFormComponent {
     this.notificationChannels =
       group.notificationChannels?.map<NotificationChannel>((channel) => {
         return {
-          id: 0,
+          id: channel?.id || 0,
           driver: channel.destinationName as NotificationChannelDriver,
           settings: JSON.parse(channel.settings || ''),
         };
@@ -183,10 +187,9 @@ export class EditNotificationGroupFormComponent {
       )
       .subscribe({
         next: () => {
-          const obs = this.loadEssentials(this.groupId);
-          obs.subscribe(() => {
-            this.isChannelCreationDialogVisible = false;
-          });
+          this.loggerService.success('Added channel');
+          this.isChannelCreationDialogVisible = false;
+          this.refresh();
         },
         error: (e) => {
           this.loggerService.error(e);
@@ -194,9 +197,83 @@ export class EditNotificationGroupFormComponent {
       });
   }
 
-  protected editChannel() {}
+  protected editChannel(channel: NotificationChannel) {
+    switch (channel.driver) {
+      case NotificationChannelDriver.EMAIL: {
+        const settings = channel.settings as EmailSettings;
+        this.editChannelForm = new FormGroup({
+          DestinationEmail: new FormControl<string>(settings.DestinationEmail),
+          SmtpServer: new FormControl<string>(settings.SmtpServer),
+          Port: new FormControl<number>(settings.Port),
+          PasswordPath: new FormControl<string>(settings.PasswordPath),
+        });
+        break;
+      }
+      case NotificationChannelDriver.TELEGRAM: {
+        const settings = channel.settings as TelegramSettings;
+        this.editChannelForm = new FormGroup({
+          TelegramTokenPath: new FormControl<string>(
+            settings.TelegramTokenPath,
+          ),
+          ChatId: new FormControl<string>(settings.ChatId),
+        });
+        break;
+      }
+      case NotificationChannelDriver.WEBHOOK: {
+        const settings = channel.settings as WebhookSettings;
+        this.editChannelForm = new FormGroup({
+          Url: new FormControl<string>(settings.Url),
+        });
+        break;
+      }
+    }
 
-  protected deleteChannel(chanel: NotificationChannel) {}
+    this.editedChannel = channel;
+    this.isChannelEditDialogVisible = true;
+  }
+
+  protected saveEditedChannel() {
+    this.editChannelForm.markAllAsTouched();
+    this.editChannelForm.updateValueAndValidity();
+
+    if (!this.editChannelForm.valid || !this.editedChannel) {
+      return;
+    }
+
+    const request: any = {
+      destinationName: this.editedChannel.driver,
+      settings: JSON.stringify(this.editChannelForm.value),
+    };
+
+    this.editChannelForm.disable();
+    this.apiService
+      .putApiV1NotificationChannel(this.editedChannel?.id, request)
+      .pipe(
+        finalize(() => {
+          this.editChannelForm.enable();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.isChannelEditDialogVisible = false;
+          this.refresh();
+        },
+        error: (e) => {
+          this.loggerService.error(e);
+        },
+      });
+  }
+
+  protected deleteChannel(channel: NotificationChannel) {
+    this.apiService.deleteApiV1NotificationChannelRemove(channel.id).subscribe({
+      next: () => {
+        this.refresh();
+      },
+      error: (e) => {
+        this.loggerService.error(e);
+      },
+    });
+  }
 
   protected asEmailSettings(
     settings: NotificationChannelSettings,
