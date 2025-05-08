@@ -1,0 +1,73 @@
+<div class="filter-container p-fluid">
+    <div class="filter-row row-2col">
+        <div class="p-field">
+            <label>Service</label>
+            <p-dropdown
+                    (onChange)="onServiceChange()"
+                    [(ngModel)]="currentFilter.service"
+                    [options]="services"
+                    placeholder="Service">
+            </p-dropdown>
+        </div>
+        <div class="p-field">
+            <label>Operation</label>
+            <p-dropdown
+                    [(ngModel)]="currentFilter.operation"
+                    [options]="operations"
+                    placeholder="Operation">
+            </p-dropdown>
+        </div>
+    </div>
+
+    <div class="filter-row row-2col">
+        <div class="p-field">
+            <label>Start</label>
+            <p-calendar
+                    [(ngModel)]="currentFilter.start"
+                    [showTime]="true"
+                    dateFormat="yy-mm-dd"
+                    placeholder="Start">
+            </p-calendar>
+        </div>
+        <div class="p-field">
+            <label>End</label>
+            <p-calendar
+                    [(ngModel)]="currentFilter.end"
+                    [showTime]="true"
+                    dateFormat="yy-mm-dd"
+                    placeholder="End">
+            </p-calendar>
+        </div>
+    </div>
+
+    <div class="filter-row">
+        <div class="p-field tags">
+            <label>Tags</label>
+            <input
+                    [(ngModel)]="currentFilter.tags"
+                    pInputText
+                    placeholder="key=value"/>
+        </div>
+    </div>
+
+    <div class="filter-row row-2col">
+        <div class="p-field">
+            <label>Min Duration</label>
+            <input
+                    [(ngModel)]="currentFilter.minDuration"
+                    pInputText
+                    placeholder="e.g. 100ms"/>
+        </div>
+        <div class="p-field">
+            <label>Max Duration</label>
+            <input
+                    [(ngModel)]="currentFilter.maxDuration"
+                    pInputText
+                    placeholder="e.g. 2s"/>
+        </div>
+    </div>
+
+    <div class="filter-actions">
+        <p-button (click)="applyFilters()" severity="primary">Apply Filters</p-button>
+    </div>
+</div>

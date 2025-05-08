@@ -76,6 +76,13 @@ export const ROUTES: Routes = [
                         (m) => m.ExploreLogsComponent,
                     ),
             },
+            {
+                path: urls.TRACES_EXPLORER_URL,
+                loadComponent: () =>
+                    import('../processes/explore-traces/explore-traces.component').then(
+                        (m) => m.ExploreTracesComponent,
+                    ),
+            },
         ],
     },
     {

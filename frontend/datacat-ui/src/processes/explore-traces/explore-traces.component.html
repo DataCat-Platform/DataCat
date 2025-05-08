@@ -1,0 +1,32 @@
+<p-panel [style]="{ display: 'block', height: '100%' }" header="Traces Explorer">
+    <div class="traces-explorer-layout">
+        <div class="left-panel">
+            <div class="description-container">
+                <p class="text-secondary">Explore and analyze system traces in real-time</p>
+            </div>
+
+            <div class="slot">
+                <app-traces-data-source-selector
+                        (selectedDataSourceChange)="onDataSourceChange($event)"
+                        [(selectedDataSource)]="currentFilter.dataSourceName">
+                </app-traces-data-source-selector>
+
+                <app-traces-filter
+                        (filterChange)="onFilterChange($event)"
+                        [currentFilter]="currentFilter">
+                </app-traces-filter>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            @if (isLoading) {
+                <div class="spinner-overlay">
+                    <p-progressSpinner styleClass="custom-spinner"></p-progressSpinner>
+                    <p class="spinner-text">Loading traces...</p>
+                </div>
+            } @else {
+                <app-traces-list [traces]="traces"></app-traces-list>
+            }
+        </div>
+    </div>
+</p-panel>
