@@ -56,8 +56,6 @@ public class PostgresAlertMonitorService(
            JOIN
                {Public.NotificationDestinationTable} notification_destination ON notification_channel.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationDestination.Id}
            WHERE
-               alert.{Public.Alerts.Status} = {AlertStatus.InActive.Value}
-               AND
                alert.{Public.Alerts.NextExecution} < NOW()
            ORDER BY
                alert.{Public.Alerts.NextExecution}
@@ -157,7 +155,7 @@ public class PostgresAlertMonitorService(
         JOIN
             {Public.NotificationDestinationTable} notification_destination ON notification_channel.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationDestination.Id}
         WHERE
-           alert.{Public.Alerts.Status} IN ({AlertStatus.Warning.Value}, {AlertStatus.Fire.Value}, {AlertStatus.Muted.Value})
+           alert.{Public.Alerts.Status} = {AlertStatus.Fire.Value}
            AND
            alert.{Public.Alerts.NextExecution} < NOW()
         ORDER BY

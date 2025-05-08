@@ -43,7 +43,6 @@ global using DataCat.Storage.Postgres.Jobs;
 global using DataCat.Storage.Postgres.Mappers;
 global using DataCat.Storage.Postgres.Meta;
 global using DataCat.Storage.Postgres.Persistence;
-global using DataCat.Storage.Postgres.Procedures;
 global using DataCat.Storage.Postgres.Repositories;
 global using DataCat.Storage.Postgres.Runners;
 global using DataCat.Storage.Postgres.Schemes;
