@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TableModule } from 'primeng/table';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Alert, AlertStatus, DataSource } from '../../../entities';
 import { TagModule } from 'primeng/tag';
 import { CommonModule } from '@angular/common';
@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import {
   ApiService,
-  ISearchFilter,
   ISearchFilters,
   MatchMode,
   SearchFieldType,
@@ -27,6 +26,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { DataSourceSelectComponent } from '../../../shared/ui/data-source-select/data-source-select.component';
 import * as urls from '../../../shared/common/urls';
+import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   standalone: true,
@@ -75,7 +75,6 @@ export class AlertsListComponent {
   }
 
   protected possibleAlertStatuses = Object.values(AlertStatus);
-  protected possibleDataSources: DataSource[] = [];
 
   protected hasNextPage = false;
   protected hasPreviousPage = false;
@@ -91,7 +90,6 @@ export class AlertsListComponent {
     private loggerService: ToastLoggerService,
   ) {
     this.refreshAlerts();
-    this.refreshPossibleDataSources();
   }
 
   protected addFilterTag() {
@@ -176,6 +174,14 @@ export class AlertsListComponent {
     return filters as SearchFilters;
   }
 
+  protected onLazyLoad(event: TableLazyLoadEvent) {
+    if (event.first !== undefined && event.rows) {
+      this.currentPage = Math.floor(event.first / event.rows) + 1;
+      this.alertsPerPageCount = event.rows;
+      this.refreshAlerts();
+    }
+  }
+
   protected refreshAlerts() {
     this.filtersForm.disable();
     this.apiService
@@ -219,9 +225,5 @@ export class AlertsListComponent {
           this.loggerService.error(e);
         },
       });
-  }
-
-  protected refreshPossibleDataSources() {
-    // TODO
   }
 }

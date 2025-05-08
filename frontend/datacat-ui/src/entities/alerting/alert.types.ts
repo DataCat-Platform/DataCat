@@ -1,8 +1,8 @@
 export enum AlertStatus {
-  OK = 'ok',
-  FIRING = 'firing',
-  ERROR = 'error',
-  MUTED = 'muted',
+  OK = 'Ok',
+  FIRING = 'Fire',
+  ERROR = 'Error',
+  MUTED = 'Muted',
 }
 
 export type Alert = {
@@ -18,3 +18,7 @@ export type Alert = {
   notificationTriggerPeriod: string;
   executionInterval: string;
 };
+
+export type AlertExpanded = {
+
+}

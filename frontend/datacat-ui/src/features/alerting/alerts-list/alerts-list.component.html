@@ -53,16 +53,17 @@
   <p-table
     [value]="alerts"
     stripedRows
+    (onLazyLoad)="onLazyLoad($event)"
     [paginator]="true"
-    [rows]="5"
-    [rowsPerPageOptions]="[5, 10]"
-    [pageLinks]="12"
-    [alwaysShowPaginator]="false"
+    [scrollable]="true"
+    scrollHeight="30.5rem"
+    [rowsPerPageOptions]="[5, 10, 20]"
     [lazy]="true"
     [first]="0"
     [totalRecords]="totalAlertsCount"
     [rows]="alertsPerPageCount"
     [loading]="filtersForm.disabled"
+    paginatorPosition="top"
   >
     <ng-template pTemplate="emptymessage">
       <tr>

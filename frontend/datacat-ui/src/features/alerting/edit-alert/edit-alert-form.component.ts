@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { DialogModule } from 'primeng/dialog';
@@ -23,9 +23,9 @@ import { InputMaskModule } from 'primeng/inputmask';
 
 @Component({
   standalone: true,
-  selector: './datacat-create-alert-button',
-  templateUrl: './create-alert-button.component.html',
-  styleUrl: './create-alert-button.component.scss',
+  selector: './datacat-edit-alert-form',
+  templateUrl: './edit-alert-form.component.html',
+  styleUrl: './edit-alert-form.component.scss',
   imports: [
     ButtonModule,
     DialogModule,
@@ -41,13 +41,19 @@ import { InputMaskModule } from 'primeng/inputmask';
     InputMaskModule,
   ],
 })
-export class CreateAlertButtonComponent {
-  protected isCreationDialogVisible = false;
-  protected isCreationInitiated = false;
+export class EditAlertFormComponent {
+  private _alertId?: string;
+
+  @Input() public set alertId(id: string) {
+    this._alertId = id;
+    this.refresh();
+  }
+
+  protected isSavingInitiated = false;
 
   protected addTagControl = new FormControl<string>('');
 
-  protected creationForm = new FormGroup({
+  protected editForm = new FormGroup({
     description: new FormControl<string | undefined>(undefined, {
       nonNullable: false,
       validators: Validators.required,
@@ -76,23 +82,53 @@ export class CreateAlertButtonComponent {
     tags: new FormControl<string[]>([]),
   });
 
-  protected get creationFormTags(): string[] {
-    return this.creationForm.get('tags')?.value || [];
+  protected get editFormTags(): string[] {
+    return this.editForm.get('tags')?.value || [];
   }
 
-  protected addCreationFormTag() {
+  protected refresh() {
+    if (!this._alertId) {
+      return;
+    }
+
+    this.editForm.disable();
+    this.apiService
+      .getApiV1Alert(this._alertId)
+      .pipe(
+        finalize(() => {
+          this.editForm.enable();
+        }),
+      )
+      .subscribe({
+        next: (data) => {
+          this.editForm.setValue({
+            description: data.description || '',
+            template: data.template || '',
+            query: data.rawQuery || '',
+            dataSourceId: data.dataSource?.id || '',
+            notificationGroupName: data.notificationChannelGroup?.name || '',
+            notificationTriggerPeriod: data.waitTimeBeforeAlerting || '',
+            executionInterval: data.repeatInterval || '',
+            tags: data.tags || [],
+          });
+        },
+        error: (e) => {
+          this.loggerService.error(e);
+        },
+      });
+  }
+
+  protected addEditFormTag() {
     const tag = this.addTagControl.value;
-    const previousTags = this.creationForm.get('tags')?.value || [];
+    const previousTags = this.editForm.get('tags')?.value || [];
     if (tag && !previousTags.includes(tag)) {
-      this.creationForm.get('tags')?.setValue([...previousTags, tag]);
+      this.editForm.get('tags')?.setValue([...previousTags, tag]);
     }
   }
 
-  protected removeCreationFormTag(tag: string) {
-    const previousTags = this.creationFormTags;
-    this.creationForm
-      .get('tags')
-      ?.setValue(previousTags.filter((t) => t !== tag));
+  protected removeEditFormTag(tag: string) {
+    const previousTags = this.editFormTags;
+    this.editForm.get('tags')?.setValue(previousTags.filter((t) => t !== tag));
   }
 
   protected dataSources: DataSource[] = [];
@@ -103,14 +139,17 @@ export class CreateAlertButtonComponent {
     private loggerService: ToastLoggerService,
   ) {}
 
-  protected createAlert() {
-    if (this.creationForm.invalid) {
+  protected saveAlert() {
+    this.editForm.markAllAsTouched();
+    this.editForm.updateValueAndValidity();
+
+    if (this.editForm.invalid) {
       return;
     }
 
-    this.isCreationInitiated = true;
+    this.isSavingInitiated = true;
 
-    const rawForm = this.creationForm.getRawValue();
+    const rawForm = this.editForm.getRawValue();
     const request: any = {
       description: rawForm.description,
       template: rawForm.template,
@@ -126,13 +165,12 @@ export class CreateAlertButtonComponent {
       .postApiV1AlertAdd(request)
       .pipe(
         finalize(() => {
-          this.isCreationInitiated = false;
+          this.isSavingInitiated = false;
         }),
       )
       .subscribe({
         next: () => {
-          this.loggerService.success('Alert created');
-          this.isCreationDialogVisible = false;
+          this.loggerService.success('Saved');
         },
         error: (e) => {
           this.loggerService.error(e);
