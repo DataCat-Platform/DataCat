@@ -1489,6 +1489,69 @@ export class ApiService {
         return _observableOf(null as any);
     }
 
+    getApiV1PanelTypes(): Observable<GetPanelTypesResponse[]> {
+        let url_ = this.baseUrl + "/api/v1/panel/types";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetApiV1PanelTypes(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetApiV1PanelTypes(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetPanelTypesResponse[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetPanelTypesResponse[]>;
+        }));
+    }
+
+    protected processGetApiV1PanelTypes(response: HttpResponseBase): Observable<GetPanelTypesResponse[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(GetPanelTypesResponse.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     deleteApiV1PanelRemove(panelId: string): Observable<void> {
         let url_ = this.baseUrl + "/api/v1/panel/remove/{panelId}";
         if (panelId === undefined || panelId === null)
@@ -3363,62 +3426,6 @@ export class ApiService {
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
             return _observableOf(result200);
-            }));
-        } else if (status === 400) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    postApiV1DashboardAddUser(request: AddUserToDashboardRequest): Observable<void> {
-        let url_ = this.baseUrl + "/api/v1/dashboard/add-user";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(request);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPostApiV1DashboardAddUser(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPostApiV1DashboardAddUser(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processPostApiV1DashboardAddUser(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -5344,10 +5351,7 @@ export class AddPanelRequest implements IAddPanelRequest {
     type?: number;
     rawQuery?: string;
     dataSourceId?: string;
-    panelX?: number;
-    panelY?: number;
-    width?: number;
-    height?: number;
+    layout?: string;
     dashboardId?: string;
     styleConfiguration?: string;
 
@@ -5366,10 +5370,7 @@ export class AddPanelRequest implements IAddPanelRequest {
             this.type = _data["type"];
             this.rawQuery = _data["rawQuery"];
             this.dataSourceId = _data["dataSourceId"];
-            this.panelX = _data["panelX"];
-            this.panelY = _data["panelY"];
-            this.width = _data["width"];
-            this.height = _data["height"];
+            this.layout = _data["layout"];
             this.dashboardId = _data["dashboardId"];
             this.styleConfiguration = _data["styleConfiguration"];
         }
@@ -5388,10 +5389,7 @@ export class AddPanelRequest implements IAddPanelRequest {
         data["type"] = this.type;
         data["rawQuery"] = this.rawQuery;
         data["dataSourceId"] = this.dataSourceId;
-        data["panelX"] = this.panelX;
-        data["panelY"] = this.panelY;
-        data["width"] = this.width;
-        data["height"] = this.height;
+        data["layout"] = this.layout;
         data["dashboardId"] = this.dashboardId;
         data["styleConfiguration"] = this.styleConfiguration;
         return data;
@@ -5410,10 +5408,7 @@ export interface IAddPanelRequest {
     type?: number;
     rawQuery?: string;
     dataSourceId?: string;
-    panelX?: number;
-    panelY?: number;
-    width?: number;
-    height?: number;
+    layout?: string;
     dashboardId?: string;
     styleConfiguration?: string;
 }
@@ -5423,7 +5418,7 @@ export class GetPanelResponse implements IGetPanelResponse {
     title?: string;
     typeName?: string;
     query?: RawQueryResponse;
-    layout?: DataCatLayoutResponse;
+    layout?: string;
     dashboardId?: string;
     styleConfiguration?: string | undefined;
 
@@ -5442,7 +5437,7 @@ export class GetPanelResponse implements IGetPanelResponse {
             this.title = _data["title"];
             this.typeName = _data["typeName"];
             this.query = _data["query"] ? RawQueryResponse.fromJS(_data["query"]) : <any>undefined;
-            this.layout = _data["layout"] ? DataCatLayoutResponse.fromJS(_data["layout"]) : <any>undefined;
+            this.layout = _data["layout"];
             this.dashboardId = _data["dashboardId"];
             this.styleConfiguration = _data["styleConfiguration"];
         }
@@ -5461,7 +5456,7 @@ export class GetPanelResponse implements IGetPanelResponse {
         data["title"] = this.title;
         data["typeName"] = this.typeName;
         data["query"] = this.query ? this.query.toJSON() : <any>undefined;
-        data["layout"] = this.layout ? this.layout.toJSON() : <any>undefined;
+        data["layout"] = this.layout;
         data["dashboardId"] = this.dashboardId;
         data["styleConfiguration"] = this.styleConfiguration;
         return data;
@@ -5480,7 +5475,7 @@ export interface IGetPanelResponse {
     title?: string;
     typeName?: string;
     query?: RawQueryResponse;
-    layout?: DataCatLayoutResponse;
+    layout?: string;
     dashboardId?: string;
     styleConfiguration?: string | undefined;
 }
@@ -5587,13 +5582,11 @@ export interface IDataSourceResponse {
     connectionString?: string;
 }
 
-export class DataCatLayoutResponse implements IDataCatLayoutResponse {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
+export class GetPanelTypesResponse implements IGetPanelTypesResponse {
+    id?: number;
+    name?: string;
 
-    constructor(data?: IDataCatLayoutResponse) {
+    constructor(data?: IGetPanelTypesResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -5604,42 +5597,36 @@ export class DataCatLayoutResponse implements IDataCatLayoutResponse {
 
     init(_data?: any) {
         if (_data) {
-            this.x = _data["x"];
-            this.y = _data["y"];
-            this.width = _data["width"];
-            this.height = _data["height"];
+            this.id = _data["id"];
+            this.name = _data["name"];
         }
     }
 
-    static fromJS(data: any): DataCatLayoutResponse {
+    static fromJS(data: any): GetPanelTypesResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new DataCatLayoutResponse();
+        let result = new GetPanelTypesResponse();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["x"] = this.x;
-        data["y"] = this.y;
-        data["width"] = this.width;
-        data["height"] = this.height;
+        data["id"] = this.id;
+        data["name"] = this.name;
         return data;
     }
 
-    clone(): DataCatLayoutResponse {
+    clone(): GetPanelTypesResponse {
         const json = this.toJSON();
-        let result = new DataCatLayoutResponse();
+        let result = new GetPanelTypesResponse();
         result.init(json);
         return result;
     }
 }
 
-export interface IDataCatLayoutResponse {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
+export interface IGetPanelTypesResponse {
+    id?: number;
+    name?: string;
 }
 
 export class UpdatePanelRequest implements IUpdatePanelRequest {
@@ -5647,10 +5634,7 @@ export class UpdatePanelRequest implements IUpdatePanelRequest {
     type?: number;
     rawQuery?: string;
     dataSourceId?: string;
-    panelX?: number;
-    panelY?: number;
-    width?: number;
-    height?: number;
+    layout?: string;
     styleConfiguration?: string;
 
     constructor(data?: IUpdatePanelRequest) {
@@ -5668,10 +5652,7 @@ export class UpdatePanelRequest implements IUpdatePanelRequest {
             this.type = _data["type"];
             this.rawQuery = _data["rawQuery"];
             this.dataSourceId = _data["dataSourceId"];
-            this.panelX = _data["panelX"];
-            this.panelY = _data["panelY"];
-            this.width = _data["width"];
-            this.height = _data["height"];
+            this.layout = _data["layout"];
             this.styleConfiguration = _data["styleConfiguration"];
         }
     }
@@ -5689,10 +5670,7 @@ export class UpdatePanelRequest implements IUpdatePanelRequest {
         data["type"] = this.type;
         data["rawQuery"] = this.rawQuery;
         data["dataSourceId"] = this.dataSourceId;
-        data["panelX"] = this.panelX;
-        data["panelY"] = this.panelY;
-        data["width"] = this.width;
-        data["height"] = this.height;
+        data["layout"] = this.layout;
         data["styleConfiguration"] = this.styleConfiguration;
         return data;
     }
@@ -5710,10 +5688,7 @@ export interface IUpdatePanelRequest {
     type?: number;
     rawQuery?: string;
     dataSourceId?: string;
-    panelX?: number;
-    panelY?: number;
-    width?: number;
-    height?: number;
+    layout?: string;
     styleConfiguration?: string;
 }
 
@@ -6158,10 +6133,12 @@ export interface INamespaceByNameResponse {
 
 export class DashboardResponse implements IDashboardResponse {
     id?: string;
+    namespaceId?: string;
     name?: string;
     description?: string | undefined;
-    ownerId?: string;
+    createdAt?: Date;
     updatedAt?: Date;
+    tags?: string[];
 
     constructor(data?: IDashboardResponse) {
         if (data) {
@@ -6175,10 +6152,16 @@ export class DashboardResponse implements IDashboardResponse {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.namespaceId = _data["namespaceId"];
             this.name = _data["name"];
             this.description = _data["description"];
-            this.ownerId = _data["ownerId"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
             this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : <any>undefined;
+            if (Array.isArray(_data["tags"])) {
+                this.tags = [] as any;
+                for (let item of _data["tags"])
+                    this.tags!.push(item);
+            }
         }
     }
 
@@ -6192,10 +6175,16 @@ export class DashboardResponse implements IDashboardResponse {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["namespaceId"] = this.namespaceId;
         data["name"] = this.name;
         data["description"] = this.description;
-        data["ownerId"] = this.ownerId;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+        if (Array.isArray(this.tags)) {
+            data["tags"] = [];
+            for (let item of this.tags)
+                data["tags"].push(item);
+        }
         return data;
     }
 
@@ -6209,10 +6198,12 @@ export class DashboardResponse implements IDashboardResponse {
 
 export interface IDashboardResponse {
     id?: string;
+    namespaceId?: string;
     name?: string;
     description?: string | undefined;
-    ownerId?: string;
+    createdAt?: Date;
     updatedAt?: Date;
+    tags?: string[];
 }
 
 export class MetricPoint implements IMetricPoint {
@@ -7086,7 +7077,6 @@ export interface IUpdateDataSourceRequest {
 export class AddDashboardRequest implements IAddDashboardRequest {
     name?: string;
     description?: string | undefined;
-    userId?: string;
     namespaceId?: string;
     tags?: string[];
 
@@ -7103,7 +7093,6 @@ export class AddDashboardRequest implements IAddDashboardRequest {
         if (_data) {
             this.name = _data["name"];
             this.description = _data["description"];
-            this.userId = _data["userId"];
             this.namespaceId = _data["namespaceId"];
             if (Array.isArray(_data["tags"])) {
                 this.tags = [] as any;
@@ -7124,7 +7113,6 @@ export class AddDashboardRequest implements IAddDashboardRequest {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["description"] = this.description;
-        data["userId"] = this.userId;
         data["namespaceId"] = this.namespaceId;
         if (Array.isArray(this.tags)) {
             data["tags"] = [];
@@ -7145,65 +7133,19 @@ export class AddDashboardRequest implements IAddDashboardRequest {
 export interface IAddDashboardRequest {
     name?: string;
     description?: string | undefined;
-    userId?: string;
     namespaceId?: string;
     tags?: string[];
 }
 
-export class AddUserToDashboardRequest implements IAddUserToDashboardRequest {
-    dashboardId?: string;
-    userId?: string;
-
-    constructor(data?: IAddUserToDashboardRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.dashboardId = _data["dashboardId"];
-            this.userId = _data["userId"];
-        }
-    }
-
-    static fromJS(data: any): AddUserToDashboardRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddUserToDashboardRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["dashboardId"] = this.dashboardId;
-        data["userId"] = this.userId;
-        return data;
-    }
-
-    clone(): AddUserToDashboardRequest {
-        const json = this.toJSON();
-        let result = new AddUserToDashboardRequest();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IAddUserToDashboardRequest {
-    dashboardId?: string;
-    userId?: string;
-}
-
 export class GetFullInfoDashboardResponse implements IGetFullInfoDashboardResponse {
-    dashboardId?: string;
+    id?: string;
+    namespaceId?: string;
     name?: string;
     description?: string | undefined;
     panels?: SearchDashboardsPanelDetailsResponse[] | undefined;
-    ownerId?: string;
+    createdAt?: Date;
     updatedAt?: Date;
+    tags?: string[];
 
     constructor(data?: IGetFullInfoDashboardResponse) {
         if (data) {
@@ -7216,7 +7158,8 @@ export class GetFullInfoDashboardResponse implements IGetFullInfoDashboardRespon
 
     init(_data?: any) {
         if (_data) {
-            this.dashboardId = _data["dashboardId"];
+            this.id = _data["id"];
+            this.namespaceId = _data["namespaceId"];
             this.name = _data["name"];
             this.description = _data["description"];
             if (Array.isArray(_data["panels"])) {
@@ -7224,8 +7167,13 @@ export class GetFullInfoDashboardResponse implements IGetFullInfoDashboardRespon
                 for (let item of _data["panels"])
                     this.panels!.push(SearchDashboardsPanelDetailsResponse.fromJS(item));
             }
-            this.ownerId = _data["ownerId"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
             this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : <any>undefined;
+            if (Array.isArray(_data["tags"])) {
+                this.tags = [] as any;
+                for (let item of _data["tags"])
+                    this.tags!.push(item);
+            }
         }
     }
 
@@ -7238,7 +7186,8 @@ export class GetFullInfoDashboardResponse implements IGetFullInfoDashboardRespon
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["dashboardId"] = this.dashboardId;
+        data["id"] = this.id;
+        data["namespaceId"] = this.namespaceId;
         data["name"] = this.name;
         data["description"] = this.description;
         if (Array.isArray(this.panels)) {
@@ -7246,8 +7195,13 @@ export class GetFullInfoDashboardResponse implements IGetFullInfoDashboardRespon
             for (let item of this.panels)
                 data["panels"].push(item.toJSON());
         }
-        data["ownerId"] = this.ownerId;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+        if (Array.isArray(this.tags)) {
+            data["tags"] = [];
+            for (let item of this.tags)
+                data["tags"].push(item);
+        }
         return data;
     }
 
@@ -7260,12 +7214,14 @@ export class GetFullInfoDashboardResponse implements IGetFullInfoDashboardRespon
 }
 
 export interface IGetFullInfoDashboardResponse {
-    dashboardId?: string;
+    id?: string;
+    namespaceId?: string;
     name?: string;
     description?: string | undefined;
     panels?: SearchDashboardsPanelDetailsResponse[] | undefined;
-    ownerId?: string;
+    createdAt?: Date;
     updatedAt?: Date;
+    tags?: string[];
 }
 
 export class SearchDashboardsPanelDetailsResponse implements ISearchDashboardsPanelDetailsResponse {
@@ -7273,7 +7229,7 @@ export class SearchDashboardsPanelDetailsResponse implements ISearchDashboardsPa
     title?: string | undefined;
     panelType?: string;
     query?: string;
-    layout?: DataCatLayoutResponse;
+    layout?: string;
 
     constructor(data?: ISearchDashboardsPanelDetailsResponse) {
         if (data) {
@@ -7290,7 +7246,7 @@ export class SearchDashboardsPanelDetailsResponse implements ISearchDashboardsPa
             this.title = _data["title"];
             this.panelType = _data["panelType"];
             this.query = _data["query"];
-            this.layout = _data["layout"] ? DataCatLayoutResponse.fromJS(_data["layout"]) : <any>undefined;
+            this.layout = _data["layout"];
         }
     }
 
@@ -7307,7 +7263,7 @@ export class SearchDashboardsPanelDetailsResponse implements ISearchDashboardsPa
         data["title"] = this.title;
         data["panelType"] = this.panelType;
         data["query"] = this.query;
-        data["layout"] = this.layout ? this.layout.toJSON() : <any>undefined;
+        data["layout"] = this.layout;
         return data;
     }
 
@@ -7324,7 +7280,7 @@ export interface ISearchDashboardsPanelDetailsResponse {
     title?: string | undefined;
     panelType?: string;
     query?: string;
-    layout?: DataCatLayoutResponse;
+    layout?: string;
 }
 
 export class PageOfSearchDashboardsResponse implements IPageOfSearchDashboardsResponse {
@@ -7403,11 +7359,13 @@ export interface IPageOfSearchDashboardsResponse {
 }
 
 export class SearchDashboardsResponse implements ISearchDashboardsResponse {
-    dashboardId?: string;
+    id?: string;
+    namespaceId?: string;
     name?: string;
     description?: string | undefined;
-    ownerId?: string;
+    createdAt?: Date;
     updatedAt?: Date;
+    tags?: string[];
 
     constructor(data?: ISearchDashboardsResponse) {
         if (data) {
@@ -7420,11 +7378,17 @@ export class SearchDashboardsResponse implements ISearchDashboardsResponse {
 
     init(_data?: any) {
         if (_data) {
-            this.dashboardId = _data["dashboardId"];
+            this.id = _data["id"];
+            this.namespaceId = _data["namespaceId"];
             this.name = _data["name"];
             this.description = _data["description"];
-            this.ownerId = _data["ownerId"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
             this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : <any>undefined;
+            if (Array.isArray(_data["tags"])) {
+                this.tags = [] as any;
+                for (let item of _data["tags"])
+                    this.tags!.push(item);
+            }
         }
     }
 
@@ -7437,11 +7401,17 @@ export class SearchDashboardsResponse implements ISearchDashboardsResponse {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["dashboardId"] = this.dashboardId;
+        data["id"] = this.id;
+        data["namespaceId"] = this.namespaceId;
         data["name"] = this.name;
         data["description"] = this.description;
-        data["ownerId"] = this.ownerId;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+        if (Array.isArray(this.tags)) {
+            data["tags"] = [];
+            for (let item of this.tags)
+                data["tags"].push(item);
+        }
         return data;
     }
 
@@ -7454,11 +7424,13 @@ export class SearchDashboardsResponse implements ISearchDashboardsResponse {
 }
 
 export interface ISearchDashboardsResponse {
-    dashboardId?: string;
+    id?: string;
+    namespaceId?: string;
     name?: string;
     description?: string | undefined;
-    ownerId?: string;
+    createdAt?: Date;
     updatedAt?: Date;
+    tags?: string[];
 }
 
 export class UpdateDashboardRequest implements IUpdateDashboardRequest {
