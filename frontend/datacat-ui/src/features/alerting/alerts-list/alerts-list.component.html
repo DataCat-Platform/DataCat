@@ -9,7 +9,10 @@
     </div>
     <div class="filters__item">
       <p>Data Source</p>
-      <datacat-data-source-select [filter]="{ purpose: 'metrics' }" formControlName="dataSourceId" />
+      <datacat-data-source-select
+        [filter]="{ purpose: 'metrics' }"
+        formControlName="dataSourceId"
+      />
     </div>
     <div class="filters__item">
       <p>Alert Tags</p>
@@ -71,15 +74,11 @@
     <ng-template pTemplate="header">
       <tr>
         <th>ID</th>
-        <th>Description</th>
         <th>Status</th>
-        <th pTooltip="Previous Execution Time" tooltipPosition="top">
-          Previous Execution
-        </th>
-        <th pTooltip="Next Execution Time" tooltipPosition="top">
-          Next Execution
-        </th>
-        <th style="width: 4rem"></th>
+        <th>Description</th>
+        <th>Previous Execution</th>
+        <th>Next Execution</th>
+        <th>Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-alert>
@@ -88,31 +87,81 @@
           {{ alert.id | slice: 0 : 6
           }}<span class="text-secondary" [pTooltip]="alert.id">...</span>
         </td>
-        <td>{{ alert.description }}</td>
         <td>
           <p-tag [severity]="getSeverityForStatus(alert.status)">{{
             alert.status
           }}</p-tag>
         </td>
+        <td>{{ alert.description }}</td>
         <td>{{ alert.prevExecutionTime | date: 'short' }}</td>
         <td>{{ alert.nextExecutionTime | date: 'short' }}</td>
         <td>
-          <p-button
-            icon="pi pi-arrow-up-right"
-            label="view"
-            severity="secondary"
-            size="small"
-            variant="text"
-            (onClick)="viewAlert(alert)"
-          />
+          <div class="actions">
+            <p-button
+              icon="pi pi-eye"
+              label="View"
+              size="small"
+              severity="secondary"
+              variant="outlined"
+              (onClick)="viewAlert(alert)"
+            />
+            <p-button
+              icon="pi pi-pencil"
+              label="Edit"
+              size="small"
+              severity="secondary"
+              variant="outlined"
+              (onClick)="editAlert(alert)"
+            />
+          </div>
         </td>
       </tr>
     </ng-template>
   </p-table>
 </div>
 
-<p-dialog [modal]="true" [(visible)]="isAlertViewDialogVisible">
-  <div>
-    {{ viewedAlert | json }}
+<p-dialog
+  header="Alert Details"
+  [modal]="true"
+  [(visible)]="isAlertViewDialogVisible"
+>
+  <div class="view-alert">
+    <div class="view-alert__attribute">
+      <p-tag [severity]="getSeverityForStatus(viewedAlert?.status)">{{
+        viewedAlert?.status
+      }}</p-tag>
+    </div>
+    <div class="view-alert__attribute">
+      <p>Alert ID</p>
+      <div>{{ viewedAlert?.id }}</div>
+    </div>
+    <div class="view-alert__attribute">
+      <p>Description</p>
+      <div>{{ viewedAlert?.description }}</div>
+    </div>
+    <div class="view-alert__attribute">
+      <p>Query</p>
+      <div>{{ viewedAlert?.query }}</div>
+    </div>
+    <div class="view-alert__attribute">
+      <p>Notification Template</p>
+      <div>{{ viewedAlert?.template }}</div>
+    </div>
+    <div class="view-alert__attribute">
+      <p>Next Execution Time</p>
+      <div>{{ viewedAlert?.nextExecutionTime | date: 'short' }}</div>
+    </div>
+    <div class="view-alert__attribute">
+      <p>Previous Execution Time</p>
+      <div>{{ viewedAlert?.prevExecutionTime | date: 'short' }}</div>
+    </div>
+    <div class="view-alert__attribute">
+      <p>Execution Interval</p>
+      <div>{{ viewedAlert?.executionInterval }}</div>
+    </div>
+    <div class="view-alert__attribute">
+      <p>Notification Trigger Period</p>
+      <div>{{ viewedAlert?.notificationTriggerPeriod }}</div>
+    </div>
   </div>
 </p-dialog>

@@ -1,11 +1,11 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import {
   ControlValueAccessor,
   FormsModule,
   NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
-import { DataSourceDriver, NotificationGroupExpanded } from '../../../entities';
+import { NotificationGroupExpanded } from '../../../entities';
 import { ApiService } from '../../services/datacat-generated-client';
 import { finalize } from 'rxjs';
 import { ToastLoggerService } from '../../services/toast-logger.service';
@@ -24,10 +24,10 @@ import { ToastLoggerService } from '../../services/toast-logger.service';
   ],
 })
 export class NotificationGroupSelectComponent implements ControlValueAccessor {
+  @Input() optionValue = 'id';
+
   private onChange = (_: any) => {};
   private onTouched = () => {};
-
-  protected DataSourceDriver = DataSourceDriver;
 
   protected isLoading = false;
   protected selectedNotificationGroup?: NotificationGroupExpanded;
@@ -38,7 +38,7 @@ export class NotificationGroupSelectComponent implements ControlValueAccessor {
     private loggerService: ToastLoggerService,
   ) {}
 
-  onLazyLoad(event: any) {
+  refresh() {
     this.isLoading = true;
 
     this.apiService

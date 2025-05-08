@@ -19,6 +19,9 @@ import { DataSource, NotificationGroup } from '../../../entities';
 import { ChipModule } from 'primeng/chip';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { DataSourceSelectComponent } from '../../../shared/ui/data-source-select/data-source-select.component';
+import { NotificationGroupSelectComponent } from '../../../shared/ui/notification-group-select/notification-group-select.component';
+import { InputMaskModule } from 'primeng/inputmask';
 
 @Component({
   standalone: true,
@@ -35,6 +38,9 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     ChipModule,
     InputGroupModule,
     InputGroupAddonModule,
+    DataSourceSelectComponent,
+    NotificationGroupSelectComponent,
+    InputMaskModule,
   ],
 })
 export class CreateAlertButtonComponent {
@@ -48,13 +54,28 @@ export class CreateAlertButtonComponent {
       nonNullable: false,
       validators: Validators.required,
     }),
-    template: new FormControl<string | undefined>(undefined),
-    rawQuery: new FormControl<string>('', [Validators.required]),
-    dataSourceId: new FormControl<string | undefined>(undefined),
-    notificaionGroupName: new FormControl<string | undefined>(undefined),
-    notificationTriggerPeriod: new FormControl<string | undefined>(undefined),
-    executionInterval: new FormControl<string | undefined>(undefined),
-    tags: new FormControl<string[] | undefined>(undefined),
+    template: new FormControl<string | undefined>(undefined, {
+      nonNullable: false,
+      validators: Validators.required,
+    }),
+    query: new FormControl<string>('', [Validators.required]),
+    dataSourceId: new FormControl<string | undefined>(undefined, {
+      nonNullable: false,
+      validators: Validators.required,
+    }),
+    notificationGroupName: new FormControl<string | undefined>(undefined, {
+      nonNullable: false,
+      validators: Validators.required,
+    }),
+    notificationTriggerPeriod: new FormControl<string | undefined>(undefined, {
+      nonNullable: false,
+      validators: Validators.required,
+    }),
+    executionInterval: new FormControl<string | undefined>(undefined, {
+      nonNullable: false,
+      validators: Validators.required,
+    }),
+    tags: new FormControl<string[]>([]),
   });
 
   protected get creationFormTags(): string[] {
@@ -86,9 +107,24 @@ export class CreateAlertButtonComponent {
   ) {}
 
   protected createAlert() {
+    if (this.creationForm.invalid) {
+      return;
+    }
+
     this.isCreationInitiated = true;
 
-    const request: any = this.creationForm.getRawValue();
+    const rawForm = this.creationForm.getRawValue();
+    const request: any = {
+      description: rawForm.description,
+      template: rawForm.template,
+      rawQuery: rawForm.query,
+      dataSourceId: rawForm.dataSourceId,
+      notificationChannelGroupName: rawForm.notificationGroupName,
+      waitTimeBeforeAlerting: rawForm.notificationTriggerPeriod,
+      repeatInterval: rawForm.executionInterval,
+      tags: rawForm.tags,
+    };
+
     this.apiService
       .postApiV1AlertAdd(request)
       .pipe(

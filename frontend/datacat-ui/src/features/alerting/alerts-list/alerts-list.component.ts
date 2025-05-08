@@ -9,6 +9,10 @@ import { finalize } from 'rxjs';
 import {
   ApiService,
   ISearchFilter,
+  ISearchFilters,
+  MatchMode,
+  SearchFieldType,
+  SearchFilter,
   SearchFilters,
 } from '../../../shared/services/datacat-generated-client';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -22,6 +26,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { DataSourceSelectComponent } from '../../../shared/ui/data-source-select/data-source-select.component';
+import * as urls from '../../../shared/common/urls';
 
 @Component({
   standalone: true,
@@ -61,7 +66,7 @@ export class AlertsListComponent {
     return this.filtersForm.get('status')?.value || null;
   }
 
-  protected get dataSourceId(): string | null {
+  protected get filtersFormDataSourceId(): string | null {
     return this.filtersForm.get('dataSourceId')?.value || null;
   }
 
@@ -81,6 +86,7 @@ export class AlertsListComponent {
   protected alerts: Alert[] = [];
 
   constructor(
+    private router: Router,
     private apiService: ApiService,
     private loggerService: ToastLoggerService,
   ) {
@@ -108,8 +114,12 @@ export class AlertsListComponent {
     this.viewedAlert = alert;
   }
 
+  protected editAlert(alert: Alert) {
+    this.router.navigateByUrl(urls.alertEditUrl(alert.id));
+  }
+
   protected getSeverityForStatus(
-    status: AlertStatus,
+    status?: AlertStatus,
   ): 'success' | 'danger' | 'secondary' | 'info' {
     {
       switch (status) {
@@ -119,9 +129,6 @@ export class AlertsListComponent {
         case AlertStatus.FIRING:
         case AlertStatus.ERROR: {
           return 'danger';
-        }
-        case AlertStatus.PENDING: {
-          return 'info';
         }
         case AlertStatus.MUTED: {
           return 'secondary';
@@ -134,11 +141,39 @@ export class AlertsListComponent {
   }
 
   protected get searchFilters(): SearchFilters {
-    const filters: ISearchFilter[] = [];
+    const filters = {
+      filters: [],
+      sort: undefined,
+    } as ISearchFilters;
 
-    return {
-      filters: filters as any,
-    } as any;
+    if (this.filtersFormStatus) {
+      filters.filters!.push({
+        key: 'status',
+        value: this.filtersFormStatus,
+        matchMode: MatchMode.Equals,
+        fieldType: SearchFieldType.String,
+      } as SearchFilter);
+    }
+
+    if (this.filtersFormTags.length !== 0) {
+      filters.filters!.push({
+        key: 'tags',
+        value: this.filtersFormTags,
+        matchMode: MatchMode.Contains,
+        fieldType: SearchFieldType.Array,
+      } as SearchFilter);
+    }
+
+    if (this.filtersFormDataSourceId) {
+      filters.filters!.push({
+        key: 'dataSourceId',
+        value: this.filtersFormDataSourceId,
+        matchMode: MatchMode.Equals,
+        fieldType: SearchFieldType.String,
+      } as SearchFilter);
+    }
+
+    return filters as SearchFilters;
   }
 
   protected refreshAlerts() {
@@ -175,9 +210,8 @@ export class AlertsListComponent {
                   item.previousExecutionTime?.getUTCMilliseconds() || 0,
                 nextExecutionTime:
                   item.nextExecutionTime?.getUTCMilliseconds() || 0,
-                notificationTriggerPeriod:
-                  Date.parse(item.waitTimeBeforeAlerting || '') || 0,
-                executionInterval: Date.parse(item.repeatInterval || '') || 0,
+                notificationTriggerPeriod: item.waitTimeBeforeAlerting || '',
+                executionInterval: item.repeatInterval || '',
               };
             }) || [];
         },
