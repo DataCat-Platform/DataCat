@@ -22,6 +22,7 @@ import * as urls from "../../../shared/common/urls";
 })
 export class TracesListComponent {
     @Input() traces: TraceEntry[] = [];
+    @Input({required: true}) dataSourceName: string = '';
 
     constructor(
         private router: Router) {
@@ -126,6 +127,6 @@ export class TracesListComponent {
     }
 
     redirectToTraceDetails(traceId: string) {
-        this.router.navigateByUrl(urls.traceUrl(traceId))
+        this.router.navigateByUrl(urls.traceUrl(traceId, this.dataSourceName))
     }
 }

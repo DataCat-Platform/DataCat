@@ -25,7 +25,7 @@
                     <p class="spinner-text">Loading traces...</p>
                 </div>
             } @else {
-                <app-traces-list [traces]="traces"></app-traces-list>
+                <app-traces-list [dataSourceName]="currentFilter.dataSourceName!" [traces]="traces"></app-traces-list>
             }
         </div>
     </div>

@@ -37,7 +37,7 @@ export const notificationGroupEditUrl = (groupId: string) => `notifications/grou
 export const dataSourceEditUrl = (dataSourceId: string) => `data-sources/${dataSourceId}/edit`;
 
 export const logUrl = (logId: string) => `/logs/${logId}`;
-export const traceUrl = (traceId: string) => `/traces/${traceId}`;
+export const traceUrl = (traceId: string, dataSourceName: string) => `/traces/${traceId}?dataSourceName=${dataSourceName}`;
 export const dashboardUrl = (dashboardId: string) => `/dashboards/${dashboardId}`;
 
 export const panelEditUrl = (panelId: string) => `/panels/${panelId}`;
