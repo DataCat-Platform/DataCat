@@ -21,3 +21,14 @@
     margin-right: 0;
   }
 }
+
+.trace-link {
+  color: var(--primary-color);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.trace-link:hover {
+  color: var(--primary-color-dark);
+}

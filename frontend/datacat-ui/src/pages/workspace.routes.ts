@@ -83,6 +83,13 @@ export const ROUTES: Routes = [
                         (m) => m.ExploreTracesComponent,
                     ),
             },
+            {
+                path: urls.TRACE_SPANS_EXPLORER_URL,
+                loadComponent: () =>
+                    import('../processes/explore-trace-spans/explore-trace-spans.component').then(
+                        (m) => m.ExploreTraceSpansComponent,
+                    ),
+            },
         ],
     },
     {

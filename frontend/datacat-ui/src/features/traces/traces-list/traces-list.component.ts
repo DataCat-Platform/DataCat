@@ -1,20 +1,18 @@
 import {Component, Input} from '@angular/core';
 import {TraceEntry} from "../../../shared/services/datacat-generated-client";
 import {TableModule} from "primeng/table";
-import {RouterLink} from "@angular/router";
+import {Router} from "@angular/router";
 import {Tag} from "primeng/tag";
-import {Button} from "primeng/button";
 import {DatePipe, SlicePipe} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import * as urls from "../../../shared/common/urls";
 
 @Component({
     selector: 'app-traces-list',
     standalone: true,
     imports: [
         TableModule,
-        RouterLink,
         Tag,
-        Button,
         SlicePipe,
         FormsModule,
         DatePipe
@@ -25,7 +23,8 @@ import {FormsModule} from "@angular/forms";
 export class TracesListComponent {
     @Input() traces: TraceEntry[] = [];
 
-    constructor() {
+    constructor(
+        private router: Router) {
     }
 
     getMaxDuration(): number {
@@ -124,5 +123,9 @@ export class TracesListComponent {
         }
 
         return 0;
+    }
+
+    redirectToTraceDetails(traceId: string) {
+        this.router.navigateByUrl(urls.traceUrl(traceId))
     }
 }

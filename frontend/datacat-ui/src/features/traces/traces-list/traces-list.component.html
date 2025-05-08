@@ -11,7 +11,7 @@
                     <th>Spans</th>
                     <th>Services</th>
                     <th>Time</th>
-                    <th>Details</th>
+                    <!--                    <th>Details</th>-->
                 </tr>
             </ng-template>
             <ng-template let-trace pTemplate="body">
@@ -22,7 +22,7 @@
                         <span>{{ getFormattedDuration(getCurrentDuration(trace)) }}</span>
                     </td>
                     <td>
-                        <a [routerLink]="['/trace', trace.traceId]">
+                        <a (click)="redirectToTraceDetails(trace.traceId)" class="trace-link">
                             <small>{{ trace.traceId | slice:0:8 }}</small>
                         </a>
                     </td>
@@ -42,10 +42,10 @@
                         {{ getTracesStartTime(trace) | date:'h:mm:ss a' }}<br>
                         <small>{{ getTracesTimeAgo(trace) }}</small>
                     </td>
-                    <td>
-                        <p-button [routerLink]="['/trace', trace.traceId]" class="p-button-text"
-                                  icon="pi pi-info-circle"></p-button>
-                    </td>
+                    <!--                    <td>-->
+                    <!--                        <p-button [routerLink]="['/trace', trace.traceId]" class="p-button-text"-->
+                    <!--                                  icon="pi pi-info-circle"></p-button>-->
+                    <!--                    </td>-->
                 </tr>
             </ng-template>
         </p-table>

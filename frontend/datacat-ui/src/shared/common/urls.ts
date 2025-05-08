@@ -21,7 +21,9 @@ export const HOME_URL = '';
 export const SETTINGS_URL = 'settings';
 
 export const LOGS_EXPLORER_URL = 'logs';
+
 export const TRACES_EXPLORER_URL = 'traces';
+export const TRACE_SPANS_EXPLORER_URL = 'traces/:traceId';
 
 export const FORBIDDEN_URL = 'forbidden';
 
@@ -31,6 +33,8 @@ export const alertEditUrl = (alertId: string) => `alerts/${alertId}/edit`;
 export const alertViewUrl = (alertId: string) => `alerts/${alertId}/view`;
 
 export const notificationGroupEditUrl = (groupId: string) => `notifications/groups/${groupId}/edit`;
+
+export const dataSourceEditUrl = (dataSourceId: string) => `data-sources/${dataSourceId}/edit`;
 
 export const logUrl = (logId: string) => `/logs/${logId}`;
 export const traceUrl = (traceId: string) => `/traces/${traceId}`;
