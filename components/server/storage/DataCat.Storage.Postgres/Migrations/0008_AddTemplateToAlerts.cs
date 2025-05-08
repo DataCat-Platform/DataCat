@@ -1,6 +1,6 @@
 namespace DataCat.Server.Postgres.Migrations;
 
-[Migration(10)]
+[Migration(8)]
 public class AddTemplateToAlerts : Migration 
 {
     public static readonly string UpSql = null!;

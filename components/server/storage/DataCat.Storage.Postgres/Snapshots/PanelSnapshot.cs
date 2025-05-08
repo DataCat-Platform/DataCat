@@ -8,10 +8,7 @@ public sealed record PanelSnapshot
     public required string RawQuery { get; init; }
     public required DataSourceSnapshot DataSource { get; set; }
     public string DataSourceId => DataSource.Id;
-    public required int X { get; init; }
-    public required int Y { get; init; }
-    public required int Width { get; init; }
-    public required int Height { get; init; }
+    public required string LayoutConfiguration { get; init; }
     public required string DashboardId { get; init; }
     public required string? StyleConfiguration { get; init; }
 }
@@ -29,23 +26,14 @@ public static class PanelEntitySnapshotExtensions
             TypeId = panel.Type.Value,
             RawQuery = query.PanelRawQuery,
             DataSource = query.DataSource,
-            X = panel.DataCatLayout.X,
-            Y = panel.DataCatLayout.Y,
-            Width = panel.DataCatLayout.Width,
-            Height = panel.DataCatLayout.Height,
             DashboardId = panel.DashboardId.ToString(),
             StyleConfiguration = panel.StyleConfiguration,
+            LayoutConfiguration = panel.DataCatLayout.Settings
         };
     }
 
     public static Panel RestoreFromSnapshot(this PanelSnapshot snapshot)
     {
-        var layout = DataCatLayout.Create(
-            snapshot.X,
-            snapshot.Y,
-            snapshot.Width,
-            snapshot.Height).Value;
-
         var dataSource = snapshot.DataSource.RestoreFromSnapshot();
 
         var query = Query.Create(dataSource, snapshot.RawQuery).Value;
@@ -55,7 +43,7 @@ public static class PanelEntitySnapshotExtensions
             snapshot.Title,
             PanelType.FromValue(snapshot.TypeId),
             query,
-            layout,
+            new DataCatLayout(snapshot.LayoutConfiguration),
             Guid.Parse(snapshot.DashboardId),
             snapshot.StyleConfiguration);
 

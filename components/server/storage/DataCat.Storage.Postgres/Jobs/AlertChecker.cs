@@ -54,7 +54,7 @@ public sealed class AlertChecker(
                 if (isTriggered)
                 {
                     metricsContainer.AddAlertTriggered();
-                    alert.SetWarningStatus();
+                    alert.SetFireStatus();
                     logger.LogWarning("[{Job}] Alert: {Alert} switched to the warning status", nameof(AlertChecker), alert.Id);
                 }
                 else

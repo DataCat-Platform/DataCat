@@ -12,13 +12,7 @@ public sealed record UpdatePanelCommand : ICommand, IAuthorizedCommand
     
     public required string DataSourceId { get; init; }
 
-    public required int PanelX { get; init; }
-    
-    public required int PanelY { get; init; }
-    
-    public required int Width { get; init; }
-    
-    public required int Height { get; init; }
+    public required string Layout { get; init; }
     
     public required string StyleConfiguration { get; init; }
 }

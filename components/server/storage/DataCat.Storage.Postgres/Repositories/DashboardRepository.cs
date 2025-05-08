@@ -14,20 +14,16 @@ public sealed class DashboardRepository(
         var dashboardDictionary = new Dictionary<string, DashboardSnapshot>();
         await connection.QueryAsync<
             DashboardSnapshot,
-            UserSnapshot,
             PanelSnapshot?,
-            UserSnapshot?,
             DataSourceSnapshot?,
             DataSourceTypeSnapshot?,
             DashboardSnapshot>(
             sql,
-            map: (dashboard, userOwner, panel, sharedUser, dataSource, dataSourceType) =>
+            map: (dashboard, panel, dataSource, dataSourceType) =>
             {
                 if (!dashboardDictionary.TryGetValue(dashboard.Id, out var existingDashboard))
                 {
-                    dashboard.Owner = userOwner;
                     dashboard.Panels = new List<PanelSnapshot>();
-                    dashboard.SharedWith = new List<UserSnapshot>();
                     dashboardDictionary.Add(dashboard.Id, dashboard);
                     existingDashboard = dashboard;
                 }
@@ -39,14 +35,9 @@ public sealed class DashboardRepository(
                     existingDashboard.Panels.Add(panel);
                 }
 
-                if (sharedUser is not null && existingDashboard.SharedWith.All(u => u.UserId != sharedUser.UserId))
-                {
-                    existingDashboard.SharedWith.Add(sharedUser);
-                }
-
                 return existingDashboard;
             },
-            splitOn: $"{nameof(UserSnapshot.UserId)}, {nameof(PanelSnapshot.Id)}, {nameof(UserSnapshot.UserId)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
+            splitOn: $"{nameof(PanelSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
             param: parameters, 
             transaction: UnitOfWork.Transaction);
 
@@ -62,7 +53,6 @@ public sealed class DashboardRepository(
                 {Public.Dashboards.Id}, 
                 {Public.Dashboards.Name}, 
                 {Public.Dashboards.Description},
-                {Public.Dashboards.OwnerId},
                 {Public.Dashboards.NamespaceId},
                 {Public.Dashboards.CreatedAt}, 
                 {Public.Dashboards.UpdatedAt},
@@ -72,7 +62,6 @@ public sealed class DashboardRepository(
                 (@{nameof(DashboardSnapshot.Id)}, 
                  @{nameof(DashboardSnapshot.Name)}, 
                  @{nameof(DashboardSnapshot.Description)}, 
-                 @{nameof(DashboardSnapshot.OwnerId)},
                  @{nameof(DashboardSnapshot.NamespaceId)}, 
                  @{nameof(DashboardSnapshot.CreatedAt)}, 
                  @{nameof(DashboardSnapshot.UpdatedAt)},
@@ -101,7 +90,6 @@ public sealed class DashboardRepository(
         {
             ["id"] = $"dashboard.{Public.Dashboards.Id}",
             ["name"] = $"dashboard.{Public.Dashboards.Name}",
-            ["ownerId"] = $"dashboard.{Public.Dashboards.OwnerId}",
             ["namespaceId"] = $"dashboard.{Public.Dashboards.NamespaceId}",
             ["tags"] = $"dashboard.{Public.Dashboards.Tags}",
         };
@@ -130,20 +118,16 @@ public sealed class DashboardRepository(
 
         await connection.QueryAsync<
                 DashboardSnapshot, 
-                UserSnapshot, 
                 PanelSnapshot?, 
-                UserSnapshot?, 
                 DataSourceSnapshot?, 
                 DataSourceTypeSnapshot?, 
                 DashboardSnapshot>(
                 dataSqlString,
-                map: (dashboard, userOwner, panel, sharedUser, dataSource, dataSourceType) =>
+                map: (dashboard, panel, dataSource, dataSourceType) =>
                 {
                     if (!dashboardDictionary.TryGetValue(dashboard.Id, out var existingDashboard))
                     {
-                        dashboard.Owner = userOwner;
                         dashboard.Panels = new List<PanelSnapshot>();
-                        dashboard.SharedWith = new List<UserSnapshot>();
                         dashboardDictionary[dashboard.Id] = dashboard;
                         existingDashboard = dashboard;
                     }
@@ -155,14 +139,9 @@ public sealed class DashboardRepository(
                         existingDashboard.Panels.Add(panel);
                     }
 
-                    if (sharedUser is not null && existingDashboard.SharedWith.All(u => u.UserId != sharedUser.UserId))
-                    {
-                        existingDashboard.SharedWith.Add(sharedUser);
-                    }
-
                     return existingDashboard;
                 },
-                splitOn: $"{nameof(UserSnapshot.UserId)}, {nameof(PanelSnapshot.Id)}, {nameof(UserSnapshot.UserId)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
+                splitOn: $"{nameof(PanelSnapshot.Id)}, {nameof(DataSourceSnapshot.Id)}, {nameof(DataSourceTypeSnapshot.Id)}",
                 param: parameters,
                 transaction: UnitOfWork.Transaction);
 
@@ -184,10 +163,12 @@ public sealed class DashboardRepository(
         return result.Select(x => new DashboardResponse()
         {
             Id = Guid.Parse(x.Id),
+            NamespaceId = Guid.Parse(x.NamespaceId),
             Name = x.Name,
             Description = x.Description,
-            OwnerId = Guid.Parse(x.OwnerId),
-            UpdatedAt = x.UpdatedAt
+            UpdatedAt = x.UpdatedAt,
+            CreatedAt = x.CreatedAt,
+            Tags = x.Tags.Select(tag => tag.Value).OrderBy(value => value).ToList()  
         }).ToList();
     }
 
@@ -219,29 +200,5 @@ public sealed class DashboardRepository(
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, parameters, transaction: UnitOfWork.Transaction);
-    }
-    
-    public async Task AddUserToDashboard(User user, Dashboard dashboard, CancellationToken token = default)
-    {
-        var parameters = new
-        {
-            dashboard_id = dashboard.Id.ToString(),
-            user_id = user.Id.ToString(),
-        };
-        const string sql = $"""
-            INSERT INTO {Public.DashboardUserLinkTable} (
-               {Public.Dashboards.Id},
-               {Public.Users.Id}
-            ) 
-            VALUES (
-               @dashboard_id,
-               @user_id
-            );
-        """;
-        
-        var command = new CommandDefinition(sql, parameters, transaction: UnitOfWork.Transaction);
-        var connection = await Factory.GetOrCreateConnectionAsync(token);
-
-        await connection.ExecuteAsync(command);
     }
 }

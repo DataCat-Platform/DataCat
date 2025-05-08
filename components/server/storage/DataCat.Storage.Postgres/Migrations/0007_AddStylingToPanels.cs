@@ -1,6 +1,6 @@
 namespace DataCat.Server.Postgres.Migrations;
 
-[Migration(9)]
+[Migration(7)]
 public sealed class AddStylingToPanels : Migration 
 {
     public static readonly string UpSql = null!;

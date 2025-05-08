@@ -43,7 +43,12 @@ public sealed class NotificationChannelRepository(
 
     public async Task AddAsync(NotificationChannel entity, CancellationToken token = default)
     {
-        var snapshot = entity.Save();
+        await AddReturningIdAsync(entity, token);
+    }
+
+    public async Task<int> AddReturningIdAsync(NotificationChannel notificationChannel, CancellationToken token = default)
+    {
+        var snapshot = notificationChannel.Save();
 
         const string sql = $@"
             INSERT INTO {Public.NotificationChannelTable} (
@@ -60,7 +65,8 @@ public sealed class NotificationChannelRepository(
         ";
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
-        await connection.ExecuteAsync(sql, snapshot, transaction: unitOfWork.Transaction);
+        var id = await connection.ExecuteScalarAsync<int>(sql, snapshot, transaction: unitOfWork.Transaction);
+        return id;
     }
 
     public async Task UpdateAsync(NotificationChannel entity, CancellationToken token = default)

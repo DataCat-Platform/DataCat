@@ -2,8 +2,6 @@ namespace DataCat.Server.Application.Persistence.Repositories;
 
 public interface IDashboardRepository
 {
-    Task AddUserToDashboard(User user, Dashboard dashboard, CancellationToken token = default);
-    
     Task<Page<Dashboard>> SearchAsync(
         SearchFilters filters,
         int page = 1,

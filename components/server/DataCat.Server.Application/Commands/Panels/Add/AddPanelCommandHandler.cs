@@ -39,15 +39,11 @@ public sealed class AddPanelCommandHandler(
         if (queryResult.IsFailure)
             return Result.Fail<Panel>(queryResult.Errors!);
         
-        var layoutResult = DataCatLayout.Create(request.PanelX, request.PanelY, request.Width, request.Height);
-        if (layoutResult.IsFailure)
-            return Result.Fail<Panel>(layoutResult.Errors!);
-        
         return Panel.Create(id,
             request.Title,
             panelType,
             queryResult.Value,
-            layoutResult.Value,
+            new DataCatLayout(request.Layout),
             Guid.Parse(request.DashboardId),
             request.StyleConfiguration);
     }
