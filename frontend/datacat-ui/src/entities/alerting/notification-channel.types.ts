@@ -4,7 +4,7 @@ export interface BaseSettings {
 export interface EmailSettings extends BaseSettings {
   DestinationEmail: string;
   SmtpServer: string;
-  Port: string;
+  Port: number;
   PasswordPath: string;
 };
 

@@ -1,0 +1,31 @@
+<p-select
+  placeholder="Data Source"
+  optionValue="id"
+  optionLabel="name"
+  [showClear]="true"
+  [options]="dataSources"
+  [virtualScroll]="true"
+  [virtualScrollOptions]="scrollerOptions"
+  [loading]="isLoading"
+  (onChange)="onSelect($event.value)"
+  [(ngModel)]="selectedDataSource"
+>
+  <ng-template pTemplate="item" let-dataSource>
+    <div>
+      <span class="text-secondary">
+        @switch (dataSource.driver) {
+          @case (DataSourceDriver.PROMETHEUS) {
+            P
+          }
+          @case (DataSourceDriver.ELASTIC_SEARCH) {
+            E
+          }
+          @case (DataSourceDriver.JAEGER) {
+            J
+          }
+        }
+      </span>
+      {{ dataSource.name }}
+    </div>
+  </ng-template>
+</p-select>

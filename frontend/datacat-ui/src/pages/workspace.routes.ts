@@ -37,11 +37,6 @@ export const ROUTES: Routes = [
                     ),
             },
             {
-                path: urls.ALERT_VIEW_URL,
-                loadComponent: () =>
-                    import('../processes/view-alert').then((m) => m.ViewAlertComponent),
-            },
-            {
                 path: urls.NOTIFICATIONS_EXPLORER_URL,
                 loadComponent: () =>
                     import('../processes/explore-notifications').then(

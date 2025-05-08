@@ -1,13 +1,12 @@
 export enum DataSourceDriver {
-  PROMETHEUS = 'prometheus'
-};
+  PROMETHEUS = 'prometheus',
+  ELASTIC_SEARCH = 'elasticsearch',
+  JAEGER = 'jaeger',
+}
 
 export type DataSource = {
   id: string;
   name: string;
   driver: DataSourceDriver;
-
-  // TODO: might be better to replace with abstract 'settings'
-  // that depend on the driver.
   connectionUrl: string;
 };

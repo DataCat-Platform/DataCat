@@ -1,24 +1,11 @@
-.container {
-  display: flex;
-  flex-direction: column;
-  padding: var(--p-padding-md);
-  gap: var(--p-padding-md);
-}
-
-.align {
-  display: flex;
-  align-items: center;
-  gap: var(--p-padding-md);
-}
-
-.inline {
-  display: inline-block;
-}
-
 .edit-alert-form-box {
   margin: var(--p-padding-md);
 }
 
-.delete-alert-button-box {
-  margin: var(--p-padding-md);
+.actions {
+  display: flex;
+  flex-direction: row;
+  gap: var(--p-padding-md);
+  margin-left: var(--p-padding-md);
+  margin-right: var(--p-padding-md);
 }

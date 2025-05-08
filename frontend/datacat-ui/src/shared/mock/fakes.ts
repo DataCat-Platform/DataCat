@@ -23,10 +23,11 @@ export const getFakeNotificationChannel = (): NotificationChannel => {
 
 export const FAKE_ALERT: Alert = {
   id: '0',
+  template: '',
   description: 'fake alert',
   query: 'avg{something} > 0',
-  executionInterval: 60,
-  notificationTriggerPeriod: 120,
+  executionInterval: '60',
+  notificationTriggerPeriod: '120',
   notificationGroupId: '0',
   dataSourceId: '0',
   status: AlertStatus.OK,
@@ -56,7 +57,6 @@ export const FAKE_ALERTS_COUNTS_BY_STATUS: AlertsCountsByStatus = new Map<
 FAKE_ALERTS_COUNTS_BY_STATUS.set(AlertStatus.OK, 41);
 FAKE_ALERTS_COUNTS_BY_STATUS.set(AlertStatus.ERROR, 2);
 FAKE_ALERTS_COUNTS_BY_STATUS.set(AlertStatus.FIRING, 2);
-FAKE_ALERTS_COUNTS_BY_STATUS.set(AlertStatus.PENDING, 1);
 FAKE_ALERTS_COUNTS_BY_STATUS.set(AlertStatus.MUTED, 5);
 
 export const getFakeId = (): string => {
