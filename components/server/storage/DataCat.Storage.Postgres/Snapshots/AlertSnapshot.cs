@@ -25,7 +25,7 @@ public static class AlertSnapshotExtensions
         return new AlertSnapshot
         {
             Id = alert.Id.ToString(),
-            Description = alert.Template,
+            Description = alert.Description,
             Template = alert.Template,
             Status = alert.Status.Value,
             ConditionQuery = alert.ConditionQuery.RawQuery,
