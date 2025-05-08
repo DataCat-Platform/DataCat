@@ -1,4 +1,4 @@
-<div class="logs-table-container">
+<div class="traces-table-container">
     <div class="table-scroll">
         <p-table
                 [paginator]="false"
@@ -19,22 +19,31 @@
                     <td>
                         <div [style.width.%]="(getCurrentDuration(trace) / getMaxDuration()) * 100"
                              class="duration-bar"></div>
-                        <span>{{ getCurrentDuration(trace) }}ms</span>
-                    </td>
-                    <td><a [routerLink]="['/trace', trace.traceId]">{{ trace.service }}: {{ trace.operation }}
-                        <small>{{ trace.traceId | slice:0:8 }}</small></a></td>
-                    <td>
-                        <p-tag [value]="trace.spanCount + ' Span' + (trace.spanCount>1?'s':'')"></p-tag>
+                        <span>{{ getFormattedDuration(getCurrentDuration(trace)) }}</span>
                     </td>
                     <td>
-                        @for (svc of trace.serviceTags; track svc) {
-                            <p-tag [styleClass]="'service-tag'" [value]="svc"></p-tag>
+                        <a [routerLink]="['/trace', trace.traceId]">
+                            <small>{{ trace.traceId | slice:0:8 }}</small>
+                        </a>
+                    </td>
+                    <td>
+                        <p-tag [value]="getSpanCount(trace) + ' Span' + (getSpanCount(trace) > 1 ? 's' : '')"></p-tag>
+                    </td>
+                    <td>
+                        @for (svc of getTraceServices(trace); track svc) {
+                            <p-tag
+                                    [styleClass]="'service-tag'"
+                                    [value]="svc"
+                                    severity="info">
+                            </p-tag>
                         }
                     </td>
-                    <td>{{ trace.timestamp | date:'MMM d, y, h:mm:ss a' }}<br><small>{{ trace.timestamp }}</small>
+                    <td>
+                        {{ getTracesStartTime(trace) | date:'h:mm:ss a' }}<br>
+                        <small>{{ getTracesTimeAgo(trace) }}</small>
                     </td>
                     <td>
-                        <p-button (click)="showDetails(trace)" class="p-button-text"
+                        <p-button [routerLink]="['/trace', trace.traceId]" class="p-button-text"
                                   icon="pi pi-info-circle"></p-button>
                     </td>
                 </tr>

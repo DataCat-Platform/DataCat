@@ -1,6 +1,10 @@
-.logs-table-container {
-  height: 100%;
+.traces-table-container {
+  max-height: 700px;
   overflow: auto;
+
+  .table-scroll {
+    overflow-x: auto;
+  }
 }
 
 .duration-bar {
@@ -10,5 +14,10 @@
 }
 
 .service-tag {
-  margin: 0 2px;
+  margin-right: 0.5rem;
+  margin-bottom: 0.25rem;
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
