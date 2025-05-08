@@ -1,0 +1,14 @@
+.data-source-selector {
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  p-dropdown {
+    width: 100%;
+    min-width: 250px;
+  }
+}

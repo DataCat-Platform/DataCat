@@ -17,6 +17,7 @@ import {Tooltip} from "primeng/tooltip";
 import {ToastLoggerService} from "../../../shared/services/toast-logger.service";
 import {Tag} from "primeng/tag";
 import {capitalizeFirstLetter} from "../../../shared/utils/capitalizeFirstLetter";
+import * as urls from "../../../shared/common/urls";
 
 @Component({
     selector: 'app-data-sources-list',
@@ -63,7 +64,7 @@ export class DataSourcesListComponent implements OnInit {
     }
 
     protected editDataSource(dataSourceId: string) {
-        this.router.navigate(['/data-sources', dataSourceId, 'edit']);
+        this.router.navigateByUrl(urls.dataSourceEditUrl(dataSourceId));
     }
 
     protected loadData(event: LazyLoadEvent) {

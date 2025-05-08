@@ -4523,6 +4523,7 @@ export class SpanEntry implements ISpanEntry {
     spanId?: string;
     operationName?: string;
     startTime?: Date;
+    timestamp?: number;
     duration?: string;
     tags?: { [key: string]: any; };
     references?: SpanReference[];
@@ -4543,6 +4544,7 @@ export class SpanEntry implements ISpanEntry {
             this.spanId = _data["spanId"];
             this.operationName = _data["operationName"];
             this.startTime = _data["startTime"] ? new Date(_data["startTime"].toString()) : <any>undefined;
+            this.timestamp = _data["timestamp"];
             this.duration = _data["duration"];
             if (_data["tags"]) {
                 this.tags = {} as any;
@@ -4573,6 +4575,7 @@ export class SpanEntry implements ISpanEntry {
         data["spanId"] = this.spanId;
         data["operationName"] = this.operationName;
         data["startTime"] = this.startTime ? this.startTime.toISOString() : <any>undefined;
+        data["timestamp"] = this.timestamp;
         data["duration"] = this.duration;
         if (this.tags) {
             data["tags"] = {};
@@ -4603,6 +4606,7 @@ export interface ISpanEntry {
     spanId?: string;
     operationName?: string;
     startTime?: Date;
+    timestamp?: number;
     duration?: string;
     tags?: { [key: string]: any; };
     references?: SpanReference[];

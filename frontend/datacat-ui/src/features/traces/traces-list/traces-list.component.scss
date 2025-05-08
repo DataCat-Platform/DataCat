@@ -1,0 +1,34 @@
+.traces-table-container {
+  max-height: 700px;
+  overflow: auto;
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+}
+
+.duration-bar {
+  height: 4px;
+  background-color: #17b8be;
+  margin-right: 4px;
+}
+
+.service-tag {
+  margin-right: 0.5rem;
+  margin-bottom: 0.25rem;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.trace-link {
+  color: var(--primary-color);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.trace-link:hover {
+  color: var(--primary-color-dark);
+}
