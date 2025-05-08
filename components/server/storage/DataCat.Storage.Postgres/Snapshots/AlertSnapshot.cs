@@ -5,7 +5,7 @@ public sealed record AlertSnapshot
     public required string Id { get; init; }
     public required string? Description { get; init; }
     public required string? Template { get; init; }
-    public required int Status { get; init; }
+    public required string Status { get; init; }
     public required string ConditionQuery { get; init; }
     public required DataSourceSnapshot DataSource { get; set; }
     public string DataSourceId => DataSource.Id;
@@ -27,7 +27,7 @@ public static class AlertSnapshotExtensions
             Id = alert.Id.ToString(),
             Description = alert.Description,
             Template = alert.Template,
-            Status = alert.Status.Value,
+            Status = alert.Status.Name,
             ConditionQuery = alert.ConditionQuery.RawQuery,
             DataSource = alert.ConditionQuery.DataSource.Save(),
             NotificationChannelGroup = alert.NotificationChannelGroup.Save(),
@@ -46,7 +46,7 @@ public static class AlertSnapshotExtensions
             snapshot.Description,
             snapshot.Template,
             Query.Create(snapshot.DataSource.RestoreFromSnapshot(), snapshot.ConditionQuery).Value,
-            AlertStatus.FromValue(snapshot.Status),
+            AlertStatus.FromName(snapshot.Status),
             snapshot.NotificationChannelGroup.RestoreFromSnapshot(notificationChannelManager),
             previousExecution:snapshot.PreviousExecution,
             nextExecution: snapshot.NextExecution,
