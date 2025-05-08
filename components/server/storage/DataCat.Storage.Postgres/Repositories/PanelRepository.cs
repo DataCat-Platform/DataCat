@@ -16,10 +16,7 @@ public sealed class PanelRepository(
                 p.{Public.Panels.TypeId}                     {nameof(PanelSnapshot.TypeId)},
                 p.{Public.Panels.RawQuery}                   {nameof(PanelSnapshot.RawQuery)},
                 p.{Public.Panels.DataSourceId}               {nameof(PanelSnapshot.DataSourceId)},
-                p.{Public.Panels.X}                          {nameof(PanelSnapshot.X)},
-                p.{Public.Panels.Y}                          {nameof(PanelSnapshot.Y)},
-                p.{Public.Panels.Width}                      {nameof(PanelSnapshot.Width)},
-                p.{Public.Panels.Height}                     {nameof(PanelSnapshot.Height)},
+                p.{Public.Panels.LayoutConfiguration}        {nameof(PanelSnapshot.LayoutConfiguration)},
                 p.{Public.Panels.DashboardId}                {nameof(PanelSnapshot.DashboardId)},
                 p.{Public.Panels.StylingConfiguration}       {nameof(PanelSnapshot.StyleConfiguration)},
                 
@@ -27,6 +24,7 @@ public sealed class PanelRepository(
                 ds.{Public.DataSources.Name}                 {nameof(DataSourceSnapshot.Name)},
                 ds.{Public.DataSources.TypeId}               {nameof(DataSourceSnapshot.TypeId)},
                 ds.{Public.DataSources.ConnectionSettings}   {nameof(DataSourceSnapshot.ConnectionSettings)},
+                ds.{Public.DataSources.Purpose}              {nameof(DataSourceSnapshot.Purpose)},
                 
                 dst.{Public.DataSourceType.Id}              {nameof(DataSourceTypeSnapshot.Id)},
                 dst.{Public.DataSourceType.Name}            {nameof(DataSourceTypeSnapshot.Name)}
@@ -37,7 +35,7 @@ public sealed class PanelRepository(
                 {Public.DataSourceTable} ds ON ds.{Public.DataSources.Id} = p.{Public.Panels.DataSourceId}
             JOIN 
                 {Public.DataSourceTypeTable} dst ON dst.{Public.DataSourceType.Id} = ds.{Public.DataSources.TypeId} 
-            WHERE {Public.Panels.Id} = @p_panel_id
+            WHERE p.{Public.Panels.Id} = @p_panel_id
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -67,10 +65,7 @@ public sealed class PanelRepository(
                 {Public.Panels.TypeId},
                 {Public.Panels.RawQuery},
                 {Public.Panels.DataSourceId},
-                {Public.Panels.X},
-                {Public.Panels.Y},
-                {Public.Panels.Width},
-                {Public.Panels.Height},
+                {Public.Panels.LayoutConfiguration},
                 {Public.Panels.DashboardId},
                 {Public.Panels.StylingConfiguration}
             )
@@ -80,10 +75,7 @@ public sealed class PanelRepository(
                 @{nameof(PanelSnapshot.TypeId)},
                 @{nameof(PanelSnapshot.RawQuery)},
                 @{nameof(PanelSnapshot.DataSourceId)},
-                @{nameof(PanelSnapshot.X)},
-                @{nameof(PanelSnapshot.Y)},
-                @{nameof(PanelSnapshot.Width)},
-                @{nameof(PanelSnapshot.Height)},
+                @{nameof(PanelSnapshot.LayoutConfiguration)},
                 @{nameof(PanelSnapshot.DashboardId)},
                 @{nameof(PanelSnapshot.StyleConfiguration)}
             )
@@ -104,10 +96,7 @@ public sealed class PanelRepository(
                 {Public.Panels.TypeId}                     = @{nameof(PanelSnapshot.TypeId)},
                 {Public.Panels.RawQuery}                   = @{nameof(PanelSnapshot.RawQuery)},
                 {Public.Panels.DataSourceId}               = @{nameof(PanelSnapshot.DataSourceId)},
-                {Public.Panels.X}                          = @{nameof(PanelSnapshot.X)},
-                {Public.Panels.Y}                          = @{nameof(PanelSnapshot.Y)},
-                {Public.Panels.Width}                      = @{nameof(PanelSnapshot.Width)},
-                {Public.Panels.Height}                     = @{nameof(PanelSnapshot.Height)},
+                {Public.Panels.LayoutConfiguration}        = @{nameof(PanelSnapshot.LayoutConfiguration)},
                 {Public.Panels.StylingConfiguration}       = @{nameof(PanelSnapshot.StyleConfiguration)}
             WHERE {Public.Panels.Id} = @{nameof(PanelSnapshot.Id)}
         """;

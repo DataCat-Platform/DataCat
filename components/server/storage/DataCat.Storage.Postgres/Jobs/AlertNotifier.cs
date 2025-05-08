@@ -51,12 +51,10 @@ public sealed class AlertNotifier(
                     return;
                 }
                 
-                var isTriggeredYet = await metricClient.CheckAlertTriggerAsync(alert.ConditionQuery.RawQuery, token);
+                var isTriggered = await metricClient.CheckAlertTriggerAsync(alert.ConditionQuery.RawQuery, token);
                 
-                if (isTriggeredYet)
+                if (isTriggered)
                 {
-                    alert.SetFire();
-
                     var hasErrors = false;
                     var allErrors = new List<ErrorInfo>();
 
@@ -87,7 +85,16 @@ public sealed class AlertNotifier(
                         }
 
                         var stopwatch = Stopwatch.StartNew();
-                        await notificationServiceResult.Value.SendNotificationAsync(alert, stoppingToken);
+                        try
+                        {
+                            await notificationServiceResult.Value.SendNotificationAsync(alert, stoppingToken);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.LogError("[{Job}] {Alert} had errors during sending alert to notification channel {@NotificationChannel}. Exception: {@Exception}",
+                                nameof(AlertNotifier), alert.Id, optionResult.Value.NotificationDestination.Name, ex.Message);
+                            hasErrors = true;                        
+                        }
                         stopwatch.Stop();
 
                         var destinationName = channel.NotificationOption.NotificationDestination.Name;
@@ -98,8 +105,13 @@ public sealed class AlertNotifier(
 
                     if (hasErrors)
                     {
+                        alert.SetErrorStatus();
                         logger.LogError("[{Job}] {Alert} had errors during alerting. Errors: {@Errors}",
                             nameof(AlertNotifier), alert.Id, allErrors);
+                    }
+                    else
+                    {
+                        alert.CommitAlertExecution();
                     }
                     
                     logger.LogWarning("[{Job}] Alert: {Alert} is fired", nameof(AlertNotifier), alert.Id);

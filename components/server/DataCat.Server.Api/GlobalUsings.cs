@@ -20,7 +20,6 @@ global using DataCat.Server.Application.Commands.Alerts.Mute;
 global using DataCat.Server.Application.Commands.Alerts.Remove;
 global using DataCat.Server.Application.Commands.Alerts.Update;
 global using DataCat.Server.Application.Commands.Dashboards.Add;
-global using DataCat.Server.Application.Commands.Dashboards.AddUser;
 global using DataCat.Server.Application.Commands.Dashboards.Remove;
 global using DataCat.Server.Application.Commands.Dashboards.UpdateName;
 global using DataCat.Server.Application.Commands.DataSources.Add;
@@ -67,6 +66,7 @@ global using DataCat.Server.Application.Queries.NotificationChannelGroups.GetAll
 global using DataCat.Server.Application.Queries.NotificationChannels.Get;
 global using DataCat.Server.Application.Queries.NotificationDestinations.Get;
 global using DataCat.Server.Application.Queries.Panels.Get;
+global using DataCat.Server.Application.Queries.Panels.GetTypes;
 global using DataCat.Server.Application.Queries.Plugins.Get;
 global using DataCat.Server.Application.Queries.Plugins.Search;
 global using DataCat.Server.Application.Queries.Variables.GetById;

@@ -3,7 +3,6 @@ namespace DataCat.Server.Api.Endpoints.Dashboards;
 public sealed record AddDashboardRequest(
     string Name,
     string? Description,
-    string UserId,
     Guid NamespaceId,
     List<string> Tags);
 
@@ -32,7 +31,6 @@ public sealed class AddDashboard : ApiEndpointBase
         {
             Name = request.Name,
             Description = request.Description,
-            UserId = request.UserId,
             Tags = request.Tags,
             NamespaceId = request.NamespaceId,
         };

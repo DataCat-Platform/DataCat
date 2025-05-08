@@ -57,23 +57,23 @@ public class Alert
 
     public void ResetAlert()
     {
-        Status = AlertStatus.InActive;
-        CommitAlertExecution();
-    }
-
-    public void SetFire()
-    {
-        Status = AlertStatus.Fire;
+        Status = AlertStatus.Ok;
         CommitAlertExecution();
     }
     
-    public void SetWarningStatus()
+    public void SetErrorStatus()
     {
-        Status = AlertStatus.Warning;
+        Status = AlertStatus.Error;
+        CommitAlertExecution();
+    }
+
+    public void SetFireStatus()
+    {
+        Status = AlertStatus.Fire;
         var nextExecution = DateTime.UtcNow.Add(Schedule.WaitTimeBeforeAlerting);
         UpdateExecutionTimes(nextExecution);
     }
-
+    
     public void CommitAlertExecution()
     {
         var nextExecution = DateTime.UtcNow.Add(Schedule.RepeatInterval);

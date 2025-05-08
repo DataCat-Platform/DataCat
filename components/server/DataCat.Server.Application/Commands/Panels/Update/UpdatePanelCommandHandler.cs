@@ -4,7 +4,7 @@ public sealed class UpdatePanelCommandHandler(
     IRepository<Panel, Guid> panelBaseRepository,
     IPanelRepository panelRepository,
     IRepository<DataSource, Guid> dataSourceRepository)
-    : ICommand<UpdatePanelCommand>
+    : ICommandHandler<UpdatePanelCommand>
 {
     public async Task<Result> Handle(UpdatePanelCommand request, CancellationToken cancellationToken)
     {
@@ -28,11 +28,7 @@ public sealed class UpdatePanelCommandHandler(
         var (newQuery, newPanel) = panelRawQueryResult.Value;
         panel.UpdatePanelType(newPanel, newQuery);
 
-        var layoutResult = CreateLayout(request);
-        if (layoutResult.IsFailure) 
-            return layoutResult;
-
-        panel.UpdateLayout(layoutResult.Value);
+        panel.UpdateLayout(new DataCatLayout(request.Layout));
         panel.UpdateStyleConfiguration(request.StyleConfiguration);
 
         await panelRepository.UpdateAsync(panel, cancellationToken);
@@ -63,7 +59,4 @@ public sealed class UpdatePanelCommandHandler(
             ? Result.Success((queryResult.Value, panelResult))
             : Result.Fail<(Query, PanelType)>(PanelError.InvalidPanelType);
     }
-
-    private static Result<DataCatLayout> CreateLayout(UpdatePanelCommand request) =>
-        DataCatLayout.Create(request.PanelX, request.PanelY, request.Width, request.Height);
 }

@@ -2,20 +2,12 @@ namespace DataCat.Server.Application.Commands.Dashboards.Add;
 
 public sealed class AddDashboardCommandHandler(
     IRepository<Dashboard, Guid> dashboardRepository,
-    IRepository<User, Guid> userRepository,
     IRepository<Namespace, Guid> defaultNamespaceRepository,
     INamespaceRepository namespaceRepository)
     : ICommandHandler<AddDashboardCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AddDashboardCommand request, CancellationToken cancellationToken)
     {
-        var userId = Guid.Parse(request.UserId);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken);
-        if (user is null)
-        {
-            return Result.Fail<Guid>(UserError.NotFound);
-        }
-        
         var namespaceResult = await GetNamespace(request, cancellationToken);
 
         if (namespaceResult.IsFailure)
@@ -24,7 +16,7 @@ public sealed class AddDashboardCommandHandler(
         }
 
         var id = Guid.NewGuid();
-        var result = CreateDashboard(id, request, user, namespaceResult.Value);
+        var result = CreateDashboard(id, request, namespaceResult.Value);
 
         if (result.IsFailure)
         {
@@ -55,19 +47,18 @@ public sealed class AddDashboardCommandHandler(
     private static Result<Dashboard> CreateDashboard(
         Guid id, 
         AddDashboardCommand request, 
-        User user, 
         Namespace @namespace)
     {
+        var now = DateTime.UtcNow;
+        
         return Dashboard.Create(
             id,
             request.Name,
             request.Description,
             panels: [],
-            user,
-            sharedWith: [user],
             @namespace.Id,
-            DateTime.UtcNow,
-            DateTime.UtcNow,
+            createdAt: now,
+            updatedAt: now,
             request.Tags.Select(x => new Tag(x)).ToList());
     }
 }

@@ -1,6 +1,6 @@
 namespace DataCat.Server.Postgres.Migrations;
 
-[Migration(8)]
+[Migration(6)]
 public sealed class CreateVariableTable : Migration 
 {
     public static readonly string UpSql = null!;
