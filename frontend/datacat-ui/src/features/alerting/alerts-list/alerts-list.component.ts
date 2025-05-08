@@ -204,6 +204,7 @@ export class AlertsListComponent {
           this.currentPage = data.pageNumber || 0;
           this.alerts =
             data.items?.map<Alert>((item) => {
+              console.log(item);
               return {
                 id: item.id || '',
                 template: item.template || '',
@@ -212,10 +213,8 @@ export class AlertsListComponent {
                 status: (item.status as AlertStatus) || AlertStatus.OK,
                 dataSourceId: item.dataSource?.id || '',
                 notificationGroupId: item.notificationChannelGroup?.id || '',
-                prevExecutionTime:
-                  item.previousExecutionTime?.getUTCMilliseconds() || 0,
-                nextExecutionTime:
-                  item.nextExecutionTime?.getUTCMilliseconds() || 0,
+                prevExecutionTime: item.previousExecutionTime,
+                nextExecutionTime: item.nextExecutionTime,
                 notificationTriggerPeriod: item.waitTimeBeforeAlerting || '',
                 executionInterval: item.repeatInterval || '',
               };

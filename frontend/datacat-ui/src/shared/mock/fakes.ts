@@ -31,8 +31,6 @@ export const FAKE_ALERT: Alert = {
   notificationGroupId: '0',
   dataSourceId: '0',
   status: AlertStatus.OK,
-  prevExecutionTime: Date.now(),
-  nextExecutionTime: Date.now(),
 };
 
 export const FAKE_NOTIFICATION_CHANNEL: NotificationChannel =
