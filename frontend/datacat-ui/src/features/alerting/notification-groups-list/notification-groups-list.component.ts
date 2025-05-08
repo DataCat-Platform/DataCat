@@ -68,7 +68,7 @@ export class NotificationGroupsListComponent {
                 (channel: NotificationChannelResponse) => {
                   return {
                     id: channel.id || 0,
-                    driver: NotificationChannelDriver.EMAIL,
+                    driver: channel.destinationName as NotificationChannelDriver,
                     settings: JSON.parse(channel.settings || ''),
                   };
                 },

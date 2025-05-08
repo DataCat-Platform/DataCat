@@ -3,5 +3,114 @@
   icon="pi pi-plus"
   label="Create alert"
   severity="secondary"
-  (onClick)="createAlert()"
+  (onClick)="isCreationDialogVisible = true"
 />
+
+<p-dialog
+  [modal]="true"
+  [(visible)]="isCreationDialogVisible"
+  header="Create alert"
+>
+  <form class="creation-form" [formGroup]="creationForm">
+    <div class="creation-form__item">
+      <p>Description</p>
+      <textarea
+        pInputText
+        cols="40"
+        rows="3"
+        placeholder="Description"
+        formControlName="description"
+      >
+      </textarea>
+    </div>
+    <div class="creation-form__item">
+      <p>Query</p>
+      <textarea
+        pInputText
+        cols="40"
+        rows="3"
+        placeholder="Query"
+        formControlName="query"
+      ></textarea>
+    </div>
+    <div class="creation-form__item">
+      <p>Notification Template</p>
+      <textarea
+        pInputText
+        cols="40"
+        rows="3"
+        placeholder="Template"
+        formControlName="template"
+      ></textarea>
+    </div>
+    <div class="creation-form__item">
+      <p>Execution interval</p>
+      <input
+        pInputText
+        placeholder="Interval"
+        formControlName="executionInterval"
+      />
+    </div>
+    <div class="creation-form__item">
+      <p>Notification Trigger Period</p>
+      <input
+        pInputText
+        placeholder="Trigger period"
+        formControlName="notificationTriggerPeriod"
+      />
+    </div>
+    <div class="creation-form__item">
+      <p>Data Source</p>
+      <p-select
+        [options]="dataSources"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Data Source"
+        formControlName="dataSourceId"
+      />
+    </div>
+    <div class="creation-form__item">
+      <p>Notification Group</p>
+      <p-select
+        [options]="notificationGroups"
+        optionLabel="name"
+        optionValue="name"
+        placeholder="Notification Group"
+        formControlName="notificationGroupName"
+      />
+    </div>
+    <div class="creation-form__item">
+      <p>Tags</p>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <p-button
+            icon="pi pi-plus"
+            label="Add"
+            severity="secondary"
+            [disabled]="creationForm.disabled"
+            (onClick)="addCreationFormTag()"
+          />
+        </p-inputgroup-addon>
+        <input pInputText placeholder="tag..." [formControl]="addTagControl" />
+      </p-inputgroup>
+    </div>
+    <div class="creation-form__tags">
+      @for (tag of creationFormTags; track tag) {
+        <p-chip
+          [removable]="true"
+          [label]="tag"
+          (onRemove)="removeCreationFormTag(tag)"
+        />
+      }
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <div class="creation-form__footer">
+      <p-button
+        label="Create"
+        (onClick)="createAlert()"
+        [loading]="isCreationInitiated"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

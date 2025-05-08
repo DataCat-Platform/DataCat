@@ -8,6 +8,7 @@ export enum AlertStatus {
 
 export type Alert = {
   id: string;
+  template: string;
   description: string;
   query: string;
   status: string;

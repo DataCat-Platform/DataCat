@@ -3,8 +3,12 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import {
+  EmailSettings,
   NotificationChannel,
   NotificationChannelDriver,
+  NotificationChannelSettings,
+  TelegramSettings,
+  WebhookSettings,
 } from '../../../entities';
 import { SelectModule } from 'primeng/select';
 import {
@@ -20,6 +24,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { DialogModule } from 'primeng/dialog';
 import { finalize } from 'rxjs';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { CardModule } from 'primeng/card';
 
 @Component({
   standalone: true,
@@ -36,6 +41,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     SkeletonModule,
     DialogModule,
     InputNumberModule,
+    CardModule,
   ],
 })
 export class EditNotificationGroupFormComponent {
@@ -45,6 +51,7 @@ export class EditNotificationGroupFormComponent {
     }
   }
 
+  protected isChannelEditDialogVisible = false;
   protected isChannelCreationDialogVisible = false;
   protected groupName: string = '';
 
@@ -83,7 +90,9 @@ export class EditNotificationGroupFormComponent {
   }
 
   protected loadEssentials(groupId: string) {
-    this.apiService.getApiV1NotificationChannelGroup(groupId).subscribe({
+    const groupObservable =
+      this.apiService.getApiV1NotificationChannelGroup(groupId);
+    groupObservable.subscribe({
       next: (group) => {
         this.groupName = group.name || '';
         this.parseNotificationGroupChannels(group);
@@ -94,6 +103,7 @@ export class EditNotificationGroupFormComponent {
         this.loadingState = LoadingState.Error;
       },
     });
+    return groupObservable;
   }
 
   protected switchAddChannelFormSettingsDriver(
@@ -137,7 +147,14 @@ export class EditNotificationGroupFormComponent {
   protected parseNotificationGroupChannels(
     group: NotificationChannelGroupResponse,
   ) {
-    this.notificationChannels = [];
+    this.notificationChannels =
+      group.notificationChannels?.map<NotificationChannel>((channel) => {
+        return {
+          id: 0,
+          driver: channel.destinationName as NotificationChannelDriver,
+          settings: JSON.parse(channel.settings || ''),
+        };
+      }) || [];
   }
 
   protected showChannelCreationDialog() {
@@ -157,8 +174,6 @@ export class EditNotificationGroupFormComponent {
       settings: JSON.stringify(this.addChannelForm.get('settings')?.value),
     } as IAddNotificationChannelRequest;
 
-    console.log(request);
-
     this.apiService
       .postApiV1NotificationChannelAdd(request)
       .pipe(
@@ -168,7 +183,10 @@ export class EditNotificationGroupFormComponent {
       )
       .subscribe({
         next: () => {
-          this.loadEssentials(this.groupId);
+          const obs = this.loadEssentials(this.groupId);
+          obs.subscribe(() => {
+            this.isChannelCreationDialogVisible = false;
+          });
         },
         error: (e) => {
           this.loggerService.error(e);
@@ -176,5 +194,25 @@ export class EditNotificationGroupFormComponent {
       });
   }
 
+  protected editChannel() {}
+
   protected deleteChannel(chanel: NotificationChannel) {}
+
+  protected asEmailSettings(
+    settings: NotificationChannelSettings,
+  ): EmailSettings {
+    return settings as EmailSettings;
+  }
+
+  protected asWebhookSettings(
+    settings: NotificationChannelSettings,
+  ): WebhookSettings {
+    return settings as WebhookSettings;
+  }
+
+  protected asTelegramSettings(
+    settings: NotificationChannelSettings,
+  ): TelegramSettings {
+    return settings as TelegramSettings;
+  }
 }

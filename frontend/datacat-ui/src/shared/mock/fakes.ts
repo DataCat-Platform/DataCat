@@ -23,6 +23,7 @@ export const getFakeNotificationChannel = (): NotificationChannel => {
 
 export const FAKE_ALERT: Alert = {
   id: '0',
+  template: '',
   description: 'fake alert',
   query: 'avg{something} > 0',
   executionInterval: 60,

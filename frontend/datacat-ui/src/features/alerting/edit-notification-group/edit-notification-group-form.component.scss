@@ -36,3 +36,38 @@
     gap: var(--p-padding-md);
   }
 }
+
+.channels-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-md);
+  margin-top: var(--p-padding-md);
+}
+
+.channel-attributes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--p-padding-md);
+  align-items: center;
+}
+
+p-card p {
+  color: var(--p-surface-400);
+}
+
+.card-header {
+  display: flex;
+  gap: var(--p-padding-md);
+  margin-left: var(--p-padding-md);
+  margin-right: var(--p-padding-md);
+  margin-top: var(--p-padding-md);
+  align-items: center;
+  justify-content: space-between;
+
+  &__driver {
+    display: flex;
+    flex-direction: row;
+    gap: var(--p-padding-sm);
+    align-items: center;
+  }
+}

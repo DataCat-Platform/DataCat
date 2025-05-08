@@ -20,6 +20,7 @@ import { ToastLoggerService } from '../../../shared/services/toast-logger.servic
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   standalone: true,
@@ -38,6 +39,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     InputGroupModule,
     InputGroupAddonModule,
     InputTextModule,
+    TooltipModule,
   ],
 })
 export class AlertsListComponent {
@@ -73,7 +75,7 @@ export class AlertsListComponent {
   protected totalPagesCount = 0;
   protected totalAlertsCount = 0;
   protected alertsPerPageCount = 5;
-  protected currentPage = 0;
+  protected currentPage = 1;
   protected alerts: Alert[] = [];
 
   constructor(
@@ -156,7 +158,25 @@ export class AlertsListComponent {
           this.hasNextPage = data.hasNextPage || false;
           this.hasPreviousPage = data.hasPreviousPage || false;
           this.currentPage = data.pageNumber || 0;
-          this.alerts = [];
+          this.alerts =
+            data.items?.map<Alert>((item) => {
+              return {
+                id: item.id || '',
+                template: item.template || '',
+                description: item.description || '',
+                query: item.rawQuery || '',
+                status: (item.status as AlertStatus) || AlertStatus.OK,
+                dataSourceId: item.dataSource?.id || '',
+                notificationGroupId: item.notificationChannelGroup?.id || '',
+                prevExecutionTime:
+                  item.previousExecutionTime?.getUTCMilliseconds() || 0,
+                nextExecutionTime:
+                  item.nextExecutionTime?.getUTCMilliseconds() || 0,
+                notificationTriggerPeriod:
+                  Date.parse(item.waitTimeBeforeAlerting || '') || 0,
+                executionInterval: Date.parse(item.repeatInterval || '') || 0,
+              };
+            }) || [];
         },
         error: (e) => {
           this.loggerService.error(e);
