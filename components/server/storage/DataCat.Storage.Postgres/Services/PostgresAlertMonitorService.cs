@@ -155,7 +155,7 @@ public class PostgresAlertMonitorService(
         JOIN
             {Public.NotificationDestinationTable} notification_destination ON notification_channel.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationDestination.Id}
         WHERE
-           alert.{Public.Alerts.Status} = {AlertStatus.Fire.Name}
+           alert.{Public.Alerts.Status} = '{AlertStatus.Fire.Name}'
            AND
            alert.{Public.Alerts.NextExecution} < NOW()
         ORDER BY

@@ -107,6 +107,7 @@ public sealed class AlertRepository(
         {
             ["id"] = $"alerts.{Public.Alerts.Id}",
             ["rawQuery"] = $"alerts.{Public.Alerts.RawQuery}",
+            ["dataSourceId"] = $"alerts.{Public.Alerts.DataSourceId}",
             ["status"] = $"alerts.{Public.Alerts.Status}",
             ["tags"] = $"alerts.{Public.Alerts.Tags}",
         };
