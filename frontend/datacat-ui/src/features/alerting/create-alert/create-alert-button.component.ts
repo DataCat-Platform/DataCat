@@ -49,7 +49,7 @@ export class CreateAlertButtonComponent {
       validators: Validators.required,
     }),
     template: new FormControl<string | undefined>(undefined),
-    query: new FormControl<string | undefined>(undefined),
+    rawQuery: new FormControl<string>('', [Validators.required]),
     dataSourceId: new FormControl<string | undefined>(undefined),
     notificaionGroupName: new FormControl<string | undefined>(undefined),
     notificationTriggerPeriod: new FormControl<string | undefined>(undefined),

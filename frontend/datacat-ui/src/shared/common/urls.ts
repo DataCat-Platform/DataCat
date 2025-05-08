@@ -1,6 +1,5 @@
 export const ALERTS_EXPLORER_URL = 'alerts';
 export const ALERT_EDIT_URL = 'alerts/:alertId/edit';
-export const ALERT_VIEW_URL = 'alerts/:alertId/view';
 
 export const NOTIFICATIONS_EXPLORER_URL = 'notifications';
 export const NOTIFICATION_GROUP_EDIT_URL = 'notifications/groups/:groupId/edit';
@@ -28,7 +27,6 @@ export const FORBIDDEN_URL = 'forbidden';
 // -----------------------------------------------------------------------------
 
 export const alertEditUrl = (alertId: string) => `alerts/${alertId}/edit`;
-export const alertViewUrl = (alertId: string) => `alerts/${alertId}/view`;
 
 export const notificationGroupEditUrl = (groupId: string) => `notifications/groups/${groupId}/edit`;
 

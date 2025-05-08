@@ -9,15 +9,7 @@
     </div>
     <div class="filters__item">
       <p>Data Source</p>
-      <p-select
-        [showClear]="true"
-        [options]="possibleDataSources"
-        optionLabel="name"
-        optionValue="id"
-        placeholder="Select data source"
-        emptyMessage="No data sources found"
-        formControlName="dataSourceId"
-      />
+      <datacat-data-source-select [filter]="{ purpose: 'metrics' }" formControlName="dataSourceId" />
     </div>
     <div class="filters__item">
       <p>Alert Tags</p>
@@ -28,7 +20,7 @@
             label="Add"
             severity="secondary"
             [disabled]="filtersForm.disabled"
-            (onClick)="addFilterTag(tagToAdd)"
+            (onClick)="addFilterTag()"
           />
         </p-inputgroup-addon>
         <input pInputText placeholder="tag..." [formControl]="addTagControl" />
@@ -67,6 +59,7 @@
     [first]="0"
     [totalRecords]="totalAlertsCount"
     [rows]="alertsPerPageCount"
+    [loading]="filtersForm.disabled"
   >
     <ng-template pTemplate="emptymessage">
       <tr>
@@ -110,10 +103,16 @@
             severity="secondary"
             size="small"
             variant="text"
-            (onClick)="viewAlert(alert.id)"
+            (onClick)="viewAlert(alert)"
           />
         </td>
       </tr>
     </ng-template>
   </p-table>
 </div>
+
+<p-dialog [modal]="true" [(visible)]="isAlertViewDialogVisible">
+  <div>
+    {{ viewedAlert | json }}
+  </div>
+</p-dialog>

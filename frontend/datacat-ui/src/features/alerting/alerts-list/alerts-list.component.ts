@@ -5,7 +5,6 @@ import { TagModule } from 'primeng/tag';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
-import * as urls from '../../../shared/common/urls';
 import { finalize } from 'rxjs';
 import {
   ApiService,
@@ -21,6 +20,8 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
+import { DataSourceSelectComponent } from '../../../shared/ui/data-source-select/data-source-select.component';
 
 @Component({
   standalone: true,
@@ -40,14 +41,15 @@ import { TooltipModule } from 'primeng/tooltip';
     InputGroupAddonModule,
     InputTextModule,
     TooltipModule,
+    DialogModule,
+    DataSourceSelectComponent,
   ],
 })
 export class AlertsListComponent {
-  protected addTagControl = new FormControl<string>('');
+  protected isAlertViewDialogVisible = false;
+  protected viewedAlert?: Alert;
 
-  protected get tagToAdd(): string {
-    return this.addTagControl.value || '';
-  }
+  protected addTagControl = new FormControl<string>('');
 
   protected filtersForm = new FormGroup({
     status: new FormControl<AlertStatus | null>(null),
@@ -79,7 +81,6 @@ export class AlertsListComponent {
   protected alerts: Alert[] = [];
 
   constructor(
-    private router: Router,
     private apiService: ApiService,
     private loggerService: ToastLoggerService,
   ) {
@@ -87,7 +88,8 @@ export class AlertsListComponent {
     this.refreshPossibleDataSources();
   }
 
-  protected addFilterTag(tag: string) {
+  protected addFilterTag() {
+    const tag = this.addTagControl.value;
     const previousTags = this.filtersForm.get('tags')?.value || [];
     if (tag && !previousTags.includes(tag)) {
       this.filtersForm.get('tags')?.setValue([...previousTags, tag]);
@@ -101,8 +103,9 @@ export class AlertsListComponent {
       ?.setValue(previousTags.filter((t) => t !== tag));
   }
 
-  protected viewAlert(alertId: string) {
-    this.router.navigateByUrl(urls.alertViewUrl(alertId));
+  protected viewAlert(alert: Alert) {
+    this.isAlertViewDialogVisible = true;
+    this.viewedAlert = alert;
   }
 
   protected getSeverityForStatus(
