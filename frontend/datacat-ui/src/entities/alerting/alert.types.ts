@@ -13,12 +13,10 @@ export type Alert = {
   status: AlertStatus;
   dataSourceId: string;
   notificationGroupId: string;
-  prevExecutionTime: number;
-  nextExecutionTime: number;
+  prevExecutionTime?: Date;
+  nextExecutionTime?: Date;
   notificationTriggerPeriod: string;
   executionInterval: string;
 };
 
-export type AlertExpanded = {
-
-}
+export type AlertExpanded = {};
