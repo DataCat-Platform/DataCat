@@ -1,6 +1,27 @@
 <div class="container">
-  <div class="variables">
-    ...
+  <div class="container-header">
+    <div class="variables">
+      @for (variable of variables; track $index) {
+        {{ variable.value }} {{ variable.placeholder }}
+      }
+    </div>
+    <div class="container-header__end">
+      <p-selectbutton [options]="['read', 'edit']" [allowEmpty]="false" />
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <p-button
+            icon="pi pi-sync"
+            label="Refresh"
+            severity="secondary"
+            [loading]="isBusy"
+            (onClick)="refreshDashboardsData()"
+          />
+        </p-inputgroup-addon>
+        <p-select [disabled]="isBusy" [options]="['off', '10s', '30s', '1m']" />
+      </p-inputgroup>
+    </div>
   </div>
-  <div class="panels-grid">asdf</div>
+  <div class="panels-grid">
+    @for (panel of panels; track $index) {}
+  </div>
 </div>

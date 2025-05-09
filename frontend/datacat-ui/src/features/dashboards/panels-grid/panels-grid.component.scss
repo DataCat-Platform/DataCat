@@ -8,3 +8,13 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
+.container-header {
+  display: flex;
+  justify-content: space-between;
+
+  &__end {
+    display: flex;
+    gap: var(--p-padding-md);
+  }
+}
