@@ -4,9 +4,19 @@
       @for (variable of variables; track $index) {
         {{ variable.value }} {{ variable.placeholder }}
       }
+      <p-button icon="pi pi-plus" label="Variable" severity="secondary" />
     </div>
     <div class="container-header__end">
-      <p-selectbutton [options]="['read', 'edit']" [allowEmpty]="false" />
+      <datacat-create-panel-button />
+
+      <p-togglebutton
+        onIcon="pi pi-unlock"
+        offIcon="pi pi-lock"
+        onLabel="Edit"
+        offLabel="View"
+        (onChange)="toggleMode($event)"
+      />
+
       <p-inputgroup>
         <p-inputgroup-addon>
           <p-button
@@ -17,11 +27,29 @@
             (onClick)="refreshDashboardsData()"
           />
         </p-inputgroup-addon>
-        <p-select [disabled]="isBusy" [options]="['off', '10s', '30s', '1m']" />
+        <p-select
+          [options]="refreshRateOptions"
+          optionLabel="title"
+          optionValue="seconds"
+          [formControl]="refreshRateControl"
+        />
       </p-inputgroup>
     </div>
   </div>
   <div class="panels-grid">
-    @for (panel of panels; track $index) {}
+    @if (panels.length === 0) {
+      <p class="empty">You haven't created any panels yet!</p>
+    } @else {
+      <gridster
+        [options]="gridsterOptions"
+        [style]="{ background: 'transparent' }"
+      >
+        @for (item of gridsterItems; track $index) {
+          <gridster-item [item]="item">
+            <datacat-panel-in-grid [panelId]="item['panelId']" />
+          </gridster-item>
+        }
+      </gridster>
+    }
   </div>
 </div>

@@ -1,0 +1,11 @@
+.edit-alert-form-box {
+  margin: var(--p-padding-md);
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  gap: var(--p-padding-md);
+  margin-left: var(--p-padding-md);
+  margin-right: var(--p-padding-md);
+}

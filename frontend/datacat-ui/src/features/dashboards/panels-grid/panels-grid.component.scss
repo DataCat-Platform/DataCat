@@ -2,11 +2,13 @@
   display: flex;
   flex-direction: column;
   margin: var(--p-padding-md);
+  overflow: visible;
 }
 
 .panels-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  margin-top: var(--p-padding-md);
+  display: block;
+  height: 600px;
 }
 
 .container-header {
@@ -17,4 +19,14 @@
     display: flex;
     gap: var(--p-padding-md);
   }
+}
+
+gridster-item {
+  background: transparent;
+}
+
+.empty {
+  color: var(--p-surface-400);
+  text-align: center;
+  margin-top: 20rem;
 }

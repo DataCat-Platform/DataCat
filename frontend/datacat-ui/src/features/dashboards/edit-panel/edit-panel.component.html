@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="preview">
+    <p-panel header="Preview">
+      <div class="visualization">
+        <datacat-panel-vizualization
+          [data]="data"
+          [visualizationType]="visualizationType"
+          [visualizationSettings]="visualizationSettings"
+        />
+      </div>
+    </p-panel>
+    <form class="form">
+      <div class="attr">
+        <p>Title</p>
+        <input pInputText placeholder="Title" />
+      </div>
+      <div class="attr">
+        <p>Data Source</p>
+        <datacat-data-source-select [filter]="{ purpose: 'metrics' }" />
+      </div>
+      <div class="attr">
+        <p>Query</p>
+        <textarea pTextarea placeholder="Query"></textarea>
+      </div>
+      <p-button
+        label="Save changes"
+        (onClick)="saveChanges()"
+        severity="secondary"
+      />
+    </form>
+  </div>
+  <datacat-panel-visualization-options
+    (type)="visualizationType = $event"
+    (settings)="visualizationSettings = $event"
+  />
+</div>
