@@ -3,6 +3,8 @@ import { PanelModule } from 'primeng/panel';
 import { PanelVisualizationComponent } from '../../../../shared/ui/panel-visualization/panel-visualization.component';
 import {
   DataSourceDriver,
+  decodeLayout,
+  decodeVisualizationSettings,
   Panel,
   VisualizationType,
 } from '../../../../entities';
@@ -11,13 +13,18 @@ import { ToastLoggerService } from '../../../../shared/services/toast-logger.ser
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import * as urls from '../../../../shared/common/urls';
+import { DeletePanelButtonComponent } from '../../delete-panel';
 
 @Component({
   standalone: true,
   selector: 'datacat-panel-in-grid',
   templateUrl: './panel-in-grid.component.html',
   styleUrl: './panel-in-grid.component.scss',
-  imports: [PanelModule, PanelVisualizationComponent, ButtonModule],
+  imports: [
+    PanelModule,
+    PanelVisualizationComponent,
+    ButtonModule,
+  ],
 })
 export class PanelInGridComponent {
   private _panelId?: string;
@@ -53,9 +60,11 @@ export class PanelInGridComponent {
             driver: data.query?.dataSource?.type as DataSourceDriver,
             connectionUrl: data.query?.dataSource?.connectionString || '',
           },
-          layout: JSON.parse(data.layout || ''),
-          visualizationType: data.typeName as VisualizationType,
-          visualizationSetttings: data.styleConfiguration,
+          layout: decodeLayout(data.layout),
+          visualizationType: VisualizationType.LINE,
+          visualizationSetttings: decodeVisualizationSettings(
+            data.styleConfiguration,
+          ),
         };
       },
       error: (e) => {

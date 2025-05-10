@@ -1,0 +1,31 @@
+<p-button
+  icon="pi pi-trash"
+  [text]="true"
+  severity="secondary"
+  (onClick)="showDeletionDialog()"
+/>
+<p-dialog
+  header="Delete panel?"
+  [appendTo]="'body'"
+  [(visible)]="isDeletionDialogVisible"
+  [closable]="false"
+  [modal]="true"
+>
+  <p>Are you sure you want to delete this panel?</p>
+  @if (isDeletionError) {
+    <p class="text-secondary error">Unable to delete panel</p>
+  }
+  <div class="actions-container">
+    <p-button
+      label="Cancel"
+      severity="secondary"
+      (onClick)="hideDeletionDialog()"
+    />
+    <p-button
+      [loading]="isDeletionInitiated"
+      label="Delete"
+      severity="danger"
+      (onClick)="deletePanel()"
+    />
+  </div>
+</p-dialog>

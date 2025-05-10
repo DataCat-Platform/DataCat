@@ -1,7 +1,7 @@
 <p-button
   [loading]="isCreationInitiated"
   icon="pi pi-plus"
-  label="Create dashboard"
+  label="Dashboard"
   severity="secondary"
   (onClick)="isCreationDialogVisible = true"
 />
@@ -51,13 +51,22 @@
         />
       }
     </div>
+    <div class="validation-errors">
+      @if (nameControl.invalid) {
+        <p>* Name is required</p>
+      }
+      @if (descriptionControl.invalid) {
+        <p>* Description is required</p>
+      }
+    </div>
   </form>
   <ng-template pTemplate="footer">
     <div class="creation-form__footer">
       <p-button
         label="Create"
-        (onClick)="createAlert()"
+        (onClick)="createDashboard()"
         [loading]="isCreationInitiated"
+        [disabled]="creationForm.invalid"
       />
     </div>
   </ng-template>

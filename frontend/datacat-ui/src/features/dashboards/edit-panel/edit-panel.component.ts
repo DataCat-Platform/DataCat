@@ -44,6 +44,7 @@ export class EditPanelComponent {
   protected panel?: Panel;
 
   protected data: any = {
+    labels: ['1', '2', '3', '4', '5', '6', '7'],
     datasets: [
       {
         label: 'First Dataset',

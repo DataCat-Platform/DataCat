@@ -5,6 +5,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { SelectModule } from 'primeng/select';
+import { CheckboxModule } from 'primeng/checkbox';
+import { createOptionsForm } from './forms';
 
 @Component({
   standalone: true,
@@ -16,6 +18,8 @@ import { SelectModule } from 'primeng/select';
     ReactiveFormsModule,
     InputTextModule,
     PanelModule,
+    SelectModule,
+    CheckboxModule,
     SelectModule,
   ],
 })
@@ -32,20 +36,29 @@ export class PanelVisualizationOptionsComponent implements OnInit {
     VisualizationType.LINE,
   );
 
-  protected get visualizationType() {
+  protected get visualizationType(): VisualizationType | null {
     return this.visualizationTypeControl.value;
   }
 
-  protected form?: FormGroup<any>;
+  protected get visualizationSettings(): VisualizationSettings {
+    return {};
+  }
+
+  protected optionsForm?: FormGroup<any>;
 
   constructor() {
     this.visualizationTypeControl.valueChanges.subscribe(() =>
       this.type.emit(this.visualizationType!),
     );
-    this.form?.valueChanges.subscribe(() => {});
+    this.optionsForm?.valueChanges.subscribe(() => {});
   }
 
   ngOnInit() {
     this.type.emit(this.visualizationType!);
+    this.settings.emit(this.visualizationSettings);
+  }
+
+  private updateOptionsForm() {
+    this.optionsForm = createOptionsForm(this.visualizationType);
   }
 }

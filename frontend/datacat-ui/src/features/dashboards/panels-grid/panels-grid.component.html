@@ -2,12 +2,31 @@
   <div class="container-header">
     <div class="variables">
       @for (variable of variables; track $index) {
-        {{ variable.value }} {{ variable.placeholder }}
+        <p-inputgroup>
+          <p-inputgroup-addon>
+            <p>{{ variable.placeholder }}</p>
+          </p-inputgroup-addon>
+          <p-inputgroup-addon>
+            <p>{{ variable.value }}</p>
+          </p-inputgroup-addon>
+          <p-inputgroup-addon>
+            <datacat-delete-variable-button
+              [variableId]="variable.id"
+              (onDelete)="refreshDashboardVariables()"
+            />
+          </p-inputgroup-addon>
+        </p-inputgroup>
       }
-      <p-button icon="pi pi-plus" label="Variable" severity="secondary" />
+      <datacat-add-variable-button
+        [dashboardId]="_dashboardId"
+        (onAdd)="refreshDashboardVariables()"
+      />
     </div>
     <div class="container-header__end">
-      <datacat-create-panel-button />
+      <datacat-create-panel-button
+        [dashboardId]="_dashboardId"
+        (onCreate)="refreshDashboard()"
+      />
 
       <p-togglebutton
         onIcon="pi pi-unlock"

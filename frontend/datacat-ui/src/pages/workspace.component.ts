@@ -55,7 +55,7 @@ export class WorkspaceComponent {
     },
     {
       type: 'url',
-      icon: 'pi pi-table',
+      icon: 'pi pi-th-large',
       label: 'Dashboards',
       data: {
         url: urls.DASHBOARDS_EXPLORER_URL,

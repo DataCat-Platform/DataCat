@@ -13,14 +13,6 @@
 >
   <div class="creation-dialog">
     <form class="creation-form" [formGroup]="creationForm">
-      <p-panel header="Preview">
-        <div class="visualization">
-          <datacat-panel-vizualization
-            [visualizationType]="visualizationType"
-            [data]="[0, 1, 2]"
-          />
-        </div>
-      </p-panel>
       <div class="creation-form__item">
         <p>Title</p>
         <input pInputText placeholder="Title" formControlName="title" />
@@ -42,11 +34,18 @@
           formControlName="rawQuery"
         ></textarea>
       </div>
+      <div class="validation-errors">
+        @if (titleControl.invalid) {
+          <p>* Title is required</p>
+        }
+        @if (queryControl.invalid) {
+          <p>* Query is required</p>
+        }
+        @if (dataSourceIdControl.invalid) {
+          <p>* Data source is required</p>
+        }
+      </div>
     </form>
-    <datacat-panel-visualization-options
-      (type)="setVisualizationType($event)"
-      (settings)="setVisualizationSettings($event)"
-    />
   </div>
   <ng-template pTemplate="footer">
     <div class="creation-form__footer">
@@ -54,6 +53,7 @@
         label="Create"
         (onClick)="createPanel()"
         [loading]="isCreationInitiated"
+        [disabled]="creationForm.invalid"
       />
     </div>
   </ng-template>

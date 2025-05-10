@@ -30,3 +30,12 @@ gridster-item {
   text-align: center;
   margin-top: 20rem;
 }
+
+.variables {
+  display: flex;
+  gap: var(--p-padding-md);
+}
+
+.variables p {
+  white-space: nowrap;
+}

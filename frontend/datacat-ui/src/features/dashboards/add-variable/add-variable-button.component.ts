@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { DialogModule } from 'primeng/dialog';
@@ -13,6 +13,7 @@ import { finalize } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
+import { DataSource, NotificationGroup } from '../../../entities';
 import { ChipModule } from 'primeng/chip';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -20,9 +21,9 @@ import { InputMaskModule } from 'primeng/inputmask';
 
 @Component({
   standalone: true,
-  selector: './datacat-create-dashboard-button',
-  templateUrl: './create-dashboard-button.component.html',
-  styleUrl: './create-dashboard-button.component.scss',
+  selector: './datacat-add-variable-button',
+  templateUrl: './add-variable-button.component.html',
+  styleUrl: './add-variable-button.component.scss',
   imports: [
     ButtonModule,
     DialogModule,
@@ -36,47 +37,26 @@ import { InputMaskModule } from 'primeng/inputmask';
     InputMaskModule,
   ],
 })
-export class CreateDashboardButtonComponent {
+export class AddVariableButtonComponent {
+  @Input() public dashboardId?: string;
+  @Output() public onAdd = new EventEmitter<void>();
+
   protected isCreationDialogVisible = false;
   protected isCreationInitiated = false;
 
   protected addTagControl = new FormControl<string>('');
 
   protected creationForm = new FormGroup({
-    name: new FormControl<string>('', Validators.required),
-    description: new FormControl<string>('', Validators.required),
-    tags: new FormControl<string[]>([]),
+    placeholder: new FormControl<string>('', Validators.required),
+    value: new FormControl<string>('', Validators.required),
   });
 
-  protected get nameControl() {
-    return this.creationForm.get('name')!;
+  protected get placeholderControl() {
+    return this.creationForm.get('placeholder')!;
   }
 
-  protected get descriptionControl() {
-    return this.creationForm.get('description')!;
-  }
-
-  protected get tagsControl() {
-    return this.creationForm.get('tags')!;
-  }
-
-  protected get creationFormTags(): string[] {
-    return this.creationForm.get('tags')?.value || [];
-  }
-
-  protected addCreationFormTag() {
-    const tag = this.addTagControl.value;
-    const previousTags = this.creationForm.get('tags')?.value || [];
-    if (tag && !previousTags.includes(tag)) {
-      this.creationForm.get('tags')?.setValue([...previousTags, tag]);
-    }
-  }
-
-  protected removeCreationFormTag(tag: string) {
-    const previousTags = this.creationFormTags;
-    this.creationForm
-      .get('tags')
-      ?.setValue(previousTags.filter((t) => t !== tag));
+  protected get valueControl() {
+    return this.creationForm.get('value')!;
   }
 
   constructor(
@@ -84,22 +64,19 @@ export class CreateDashboardButtonComponent {
     private loggerService: ToastLoggerService,
   ) {}
 
-  protected createDashboard() {
+  protected addVariable() {
     this.creationForm.markAllAsTouched();
     this.creationForm.updateValueAndValidity();
 
-    if (this.creationForm.invalid) return;
-
-    const rawForm = this.creationForm.getRawValue();
-    const request: any = {
-      name: rawForm.name,
-      description: rawForm.description,
-      tags: rawForm.tags,
-    };
+    if (this.creationForm.invalid || !this.dashboardId) return;
 
     this.isCreationInitiated = true;
+
+    const request: any = this.creationForm.getRawValue();
+    request.dashboardId = this.dashboardId;
+
     this.apiService
-      .postApiV1DashboardAdd(request)
+      .postApiV1VariableAdd(request)
       .pipe(
         finalize(() => {
           this.isCreationInitiated = false;
@@ -107,8 +84,9 @@ export class CreateDashboardButtonComponent {
       )
       .subscribe({
         next: () => {
-          this.loggerService.success('Dashboard created');
+          this.loggerService.success('Variable added');
           this.isCreationDialogVisible = false;
+          this.onAdd.emit();
         },
         error: (e) => {
           this.loggerService.error(e);

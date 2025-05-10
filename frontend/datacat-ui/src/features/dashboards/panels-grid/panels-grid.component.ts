@@ -21,6 +21,8 @@ import { PanelInGridComponent } from './panel-in-grid';
 import { CreatePanelButtonComponent } from './create-panel-button';
 import { RefreshRateOption } from '.';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { AddVariableButtonComponent } from '../add-variable';
+import { DeleteVariableButtonComponent } from '../delete-variable';
 
 @Component({
   standalone: true,
@@ -39,6 +41,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
     PanelInGridComponent,
     CreatePanelButtonComponent,
     ReactiveFormsModule,
+    AddVariableButtonComponent,
+    DeleteVariableButtonComponent,
   ],
 })
 export class PanelsGridComponent {
@@ -57,6 +61,7 @@ export class PanelsGridComponent {
   @Input() public set dashboardId(id: string) {
     this._dashboardId = id;
     this.refreshDashboard();
+    this.refreshDashboardVariables();
   }
 
   protected isBusy = false;
