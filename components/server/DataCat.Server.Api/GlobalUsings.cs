@@ -50,6 +50,7 @@ global using DataCat.Server.Application.Enums;
 global using DataCat.Server.Application.Exceptions;
 global using DataCat.Server.Application.Queries.Alerts.Get;
 global using DataCat.Server.Application.Queries.Alerts.GetAvailableTemplateVariables;
+global using DataCat.Server.Application.Queries.Alerts.GetCounters;
 global using DataCat.Server.Application.Queries.Alerts.Search;
 global using DataCat.Server.Application.Queries.Common;
 global using DataCat.Server.Application.Queries.Common.Responses;
