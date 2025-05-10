@@ -1,3 +1,5 @@
+using DataCat.Server.Application.Queries.Alerts.GetCounters;
+
 namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class AlertRepository(
@@ -88,6 +90,24 @@ public sealed class AlertRepository(
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         await connection.ExecuteAsync(sql, alertSnapshot, transaction: unitOfWork.Transaction);
+    }
+
+    public async Task<List<AlertCounterResponse>> GetAlertCountersAsync(CancellationToken token = default)
+    {
+        const string sql = $"""
+           SELECT
+               alerts.{Public.Alerts.Status} AS {nameof(AlertCounterResponse.Status)},
+               COUNT(*)                      AS {nameof(AlertCounterResponse.Count)}
+           FROM {Public.AlertTable} alerts
+           GROUP BY alerts.{Public.Alerts.Status}
+       """;
+
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+        var result = await connection.QueryAsync<AlertCounterResponse>(
+            sql,
+            transaction: unitOfWork.Transaction);
+
+        return result.ToList();
     }
 
     public async Task<Page<Alert>> SearchAsync(
