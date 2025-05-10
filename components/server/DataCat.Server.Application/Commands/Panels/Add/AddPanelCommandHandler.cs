@@ -3,7 +3,8 @@ namespace DataCat.Server.Application.Commands.Panels.Add;
 public sealed class AddPanelCommandHandler(
     IRepository<Panel, Guid> panelRepository,
     IRepository<DataSource, Guid> dataSourceRepository,
-    IRepository<Dashboard, Guid> dashboardRepository)
+    IRepository<Dashboard, Guid> dashboardRepository,
+    NamespaceContext namespaceContext)
     : ICommandHandler<AddPanelCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AddPanelCommand request, CancellationToken cancellationToken)
@@ -20,7 +21,7 @@ public sealed class AddPanelCommandHandler(
         }
         
         var panelId = Guid.NewGuid();
-        var result = CreatePanel(panelId, request, dataSource);
+        var result = CreatePanel(panelId, request, dataSource, namespaceContext.GetNamespaceId());
 
         if (result.IsFailure)
             return Result.Fail<Guid>(result.Errors!);
@@ -29,7 +30,7 @@ public sealed class AddPanelCommandHandler(
         return Result.Success(panelId);
     }
     
-    private static Result<Panel> CreatePanel(Guid id, AddPanelCommand request, DataSource dataSource)
+    private static Result<Panel> CreatePanel(Guid id, AddPanelCommand request, DataSource dataSource, Guid namespaceId)
     {
         var panelType = PanelType.FromValue(request.Type);
         if (panelType is null)
@@ -45,6 +46,7 @@ public sealed class AddPanelCommandHandler(
             queryResult.Value,
             new DataCatLayout(request.Layout),
             Guid.Parse(request.DashboardId),
-            request.StyleConfiguration);
+            request.StyleConfiguration,
+            namespaceId);
     }
 }

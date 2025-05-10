@@ -5,6 +5,7 @@ public sealed record NotificationChannelResponse
     public required int Id { get; init; }
     public required string DestinationName { get; init; }
     public required string Settings { get; init; }
+    public required Guid NamespaceId { get; init; }
 }
 
 public static class NotificationChannelResponseExtensions
@@ -15,7 +16,8 @@ public static class NotificationChannelResponseExtensions
         {
             Id = notificationChannel.Id,
             DestinationName = notificationChannel.NotificationOption.NotificationDestination.Name,
-            Settings = notificationChannel.NotificationOption.Settings
+            Settings = notificationChannel.NotificationOption.Settings,
+            NamespaceId = notificationChannel.NamespaceId
         };
     }
 }

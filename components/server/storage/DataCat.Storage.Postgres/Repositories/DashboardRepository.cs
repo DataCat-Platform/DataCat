@@ -2,12 +2,13 @@ namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class DashboardRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
-    UnitOfWork UnitOfWork)
+    UnitOfWork UnitOfWork,
+    NamespaceContext NamespaceContext)
     : IRepository<Dashboard, Guid>, IDashboardRepository
 {
     public async Task<Dashboard?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
-        var parameters = new { p_dashboard_id = id.ToString() };
+        var parameters = new { p_dashboard_id = id.ToString(), p_namespace_id = NamespaceContext.NamespaceId };
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         const string sql = DashboardSql.Select.FindDashboard;
         
@@ -83,6 +84,7 @@ public sealed class DashboardRepository(
         var parameters = new DynamicParameters();
 
         var offset = (page - 1) * pageSize;
+        parameters.Add("p_namespace_id", NamespaceContext.NamespaceId);
         parameters.Add("offset", offset);
         parameters.Add("limit", pageSize);
 
@@ -90,7 +92,6 @@ public sealed class DashboardRepository(
         {
             ["id"] = $"dashboard.{Public.Dashboards.Id}",
             ["name"] = $"dashboard.{Public.Dashboards.Name}",
-            ["namespaceId"] = $"dashboard.{Public.Dashboards.NamespaceId}",
             ["tags"] = $"dashboard.{Public.Dashboards.Tags}",
         };
 

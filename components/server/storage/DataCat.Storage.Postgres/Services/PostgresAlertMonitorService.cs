@@ -22,6 +22,7 @@ public class PostgresAlertMonitorService(
                alert.{Public.Alerts.WaitTimeBeforeAlertingInTicks}               {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
                alert.{Public.Alerts.RepeatIntervalInTicks}                       {nameof(AlertSnapshot.RepeatIntervalInTicks)},
                alert.{Public.Alerts.Tags}                                        {nameof(AlertSnapshot.Tags)},
+               alert.{Public.Alerts.NamespaceId}                                 {nameof(AlertSnapshot.NamespaceId)},
    
                data_source.{Public.DataSources.Id}                                    {nameof(DataSourceSnapshot.Id)},
                data_source.{Public.DataSources.Name}                                  {nameof(DataSourceSnapshot.Name)},
@@ -34,11 +35,13 @@ public class PostgresAlertMonitorService(
    
                notification_channel_group.{Public.NotificationChannelGroups.Id}            {nameof(NotificationChannelGroupSnapshot.Id)},
                notification_channel_group.{Public.NotificationChannelGroups.Name}          {nameof(NotificationChannelGroupSnapshot.Name)},
+               notification_channel_group.{Public.NotificationChannelGroups.NamespaceId}   {nameof(NotificationChannelGroupSnapshot.NamespaceId)},
                
                notification_channel.{Public.NotificationChannels.Id}                           {nameof(NotificationChannelSnapshot.Id)},
                notification_channel.{Public.NotificationChannels.NotificationChannelGroupId}   {nameof(NotificationChannelSnapshot.NotificationChannelGroupId)},
                notification_channel.{Public.NotificationChannels.Settings}                     {nameof(NotificationChannelSnapshot.Settings)},
                notification_channel.{Public.NotificationChannels.DestinationId}                {nameof(NotificationChannelSnapshot.DestinationId)},
+               notification_channel.{Public.NotificationChannels.NamespaceId}                  {nameof(NotificationChannelSnapshot.NamespaceId)},
                
                notification_destination.{Public.NotificationDestination.Id}         {nameof(NotificationDestinationSnapshot.Id)},
                notification_destination.{Public.NotificationDestination.Name}       {nameof(NotificationDestinationSnapshot.Name)}
@@ -120,7 +123,7 @@ public class PostgresAlertMonitorService(
                 alert.{Public.Alerts.WaitTimeBeforeAlertingInTicks}       {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
                 alert.{Public.Alerts.RepeatIntervalInTicks}               {nameof(AlertSnapshot.RepeatIntervalInTicks)},
                 alert.{Public.Alerts.Tags}                                {nameof(AlertSnapshot.Tags)},
-                
+                alert.{Public.Alerts.NamespaceId}                         {nameof(AlertSnapshot.NamespaceId)},
                 
                 data_source.{Public.DataSources.Id}                     {nameof(DataSourceSnapshot.Id)},
                 data_source.{Public.DataSources.Name}                   {nameof(DataSourceSnapshot.Name)},
@@ -133,11 +136,13 @@ public class PostgresAlertMonitorService(
                 
                 notification_channel_group.{Public.NotificationChannelGroups.Id}           {nameof(NotificationChannelGroupSnapshot.Id)},
                 notification_channel_group.{Public.NotificationChannelGroups.Name}         {nameof(NotificationChannelGroupSnapshot.Name)},
+                notification_channel_group.{Public.NotificationChannelGroups.NamespaceId}  {nameof(NotificationChannelGroupSnapshot.NamespaceId)},
                 
                 notification_channel.{Public.NotificationChannels.Id}                            {nameof(NotificationChannelSnapshot.Id)},
                 notification_channel.{Public.NotificationChannels.NotificationChannelGroupId}    {nameof(NotificationChannelSnapshot.NotificationChannelGroupId)},
                 notification_channel.{Public.NotificationChannels.Settings}                      {nameof(NotificationChannelSnapshot.Settings)},
                 notification_channel.{Public.NotificationChannels.DestinationId}                 {nameof(NotificationChannelSnapshot.DestinationId)},
+                notification_channel.{Public.NotificationChannels.NamespaceId}                   {nameof(NotificationChannelSnapshot.NamespaceId)},
             
                 notification_destination.{Public.NotificationDestination.Id}          {nameof(NotificationDestinationSnapshot.Id)},
                 notification_destination.{Public.NotificationDestination.Name}        {nameof(NotificationDestinationSnapshot.Name)}

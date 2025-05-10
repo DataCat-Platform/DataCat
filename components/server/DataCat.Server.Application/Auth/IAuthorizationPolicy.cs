@@ -2,5 +2,5 @@ namespace DataCat.Server.Application.Auth;
 
 public interface IAuthorizationPolicy
 {
-    bool IsAuthorized(IIdentity? user);
+    bool IsAuthorized(IIdentity? user, string NamespaceId);
 }

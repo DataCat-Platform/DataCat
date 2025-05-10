@@ -4,7 +4,7 @@ import {CreateDataSourceButtonComponent} from "../../features/data-sources/creat
 import {
     DataSourcesFilteringComponent
 } from "../../features/data-sources/data-sources-filtering/data-sources-filtering.component";
-import {DataSourcesFilter} from "../../entities/data-sources/data-sources-filter";
+import {DataSourcesFilter} from "../../entities/data-sources";
 import {DataSourcesListComponent} from "../../features/data-sources/data-sources-list/data-sources-list.component";
 
 @Component({

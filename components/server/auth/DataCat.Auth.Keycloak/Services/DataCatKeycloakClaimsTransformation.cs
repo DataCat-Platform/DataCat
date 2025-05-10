@@ -33,7 +33,7 @@ public sealed class DataCatKeycloakClaimsTransformation(
         foreach (var role in mappings.Where(map => roles.Any(r => r == map.ExternalRole)))
         {
             claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, role.Role.Name));
-            roleClaims.Add(new RoleClaim(role.Role, role.NamespaceId));
+            roleClaims.Add(new RoleClaim(role.Role, role.NamespaceId.ToString()));
         }
         
         principal.AddIdentity(claimsIdentity);

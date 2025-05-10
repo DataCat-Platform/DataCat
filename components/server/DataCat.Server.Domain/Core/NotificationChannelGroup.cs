@@ -5,15 +5,18 @@ public sealed class NotificationChannelGroup
     private NotificationChannelGroup(
         Guid id,
         string name,
-        List<NotificationChannel> notificationChannels)
+        List<NotificationChannel> notificationChannels,
+        Guid namespaceId)
     {
         Id = id;
         Name = name;
+        NamespaceId = namespaceId;
         _notificationChannels = notificationChannels;
     }
     
     public Guid Id { get; }
     public string Name { get; }
+    public Guid NamespaceId { get; }
 
     private readonly List<NotificationChannel> _notificationChannels;
     public IReadOnlyCollection<NotificationChannel> NotificationChannels => _notificationChannels.AsReadOnly();
@@ -21,7 +24,8 @@ public sealed class NotificationChannelGroup
     public static Result<NotificationChannelGroup> Create(
         Guid id, 
         string name,
-        List<NotificationChannel> notificationChannels)
+        List<NotificationChannel> notificationChannels,
+        Guid namespaceId)
     {
         var validationList = new List<Result<NotificationChannelGroup>>();
 
@@ -36,6 +40,6 @@ public sealed class NotificationChannelGroup
 
         return validationList.Count != 0 
             ? validationList.FoldResults()! 
-            : Result.Success(new NotificationChannelGroup(id, name, notificationChannels ?? []));
+            : Result.Success(new NotificationChannelGroup(id, name, notificationChannels ?? [], namespaceId));
     }
 }

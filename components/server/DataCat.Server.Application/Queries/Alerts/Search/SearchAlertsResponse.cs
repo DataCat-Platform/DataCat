@@ -14,6 +14,8 @@ public sealed record SearchAlertsResponse
     public required TimeSpan WaitTimeBeforeAlerting { get; init; }
     public required TimeSpan RepeatInterval { get; init; }
     public required List<string> Tags { get; init; }
+    public required Guid NamespaceId { get; init; }
+
     
     public static SearchAlertsResponse ToResponse(Alert alert)
     {
@@ -31,6 +33,7 @@ public sealed record SearchAlertsResponse
             PreviousExecutionTime = alert.PreviousExecution.DateTime,
             NextExecutionTime = alert.NextExecution.DateTime,
             Tags = alert.Tags.Select(x => x.Value).OrderBy(x => x).ToList(),
+            NamespaceId = alert.NamespaceId,
         };
     }
 }

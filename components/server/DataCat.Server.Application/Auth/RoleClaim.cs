@@ -1,3 +1,3 @@
 namespace DataCat.Server.Application.Auth;
 
-public sealed record RoleClaim(UserRole Role, Guid Namespace);
+public sealed record RoleClaim(UserRole Role, string NamespaceId);

@@ -2,12 +2,13 @@ namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class PanelRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
-    UnitOfWork UnitOfWork)
+    UnitOfWork UnitOfWork,
+    NamespaceContext NamespaceContext)
     : IRepository<Panel, Guid>, IPanelRepository
 {
     public async Task<Panel?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
-        var parameters = new { p_panel_id = id.ToString() };
+        var parameters = new { p_panel_id = id.ToString(), p_namespace_id = NamespaceContext.NamespaceId };
 
         const string sql = $"""
             SELECT
@@ -19,6 +20,7 @@ public sealed class PanelRepository(
                 p.{Public.Panels.LayoutConfiguration}        {nameof(PanelSnapshot.LayoutConfiguration)},
                 p.{Public.Panels.DashboardId}                {nameof(PanelSnapshot.DashboardId)},
                 p.{Public.Panels.StylingConfiguration}       {nameof(PanelSnapshot.StyleConfiguration)},
+                p.{Public.Panels.NamespaceId}                {nameof(PanelSnapshot.NamespaceId)},
                 
                 ds.{Public.DataSources.Id}                   {nameof(DataSourceSnapshot.Id)},
                 ds.{Public.DataSources.Name}                 {nameof(DataSourceSnapshot.Name)},
@@ -35,7 +37,7 @@ public sealed class PanelRepository(
                 {Public.DataSourceTable} ds ON ds.{Public.DataSources.Id} = p.{Public.Panels.DataSourceId}
             JOIN 
                 {Public.DataSourceTypeTable} dst ON dst.{Public.DataSourceType.Id} = ds.{Public.DataSources.TypeId} 
-            WHERE p.{Public.Panels.Id} = @p_panel_id
+            WHERE p.{Public.Panels.Id} = @p_panel_id AND p.{Public.Panels.NamespaceId} = @p_namespace_id
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -67,17 +69,19 @@ public sealed class PanelRepository(
                 {Public.Panels.DataSourceId},
                 {Public.Panels.LayoutConfiguration},
                 {Public.Panels.DashboardId},
-                {Public.Panels.StylingConfiguration}
+                {Public.Panels.StylingConfiguration},
+                {Public.Panels.NamespaceId}
             )
             VALUES (
                 @{nameof(PanelSnapshot.Id)},
-                @{nameof(PanelSnapshot.TypeId)},
+                @{nameof(PanelSnapshot.Title)},
                 @{nameof(PanelSnapshot.TypeId)},
                 @{nameof(PanelSnapshot.RawQuery)},
                 @{nameof(PanelSnapshot.DataSourceId)},
                 @{nameof(PanelSnapshot.LayoutConfiguration)},
                 @{nameof(PanelSnapshot.DashboardId)},
-                @{nameof(PanelSnapshot.StyleConfiguration)}
+                @{nameof(PanelSnapshot.StyleConfiguration)},
+                @{nameof(PanelSnapshot.NamespaceId)}
             )
         """;
 

@@ -4,7 +4,8 @@ public sealed class AddNotificationCommandHandler(
     INotificationDestinationRepository notificationDestinationRepository,
     INotificationChannelRepository notificationChannelRepository,
     INotificationChannelGroupRepository notificationChannelGroupRepository,
-    NotificationChannelManager notificationChannelManager)
+    NotificationChannelManager notificationChannelManager,
+    NamespaceContext namespaceContext)
     : ICommandHandler<AddNotificationCommand, int>
 {
     public async Task<Result<int>> Handle(AddNotificationCommand request, CancellationToken cancellationToken)
@@ -25,7 +26,8 @@ public sealed class AddNotificationCommandHandler(
 
         var notificationResult = NotificationChannel.Create(
             notificationChannelGroup.Id,
-            notificationOptionResult.Value);
+            notificationOptionResult.Value,
+            namespaceContext.GetNamespaceId());
         
         if (notificationResult.IsFailure)
             return Result.Fail<int>(notificationResult.Errors!);
