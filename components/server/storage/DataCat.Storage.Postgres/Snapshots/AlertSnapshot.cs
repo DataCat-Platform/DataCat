@@ -16,6 +16,7 @@ public sealed record AlertSnapshot
     public required long WaitTimeBeforeAlertingInTicks { get; init; }
     public required long RepeatIntervalInTicks { get; init; }
     public required List<Tag> Tags { get; init; }
+    public required string NamespaceId { get; init; } 
 }
 
 public static class AlertSnapshotExtensions
@@ -36,6 +37,7 @@ public static class AlertSnapshotExtensions
             RepeatIntervalInTicks = alert.Schedule.RepeatInterval.Ticks,
             WaitTimeBeforeAlertingInTicks = alert.Schedule.WaitTimeBeforeAlerting.Ticks,
             Tags = alert.Tags.ToList(),
+            NamespaceId = alert.NamespaceId.ToString()
         };
     }
 
@@ -52,7 +54,8 @@ public static class AlertSnapshotExtensions
             nextExecution: snapshot.NextExecution,
             TimeSpan.FromTicks(snapshot.WaitTimeBeforeAlertingInTicks),
             TimeSpan.FromTicks(snapshot.RepeatIntervalInTicks),
-            snapshot.Tags
+            snapshot.Tags,
+            Guid.Parse(snapshot.NamespaceId)
         );
 
         return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(Alert));

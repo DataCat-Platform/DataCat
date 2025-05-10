@@ -18,14 +18,17 @@ public static class AlertSql
                 alert.{Public.Alerts.WaitTimeBeforeAlertingInTicks}     {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
                 alert.{Public.Alerts.RepeatIntervalInTicks}             {nameof(AlertSnapshot.RepeatIntervalInTicks)},
                 alert.{Public.Alerts.Tags}                              {nameof(AlertSnapshot.Tags)},
+                alert.{Public.Alerts.NamespaceId}                       {nameof(AlertSnapshot.NamespaceId)},
                 
                 notification_group.{Public.NotificationChannelGroups.Id}                  {nameof(NotificationChannelGroupSnapshot.Id)},
                 notification_group.{Public.NotificationChannelGroups.Name}                {nameof(NotificationChannelGroupSnapshot.Name)},
+                notification_group.{Public.NotificationChannelGroups.NamespaceId}         {nameof(NotificationChannelGroupSnapshot.NamespaceId)},
                 
                 notification_channel.{Public.NotificationChannels.Id}                            {nameof(NotificationChannelSnapshot.Id)},
                 notification_channel.{Public.NotificationChannels.NotificationChannelGroupId}    {nameof(NotificationChannelSnapshot.NotificationChannelGroupId)},
                 notification_channel.{Public.NotificationChannels.DestinationId}                 {nameof(NotificationChannelSnapshot.DestinationId)},
                 notification_channel.{Public.NotificationChannels.Settings}                      {nameof(NotificationChannelSnapshot.Settings)},
+                notification_channel.{Public.NotificationChannels.NamespaceId}                   {nameof(NotificationChannelSnapshot.NamespaceId)},
                 
                 notification_destination.{Public.NotificationDestination.Id}                  {nameof(NotificationDestinationSnapshot.Id)},
                 notification_destination.{Public.NotificationDestination.Name}                {nameof(NotificationDestinationSnapshot.Name)},
@@ -51,7 +54,7 @@ public static class AlertSql
                  {Public.DataSourceTable} data_source ON alert.{Public.Alerts.DataSourceId} = data_source.{Public.DataSources.Id}
              JOIN
                  {Public.DataSourceTypeTable} data_source_type ON data_source_type.{Public.DataSourceType.Id} = data_source.{Public.DataSources.TypeId}
-             WHERE alert.{Public.Alerts.Id} = @p_alert_id
+             WHERE alert.{Public.Alerts.Id} = @p_alert_id AND alert.{Public.Alerts.NamespaceId} = @p_namespace_id
              ";
         
         public const string SearchAlertsTotalCount =
@@ -60,7 +63,7 @@ public static class AlertSql
                 COUNT(*)
              FROM 
                  {Public.AlertTable} alerts
-             WHERE 1=1 
+             WHERE alerts.{Public.Alerts.NamespaceId} = @p_namespace_id 
              """;
         
         public const string SearchAlerts =
@@ -78,14 +81,17 @@ public static class AlertSql
                  alerts.{Public.Alerts.WaitTimeBeforeAlertingInTicks}            {nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
                  alerts.{Public.Alerts.RepeatIntervalInTicks}                    {nameof(AlertSnapshot.RepeatIntervalInTicks)},
                  alerts.{Public.Alerts.Tags}                                     {nameof(AlertSnapshot.Tags)},
+                 alerts.{Public.Alerts.NamespaceId}                              {nameof(AlertSnapshot.NamespaceId)},
                  
-                 notification_group.{Public.NotificationChannelGroups.Id}      {nameof(NotificationChannelGroupSnapshot.Id)},
-                 notification_group.{Public.NotificationChannelGroups.Name}    {nameof(NotificationChannelGroupSnapshot.Name)},
+                 notification_group.{Public.NotificationChannelGroups.Id}             {nameof(NotificationChannelGroupSnapshot.Id)},
+                 notification_group.{Public.NotificationChannelGroups.Name}           {nameof(NotificationChannelGroupSnapshot.Name)},
+                 notification_group.{Public.NotificationChannelGroups.NamespaceId}    {nameof(NotificationChannelGroupSnapshot.NamespaceId)},
                  
                  notification_channel.{Public.NotificationChannels.Id}                           {nameof(NotificationChannelSnapshot.Id)},
                  notification_channel.{Public.NotificationChannels.NotificationChannelGroupId}   {nameof(NotificationChannelSnapshot.NotificationChannelGroupId)},
                  notification_channel.{Public.NotificationChannels.DestinationId}                {nameof(NotificationChannelSnapshot.DestinationId)},
                  notification_channel.{Public.NotificationChannels.Settings}                     {nameof(NotificationChannelSnapshot.Settings)},
+                 notification_channel.{Public.NotificationChannels.NamespaceId}                  {nameof(NotificationChannelSnapshot.NamespaceId)},
                  
                  notification_destination.{Public.NotificationDestination.Id}        {nameof(NotificationDestinationSnapshot.Id)},
                  notification_destination.{Public.NotificationDestination.Name}      {nameof(NotificationDestinationSnapshot.Name)},
@@ -111,7 +117,7 @@ public static class AlertSql
                  {Public.DataSourceTable} data_source ON alerts.{Public.Alerts.DataSourceId} = data_source.{Public.DataSources.Id}
              JOIN
                  {Public.DataSourceTypeTable} data_source_type ON data_source_type.{Public.DataSourceType.Id} = data_source.{Public.DataSources.TypeId}
-             WHERE 1=1 
+             WHERE alerts.{Public.Alerts.NamespaceId} = @p_namespace_id 
              """;
     }
 }

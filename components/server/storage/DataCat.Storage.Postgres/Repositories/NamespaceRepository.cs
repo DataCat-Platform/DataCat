@@ -26,7 +26,35 @@ public sealed class NamespaceRepository(
 
         return result?.RestoreFromSnapshot();
     }
-    
+
+    public async Task<List<Namespace>> GetNamespacesForUserAsync(string identityId, CancellationToken token = default)
+    {
+        var parameters = new { p_identity_id = identityId };
+        var connection = await Factory.GetOrCreateConnectionAsync(token);
+        
+        const string sql = $"""
+                                SELECT DISTINCT
+                                    namespace.{Public.Namespaces.Id}       {nameof(NamespaceSnapshot.Id)}, 
+                                    namespace.{Public.Namespaces.Name}     {nameof(NamespaceSnapshot.Name)}
+                                    
+                                FROM 
+                                    {Public.NamespaceTable} namespace
+                                JOIN
+                                    {Public.UserRoleLinkTable} user_role_link ON namespace.{Public.Namespaces.Id} = user_role_link.{Public.UsersRolesLink.NamespaceId}
+                                JOIN
+                                    {Public.UserTable} users ON users.{Public.Users.Id} = user_role_link.{Public.UsersRolesLink.UserId}
+                                WHERE {Public.Users.IdentityId} = @p_identity_id
+                            """;
+
+        var result = await connection.QueryAsync<NamespaceSnapshot>(
+            sql,
+            param: parameters,
+            transaction: unitOfWork.Transaction
+        );
+
+        return result.Select(x => x.RestoreFromSnapshot()).ToList();
+    }
+
     public async Task<Namespace?> GetByNameAsync(string name, CancellationToken token)
     {
         var parameters = new { p_name = name };

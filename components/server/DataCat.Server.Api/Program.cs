@@ -57,7 +57,9 @@ app.UseSwaggerUI(options =>
 
 app.UseRouting();
 
-app.UseLoggingRequests();
+app
+    .UseNamespaceEnricher()
+    .UseLoggingRequests();
 
 app.UseCors("frontend");
 

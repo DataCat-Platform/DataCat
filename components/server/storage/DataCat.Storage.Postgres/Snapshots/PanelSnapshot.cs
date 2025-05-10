@@ -11,6 +11,7 @@ public sealed record PanelSnapshot
     public required string LayoutConfiguration { get; init; }
     public required string DashboardId { get; init; }
     public required string? StyleConfiguration { get; init; }
+    public required string NamespaceId { get; init; }
 }
 
 public static class PanelEntitySnapshotExtensions
@@ -28,7 +29,8 @@ public static class PanelEntitySnapshotExtensions
             DataSource = query.DataSource,
             DashboardId = panel.DashboardId.ToString(),
             StyleConfiguration = panel.StyleConfiguration,
-            LayoutConfiguration = panel.DataCatLayout.Settings
+            LayoutConfiguration = panel.DataCatLayout.Settings,
+            NamespaceId = panel.NamespaceId.ToString(),
         };
     }
 
@@ -45,7 +47,8 @@ public static class PanelEntitySnapshotExtensions
             query,
             new DataCatLayout(snapshot.LayoutConfiguration),
             Guid.Parse(snapshot.DashboardId),
-            snapshot.StyleConfiguration);
+            snapshot.StyleConfiguration,
+            Guid.Parse(snapshot.NamespaceId));
 
         return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSource));
     }

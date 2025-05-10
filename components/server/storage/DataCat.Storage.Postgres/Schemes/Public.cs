@@ -125,6 +125,7 @@ public static class Public
         public const string LayoutConfiguration = "layout_configuration";
         public const string DashboardId = "dashboard_id";
         public const string StylingConfiguration = "style_configuration";
+        public const string NamespaceId = "namespace_id";
     }
 
     public static class Alerts
@@ -141,6 +142,7 @@ public static class Public
         public const string WaitTimeBeforeAlertingInTicks = "wait_time_before_alerting_in_ticks";
         public const string RepeatIntervalInTicks = "repeat_interval_in_ticks";
         public const string Tags = "tags";
+        public const string NamespaceId = "namespace_id";
     }
 
     public static class NotificationChannels
@@ -149,12 +151,14 @@ public static class Public
         public const string DestinationId = "destination_id";
         public const string NotificationChannelGroupId = "notification_channel_group_id";
         public const string Settings = "settings";
+        public const string NamespaceId = "namespace_id";
     }
     
     public static class NotificationChannelGroups
     {
         public const string Id = "id";
         public const string Name = "name";
+        public const string NamespaceId = "namespace_id";
     }
 
     public static class DataSourceType

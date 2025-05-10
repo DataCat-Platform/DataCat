@@ -15,13 +15,15 @@ export class AppDialogService {
         component: Type<any>,
         header: string,
         data: any,
+        height: string = '1200px',
+        width: string = '800px',
     ): void {
         this.ref = this.dialogService.open(component, {
             header: `${header}`,
             data: data,
             modal: true,
-            width: '1200px',
-            height: '800px',
+            width: width!,
+            height: height!,
             focusOnShow: false,
         });
     }

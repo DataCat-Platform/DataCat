@@ -22,7 +22,12 @@ public sealed class NamespaceCachedRepository(
         
         return @namespace;
     }
-    
+
+    public Task<List<Namespace>> GetNamespacesForUserAsync(string identityId, CancellationToken token = default)
+    {
+        return namespaceRepository.GetNamespacesForUserAsync(identityId, token);
+    }
+
     public async Task<Namespace?> GetByNameAsync(string name, CancellationToken token)
     {
         var cacheKey = $"{ByNameCacheKeyPrefix}{name}";

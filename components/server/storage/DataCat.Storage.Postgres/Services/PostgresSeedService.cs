@@ -86,7 +86,7 @@ public sealed class PostgresSeedService(
         {
             var insertSql = $"""
                 INSERT INTO {Public.NamespaceTable} ({Public.Namespaces.Id}, {Public.Namespaces.Name})
-                VALUES ('{Guid.NewGuid()}', '{ApplicationConstants.DefaultNamespace}');
+                VALUES ('{ApplicationConstants.DefaultNamespaceId}', '{ApplicationConstants.DefaultNamespace}');
             """; 
             
             await connection.ExecuteAsync(insertSql);

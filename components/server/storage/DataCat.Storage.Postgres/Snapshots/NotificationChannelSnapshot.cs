@@ -7,6 +7,7 @@ public sealed record NotificationChannelSnapshot
     public required NotificationDestinationSnapshot Destination { get; set; }
     public int? DestinationId => Destination.Id;
     public required string Settings { get; init; }
+    public required string NamespaceId { get; init; }
 }
 
 public static class NotificationChannelSnapshotExtensions
@@ -18,7 +19,8 @@ public static class NotificationChannelSnapshotExtensions
             Id = notification.Id,
             NotificationChannelGroupId = notification.NotificationChannelGroupId.ToString(),
             Destination = notification.NotificationOption.NotificationDestination.Save(),
-            Settings = notification.NotificationOption.Settings
+            Settings = notification.NotificationOption.Settings,
+            NamespaceId = notification.NamespaceId.ToString(),
         };
     }
 
@@ -29,6 +31,7 @@ public static class NotificationChannelSnapshotExtensions
         var result = NotificationChannel.Create(
             Guid.Parse(snapshot.NotificationChannelGroupId),
             notificationChannelManager.GetNotificationChannelFactory(destination).Create(destination, snapshot.Settings).Value,
+            Guid.Parse(snapshot.NamespaceId),
             snapshot.Id
         );
 

@@ -6,6 +6,7 @@ import {Tag} from "primeng/tag";
 import {Button} from "primeng/button";
 import {AppDialogService} from "../../../shared/services/app-dialog.service";
 import {LogsDetailsComponent} from "../logs-details/logs-details.component";
+import {sanitizeMessage} from "../../../shared/utils/sanitizeMessage";
 
 @Component({
     selector: 'app-logs-list',
@@ -28,6 +29,7 @@ export class LogsListComponent {
 
     currentSortField = '';
     sortAscending = false;
+    protected readonly sanitizeMessage = sanitizeMessage;
 
     constructor(
         private appDialogService: AppDialogService,
@@ -68,18 +70,5 @@ export class LogsListComponent {
             'Additional Fields',
             additionalFields || {}
         )
-    }
-
-    sanitizeMessage(message: string): string {
-        try {
-            if ((message.startsWith('"') && message.endsWith('"')) ||
-                (message.startsWith('\"') && message.endsWith('\"'))) {
-                message = message.slice(1, -1);
-            }
-
-            return JSON.parse(`"${message}"`);
-        } catch {
-            return message;
-        }
     }
 }

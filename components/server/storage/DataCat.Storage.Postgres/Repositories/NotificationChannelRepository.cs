@@ -3,12 +3,13 @@ namespace DataCat.Storage.Postgres.Repositories;
 public sealed class NotificationChannelRepository(
     IDbConnectionFactory<NpgsqlConnection> Factory,
     UnitOfWork unitOfWork,
-    NotificationChannelManager NotificationChannelManager)
+    NotificationChannelManager NotificationChannelManager,
+    NamespaceContext NamespaceContext)
     : IRepository<NotificationChannel, int>, INotificationChannelRepository
 {
     public async Task<NotificationChannel?> GetByIdAsync(int id, CancellationToken token = default)
     {
-        var parameters = new { p_notification_channel_id = id };
+        var parameters = new { p_notification_channel_id = id, p_namespace_id = NamespaceContext.NamespaceId };
 
         const string sql = $"""
             SELECT
@@ -16,6 +17,7 @@ public sealed class NotificationChannelRepository(
                 notification.{Public.NotificationChannels.DestinationId}                  {nameof(NotificationChannelSnapshot.DestinationId)},
                 notification.{Public.NotificationChannels.Settings}                       {nameof(NotificationChannelSnapshot.Settings)},
                 notification.{Public.NotificationChannels.NotificationChannelGroupId}     {nameof(NotificationChannelSnapshot.NotificationChannelGroupId)},
+                notification.{Public.NotificationChannels.NamespaceId}                    {nameof(NotificationChannelSnapshot.NamespaceId)},
                 
                 notification_destination.{Public.NotificationDestination.Id}                 {nameof(NotificationDestinationSnapshot.Id)},
                 notification_destination.{Public.NotificationDestination.Name}               {nameof(NotificationDestinationSnapshot.Name)}
@@ -25,7 +27,7 @@ public sealed class NotificationChannelRepository(
             JOIN 
                 {Public.NotificationDestinationTable} notification_destination 
                     ON notification.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationChannels.Id} 
-            WHERE notification.{Public.NotificationChannels.Id} = @p_notification_channel_id
+            WHERE notification.{Public.NotificationChannels.Id} = @p_notification_channel_id AND notification.{Public.NotificationChannels.NamespaceId} = @p_namespace_id
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -54,12 +56,14 @@ public sealed class NotificationChannelRepository(
             INSERT INTO {Public.NotificationChannelTable} (
                 {Public.NotificationChannels.NotificationChannelGroupId},
                 {Public.NotificationChannels.DestinationId},
-                {Public.NotificationChannels.Settings}
+                {Public.NotificationChannels.Settings},
+                {Public.NotificationChannels.NamespaceId}
             )
             VALUES (
                 @{nameof(NotificationChannelSnapshot.NotificationChannelGroupId)},
                 @{nameof(NotificationChannelSnapshot.DestinationId)},
-                @{nameof(NotificationChannelSnapshot.Settings)}
+                @{nameof(NotificationChannelSnapshot.Settings)},
+                @{nameof(NotificationChannelSnapshot.NamespaceId)}
             )
             RETURNING {Public.NotificationChannels.Id};
         ";

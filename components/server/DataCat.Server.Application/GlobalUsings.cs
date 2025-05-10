@@ -18,6 +18,7 @@ global using DataCat.Server.Application.Behaviors;
 global using DataCat.Server.Application.Caching;
 global using DataCat.Server.Application.Commands.Common;
 global using DataCat.Server.Application.Commands.Users.Login;
+global using DataCat.Server.Application.Constants;
 global using DataCat.Server.Application.Enums;
 global using DataCat.Server.Application.Exceptions;
 global using DataCat.Server.Application.Persistence;

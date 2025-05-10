@@ -3,7 +3,8 @@ namespace DataCat.Server.Application.Commands.Alerts.Add;
 public sealed class AddAlertCommandHandler(
     IRepository<Alert, Guid> alertRepository,
     IRepository<DataSource, Guid> dataSourceRepository,
-    INotificationChannelGroupRepository notificationChannelGroupRepository)
+    INotificationChannelGroupRepository notificationChannelGroupRepository,
+    NamespaceContext namespaceContext)
     : ICommandHandler<AddAlertCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AddAlertCommand request, CancellationToken cancellationToken)
@@ -31,7 +32,8 @@ public sealed class AddAlertCommandHandler(
             nextExecution: DateTime.UtcNow.Add(request.RepeatInterval),
             request.WaitTimeBeforeAlerting,
             request.RepeatInterval,
-            request.Tags.Select(x => new Tag(x)).ToList());
+            request.Tags.Select(x => new Tag(x)).ToList(),
+            namespaceContext.GetNamespaceId());
         
         if (alertResult.IsFailure)
             return Result.Fail<Guid>(alertResult.Errors!);

@@ -6,6 +6,8 @@ import {ToastLoggerService} from "../../shared/services/toast-logger.service";
 import {Button} from "primeng/button";
 import {Panel} from "primeng/panel";
 import {NgStyle} from "@angular/common";
+import {AppDialogService} from "../../shared/services/app-dialog.service";
+import {SpanDetailsDialogComponent} from "../../features/traces/span-details-dialog/span-details-dialog.component";
 
 @Component({
     selector: 'app-explore-trace-spans',
@@ -34,7 +36,8 @@ export class ExploreTraceSpansComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private apiService: ApiService,
-        private toastLoggerService: ToastLoggerService) {
+        private toastLoggerService: ToastLoggerService,
+        private appDialogService: AppDialogService) {
     }
 
     ngOnInit(): void {
@@ -69,6 +72,14 @@ export class ExploreTraceSpansComponent implements OnInit {
                 return error;
             })
         ).subscribe();
+    }
+
+    openSpanDetails(span: SpanEntry) {
+        this.appDialogService.showDialog(SpanDetailsDialogComponent,
+            "Span Details",
+            span,
+            '1200px',
+            '1500px');
     }
 
     getSpanWidth(span: SpanEntry): number {
