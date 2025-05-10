@@ -5,8 +5,6 @@ export type Dashboard = {
   name: string;
   description: string;
   panels: Panel[];
-  ownerId: string;
-  lastUpdatedAt: number;
-  tags: string[];
-  isFavorite: boolean;
+  createdAt?: Date;
+  lastUpdatedAt?: Date;
 };

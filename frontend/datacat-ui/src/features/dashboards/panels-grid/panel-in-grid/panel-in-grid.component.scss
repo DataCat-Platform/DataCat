@@ -1,0 +1,10 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  overflow: visible;
+}
+
+.container {
+  padding: var(--p-padding-md);
+}

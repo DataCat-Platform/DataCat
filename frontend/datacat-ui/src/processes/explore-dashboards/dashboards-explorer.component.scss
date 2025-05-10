@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-md);
+
+  &__mg {
+    margin-left: var(--p-padding-md);
+    margin-right: var(--p-padding-md);
+  }
+}

@@ -1,0 +1,60 @@
+<p-button
+  [loading]="isCreationInitiated"
+  icon="pi pi-plus"
+  label="Panel"
+  severity="secondary"
+  (onClick)="isCreationDialogVisible = true"
+/>
+
+<p-dialog
+  [modal]="true"
+  [(visible)]="isCreationDialogVisible"
+  header="Create panel"
+>
+  <div class="creation-dialog">
+    <form class="creation-form" [formGroup]="creationForm">
+      <p-panel header="Preview">
+        <div class="visualization">
+          <datacat-panel-vizualization
+            [visualizationType]="visualizationType"
+            [data]="[0, 1, 2]"
+          />
+        </div>
+      </p-panel>
+      <div class="creation-form__item">
+        <p>Title</p>
+        <input pInputText placeholder="Title" formControlName="title" />
+      </div>
+      <div class="creation-form__item">
+        <p>Data Source</p>
+        <datacat-data-source-select
+          [filter]="{ purpose: 'metrics' }"
+          formControlName="dataSourceId"
+        />
+      </div>
+      <div class="creation-form__item">
+        <p>Query</p>
+        <textarea
+          pInputText
+          cols="40"
+          rows="3"
+          placeholder="Query"
+          formControlName="rawQuery"
+        ></textarea>
+      </div>
+    </form>
+    <datacat-panel-visualization-options
+      (type)="setVisualizationType($event)"
+      (settings)="setVisualizationSettings($event)"
+    />
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="creation-form__footer">
+      <p-button
+        label="Create"
+        (onClick)="createPanel()"
+        [loading]="isCreationInitiated"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

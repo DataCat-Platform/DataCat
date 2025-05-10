@@ -1,0 +1,16 @@
+<div class="container">
+  @switch (visualizationType) {
+    @case (VisualizationType.LINE) {
+      <p-chart type="line" [data]="data"> </p-chart>
+    }
+    @case (VisualizationType.BAR) {
+      <p-chart type="bar" [data]="data"> </p-chart>
+    }
+    @case (VisualizationType.PIE) {
+      <p-chart type="pie" [data]="data"> </p-chart>
+    }
+    @default {
+      <p>Unsupported visualization</p>
+    }
+  }
+</div>

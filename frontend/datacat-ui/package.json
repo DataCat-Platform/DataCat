@@ -21,6 +21,7 @@
     "@angular/router": "^18.0.0",
     "@microsoft/signalr": "^8.0.7",
     "@primeng/themes": "^19.0.3",
+    "angular-gridster2": "^18.0.1",
     "chart.js": "^4.4.7",
     "primeicons": "^7.0.0",
     "primeng": "^18.0.2",
