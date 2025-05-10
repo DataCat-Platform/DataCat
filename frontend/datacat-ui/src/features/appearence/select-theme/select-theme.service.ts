@@ -40,7 +40,7 @@ export class ThemeSelectionService {
     localStorage.setItem(this.themeKey, theme);
   }
 
-  private loadSavedTheme() {
+  public loadSavedTheme() {
     const savedTheme = localStorage.getItem(this.themeKey);
 
     if (savedTheme === null) {
