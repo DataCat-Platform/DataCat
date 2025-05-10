@@ -2,6 +2,8 @@ namespace DataCat.Server.Application.Persistence.Repositories;
 
 public interface IAlertRepository
 {
+    Task<List<AlertCounterResponse>> GetAlertCountersAsync(CancellationToken token = default);
+    
     Task<Page<Alert>> SearchAsync(
         SearchFilters filters,
         int page = 1,
