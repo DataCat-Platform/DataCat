@@ -7,6 +7,11 @@ import { PanelModule } from 'primeng/panel';
 import { SelectModule } from 'primeng/select';
 import { CheckboxModule } from 'primeng/checkbox';
 import { createOptionsForm } from './forms';
+import {
+  LegendOptionsComponent,
+  TooltipOptionsComponent,
+} from './option-groups';
+import { TitleOptionsComponent } from './option-groups/title-options/title-options.component';
 
 @Component({
   standalone: true,
@@ -21,11 +26,15 @@ import { createOptionsForm } from './forms';
     SelectModule,
     CheckboxModule,
     SelectModule,
+    LegendOptionsComponent,
+    TitleOptionsComponent,
+    TooltipOptionsComponent,
   ],
 })
 export class PanelVisualizationOptionsComponent implements OnInit {
-  @Output() public type = new EventEmitter<VisualizationType>();
-  @Output() public settings = new EventEmitter<VisualizationSettings>();
+  @Output() public onOptionsChange = new EventEmitter<
+    [VisualizationType, VisualizationSettings]
+  >();
 
   protected VisualizationType = VisualizationType;
   protected selectableVisualizationTypes = Object.values(
@@ -41,21 +50,36 @@ export class PanelVisualizationOptionsComponent implements OnInit {
   }
 
   protected get visualizationSettings(): VisualizationSettings {
-    return {};
+    return this.optionsForm.value;
   }
 
-  protected optionsForm?: FormGroup<any>;
+  protected optionsForm: FormGroup<any> = new FormGroup({});
+
+  protected optionsGroup(name: string): FormGroup<any> {
+    return this.optionsForm?.get(name) as FormGroup<any>;
+  }
 
   constructor() {
-    this.visualizationTypeControl.valueChanges.subscribe(() =>
-      this.type.emit(this.visualizationType!),
-    );
-    this.optionsForm?.valueChanges.subscribe(() => {});
+    this.updateOptionsForm();
+
+    this.visualizationTypeControl.valueChanges.subscribe(() => {
+      this.updateOptionsForm();
+      this.emit();
+    });
+    this.optionsForm?.valueChanges.subscribe(() => {
+      this.emit();
+    });
   }
 
   ngOnInit() {
-    this.type.emit(this.visualizationType!);
-    this.settings.emit(this.visualizationSettings);
+    this.emit();
+  }
+
+  private emit() {
+    this.onOptionsChange.emit([
+      this.visualizationType!,
+      this.visualizationSettings!,
+    ]);
   }
 
   private updateOptionsForm() {

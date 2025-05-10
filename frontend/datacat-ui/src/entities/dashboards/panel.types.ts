@@ -48,7 +48,7 @@ export type Panel = {
   dataSource?: DataSource;
   layout: Layout;
   visualizationType?: VisualizationType;
-  visualizationSetttings?: VisualizationSettings;
+  visualizationSettings?: VisualizationSettings;
 };
 
 export type LineStyle = {
@@ -89,7 +89,7 @@ export const decodeVisualizationSettings = (
 };
 
 export const encodeVisualizationSettings = (
-  settings: VisualizationSettings,
+  settings: VisualizationSettings | undefined,
 ): string => {
   return JSON.stringify(settings);
 };

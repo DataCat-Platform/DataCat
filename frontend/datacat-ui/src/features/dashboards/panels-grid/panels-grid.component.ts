@@ -1,5 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { DashboardVariable, decodeLayout, Panel } from '../../../entities';
+import {
+  DashboardVariable,
+  decodeLayout,
+  encodeLayout,
+  encodeVisualizationSettings,
+  Panel,
+} from '../../../entities';
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { ButtonModule } from 'primeng/button';
@@ -7,7 +13,7 @@ import { SelectModule } from 'primeng/select';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { finalize, interval, Subscription, timer } from 'rxjs';
+import { finalize, forkJoin, interval, Subscription, timer } from 'rxjs';
 import {
   DisplayGrid,
   GridsterConfig,
@@ -23,6 +29,7 @@ import { RefreshRateOption } from '.';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AddVariableButtonComponent } from '../add-variable';
 import { DeleteVariableButtonComponent } from '../delete-variable';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   standalone: true,
@@ -43,6 +50,7 @@ import { DeleteVariableButtonComponent } from '../delete-variable';
     ReactiveFormsModule,
     AddVariableButtonComponent,
     DeleteVariableButtonComponent,
+    DatePickerModule,
   ],
 })
 export class PanelsGridComponent {
@@ -64,6 +72,7 @@ export class PanelsGridComponent {
     this.refreshDashboardVariables();
   }
 
+  protected isSaving = false;
   protected isBusy = false;
 
   protected refreshRateOptions: RefreshRateOption[] = [
@@ -188,5 +197,44 @@ export class PanelsGridComponent {
         this.refreshDashboardsData();
       });
     }
+  }
+
+  protected saveLayout() {
+    this.isSaving = true;
+
+    const observables = this.gridsterItems.map((item) => {
+      const panel = this.panels.filter((p) => p.id == item['panelId']).at(0);
+      const request: any = {
+        title: panel?.title,
+        type: panel?.visualizationType,
+        rawQuery: panel?.query,
+        dataSourceId: panel?.dataSource?.id,
+        styleConfiguration: encodeVisualizationSettings(
+          panel?.visualizationSettings,
+        ),
+        layout: encodeLayout({
+          x: item.x,
+          y: item.y,
+          cols: item.cols,
+          rows: item.rows,
+        }),
+      };
+      return this.apiService.putApiV1PanelUpdate(item['panelId'], request);
+    });
+
+    forkJoin(observables)
+      .pipe(
+        finalize(() => {
+          this.isSaving = false;
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.loggerService.success('Saved layout');
+        },
+        error: () => {
+          this.loggerService.error('Unable to save layout');
+        },
+      });
   }
 }

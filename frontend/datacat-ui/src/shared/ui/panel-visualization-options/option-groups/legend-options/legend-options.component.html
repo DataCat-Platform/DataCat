@@ -1,0 +1,15 @@
+<div [formGroup]="formGroup">
+  <div class="sub">
+    <div class="attr">
+      <p>Enabled</p>
+      <p-checkbox [binary]="true" formControlName="enabled" />
+    </div>
+    <div class="attr">
+      <p>Position</p>
+      <p-select
+        [options]="['top', 'bottom', 'left', 'right']"
+        formControlName="position"
+      />
+    </div>
+  </div>
+</div>

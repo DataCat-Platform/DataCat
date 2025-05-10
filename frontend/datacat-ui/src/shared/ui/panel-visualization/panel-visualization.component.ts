@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
 import { VisualizationSettings, VisualizationType } from '../../../entities';
 import { ChartModule } from 'primeng/chart';
+import { BASIC_OPTIONS } from './consts';
 
 @Component({
   standalone: true,
@@ -12,6 +13,10 @@ import { ChartModule } from 'primeng/chart';
 export class PanelVisualizationComponent {
   protected VisualizationType = VisualizationType;
 
+  protected chartjsOptions: any = BASIC_OPTIONS;
+
+  @ViewChild('chart') protected chartRef: any;
+
   @Input() public visualizationType?: VisualizationType;
 
   @Input() public set data(data: any) {}
@@ -19,19 +24,20 @@ export class PanelVisualizationComponent {
     settings: VisualizationSettings | undefined,
   ) {
     if (settings) {
-      this.chartjsOptions = this.parseSettingsIntoChartjsOptions(settings);
+      this.parseSettingsIntoChartjsOptions(settings);
     }
   }
 
   protected parseSettingsIntoChartjsOptions(settings: VisualizationSettings) {
+    const chart: any = this.chartRef.chart;
+
     this.chartjsOptions.plugins.legend.display = settings.legend?.enabled;
     this.chartjsOptions.plugins.legend.position = settings.legend?.position;
 
-    switch (this.visualizationType) {
-      case VisualizationType.LINE: {
-        break;
-      }
-    }
+    this.chartjsOptions.plugins.title.display = settings.title?.enabled;
+    this.chartjsOptions.plugins.title.text = settings.title?.text;
+
+    chart.update();
   }
 
   protected chartjsData: any = {
@@ -45,43 +51,5 @@ export class PanelVisualizationComponent {
         // backgroundColor: 'blue',
       },
     ],
-  };
-
-  protected chartjsOptions: any = {
-    animation: false,
-    maintainAspectRatio: false,
-    scales: {
-      x: {
-        min: 0,
-        max: 10,
-        ticks: {},
-      },
-      y: {
-        min: 0,
-        max: 10,
-        ticks: {},
-      },
-    },
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-      },
-      title: {
-        display: false,
-        text: '',
-      },
-      tooltip: {
-        enabled: true,
-      },
-    },
-    parsing: {
-      key: 'x',
-      xAxisKey: 'x',
-      yAxisKey: 'y',
-    },
-    layout: {
-      padding: null,
-    },
   };
 }

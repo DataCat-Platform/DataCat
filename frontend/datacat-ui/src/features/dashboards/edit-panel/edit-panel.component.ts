@@ -2,7 +2,12 @@ import { afterNextRender, Component, Input } from '@angular/core';
 import { PanelVisualizationComponent } from '../../../shared/ui/panel-visualization';
 import { PanelVisualizationOptionsComponent } from '../../../shared/ui/panel-visualization-options';
 import { PanelModule } from 'primeng/panel';
-import { ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { DataSourceSelectComponent } from '../../../shared/ui/data-source-select/data-source-select.component';
@@ -55,6 +60,15 @@ export class EditPanelComponent {
   protected visualizationType?: VisualizationType;
   protected visualizationSettings?: VisualizationSettings;
 
+  protected editForm = new FormGroup({
+    title: new FormControl<string>('', Validators.required),
+    dataSourceId: new FormControl<string | undefined>(
+      undefined,
+      Validators.required,
+    ),
+    query: new FormControl<string>('', Validators.required),
+  });
+
   constructor(
     private apiService: ApiService,
     private loggerService: ToastLoggerService,
@@ -77,9 +91,15 @@ export class EditPanelComponent {
           },
           layout: decodeLayout(data.layout),
           visualizationType: data.typeName as VisualizationType,
-          visualizationSetttings:
+          visualizationSettings:
             data.styleConfiguration as VisualizationSettings,
         };
+
+        this.editForm.setValue({
+          title: this.panel.title,
+          dataSourceId: this.panel.dataSource?.id,
+          query: this.panel.query,
+        });
       },
       error: (e) => {
         this.loggerService.error(e);

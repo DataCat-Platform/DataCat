@@ -9,18 +9,25 @@
         />
       </div>
     </p-panel>
-    <form class="form">
+    <form class="form" [formGroup]="editForm">
       <div class="attr">
         <p>Title</p>
-        <input pInputText placeholder="Title" />
+        <input pInputText placeholder="Title" formControlName="title" />
       </div>
       <div class="attr">
         <p>Data Source</p>
-        <datacat-data-source-select [filter]="{ purpose: 'metrics' }" />
+        <datacat-data-source-select
+          [filter]="{ purpose: 'metrics' }"
+          formControlName="dataSourceId"
+        />
       </div>
       <div class="attr">
         <p>Query</p>
-        <textarea pTextarea placeholder="Query"></textarea>
+        <textarea
+          pTextarea
+          placeholder="Query"
+          formControlName="query"
+        ></textarea>
       </div>
       <p-button
         label="Save changes"
@@ -30,7 +37,8 @@
     </form>
   </div>
   <datacat-panel-visualization-options
-    (type)="visualizationType = $event"
-    (settings)="visualizationSettings = $event"
+    (onOptionsChange)="
+      visualizationType = $event[0]; visualizationSettings = $event[1]
+    "
   />
 </div>

@@ -8,55 +8,29 @@
   </div>
   <div class="options">
     <p-accordion [value]="[]">
+      <!-- Basic options -->
       <p-accordion-panel value="0">
         <p-accordion-header>Title</p-accordion-header>
         <p-accordion-content>
-          <div class="sub">
-            <div class="attr">
-              <p>Enabled</p>
-              <p-checkbox />
-            </div>
-            <div class="attr">
-              <p>Title</p>
-              <input pInputText placeholder="Title" />
-            </div>
-          </div>
+          <datacat-title-options [formGroup]="optionsGroup('title')" />
         </p-accordion-content>
       </p-accordion-panel>
       <p-accordion-panel value="1">
         <p-accordion-header>Legend</p-accordion-header>
         <p-accordion-content>
-          <div class="sub">
-            <div class="attr">
-              <p>Enabled</p>
-              <p-checkbox />
-            </div>
-            <div class="attr">
-              <p>Position</p>
-              <p-select [options]="['top', 'bottom', 'left', 'right']" />
-            </div>
-          </div>
+          <datacat-legend-options [formGroup]="optionsGroup('legend')" />
         </p-accordion-content>
       </p-accordion-panel>
       <p-accordion-panel value="2">
         <p-accordion-header>Tooltip</p-accordion-header>
         <p-accordion-content>
-          <div class="sub">
-            <input pInputText placeholder="something" />
-          </div>
+          <datacat-tooltip-options />
         </p-accordion-content>
       </p-accordion-panel>
+
+      <!-- Type-dependent options -->
       @switch (visualizationType) {
-        @case (VisualizationType.LINE) {
-          <p-accordion-panel value="3">
-            <p-accordion-header>Line</p-accordion-header>
-            <p-accordion-content>
-              <div class="sub">
-                <input pInputText placeholder="something" />
-              </div>
-            </p-accordion-content>
-          </p-accordion-panel>
-        }
+        @case (VisualizationType.LINE) {}
         @case (VisualizationType.BAR) {}
         @case (VisualizationType.PIE) {}
         @default {}

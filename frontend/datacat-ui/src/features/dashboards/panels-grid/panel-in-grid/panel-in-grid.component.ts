@@ -20,11 +20,7 @@ import { DeletePanelButtonComponent } from '../../delete-panel';
   selector: 'datacat-panel-in-grid',
   templateUrl: './panel-in-grid.component.html',
   styleUrl: './panel-in-grid.component.scss',
-  imports: [
-    PanelModule,
-    PanelVisualizationComponent,
-    ButtonModule,
-  ],
+  imports: [PanelModule, PanelVisualizationComponent, ButtonModule],
 })
 export class PanelInGridComponent {
   private _panelId?: string;
@@ -62,7 +58,7 @@ export class PanelInGridComponent {
           },
           layout: decodeLayout(data.layout),
           visualizationType: VisualizationType.LINE,
-          visualizationSetttings: decodeVisualizationSettings(
+          visualizationSettings: decodeVisualizationSettings(
             data.styleConfiguration,
           ),
         };

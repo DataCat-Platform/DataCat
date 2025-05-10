@@ -4,10 +4,7 @@
       @for (variable of variables; track $index) {
         <p-inputgroup>
           <p-inputgroup-addon>
-            <p>{{ variable.placeholder }}</p>
-          </p-inputgroup-addon>
-          <p-inputgroup-addon>
-            <p>{{ variable.value }}</p>
+            <p>{{ variable.placeholder }} = {{ variable.value }}</p>
           </p-inputgroup-addon>
           <p-inputgroup-addon>
             <datacat-delete-variable-button
@@ -23,6 +20,21 @@
       />
     </div>
     <div class="container-header__end">
+      <!-- <p-datepicker
+        [style]="{ width: '23rem' }"
+        selectionMode="range"
+        [readonlyInput]="true"
+        [showTime]="true"
+      /> -->
+
+      <p-button
+        icon="pi pi-save"
+        label="Save"
+        severity="secondary"
+        [loading]="isSaving"
+        (onClick)="saveLayout()"
+      />
+
       <datacat-create-panel-button
         [dashboardId]="_dashboardId"
         (onCreate)="refreshDashboard()"
