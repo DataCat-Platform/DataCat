@@ -19,7 +19,7 @@ public sealed class UpdateDashboard : ApiEndpointBase
             .WithTags(ApiTags.Dashboards)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static UpdateDashboardCommand ToCommand(UpdateDashboardRequest request, string dashboardId)

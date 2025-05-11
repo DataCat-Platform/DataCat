@@ -21,7 +21,7 @@ public sealed class UpdateNotificationChannel : ApiEndpointBase
             .WithTags(ApiTags.NotificationChannels)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static UpdateNotificationCommand ToCommand(UpdateNotificationChannelRequest request, int notificationChannelId)

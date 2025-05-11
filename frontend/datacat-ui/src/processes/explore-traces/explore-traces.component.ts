@@ -14,6 +14,7 @@ import {ToastLoggerService} from "../../shared/services/toast-logger.service";
 import {ProgressSpinner} from "primeng/progressspinner";
 import {TracesListComponent} from "../../features/traces/traces-list/traces-list.component";
 import {TracesFilterComponent} from "../../features/traces/traces-filter/traces-filter.component";
+import {formatCustomProblemDetails} from "../../shared/utils/formatCustomProblemDetails";
 
 @Component({
     selector: 'app-explore-traces',
@@ -75,7 +76,7 @@ export class ExploreTracesComponent {
                 this.traces = traces!;
             }),
             catchError(error => {
-                this.toastLoggerService.error(error.message);
+                this.toastLoggerService.error(formatCustomProblemDetails(error));
                 return error;
             })
         ).subscribe()

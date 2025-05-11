@@ -40,7 +40,7 @@ public static class DashboardSql
          LEFT JOIN {Public.PanelTable} panel ON dashboard.{Public.Dashboards.Id} = panel.{Public.Panels.DashboardId}
          LEFT JOIN {Public.DataSourceTable} data_source on panel.{Public.Panels.DataSourceId} = data_source.{Public.DataSources.Id}
          LEFT JOIN {Public.DataSourceTypeTable} data_source_type ON data_source_type.{Public.DataSourceType.Id} = data_source.{Public.DataSources.TypeId} 
-         WHERE dashboard.{Public.Dashboards.Id} = @p_dashboard_id
+         WHERE dashboard.{Public.Dashboards.Id} = @p_dashboard_id AND dashboard.{Public.Dashboards.NamespaceId} = @p_namespace_id
          """;
           
      public const string SearchDashboardsTotalCount =
@@ -49,7 +49,7 @@ public static class DashboardSql
                 COUNT(*)
            FROM
                 {Public.DashboardTable} dashboard
-           WHERE 1=1 
+           WHERE dashboard.{Public.Dashboards.NamespaceId} = @p_namespace_id 
            """;
     
      public const string SearchDashboards =
@@ -88,7 +88,7 @@ public static class DashboardSql
          LEFT JOIN {Public.PanelTable} panel ON dashboard.{Public.Dashboards.Id} = panel.{Public.Panels.DashboardId}
          LEFT JOIN {Public.DataSourceTable} data_source on panel.{Public.Panels.DataSourceId} = data_source.{Public.DataSources.Id}
          LEFT JOIN {Public.DataSourceTypeTable} data_source_type ON data_source_type.{Public.DataSourceType.Id} = data_source.{Public.DataSources.TypeId}
-         WHERE 1=1 
+         WHERE dashboard.{Public.Dashboards.NamespaceId} = @p_namespace_id 
          """;
      
      public const string GetDashboardsByNamespaceId =

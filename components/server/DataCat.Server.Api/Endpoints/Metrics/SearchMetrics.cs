@@ -27,7 +27,7 @@ public class SearchMetrics : ApiEndpointBase
                 return HandleCustomResponse(result);
             })
             .Produces<IEnumerable<MetricPoint>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
         
         group.MapGet("query-range", async (
                 [FromServices] IMediator mediator,
@@ -44,7 +44,7 @@ public class SearchMetrics : ApiEndpointBase
                 return HandleCustomResponse(result);
             })
             .Produces<IEnumerable<TimeSeries>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
     
     private static SearchMetricsQuery ToQuery(SearchMetricsRequest request)

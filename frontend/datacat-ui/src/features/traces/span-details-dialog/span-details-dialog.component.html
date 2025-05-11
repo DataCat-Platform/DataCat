@@ -1,0 +1,55 @@
+<div class="split-layout">
+    <div class="details-section">
+        <div class="details-content">
+            @if (!span || flattenedData.length === 0) {
+                <div class="no-data">
+                    No span data available
+                </div>
+            } @else {
+                @for (item of flattenedData; track item) {
+                    <div class="detail-row">
+                        <div class="field-name">
+                            <span class="dot"></span>
+                            <span class="key">{{ item.key }}</span>
+                        </div>
+                        <div class="field-value">
+                            <code>{{ item.value }}</code>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="logs-section">
+        <h3>Related Logs</h3>
+
+        <app-logs-data-source-selector
+                (selectedDataSourceChange)="onDataSourceChange($event)"
+                [(selectedDataSource)]="dataSourceName">
+        </app-logs-data-source-selector>
+
+        <p-table
+                [value]="logs"
+                scrollable="true"
+                styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 85%">Message</th>
+                    <th style="width: 15%">Details</th>
+                </tr>
+            </ng-template>
+            <ng-template let-log pTemplate="body">
+                <tr>
+                    <td class="message-cell" style="width: 85%">{{ sanitizeMessage(log.message) }}</td>
+                    <td style="width: 15%">
+                        <p-button
+                                (click)="showLogsDetails(log.additionalFields)"
+                                class="p-button-rounded p-button-text"
+                                icon="pi pi-info-circle"></p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

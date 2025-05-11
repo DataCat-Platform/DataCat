@@ -16,7 +16,7 @@ public sealed class RemoveDashboard : ApiEndpointBase
             .WithTags(ApiTags.Dashboards)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static RemoveDashboardCommand ToCommand(string dashboardId) => new(dashboardId);

@@ -14,8 +14,8 @@ public interface ITracesClient : IDataSourceClient
         DateTime end,
         string? operation = null,
         int? limit = null,
-        TimeSpan? minDuration = null,
-        TimeSpan? maxDuration = null,
+        string? minDuration = null,
+        string? maxDuration = null,
         Dictionary<string, object>? tags = null,
         CancellationToken token = default);
 

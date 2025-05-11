@@ -9,6 +9,7 @@ public sealed record GetPanelResponse
     public required string Layout { get; init; }
     public required Guid DashboardId { get; init; }
     public required string? StyleConfiguration { get; init; }
+    public required Guid NamespaceId { get; init; }
 }
 
 public static class GetPanelResponseExtensions
@@ -24,6 +25,7 @@ public static class GetPanelResponseExtensions
             Layout = panel.DataCatLayout.Settings,
             DashboardId = panel.DashboardId,
             StyleConfiguration = panel.StyleConfiguration,
+            NamespaceId = panel.NamespaceId,
         };
     }
 }

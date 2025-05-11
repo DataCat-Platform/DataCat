@@ -14,6 +14,6 @@ public sealed class GetDatabaseScheme : ApiEndpointBase
             })
             .HasApiVersion(ApiVersions.V1)
             .Produces<IEnumerable<SchemaResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 }

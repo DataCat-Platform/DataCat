@@ -16,7 +16,7 @@ public sealed class GetVariableById : ApiEndpointBase
             .WithTags(ApiTags.Variables)
             .HasApiVersion(ApiVersions.V1)
             .Produces<VariableResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetVariableByIdQuery ToQuery(Guid id) => new(id);

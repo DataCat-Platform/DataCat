@@ -16,6 +16,6 @@ public sealed class GetTrace : ApiEndpointBase
             .WithTags(ApiTags.Traces)
             .HasApiVersion(ApiVersions.V1)
             .Produces<TraceEntry>()
-            .ProducesProblem(StatusCodes.Status404NotFound);
+            .WithCustomProblemDetails();
     }
 }

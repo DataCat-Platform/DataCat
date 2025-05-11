@@ -9,7 +9,8 @@ public sealed record Panel
         Query query,
         DataCatLayout dataCatLayout,
         Guid dashboardId,
-        string? styleConfiguration)
+        string? styleConfiguration,
+        Guid namespaceId)
     {
         Id = id;
         Title = title;
@@ -18,6 +19,7 @@ public sealed record Panel
         DataCatLayout = dataCatLayout;
         DashboardId = dashboardId;
         StyleConfiguration = styleConfiguration;
+        NamespaceId = namespaceId;
     }
 
     public Guid Id { get; private set; }
@@ -32,6 +34,7 @@ public sealed record Panel
     
     public Guid DashboardId { get; private set; }
     public string? StyleConfiguration { get; private set; }
+    public Guid NamespaceId { get; }
 
     public void UpdateTitle(string title) => Title = title;
     
@@ -55,7 +58,8 @@ public sealed record Panel
         Query? query,
         DataCatLayout? dataCatLayout,
         Guid parentDashboardId,
-        string? styleConfiguration)
+        string? styleConfiguration,
+        Guid namespaceId)
     {
         var validationList = new List<Result<Panel>>();
 
@@ -85,6 +89,6 @@ public sealed record Panel
 
         return validationList.Count != 0 
             ? validationList.FoldResults()! 
-            : Result.Success(new Panel(id, title, panelType!, query!, dataCatLayout!, parentDashboardId, styleConfiguration));
+            : Result.Success(new Panel(id, title, panelType!, query!, dataCatLayout!, parentDashboardId, styleConfiguration, namespaceId));
     }
 }

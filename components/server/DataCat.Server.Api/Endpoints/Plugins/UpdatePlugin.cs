@@ -21,7 +21,7 @@ public sealed class UpdatePlugin : ApiEndpointBase
             .WithTags(ApiTags.Plugins)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static UpdatePluginCommand ToCommand(UpdatePluginRequest request, string pluginId)

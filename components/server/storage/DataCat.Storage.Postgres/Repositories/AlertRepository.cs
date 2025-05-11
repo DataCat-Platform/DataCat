@@ -1,16 +1,15 @@
-using DataCat.Server.Application.Queries.Alerts.GetCounters;
-
 namespace DataCat.Storage.Postgres.Repositories;
 
 public sealed class AlertRepository(
     UnitOfWork unitOfWork,
     IDbConnectionFactory<NpgsqlConnection> Factory,
-    NotificationChannelManager notificationChannelManager)
+    NotificationChannelManager notificationChannelManager,
+    NamespaceContext namespaceContext)
     : IRepository<Alert, Guid>, IAlertRepository
 {
     public async Task<Alert?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
-        var parameters = new { p_alert_id = id.ToString() };
+        var parameters = new { p_alert_id = id.ToString(), p_namespace_id = namespaceContext.NamespaceId };
         const string sql = AlertSql.Select.GetById;
         
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -71,7 +70,8 @@ public sealed class AlertRepository(
                {Public.Alerts.NextExecution},
                {Public.Alerts.RepeatIntervalInTicks},
                {Public.Alerts.WaitTimeBeforeAlertingInTicks},
-               {Public.Alerts.Tags}
+               {Public.Alerts.Tags},
+               {Public.Alerts.NamespaceId}
            )
            VALUES (
                @{nameof(AlertSnapshot.Id)},
@@ -85,7 +85,8 @@ public sealed class AlertRepository(
                @{nameof(AlertSnapshot.NextExecution)},
                @{nameof(AlertSnapshot.RepeatIntervalInTicks)},
                @{nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
-               @{nameof(AlertSnapshot.Tags)}
+               @{nameof(AlertSnapshot.Tags)},
+               @{nameof(AlertSnapshot.NamespaceId)}
            )";
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -94,17 +95,21 @@ public sealed class AlertRepository(
 
     public async Task<List<AlertCounterResponse>> GetAlertCountersAsync(CancellationToken token = default)
     {
+        var parameters = new { p_namespace_id = namespaceContext.NamespaceId };
+        
         const string sql = $"""
            SELECT
                alerts.{Public.Alerts.Status} AS {nameof(AlertCounterResponse.Status)},
                COUNT(*)                      AS {nameof(AlertCounterResponse.Count)}
            FROM {Public.AlertTable} alerts
+           WHERE alerts.{Public.Alerts.NamespaceId} = @p_namespace_id
            GROUP BY alerts.{Public.Alerts.Status}
        """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
         var result = await connection.QueryAsync<AlertCounterResponse>(
             sql,
+            param: parameters,
             transaction: unitOfWork.Transaction);
 
         return result.ToList();
@@ -120,6 +125,7 @@ public sealed class AlertRepository(
         var parameters = new DynamicParameters();
         
         var offset = (page - 1) * pageSize;
+        parameters.Add("p_namespace_id", namespaceContext.NamespaceId);
         parameters.Add("offset", offset);
         parameters.Add("limit", pageSize);
         
@@ -211,7 +217,8 @@ public sealed class AlertRepository(
                {Public.Alerts.NextExecution}                  = @{nameof(AlertSnapshot.NextExecution)},
                {Public.Alerts.RepeatIntervalInTicks}          = @{nameof(AlertSnapshot.RepeatIntervalInTicks)}, 
                {Public.Alerts.WaitTimeBeforeAlertingInTicks}  = @{nameof(AlertSnapshot.WaitTimeBeforeAlertingInTicks)},
-               {Public.Alerts.Tags}                           = @{nameof(AlertSnapshot.Tags)}
+               {Public.Alerts.Tags}                           = @{nameof(AlertSnapshot.Tags)},
+               {Public.Alerts.NamespaceId}                    = @{nameof(AlertSnapshot.NamespaceId)}
            WHERE {Public.Alerts.Id} = @{nameof(AlertSnapshot.Id)}
            ";
 

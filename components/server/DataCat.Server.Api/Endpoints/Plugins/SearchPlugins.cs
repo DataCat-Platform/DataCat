@@ -18,7 +18,7 @@ public sealed class SearchPlugins : ApiEndpointBase
             .WithTags(ApiTags.Plugins)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Page<SearchPluginsResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static SearchPluginsQuery ToQuery(SearchFilters filters, int page, int pageSize)

@@ -15,7 +15,7 @@ public sealed class GetAlertCounters : ApiEndpointBase
             .WithTags(ApiTags.Alerts)
             .HasApiVersion(ApiVersions.V1)
             .Produces<List<AlertCounterResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetAlertCountersQuery ToQuery() => new();

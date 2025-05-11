@@ -27,6 +27,8 @@ public static class DependencyInjectionExtensions
 
         services.AddScoped<INamespaceService, NamespaceService>();
         services.AddScoped<IVariableService, VariableService>();
+
+        services.AddScoped<NamespaceContext>();
         
         services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
         

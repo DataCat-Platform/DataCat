@@ -16,7 +16,7 @@ public sealed class RemoveVariable : ApiEndpointBase
             .WithTags(ApiTags.Variables)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static RemoveVariableCommand ToCommand(Guid variableId) => new(variableId);

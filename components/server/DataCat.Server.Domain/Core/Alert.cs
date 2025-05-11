@@ -12,7 +12,8 @@ public class Alert
         DateTimeUtc previousExecution,
         DateTimeUtc nextExecution,
         AlertSchedule schedule,
-        List<Tag> tags)
+        List<Tag> tags,
+        Guid namespaceId)
     {
         Id = id;
         Description = description;
@@ -23,6 +24,7 @@ public class Alert
         PreviousExecution = previousExecution;
         NextExecution = nextExecution;
         Schedule = schedule;
+        NamespaceId = namespaceId;
         _tags = tags;
     }
     
@@ -39,6 +41,7 @@ public class Alert
     public DateTimeUtc PreviousExecution { get; private set; }
     public DateTimeUtc NextExecution { get; private set; }
     public AlertSchedule Schedule { get; private set; }
+    public Guid NamespaceId { get; }
     private readonly List<Tag> _tags;
     public IReadOnlyCollection<Tag> Tags => _tags.AsReadOnly();
 
@@ -118,7 +121,8 @@ public class Alert
         DateTimeUtc nextExecution,
         TimeSpan waitTimeBeforeAlerting,
         TimeSpan repeatInterval,
-        List<Tag> tags)
+        List<Tag> tags,
+        Guid namespaceId)
     {
         var validationList = new List<Result<Alert>>();
 
@@ -167,6 +171,7 @@ public class Alert
                     previousExecution,
                     nextExecution,
                     new AlertSchedule(waitTimeBeforeAlerting, repeatInterval),
-                    tags));
+                    tags,
+                    namespaceId));
     }
 }

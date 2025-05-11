@@ -16,6 +16,7 @@ import {
 } from "../../features/logs/logs-data-source-selector/logs-data-source-selector.component";
 import {catchError, finalize, tap} from "rxjs";
 import {ProgressSpinner} from "primeng/progressspinner";
+import {formatCustomProblemDetails} from "../../shared/utils/formatCustomProblemDetails";
 
 @Component({
     selector: 'app-explore-logs',
@@ -105,7 +106,7 @@ export class ExploreLogsComponent {
                 };
             }),
             catchError(error => {
-                this.toastLoggerService.error(error.message);
+                this.toastLoggerService.error(formatCustomProblemDetails(error));
                 return error;
             })
         ).subscribe()

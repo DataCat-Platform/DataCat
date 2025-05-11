@@ -29,7 +29,7 @@ public sealed class SearchLogs : ApiEndpointBase
             .WithTags(ApiTags.Logs)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Page<LogEntry>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
     
     private static LogSearchQuery ToQuery(SearchLogsRequest request)

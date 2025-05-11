@@ -22,7 +22,7 @@ public sealed class AddDataSource : ApiEndpointBase
             .WithTags(ApiTags.DataSources)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Guid>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
     
     private static AddDataSourceCommand ToCommand(AddDataSourceRequest request)

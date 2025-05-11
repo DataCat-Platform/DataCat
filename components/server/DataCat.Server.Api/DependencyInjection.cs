@@ -11,6 +11,7 @@ public static class DependencyInjection
         });
         services.AddSwaggerGen(option =>
         {
+            option.OperationFilter<NamespaceHeaderOperationFilter>();
             option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
@@ -20,7 +21,7 @@ public static class DependencyInjection
                 BearerFormat = "JWT",
                 Scheme = "Bearer"
             });
-            option.AddSecurityRequirement(new OpenApiSecurityRequirement
+            option.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
             {
                 {
                     new OpenApiSecurityScheme
@@ -107,6 +108,7 @@ public static class DependencyInjection
     public static IServiceCollection AddCustomMiddlewares(this IServiceCollection services)
     {
         services
+            .AddScoped<NamespaceEnricherMiddleware>()
             .AddSingleton<ExceptionHandlingMiddleware>()
             .AddSingleton<RequestLoggingMiddleware>();
 

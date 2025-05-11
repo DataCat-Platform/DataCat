@@ -7,8 +7,8 @@ public sealed record SearchTracesRequest(
     DateTime End,
     string? Operation = null,
     int? Limit = null,
-    TimeSpan? MinDuration = null,
-    TimeSpan? MaxDuration = null,
+    string? MinDuration = null,
+    string? MaxDuration = null,
     Dictionary<string, object>? Tags = null);
 
 public sealed class SearchTraces : ApiEndpointBase
@@ -27,7 +27,7 @@ public sealed class SearchTraces : ApiEndpointBase
             .WithTags(ApiTags.Traces)
             .HasApiVersion(ApiVersions.V1)
             .Produces<IEnumerable<TraceEntry>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static SearchTracesQuery ToQuery(SearchTracesRequest request)

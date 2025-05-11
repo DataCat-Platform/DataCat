@@ -16,7 +16,7 @@ public sealed class RemoveNotificationChannel : ApiEndpointBase
             .WithTags(ApiTags.NotificationChannels)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static RemoveNotificationCommand ToCommand(int notificationChannelId) => new(notificationChannelId);

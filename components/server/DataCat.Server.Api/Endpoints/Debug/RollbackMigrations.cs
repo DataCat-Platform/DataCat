@@ -15,6 +15,6 @@ public sealed class RollbackMigrations : ApiEndpointBase
             })
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 }

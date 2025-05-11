@@ -18,7 +18,7 @@ public sealed class AddDataSourceType : ApiEndpointBase
             .WithTags(ApiTags.DataSourceTypes)
             .HasApiVersion(ApiVersions.V1)
             .Produces<int>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
     
     private static AddDataSourceTypeCommand ToCommand(AddDataSourceTypeRequest request)

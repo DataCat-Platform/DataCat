@@ -23,7 +23,7 @@ public sealed class UpdateAlert : ApiEndpointBase
             .WithTags(ApiTags.Alerts)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static UpdateAlertQueryCommand ToCommand(UpdateAlertRequest request, string alertId)

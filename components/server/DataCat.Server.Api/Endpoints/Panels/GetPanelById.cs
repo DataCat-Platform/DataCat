@@ -16,7 +16,7 @@ public sealed class GetPanelById : ApiEndpointBase
             .WithTags(ApiTags.Panels)
             .HasApiVersion(ApiVersions.V1)
             .Produces<GetPanelResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetPanelQuery ToQuery(Guid id) => new(id);

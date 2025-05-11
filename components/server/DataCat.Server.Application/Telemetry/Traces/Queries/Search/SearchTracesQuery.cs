@@ -7,7 +7,7 @@ public sealed record SearchTracesQuery(
     DateTime End,
     string? Operation = null,
     int? Limit = null,
-    TimeSpan? MinDuration = null,
-    TimeSpan? MaxDuration = null,
+    string? MinDuration = null,
+    string? MaxDuration = null,
     Dictionary<string, object>? Tags = null) 
     : IRequest<Result<IEnumerable<TraceEntry>>>, IAuthorizedQuery;

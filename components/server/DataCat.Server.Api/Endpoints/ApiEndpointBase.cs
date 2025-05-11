@@ -38,14 +38,33 @@ public abstract class ApiEndpointBase
         return Results.BadRequest(problemDetails);
     }
 
-    private static ProblemDetails CreateProblemDetails(object? detail)
+    private static CustomProblemDetails CreateProblemDetails(List<ErrorInfo>? detail)
     {
-        return new ProblemDetails
+        var errorsDict = new Dictionary<string, string[]>();
+
+        if (detail is not null && detail.Count > 0)
+        {
+            foreach (var error in detail)
+            {
+                var key = string.IsNullOrWhiteSpace(error.ErrorCode) ? "General" : error.ErrorCode;
+
+                if (!errorsDict.TryGetValue(key, out var list))
+                {
+                    list = [];
+                    errorsDict[key] = list;
+                }
+
+                errorsDict[key] = errorsDict[key].Append(error.ErrorMessage).ToArray();
+            }
+        }
+        
+        return new CustomProblemDetails
         {
             Status = StatusCodes.Status400BadRequest,
             Title = "Server logic error",
             Detail = "There was an error processing the request",
-            Extensions = { ["errors"] = detail }
+            Instance = "There was an error processing the request",
+            Errors = errorsDict
         };
     }
 }
