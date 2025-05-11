@@ -3,8 +3,16 @@
   justify-content: space-between;
   width: 100%;
   overflow: visible;
+  align-items: center;
 }
 
 .container {
-  padding: var(--p-padding-md);
+  height: 100%;
+  margin-left: var(--p-padding-md);
+  margin-right: var(--p-padding-md);
+  margin-bottom: var(--p-padding-md);
+}
+
+.p-panel-content {
+  flex-grow: 1;
 }

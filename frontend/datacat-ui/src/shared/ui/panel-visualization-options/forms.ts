@@ -1,13 +1,25 @@
 import { FormControl, FormGroup } from '@angular/forms';
-import { VisualizationType } from '../../../entities';
+import { Position, VisualizationType } from '../../../entities';
 
-const createForm = (type: VisualizationType) => {
-  switch (type) {
-    case VisualizationType.LINE: {
-      return new FormGroup({});
-    }
-    default: {
-      return new FormGroup({});
-    }
-  }
+export const createOptionsForm = (
+  type: VisualizationType | null,
+): FormGroup<any> => {
+  return new FormGroup({
+    legend: new FormGroup({
+      enabled: new FormControl<boolean>(false),
+      position: new FormControl<Position>('top'),
+    }),
+    title: new FormGroup({
+      enabled: new FormControl<boolean>(true),
+      text: new FormControl<string>('a'),
+    }),
+  });
+
+  // switch (type) {
+  //   case VisualizationType.LINE: {
+  //   }
+  //   default: {
+  //     return new FormGroup({});
+  //   }
+  // }
 };

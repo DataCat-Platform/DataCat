@@ -8,47 +8,32 @@
   </div>
   <div class="options">
     <p-accordion [value]="[]">
+      <!-- Basic options -->
+      <p-accordion-panel value="0">
+        <p-accordion-header>Title</p-accordion-header>
+        <p-accordion-content>
+          <datacat-title-options [formGroup]="optionsGroup('title')" />
+        </p-accordion-content>
+      </p-accordion-panel>
+      <p-accordion-panel value="1">
+        <p-accordion-header>Legend</p-accordion-header>
+        <p-accordion-content>
+          <datacat-legend-options [formGroup]="optionsGroup('legend')" />
+        </p-accordion-content>
+      </p-accordion-panel>
+      <p-accordion-panel value="2">
+        <p-accordion-header>Tooltip</p-accordion-header>
+        <p-accordion-content>
+          <datacat-tooltip-options />
+        </p-accordion-content>
+      </p-accordion-panel>
+
+      <!-- Type-dependent options -->
       @switch (visualizationType) {
-        @case (VisualizationType.LINE) {
-          <p-accordion-panel value="0">
-            <p-accordion-header>Axis</p-accordion-header>
-            <p-accordion-content>
-              <div class="sub">
-                <div class="attr">
-                  <p>X-axis label</p>
-                  <input pInputText placeholder="..." />
-                </div>
-                <div class="attr">
-                  <p>Y-axis label</p>
-                  <input pInputText placeholder="..." />
-                </div>
-              </div>
-            </p-accordion-content>
-          </p-accordion-panel>
-          <p-accordion-panel value="1">
-            <p-accordion-header>Line</p-accordion-header>
-            <p-accordion-content>
-              <div class="sub">
-                <input pInputText placeholder="something" />
-                <input pInputText placeholder="something" />
-                <input pInputText placeholder="something" />
-              </div>
-            </p-accordion-content>
-          </p-accordion-panel>
-          <p-accordion-panel value="2">
-            <p-accordion-header>Legend</p-accordion-header>
-            <p-accordion-content>
-              <div class="sub">
-                <input pInputText placeholder="something" />
-                <input pInputText placeholder="something" />
-                <input pInputText placeholder="something" />
-              </div>
-            </p-accordion-content>
-          </p-accordion-panel>
-        }
-        @default {
-          <div class="pad-lr pad-tb text-secondary">No options</div>
-        }
+        @case (VisualizationType.LINE) {}
+        @case (VisualizationType.BAR) {}
+        @case (VisualizationType.PIE) {}
+        @default {}
       }
     </p-accordion>
   </div>

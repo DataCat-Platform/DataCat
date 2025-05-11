@@ -15,7 +15,11 @@
     @if (isRefreshError) {
       <p>Loading error</p>
     } @else {
-      <datacat-panel-vizualization />
+      <datacat-panel-vizualization
+        [data]="data"
+        [visualizationType]="panel?.visualizationType"
+        [visualizationSettings]="panel?.visualizationSettings"
+      />
     }
   </div>
 </p-panel>

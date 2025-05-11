@@ -59,3 +59,18 @@
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--primary-500);
 }
+
+.p-panel-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.p-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.p-panel-content-container {
+  flex-grow: 1;
+}

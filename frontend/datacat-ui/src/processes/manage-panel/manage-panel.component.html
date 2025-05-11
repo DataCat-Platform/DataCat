@@ -1,4 +1,9 @@
 <p-panel [style]="{ display: 'block', height: '100%' }">
-  <ng-template pTemplate="header"> Edit panel </ng-template>
+  <ng-template pTemplate="header">
+    <div class="header">
+      <p>Edit panel</p>
+      <datacat-delete-panel-button [panelId]="panelId" (onDelete)="gotoDashboard()" />
+    </div>
+  </ng-template>
   <datacat-edit-panel [panelId]="panelId" />
 </p-panel>

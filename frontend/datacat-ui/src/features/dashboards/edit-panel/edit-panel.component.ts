@@ -2,13 +2,21 @@ import { afterNextRender, Component, Input } from '@angular/core';
 import { PanelVisualizationComponent } from '../../../shared/ui/panel-visualization';
 import { PanelVisualizationOptionsComponent } from '../../../shared/ui/panel-visualization-options';
 import { PanelModule } from 'primeng/panel';
-import { ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { DataSourceSelectComponent } from '../../../shared/ui/data-source-select/data-source-select.component';
 import {
   DataSourceDriver,
   decodeLayout,
+  decodeVisualizationType,
+  encodeVisualizationSettings,
+  encodeVisualizationType,
   Panel,
   VisualizationSettings,
   VisualizationType,
@@ -16,6 +24,7 @@ import {
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { ButtonModule } from 'primeng/button';
+import { finalize } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -44,6 +53,7 @@ export class EditPanelComponent {
   protected panel?: Panel;
 
   protected data: any = {
+    labels: ['1', '2', '3', '4', '5', '6', '7'],
     datasets: [
       {
         label: 'First Dataset',
@@ -53,6 +63,15 @@ export class EditPanelComponent {
   };
   protected visualizationType?: VisualizationType;
   protected visualizationSettings?: VisualizationSettings;
+
+  protected editForm = new FormGroup({
+    title: new FormControl<string>('', Validators.required),
+    dataSourceId: new FormControl<string | undefined>(
+      undefined,
+      Validators.required,
+    ),
+    query: new FormControl<string>('', Validators.required),
+  });
 
   constructor(
     private apiService: ApiService,
@@ -75,10 +94,16 @@ export class EditPanelComponent {
             connectionUrl: data.query?.dataSource?.connectionString || '',
           },
           layout: decodeLayout(data.layout),
-          visualizationType: data.typeName as VisualizationType,
-          visualizationSetttings:
+          visualizationType: decodeVisualizationType(data.typeName),
+          visualizationSettings:
             data.styleConfiguration as VisualizationSettings,
         };
+
+        this.editForm.setValue({
+          title: this.panel.title,
+          dataSourceId: this.panel.dataSource?.id,
+          query: this.panel.query,
+        });
       },
       error: (e) => {
         this.loggerService.error(e);
@@ -86,5 +111,31 @@ export class EditPanelComponent {
     });
   }
 
-  protected saveChanges() {}
+  protected saveChanges() {
+    if (!this._panelId) return;
+
+    const request: any = {
+      title: this.editForm.get('title')?.value || '',
+      type: encodeVisualizationType(this.visualizationType),
+      rawQuery: this.editForm.get('query')?.value || '',
+      dataSourceId: this.editForm.get('dataSourceId')?.value || '',
+      // layout: '',
+      styleConfiguration: encodeVisualizationSettings(
+        this.visualizationSettings,
+      ),
+    };
+
+    this.editForm.disable();
+    this.apiService
+      .putApiV1PanelUpdate(this._panelId, request)
+      .pipe(finalize(() => this.editForm.enable()))
+      .subscribe({
+        next: () => {
+          this.loggerService.success('Saved');
+        },
+        error: (e) => {
+          this.loggerService.error(e);
+        },
+      });
+  }
 }
