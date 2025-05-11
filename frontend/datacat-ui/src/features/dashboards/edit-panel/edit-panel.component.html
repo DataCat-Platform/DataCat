@@ -33,6 +33,8 @@
         label="Save changes"
         (onClick)="saveChanges()"
         severity="secondary"
+        [loading]="editForm.disabled"
+        [disabled]="editForm.invalid"
       />
     </form>
   </div>

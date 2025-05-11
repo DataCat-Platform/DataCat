@@ -15,7 +15,12 @@ export class PanelVisualizationComponent {
 
   protected chartjsOptions: any = BASIC_OPTIONS;
 
-  @ViewChild('chart') protected chartRef: any;
+  protected chartRef: any;
+
+  @ViewChild('chart') protected set chart(ref: any) {
+    this.chartRef = ref;
+    this.chartRef?.chart?.update();
+  }
 
   @Input() public visualizationType?: VisualizationType;
 
@@ -29,7 +34,7 @@ export class PanelVisualizationComponent {
   }
 
   protected parseSettingsIntoChartjsOptions(settings: VisualizationSettings) {
-    const chart: any = this.chartRef.chart;
+    const chart: any = this.chartRef?.chart;
 
     this.chartjsOptions.plugins.legend.display = settings.legend?.enabled;
     this.chartjsOptions.plugins.legend.position = settings.legend?.position;
@@ -37,7 +42,7 @@ export class PanelVisualizationComponent {
     this.chartjsOptions.plugins.title.display = settings.title?.enabled;
     this.chartjsOptions.plugins.title.text = settings.title?.text;
 
-    chart.update();
+    chart?.update();
   }
 
   protected chartjsData: any = {

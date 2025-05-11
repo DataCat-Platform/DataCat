@@ -19,8 +19,8 @@ export const BASIC_OPTIONS = {
       position: 'top',
     },
     title: {
-      display: true,
-      text: 'asf',
+      display: false,
+      text: '',
     },
     tooltip: {
       enabled: true,

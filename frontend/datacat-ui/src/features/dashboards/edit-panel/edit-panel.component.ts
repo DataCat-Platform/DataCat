@@ -14,6 +14,7 @@ import { DataSourceSelectComponent } from '../../../shared/ui/data-source-select
 import {
   DataSourceDriver,
   decodeLayout,
+  encodeVisualizationSettings,
   Panel,
   VisualizationSettings,
   VisualizationType,
@@ -21,6 +22,7 @@ import {
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { ButtonModule } from 'primeng/button';
+import { finalize } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -107,5 +109,31 @@ export class EditPanelComponent {
     });
   }
 
-  protected saveChanges() {}
+  protected saveChanges() {
+    if (!this._panelId) return;
+
+    const request: any = {
+      title: this.editForm.get('title')?.value || '',
+      type: this.visualizationType,
+      rawQuery: this.editForm.get('query')?.value || '',
+      dataSourceId: this.editForm.get('dataSourceId')?.value || '',
+      layout: '',
+      styleConfiguration: encodeVisualizationSettings(
+        this.visualizationSettings,
+      ),
+    };
+
+    this.editForm.disable();
+    this.apiService
+      .putApiV1PanelUpdate(this._panelId, request)
+      .pipe(finalize(() => this.editForm.enable()))
+      .subscribe({
+        next: () => {
+          this.loggerService.success('Saved');
+        },
+        error: (e) => {
+          this.loggerService.error(e);
+        },
+      });
+  }
 }
