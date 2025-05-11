@@ -16,7 +16,7 @@ public sealed class GetNamespaceByName : ApiEndpointBase
             .WithTags(ApiTags.Namespaces)
             .HasApiVersion(ApiVersions.V1)
             .Produces<NamespaceByNameResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetNamespaceByNameQuery ToQuery(string name) => new(name);

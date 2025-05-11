@@ -18,7 +18,7 @@ public sealed class SearchAlerts : ApiEndpointBase
             .WithTags(ApiTags.Alerts)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Page<SearchAlertsResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static SearchAlertsQuery ToQuery(SearchFilters filters, int page, int pageSize)

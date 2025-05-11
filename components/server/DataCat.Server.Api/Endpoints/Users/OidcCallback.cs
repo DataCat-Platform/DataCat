@@ -36,6 +36,6 @@ public sealed class OidcCallbackEndpoint : ApiEndpointBase
             })
             .WithTags(ApiTags.Users)
             .Produces(StatusCodes.Status302Found)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 }

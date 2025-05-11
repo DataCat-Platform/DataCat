@@ -22,7 +22,7 @@ public sealed class AddVariable : ApiEndpointBase
             .WithTags(ApiTags.Variables)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Guid>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static AddVariableCommand ToCommand(AddVariableRequest request)

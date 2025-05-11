@@ -16,7 +16,7 @@ public sealed class GetDataSourcesById : ApiEndpointBase
             .WithTags(ApiTags.DataSources)
             .HasApiVersion(ApiVersions.V1)
             .Produces<GetDataSourceResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetDataSourceQuery ToQuery(Guid id) => new(id);

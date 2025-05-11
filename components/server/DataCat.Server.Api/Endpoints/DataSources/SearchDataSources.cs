@@ -18,7 +18,7 @@ public sealed class SearchDataSources : ApiEndpointBase
             .WithTags(ApiTags.DataSources)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Page<SearchDataSourcesResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static SearchDataSourcesQuery ToQuery(SearchFilters filters, int page, int pageSize)

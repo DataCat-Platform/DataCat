@@ -12,6 +12,6 @@ public sealed class GetSqlQueries : ApiEndpointBase
             })
             .HasApiVersion(ApiVersions.V1)
             .Produces<List<string>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 }

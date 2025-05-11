@@ -16,7 +16,7 @@ public sealed class RemoveDataSourceType : ApiEndpointBase
             .WithTags(ApiTags.DataSourceTypes)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static RemoveDataSourceTypeCommand ToCommand(string name) => new(name);

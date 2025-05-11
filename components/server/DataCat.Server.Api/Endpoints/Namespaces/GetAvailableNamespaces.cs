@@ -15,6 +15,6 @@ public sealed class GetAvailableNamespaces : ApiEndpointBase
             .WithTags(ApiTags.Namespaces)
             .HasApiVersion(ApiVersions.V1)
             .Produces<List<GetAvailableNamespaceResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 }

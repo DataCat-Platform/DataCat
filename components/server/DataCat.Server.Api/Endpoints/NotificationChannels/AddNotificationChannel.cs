@@ -21,7 +21,7 @@ public sealed class AddNotificationChannel : ApiEndpointBase
             .WithTags(ApiTags.NotificationChannels)
             .HasApiVersion(ApiVersions.V1)
             .Produces<int>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
     
     private static AddNotificationCommand ToCommand(AddNotificationChannelRequest request)

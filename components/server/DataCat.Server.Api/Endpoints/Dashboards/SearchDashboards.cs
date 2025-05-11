@@ -18,7 +18,7 @@ public sealed class SearchDashboards : ApiEndpointBase
             .WithTags(ApiTags.Dashboards)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Page<SearchDashboardsResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static SearchDashboardsQuery ToQuery(SearchFilters filters, int page, int pageSize)

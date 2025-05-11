@@ -15,7 +15,7 @@ public sealed class GetAllNotificationChannelGroups : ApiEndpointBase
             .WithTags(ApiTags.NotificationChannelGroups)
             .HasApiVersion(ApiVersions.V1)
             .Produces<List<NotificationChannelGroupResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetAllNotificationChannelGroupsQuery ToQuery() => new();

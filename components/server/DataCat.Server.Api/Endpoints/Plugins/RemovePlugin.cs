@@ -16,7 +16,7 @@ public sealed class RemovePlugin : ApiEndpointBase
             .WithTags(ApiTags.Plugins)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static RemovePluginCommand ToCommand(string dataSourceId) => new(dataSourceId);

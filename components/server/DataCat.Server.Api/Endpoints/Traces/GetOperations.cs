@@ -16,6 +16,6 @@ public sealed class GetOperations : ApiEndpointBase
             .WithTags(ApiTags.Traces)
             .HasApiVersion(ApiVersions.V1)
             .Produces<IEnumerable<string>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 }

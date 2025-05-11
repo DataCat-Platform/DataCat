@@ -26,7 +26,7 @@ public sealed class AddAlert : ApiEndpointBase
             .WithTags(ApiTags.Alerts)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Guid>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static AddAlertCommand ToCommand(AddAlertRequest request)

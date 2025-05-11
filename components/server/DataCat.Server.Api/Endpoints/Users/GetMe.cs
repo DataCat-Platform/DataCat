@@ -13,6 +13,6 @@ public sealed class GetMe : ApiEndpointBase
             .WithTags(ApiTags.Users)
             .HasApiVersion(ApiVersions.V1)
             .Produces<GetMeResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 }

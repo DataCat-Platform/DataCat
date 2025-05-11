@@ -16,7 +16,7 @@ public sealed class GetDashboardById : ApiEndpointBase
             .WithTags(ApiTags.Dashboards)
             .HasApiVersion(ApiVersions.V1)
             .Produces<DashboardResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetDashboardQuery ToQuery(Guid id) => new(id);

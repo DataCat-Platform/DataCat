@@ -15,7 +15,7 @@ public sealed class GetPanelTypes : ApiEndpointBase
             .WithTags(ApiTags.Panels)
             .HasApiVersion(ApiVersions.V1)
             .Produces<List<GetPanelTypesResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetPanelTypesQuery ToQuery() => new();

@@ -15,7 +15,7 @@ public sealed class GetAvailableTemplateVars : ApiEndpointBase
             .WithTags(ApiTags.Alerts)
             .HasApiVersion(ApiVersions.V1)
             .Produces<List<string>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetAlertAvailableTemplateVariableQuery ToQuery() => new();

@@ -3,7 +3,7 @@ namespace DataCat.Server.Api.Middlewares;
 public abstract class AbstractExceptionHandlerMiddleware(ILogger<AbstractExceptionHandlerMiddleware> logger)
     : IMiddleware
 {
-    protected abstract (int statusCode, ProblemDetails problemDetails) GetSpecificResponse(Exception exception);
+    protected abstract (int statusCode, CustomProblemDetails problemDetails) GetSpecificResponse(Exception exception);
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {

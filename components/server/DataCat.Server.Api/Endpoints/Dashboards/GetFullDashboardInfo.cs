@@ -16,7 +16,7 @@ public sealed class GetFullDashboardInfo : ApiEndpointBase
             .WithTags(ApiTags.Dashboards)
             .HasApiVersion(ApiVersions.V1)
             .Produces<GetFullInfoDashboardResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetFullInfoDashboardQuery ToQuery(Guid id) => new(id);

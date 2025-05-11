@@ -1,13 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ApiService, SpanEntry, TraceEntry} from "../../shared/services/datacat-generated-client";
-import {catchError, finalize, tap} from "rxjs";
+import {catchError, finalize, tap, throwError} from "rxjs";
 import {ToastLoggerService} from "../../shared/services/toast-logger.service";
 import {Button} from "primeng/button";
 import {Panel} from "primeng/panel";
 import {NgStyle} from "@angular/common";
 import {AppDialogService} from "../../shared/services/app-dialog.service";
 import {SpanDetailsDialogComponent} from "../../features/traces/span-details-dialog/span-details-dialog.component";
+import {formatCustomProblemDetails} from "../../shared/utils/formatCustomProblemDetails";
 
 @Component({
     selector: 'app-explore-trace-spans',
@@ -68,8 +69,8 @@ export class ExploreTraceSpansComponent implements OnInit {
                 this.calculateTimeMetrics();
             }),
             catchError(error => {
-                this.toastLoggerService.error(error.message);
-                return error;
+                this.toastLoggerService.error(formatCustomProblemDetails(error));
+                return throwError(() => error);
             })
         ).subscribe();
     }

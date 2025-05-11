@@ -16,7 +16,7 @@ public sealed class GetPluginById : ApiEndpointBase
             .WithTags(ApiTags.Plugins)
             .HasApiVersion(ApiVersions.V1)
             .Produces<GetPluginResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetPluginQuery ToQuery(Guid id) => new(id);

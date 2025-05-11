@@ -19,7 +19,7 @@ public sealed class UpdateDataSource : ApiEndpointBase
             .WithTags(ApiTags.DataSources)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static UpdateConnectionStringDataSourceCommand ToCommand(UpdateDataSourceRequest request, Guid dataSourceId)

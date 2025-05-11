@@ -25,7 +25,7 @@ public sealed class AddPlugin : ApiEndpointBase
             .WithTags(ApiTags.Plugins)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Guid>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
     
     private static AddPluginCommand ToCommand(AddPluginRequest request)

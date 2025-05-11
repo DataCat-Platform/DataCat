@@ -18,7 +18,7 @@ public sealed class AddNotificationDestination : ApiEndpointBase
             .WithTags(ApiTags.NotificationDestination)
             .HasApiVersion(ApiVersions.V1)
             .Produces<int>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
     
     private static AddNotificationDestinationCommand ToCommand(AddNotificationDestinationRequest request)

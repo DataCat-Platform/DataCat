@@ -16,7 +16,7 @@ public sealed class GetNotificationDestinationByName : ApiEndpointBase
             .WithTags(ApiTags.NotificationDestination)
             .HasApiVersion(ApiVersions.V1)
             .Produces<GetNotificationDestinationResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetNotificationDestinationQuery ToQuery(string name) => new(name);
