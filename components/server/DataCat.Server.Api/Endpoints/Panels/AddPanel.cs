@@ -25,7 +25,7 @@ public sealed class AddPanel : ApiEndpointBase
             .WithTags(ApiTags.Panels)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Guid>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static AddPanelCommand ToCommand(AddPanelRequest request)

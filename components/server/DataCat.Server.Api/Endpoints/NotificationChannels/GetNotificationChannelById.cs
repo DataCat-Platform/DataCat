@@ -16,7 +16,7 @@ public sealed class GetNotificationChannelById : ApiEndpointBase
             .WithTags(ApiTags.NotificationChannels)
             .HasApiVersion(ApiVersions.V1)
             .Produces<NotificationChannelResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetNotificationChannelQuery ToQuery(int id) => new(id);

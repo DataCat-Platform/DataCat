@@ -21,7 +21,7 @@ public sealed class UpdateVariable : ApiEndpointBase
             .WithTags(ApiTags.Variables)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static UpdateVariableCommand ToCommand(UpdateVariableRequest request, Guid variableId)

@@ -18,7 +18,7 @@ public sealed class AddNamespace : ApiEndpointBase
             .WithTags(ApiTags.Namespaces)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Guid>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static AddNamespaceCommand ToCommand(AddNamespaceRequest request)

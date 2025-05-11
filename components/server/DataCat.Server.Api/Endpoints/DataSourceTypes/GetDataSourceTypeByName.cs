@@ -16,7 +16,7 @@ public sealed class GetDataSourceTypeByName : ApiEndpointBase
             .WithTags(ApiTags.DataSourceTypes)
             .HasApiVersion(ApiVersions.V1)
             .Produces<GetDataSourceTypeResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetDataSourceTypeQuery ToQuery(string name) => new(name);

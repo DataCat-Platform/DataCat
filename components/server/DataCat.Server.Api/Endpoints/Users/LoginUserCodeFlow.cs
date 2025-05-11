@@ -13,6 +13,6 @@ public sealed class LoginUserCodeFlow : ApiEndpointBase
             .WithTags(ApiTags.Users)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status302Found)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 }

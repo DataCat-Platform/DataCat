@@ -16,6 +16,6 @@ public sealed class GetVariablesByNamespace : ApiEndpointBase
             .WithTags(ApiTags.Variables)
             .HasApiVersion(ApiVersions.V1)
             .Produces<List<VariableResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 }

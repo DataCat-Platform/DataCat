@@ -20,7 +20,7 @@ public sealed class LoginUserByPassword : ApiEndpointBase
             .WithTags(ApiTags.Users)
             .HasApiVersion(ApiVersions.V1)
             .Produces<AccessTokenResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static LoginUserCommand ToCommand(LoginUserByPasswordRequest request) 

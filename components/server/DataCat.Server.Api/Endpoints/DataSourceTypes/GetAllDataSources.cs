@@ -15,7 +15,7 @@ public sealed class GetAllDataSources : ApiEndpointBase
             .WithTags(ApiTags.DataSourceTypes)
             .HasApiVersion(ApiVersions.V1)
             .Produces<List<GetDataSourceTypeResponse>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetAllDataSourceTypesQuery ToQuery() => new();

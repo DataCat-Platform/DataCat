@@ -25,7 +25,7 @@ public sealed class UpdatePanel : ApiEndpointBase
             .WithTags(ApiTags.Panels)
             .HasApiVersion(ApiVersions.V1)
             .Produces(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static UpdatePanelCommand ToCommand(UpdatePanelRequest request, string panelId)

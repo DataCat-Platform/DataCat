@@ -18,7 +18,7 @@ public sealed class AddNotificationChannelGroup : ApiEndpointBase
             .WithTags(ApiTags.NotificationChannelGroups)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Guid>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
     
     private static AddNotificationChannelGroupCommand ToCommand(AddNotificationChannelGroupRequest request)

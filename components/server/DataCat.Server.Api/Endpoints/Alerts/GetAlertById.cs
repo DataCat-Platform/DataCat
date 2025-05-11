@@ -16,7 +16,7 @@ public sealed class GetAlertById : ApiEndpointBase
             .WithTags(ApiTags.Alerts)
             .HasApiVersion(ApiVersions.V1)
             .Produces<GetAlertResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static GetAlertQuery ToQuery(Guid id) => new(id);

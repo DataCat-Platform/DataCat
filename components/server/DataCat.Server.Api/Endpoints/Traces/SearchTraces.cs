@@ -27,7 +27,7 @@ public sealed class SearchTraces : ApiEndpointBase
             .WithTags(ApiTags.Traces)
             .HasApiVersion(ApiVersions.V1)
             .Produces<IEnumerable<TraceEntry>>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static SearchTracesQuery ToQuery(SearchTracesRequest request)

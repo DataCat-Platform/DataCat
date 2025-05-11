@@ -22,7 +22,7 @@ public sealed class AddDashboard : ApiEndpointBase
             .WithTags(ApiTags.Dashboards)
             .HasApiVersion(ApiVersions.V1)
             .Produces<Guid>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .WithCustomProblemDetails();
     }
 
     private static AddDashboardCommand ToCommand(AddDashboardRequest request)
