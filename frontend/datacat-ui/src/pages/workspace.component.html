@@ -1,0 +1,76 @@
+<p-toast
+        [baseZIndex]="2000"
+        [life]="10000"
+        [style]="{
+    'white-space': 'pre-line',
+    width: '35%',
+    'word-break': 'break-word',
+  }"
+>
+</p-toast>
+
+<div class="screen">
+    <p-splitter
+            [gutterSize]="2"
+            [minSizes]="[15, 50]"
+            [panelSizes]="[15, 85]"
+            [style]="{ height: '100%' }"
+    >
+        <!-- Navigation panel. -->
+        <ng-template pTemplate>
+            <div class="navigation">
+                <p-select
+                        (onChange)="onNamespaceChange($event)"
+                        [ngModel]="selectedNamespace()"
+                        [options]="namespaces()"
+                        optionLabel="name"
+                        placeholder="Select a namespace"
+                        size="small"
+                        variant="outlined">
+                </p-select>
+                <p-tree
+                        (onNodeSelect)="onTreeMenuNodeSelect($event)"
+                        [dt]="{ gap: '{padding.sm}', node: { toggle: { button: { size: 0 } } } }"
+                        [value]="treeMenuRootNode"
+                        class="w-full"
+                        selectionMode="single"
+                />
+                <div class="navigation__settings-button">
+                    <p-button
+                            (onClick)="openSettings()"
+                            [rounded]="true"
+                            [text]="true"
+                            icon="pi pi-cog"
+                            severity="secondary"
+                    />
+                </div>
+            </div>
+        </ng-template>
+
+        <!-- Content panel. -->
+        <ng-template pTemplate>
+            <div class="content">
+                <div class="content__nav">
+                    <p-button
+                            (onClick)="goToPreviousActivity()"
+                            [text]="true"
+                            icon="pi pi-arrow-left"
+                            severity="secondary"
+                    />
+                    <p-button
+                            (onClick)="goToNextActivity()"
+                            [text]="true"
+                            icon="pi pi-arrow-right"
+                            severity="secondary"
+                    />
+                    <div class="activity-path-items">
+                        <datacat-activity-breadcrumb/>
+                    </div>
+                </div>
+                <div class="content__view">
+                    <router-outlet/>
+                </div>
+            </div>
+        </ng-template>
+    </p-splitter>
+</div>

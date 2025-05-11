@@ -1,0 +1,53 @@
+<div class="traces-table-container">
+    <div class="table-scroll">
+        <p-table
+                [paginator]="false"
+                [value]="traces"
+                styleClass="ResultList">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Duration</th>
+                    <th>Trace</th>
+                    <th>Spans</th>
+                    <th>Services</th>
+                    <th>Time</th>
+                    <!--                    <th>Details</th>-->
+                </tr>
+            </ng-template>
+            <ng-template let-trace pTemplate="body">
+                <tr>
+                    <td>
+                        <div [style.width.%]="(getCurrentDuration(trace) / getMaxDuration()) * 100"
+                             class="duration-bar"></div>
+                        <span>{{ getFormattedDuration(getCurrentDuration(trace)) }}</span>
+                    </td>
+                    <td>
+                        <a (click)="redirectToTraceDetails(trace.traceId)" class="trace-link">
+                            <small>{{ trace.traceId | slice:0:8 }}</small>
+                        </a>
+                    </td>
+                    <td>
+                        <p-tag [value]="getSpanCount(trace) + ' Span' + (getSpanCount(trace) > 1 ? 's' : '')"></p-tag>
+                    </td>
+                    <td>
+                        @for (svc of getTraceServices(trace); track svc) {
+                            <p-tag
+                                    [styleClass]="'service-tag'"
+                                    [value]="svc"
+                                    severity="info">
+                            </p-tag>
+                        }
+                    </td>
+                    <td>
+                        {{ getTracesStartTime(trace) | date:'h:mm:ss a' }}<br>
+                        <small>{{ getTracesTimeAgo(trace) }}</small>
+                    </td>
+                    <!--                    <td>-->
+                    <!--                        <p-button [routerLink]="['/trace', trace.traceId]" class="p-button-text"-->
+                    <!--                                  icon="pi pi-info-circle"></p-button>-->
+                    <!--                    </td>-->
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<p-panel [style]="{ display: 'block', height: '100%' }">
+    <ng-template pTemplate="header">
+        @if (isLoading) {
+            Loading Data Source...
+        } @else {
+            Edit Data Source {{ dataSourceId }} <br>
+            Type {{ dataSource.type | uppercase }}
+        }
+    </ng-template>
+
+    @if (isLoading) {
+        <div class="loading-container">
+            <p-progressBar mode="indeterminate"></p-progressBar>
+            <p class="loading-message">
+                <i class="pi pi-spinner pi-spin"></i>
+                Fetching data source details...
+            </p>
+        </div>
+    } @else {
+        <div class="edit-data-source-form-box">
+            <app-edit-data-source-form [editDataSource]="editDataSource"></app-edit-data-source-form>
+        </div>
+
+        <p-divider align="left">
+            <span class="danger-section-title">Danger Zone</span>
+        </p-divider>
+
+        <div class="danger-action-item">
+            <app-delete-data-source-button [dataSourceId]="dataSourceId"></app-delete-data-source-button>
+        </div>
+    }
+</p-panel>

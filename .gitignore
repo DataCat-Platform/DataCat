@@ -3,6 +3,8 @@
 **/bin/
 **/obj/
 
+**/Properties/
+
 # IDE
 .idea/
 .vscode/

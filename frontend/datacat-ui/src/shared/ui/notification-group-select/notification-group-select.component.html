@@ -1,0 +1,17 @@
+<p-select
+  placeholder="Notification Group"
+  optionLabel="name"
+  [optionValue]="optionValue"
+  [showClear]="true"
+  [options]="notificationGroups"
+  [loading]="isLoading"
+  (onChange)="onSelect($event.value)"
+  (onShow)="refresh()"
+  [(ngModel)]="selectedNotificationGroup"
+>
+  <ng-template pTemplate="item" let-group>
+    <div>
+      {{ group.name }}
+    </div>
+  </ng-template>
+</p-select>

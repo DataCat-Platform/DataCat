@@ -1,0 +1,67 @@
+.filter-container {
+  padding-left: 1rem;
+  padding-top: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+
+  .filter-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+
+    &.row-2col {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .p-field {
+        flex: 1 1 0;
+        min-width: 0; // for proper shrinking
+      }
+    }
+
+    &.row-3col {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      .p-field {
+        flex: 1 1 calc(33.333% - 0.66rem);
+        min-width: 0;
+      }
+
+      .p-field.tags {
+        flex: 2 1 calc(66.666% - 0.66rem);
+      }
+    }
+  }
+
+  .p-field {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    input,
+    .p-dropdown .p-inputtext,
+    .p-calendar .p-inputtext {
+      height: 2.5rem !important;
+      padding: 0.5rem 0.75rem;
+      font-size: 1rem;
+    }
+  }
+
+  .filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+
+    p-button {
+      min-width: 150px;
+    }
+  }
+}

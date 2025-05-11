@@ -1,0 +1,49 @@
+.logs-table-container {
+  max-height: 600px; // ограничение по высоте
+  overflow: auto; // включение скролла при переполнении
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  .table-scroll {
+    min-width: 100%;
+    overflow-x: auto;
+  }
+
+  .p-datatable {
+    min-width: 1000px; // ширина для активации горизонтального скролла
+    width: max-content;
+
+    th {
+      cursor: pointer;
+      user-select: none;
+
+      i {
+        margin-left: 0.25rem;
+      }
+    }
+
+    .message-cell {
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-width: 400px;
+    }
+  }
+
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 1rem;
+
+    .page-info {
+      font-weight: 500;
+    }
+
+    button {
+      min-width: 2rem;
+      height: 2rem;
+    }
+  }
+}

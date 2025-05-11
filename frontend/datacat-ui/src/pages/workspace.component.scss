@@ -1,0 +1,45 @@
+.screen {
+  height: 100vh;
+  width: 100vw;
+  padding: var(--p-padding-md);
+  background-color: var(--p-background);
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding-right: var(--p-padding-lg);
+
+  &__settings-button {
+    flex: 1;
+    display: flex;
+    align-items: end;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  &__nav {
+    display: flex;
+    gap: var(--p-padding-md);
+    padding-bottom: var(--p-padding-sm);
+    align-items: center;
+  }
+
+  &__view {
+    flex-grow: 1;
+  }
+}
+
+.activity-path-items {
+  display: flex;
+  justify-content: center;
+  padding-left: var(--p-padding-lg);
+  flex-grow: 1;
+}

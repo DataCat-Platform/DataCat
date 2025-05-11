@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="preview">
+    <p-panel header="Preview">
+      <div class="visualization">
+        <datacat-panel-vizualization
+          [data]="data"
+          [visualizationType]="visualizationType"
+          [visualizationSettings]="visualizationSettings"
+        />
+      </div>
+    </p-panel>
+    <form class="form" [formGroup]="editForm">
+      <div class="attr">
+        <p>Title</p>
+        <input pInputText placeholder="Title" formControlName="title" />
+      </div>
+      <div class="attr">
+        <p>Data Source</p>
+        <datacat-data-source-select
+          [filter]="{ purpose: 'metrics' }"
+          formControlName="dataSourceId"
+        />
+      </div>
+      <div class="attr">
+        <p>Query</p>
+        <textarea
+          pTextarea
+          placeholder="Query"
+          formControlName="query"
+        ></textarea>
+      </div>
+      <p-button
+        icon="pi pi-save"
+        label="Save changes"
+        (onClick)="saveChanges()"
+        severity="secondary"
+        [loading]="editForm.disabled"
+        [disabled]="editForm.invalid"
+      />
+    </form>
+  </div>
+  <datacat-panel-visualization-options
+    (onOptionsChange)="
+      visualizationType = $event[0]; visualizationSettings = $event[1]
+    "
+  />
+</div>

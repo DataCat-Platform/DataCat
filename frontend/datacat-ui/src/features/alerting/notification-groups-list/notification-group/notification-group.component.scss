@@ -1,0 +1,9 @@
+.channels-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.actions-container {
+  display: flex;
+  gap: var(--p-padding-sm);
+}

@@ -1,69 +1,98 @@
 namespace DataCat.Server.Api.Middlewares;
 
-public class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger)
+public sealed class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger)
     : AbstractExceptionHandlerMiddleware(logger)
 {
-    protected override (int statusCode, ProblemDetails problemDetails) GetSpecificResponse(Exception exception)
+    protected override (int statusCode, CustomProblemDetails problemDetails) GetSpecificResponse(Exception exception)
     {
         int statusCode;
-        ProblemDetails problemDetails;
+        CustomProblemDetails problemDetails;
             
         switch (exception)
         {
             case CustomValidationException validationException:
                 statusCode = StatusCodes.Status400BadRequest;
-                problemDetails = new ProblemDetails
+                
+                var errors = validationException.Failures
+                    .GroupBy(f => f.PropertyName)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(f => f.ErrorMessage).ToArray()
+                    );
+                
+                problemDetails = new CustomProblemDetails
                 {
                     Status = statusCode,
                     Type = "ValidationFailure",
                     Title = "Validation error",
-                    Detail = "One or more validation errors occurred",
-                    Extensions =
-                    {
-                        ["errors"] = validationException.Failures
-                    }
+                    Detail = validationException.Message,
+                    Instance = validationException.Message,
+                    Errors = errors
                 };
                 break;
             case FileNotFoundException fileNotFoundException:
                 statusCode = StatusCodes.Status404NotFound;
-                problemDetails = new ProblemDetails
+                problemDetails = new CustomProblemDetails
                 {
                     Status = statusCode,
                     Type = "FileNotFound",
                     Title = "File Not Found",
                     Detail = $"Disk problem. Cannot find file with name {fileNotFoundException.Message}",
-                    Extensions =
-                    {
-                        ["errors"] = fileNotFoundException.Message
-                    }
+                    Instance = fileNotFoundException.Message
                 };
                 break;
             case DirectoryNotFoundException directoryNotFoundException:
                 statusCode = StatusCodes.Status404NotFound;
-                problemDetails = new ProblemDetails
+                problemDetails = new CustomProblemDetails
                 {
                     Status = statusCode,
                     Type = "FileNotFound",
                     Title = "File Not Found",
                     Detail = $"Disk problem. Cannot directory file with name {directoryNotFoundException.Message}",
-                    Extensions =
-                    {
-                        ["errors"] = directoryNotFoundException.Message
-                    }
+                    Instance = directoryNotFoundException.Message
+                };
+                break;
+            case AuthenticationException authenticationException:
+                statusCode = StatusCodes.Status401Unauthorized;
+                problemDetails = new CustomProblemDetails
+                {
+                    Status = statusCode,
+                    Type = "AuthenticationFailure",
+                    Title = "Authentication failed",
+                    Detail = authenticationException.Message,
+                    Instance = authenticationException.Message
+                };
+                break;
+            case ForbiddenException forbiddenException:
+                statusCode = StatusCodes.Status403Forbidden;
+                problemDetails = new CustomProblemDetails
+                {
+                    Status = statusCode,
+                    Type = "Forbidden",
+                    Title = "Forbidden",
+                    Detail = forbiddenException.Message,
+                    Instance = forbiddenException.Message
+                };
+                break;
+            case HttpRequestException httpRequestException:
+                statusCode = StatusCodes.Status400BadRequest;
+                problemDetails = new CustomProblemDetails
+                {
+                    Status = statusCode,
+                    Type = "HttpRequestException",
+                    Title = "HTTP Error",
+                    Detail = httpRequestException.Message,
+                    Instance = httpRequestException.Message,
                 };
                 break;
             default:
                 statusCode = StatusCodes.Status500InternalServerError;
-                problemDetails = new ProblemDetails()
+                problemDetails = new CustomProblemDetails
                 {
                     Status = StatusCodes.Status500InternalServerError,
                     Type = "ServerError",
                     Title = "Internal Server Error",
                     Detail = "Some server error. Please try later",
-                    Extensions =
-                    {
-                        ["errors"] = exception.Message
-                    }
                 };
                 break;
         }

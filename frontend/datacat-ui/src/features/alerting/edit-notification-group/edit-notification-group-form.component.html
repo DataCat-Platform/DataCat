@@ -1,0 +1,298 @@
+@switch (loadingState) {
+  @case (LoadingState.Loading) {
+    <div class="attributes-box">
+      <div class="attributes-box__attribute">
+        <p class="text-secondary">Group name</p>
+        <p-skeleton width="20rem" height="1.34rem" />
+      </div>
+      <div class="attributes-box__channels">
+        <p class="text-secondary">Channels</p>
+        <p-button label="Add channel" severity="secondary" />
+        <p-skeleton width="20rem" height="1.34rem" />
+        <p-skeleton width="20rem" height="1.34rem" />
+        <p-skeleton width="20rem" height="1.34rem" />
+      </div>
+    </div>
+  }
+  @case (LoadingState.Error) {
+    <p-tag value="Unable to load edit form" severity="secondary" />
+  }
+  @case (LoadingState.Success) {
+    <div class="attributes-box">
+      <div class="attributes-box__attribute">
+        <p class="text-secondary">Group name</p>
+        <p>{{ groupName }}</p>
+      </div>
+      <div class="attributes-box__channels">
+        <p class="text-secondary">Channels</p>
+        <p-button
+          label="Add channel"
+          severity="secondary"
+          (onClick)="showChannelCreationDialog()"
+        />
+        @if (notificationChannels.length === 0) {
+          <p-tag value="No channels yet" severity="info" />
+        } @else {
+          <div class="channels-list">
+            @for (channel of notificationChannels; track $index) {
+              @switch (channel.driver) {
+                @case (NotificationChannelDriver.EMAIL) {
+                  <p-card>
+                    <ng-template pTemplate="header">
+                      <div class="card-header">
+                        <div class="card-header__driver">
+                          <i class="pi pi-envelope text-secondary"></i>
+                          <p>Email</p>
+                        </div>
+                        <div class="card-header__actions">
+                          <p-button
+                            icon="pi pi-pencil"
+                            (onClick)="editChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Edit"
+                          />
+                          <p-button
+                            icon="pi pi-trash"
+                            (onClick)="deleteChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Delete"
+                          />
+                        </div>
+                      </div>
+                    </ng-template>
+                    <div class="channel-attributes">
+                      <div>
+                        <p>Destination Address</p>
+                        <input
+                          pInputText
+                          [value]="
+                            asEmailSettings(channel.settings).DestinationEmail
+                          "
+                          [disabled]="true"
+                        />
+                      </div>
+                      <div>
+                        <p>Password Path</p>
+                        <input
+                          pInputText
+                          [value]="
+                            asEmailSettings(channel.settings).PasswordPath
+                          "
+                          [disabled]="true"
+                        />
+                      </div>
+                      <div>
+                        <p>Port</p>
+                        <input
+                          pInputText
+                          [value]="asEmailSettings(channel.settings).Port"
+                          [disabled]="true"
+                        />
+                      </div>
+                      <div>
+                        <p>SMTP Server</p>
+                        <input
+                          pInputText
+                          [value]="asEmailSettings(channel.settings).SmtpServer"
+                          [disabled]="true"
+                        />
+                      </div>
+                    </div>
+                  </p-card>
+                }
+                @case (NotificationChannelDriver.TELEGRAM) {
+                  <p-card>
+                    <ng-template pTemplate="header">
+                      <div class="card-header">
+                        <div class="card-header__driver">
+                          <i class="pi pi-telegram text-secondary"></i>
+                          <p>Telegram</p>
+                        </div>
+                        <div class="card-header__actions">
+                          <p-button
+                            icon="pi pi-pencil"
+                            (onClick)="editChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Edit"
+                          />
+                          <p-button
+                            icon="pi pi-trash"
+                            (onClick)="deleteChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Delete"
+                          />
+                        </div>
+                      </div>
+                    </ng-template>
+                    <div class="channel-attributes">
+                      <div>
+                        <p>Chat ID</p>
+                        <input
+                          pInputText
+                          [value]="asTelegramSettings(channel.settings).ChatId"
+                          [disabled]="true"
+                        />
+                      </div>
+                      <div>
+                        <p>Telegram Token Path</p>
+                        <input
+                          pInputText
+                          [value]="
+                            asTelegramSettings(channel.settings)
+                              .TelegramTokenPath
+                          "
+                          [disabled]="true"
+                        />
+                      </div>
+                    </div>
+                  </p-card>
+                }
+                @case (NotificationChannelDriver.WEBHOOK) {
+                  <p-card>
+                    <ng-template pTemplate="header">
+                      <div class="card-header">
+                        <div class="card-header__driver">
+                          <i class="pi pi-link text-secondary"></i>
+                          <p>Webhook</p>
+                        </div>
+                        <div class="card-header__actions">
+                          <p-button
+                            icon="pi pi-pencil"
+                            (onClick)="editChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Edit"
+                          />
+                          <p-button
+                            icon="pi pi-trash"
+                            (onClick)="deleteChannel(channel)"
+                            variant="outlined"
+                            severity="secondary"
+                            label="Delete"
+                          />
+                        </div>
+                      </div>
+                    </ng-template>
+                    <div class="channel-attributes">
+                      <div>
+                        <p>URL</p>
+                        <input
+                          pInputText
+                          [value]="asWebhookSettings(channel.settings).Url"
+                          [disabled]="true"
+                        />
+                      </div>
+                    </div>
+                  </p-card>
+                }
+              }
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+}
+
+<p-dialog
+  header="Add notification channel"
+  [(visible)]="isChannelCreationDialogVisible"
+  [modal]="true"
+>
+  <form class="dialog" [formGroup]="addChannelForm">
+    <p class="text-secondary">Channel driver</p>
+    <p-select
+      [options]="drivers"
+      formControlName="driver"
+      placeholder="Select driver"
+      (onChange)="switchAddChannelFormSettingsDriver(addChannelFormDriver)"
+    />
+    <p class="text-secondary">Channel settings</p>
+    <div class="dialog__settings" formGroupName="settings">
+      @switch (addChannelFormDriver) {
+        @case (NotificationChannelDriver.EMAIL) {
+          <input
+            pInputText
+            formControlName="DestinationEmail"
+            placeholder="Destination address"
+          />
+          <input
+            pInputText
+            formControlName="SmtpServer"
+            placeholder="SMTP server"
+          />
+          <p-inputnumber formControlName="Port" placeholder="Port" />
+          <input
+            pInputText
+            formControlName="PasswordPath"
+            placeholder="Password path"
+          />
+        }
+        @case (NotificationChannelDriver.TELEGRAM) {
+          <input
+            pInputText
+            formControlName="TelegramTokenPath"
+            placeholder="Telegram token path"
+          />
+          <input pInputText formControlName="ChatId" placeholder="Chat ID" />
+        }
+        @case (NotificationChannelDriver.WEBHOOK) {
+          <input pInputText formControlName="Url" placeholder="Url" />
+        }
+      }
+    </div>
+    <div class="dialog__actions">
+      <p-button
+        severity="secondary"
+        label="Cancel"
+        (onClick)="hideChannelCreationDialog()"
+      />
+      <p-button label="Add" (onClick)="addChannel()" />
+    </div>
+  </form>
+</p-dialog>
+
+<p-dialog
+  header="Edit notification channel"
+  [(visible)]="isChannelEditDialogVisible"
+  [modal]="true"
+>
+  <form [formGroup]="editChannelForm" class="dialog__settings">
+    @switch (editedChannel?.driver) {
+      @case (NotificationChannelDriver.EMAIL) {
+        <input
+          pInputText
+          formControlName="DestinationEmail"
+          placeholder="Destination address"
+        />
+        <input
+          pInputText
+          formControlName="SmtpServer"
+          placeholder="SMTP server"
+        />
+        <p-inputnumber formControlName="Port" placeholder="Port" />
+        <input
+          pInputText
+          formControlName="PasswordPath"
+          placeholder="Password path"
+        />
+      }
+      @case (NotificationChannelDriver.TELEGRAM) {
+        <input
+          pInputText
+          formControlName="TelegramTokenPath"
+          placeholder="Telegram token path"
+        />
+        <input pInputText formControlName="ChatId" placeholder="Chat ID" />
+      }
+      @case (NotificationChannelDriver.WEBHOOK) {
+        <input pInputText formControlName="Url" placeholder="Url" />
+      }
+    }
+    <p-button label="Save" (onClick)="saveEditedChannel()" />
+  </form>
+</p-dialog>

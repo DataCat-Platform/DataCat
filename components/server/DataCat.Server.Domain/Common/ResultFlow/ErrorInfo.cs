@@ -14,12 +14,7 @@ public class ErrorInfo
         Exception = ex;
     }
 
-    public ErrorInfo(int errorCode)
-    {
-        ErrorCode = errorCode;
-    }
-
-    public ErrorInfo(int errorCode, string error)
+    public ErrorInfo(string errorCode, string error)
     {
         ErrorCode = errorCode;
         ErrorMessage = error;
@@ -33,7 +28,7 @@ public class ErrorInfo
 
     public string ErrorMessage { get; private set; }
 
-    public int ErrorCode { get; private set; }
+    public string ErrorCode { get; private set; }
 
     public Exception Exception { get; private set; }
 

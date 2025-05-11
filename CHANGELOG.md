@@ -18,10 +18,46 @@ All notable changes to this project will be documented in this file.
 - *(datacat-server)* Complete plugin architecture, add database plugin, create plugin scheme
 - *(datacat-server)* Create scheme for key domain models
 - *(datacat-server)* Add main sql queries for entities
+- *(datacat-server)* Add alerts and notification channels
+- *(datacat-server)* Implement secrets interface, auth interface
+- *(datacat-server)* Implement all alert logic for telegram
+- *(datacat-ui)* Add expanded drawer
+- *(datacat-ui)* Add dashboard-list page
+- *(datacat-server)* Implement full integration with keycloak provider
+- *(datacat-server)* Complete elasticsearch integration
+- *(datacat-ui)* Erase Tailwind from project
+- *(datacat-ui)* Tune styles a little bit, work on alerts filtering
+- *(datacat-ui)* Trying to implement filtering component
+- *(datacat-ui)* Make unknown path redirect to home
+- *(datacat-ui)* Alerts explore page 'almost' done
+- *(datacat-ui)* Work on notifications and alerts
+- *(datacat-ui)* Finish alerts (API calls are mocked)
+- *(datacat-ui)* Remove dashboards features (better to start over), clear entities; notification channels will be implemented tomorrow
+- *(datacat-ui)* Add notification templates and notification groups explorer
+- *(datacat-ui)* Working on notifications
+- *(datacat-server)* Add prometheus integration
+- *(datacat-server)* Complete jaeger (traces) integration
+- *(datacat-server)* Complete security module
+- *(datacat-server)* Add distributed caching module, fix some security issues
+- *(datacat-server)* Add server custom metrics
+- *(datacat-ui)* Add keycloak ui integration
+- *(datacat-ui)* Finish notification template, need to figure out notification group editing
+- *(datacat-ui)* MVP notifications done
+- *(datacat-ui)* Start fixing alerts and notifications
+- *(datacat-ui)* Check before pulling
+- *(datacat-ui)* Commit before merging
+- *(datacat-ui)* Commit before merge
+- *(datacat-ui)* Notifications can't be fixed until backend is fixed
+- *(datacat-ui)* Fix alerts filtering
+- *(datacat-ui)* Add logs visualization
+- *(datacat-ui)* Add logs visualization
 
 ### 🚜 Refactor
 
 - *(datacat-ui)* Delete unnecessary imports
+- *(datacat-ui)* Migrate to FSD architecture
+- *(datacat-ui)* Implement settings theme select option in FSD style
+- *(datacat-ui)* Add alerting entities
 
 ### 📚 Documentation
 

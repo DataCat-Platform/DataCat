@@ -1,0 +1,76 @@
+@import 'primeicons/primeicons.css';
+
+@font-face {
+  font-display: swap;
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/assets/fonts/JetBrainsMono-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/assets/fonts/JetBrainsMono-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 800;
+  src: url('/assets/fonts/JetBrainsMono-Bold.woff2') format('woff2');
+}
+
+:root {
+  font-family: 'JetBrains Mono', monospace;
+
+  // Font size scales all of PrimeNG components.
+  font-size: 14px;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.text-secondary {
+  color: var(--p-surface-400);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-ground);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-300);
+  border-radius: 8px;
+  border: 3px solid var(--surface-ground);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary-500);
+}
+
+.p-panel-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.p-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.p-panel-content-container {
+  flex-grow: 1;
+}

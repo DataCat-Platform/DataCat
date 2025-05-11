@@ -4,26 +4,27 @@ builder.Logging.ClearProviders();
 var configuration = builder.Configuration;
 
 builder.Services.AddGrpc();
+
 builder.Services
-    .AddCustomMiddlewares()
     .AddApiSetup()
     .AddApplicationServices(configuration)
     .AddServerLogging(configuration)
     .AddMigrationSetup(configuration)
-    .AddRealTimeCommunication(configuration);
+    .AddSecretsSetup(configuration)
+    .AddAuthSetup(configuration)
+    .AddNotificationsSetup(configuration)
+    .AddRealTimeCommunication(configuration)
+    .AddSearchLogsServices(configuration)
+    .AddSearchMetricsServices(configuration)
+    .AddSearchTracesServices(configuration)
+    .AddKeycloakAuth(configuration)
+    .AddCachingServices(configuration)
+    .AddObservability(configuration, builder.Logging);
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(5000, listenOptions =>
-    {
-        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
-    });
+builder.Services
+    .AddCustomMiddlewares();
 
-    options.ListenAnyIP(5001, listenOptions =>
-    {
-        listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
-    });
-});
+builder.AddAspireServiceDefaults();
 
 var app = builder.Build();
 
@@ -34,24 +35,49 @@ if (bool.TryParse(app.Configuration["ApplyMigrations"], out var applyMigrations)
 
 app.UseStaticFiles();
 app.UseSwagger();
-app.UseSwaggerUI(c =>
+// app.UseSwaggerUI(c =>
+// {
+//     c.SwaggerEndpoint("/swagger/v1/swagger.json", "DataCat API");
+//     c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
+// });
+
+app.UseSwaggerUI(options =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DataCat API");
-    c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
+    var descriptions = app.DescribeApiVersions();
+
+    foreach (var description in descriptions)
+    {
+        var url = $"/swagger/{description.GroupName}/swagger.json";
+        var name = description.GroupName.ToUpperInvariant();
+        options.SwaggerEndpoint(url, name);
+    }
+    
+    options.InjectStylesheet("/swagger-ui/SwaggerDark.css");
 });
 
 app.UseRouting();
-app.UseLoggingRequests();
+
+app
+    .UseNamespaceEnricher()
+    .UseLoggingRequests();
+
+app.UseCors("frontend");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseExceptionHandling();
 
 app.MapHub<MetricsHub>("/datacat-metrics");
 app.MapGrpcService<ReceiveMetricService>();
-app.MapControllers();
+
+app.MapApiEndpoints();
+
+app.MapAspireEndpoints();
 
 app.UseEndpoints(_ => { });
 
 #if DEBUG
-    app.UseCors("frontend");
     app.UseSpa(cfg =>
     {
         cfg.UseProxyToSpaDevelopmentServer("http://localhost:4200");

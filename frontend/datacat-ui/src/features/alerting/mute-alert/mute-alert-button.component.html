@@ -1,0 +1,14 @@
+<form class="form">
+  <p-button
+    icon="pi pi-ban"
+    label="Mute"
+    [loading]="isMuteInitiated"
+    (onClick)="muteAlert()"
+    severity="secondary"
+  />
+  <p-inputmask
+    mask="99:99:99"
+    placeholder="01:00:00"
+    [formControl]="nextExecutionTimeControl"
+  />
+</form>

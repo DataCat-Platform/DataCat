@@ -1,0 +1,42 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: var(--p-padding-md);
+  overflow: visible;
+}
+
+.panels-grid {
+  margin-top: var(--p-padding-md);
+  display: block;
+  height: 600px;
+}
+
+.container-header {
+  display: flex;
+  justify-content: space-between;
+
+  &__end {
+    display: flex;
+    gap: var(--p-padding-md);
+    align-items: center;
+  }
+}
+
+gridster-item {
+  background: transparent;
+}
+
+.empty {
+  color: var(--p-surface-400);
+  text-align: center;
+  margin-top: 20rem;
+}
+
+.variables {
+  display: flex;
+  gap: var(--p-padding-md);
+}
+
+.variables p {
+  white-space: nowrap;
+}

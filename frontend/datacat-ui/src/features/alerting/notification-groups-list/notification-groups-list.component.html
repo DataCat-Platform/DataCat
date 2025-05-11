@@ -1,0 +1,19 @@
+<form class="form">
+  <div class="form__item">
+    <p class="text-secondary">Search by group name</p>
+    <input
+      pInputText
+      placeholder="Enter group name"
+      [formControl]="groupNameControl"
+    />
+  </div>
+</form>
+<p-dataview [value]="filteredNotificationGroups">
+  <ng-template #list let-groups>
+    <div class="groups-box">
+      @for (group of groups; track $index) {
+        <datacat-notification-group [notificationGroup]="group" />
+      }
+    </div>
+  </ng-template>
+</p-dataview>

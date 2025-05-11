@@ -8,9 +8,9 @@ module.exports = tseslint.config(
     files: ["**/*.ts"],
     extends: [
       eslint.configs.recommended,
-      ...tseslint.configs.recommended,
-      ...tseslint.configs.stylistic,
-      ...angular.configs.tsRecommended,
+      tseslint.configs.recommended,
+      tseslint.configs.stylistic,
+      angular.configs.tsRecommended,
     ],
     processor: angular.processInlineTemplates,
     rules: {
@@ -31,6 +31,7 @@ module.exports = tseslint.config(
         },
       ],
       "@typescript-eslint/no-explicit-any": "off",
+      "@angular-eslint/template/click-events-have-key-events": "off"
     },
   },
   {

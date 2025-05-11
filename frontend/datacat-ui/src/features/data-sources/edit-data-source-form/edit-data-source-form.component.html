@@ -1,0 +1,38 @@
+<form [formGroup]="form" class="form">
+    <div class="form__item">
+        <p class="form__label">Name</p>
+        <input class="form__input" formControlName="name" pInputText/>
+    </div>
+
+    <div class="form__settings">
+        @switch (editDataSource.type) {
+            @case ('prometheus') {
+                <app-prometheus-settings-form
+                        [form]="settingsForm"
+                        [authType]="settingsForm.value?.authType"
+                />
+            }
+            @case ('jaeger') {
+                <app-jaeger-settings-form
+                        [form]="settingsForm"
+                        [authType]="settingsForm.value?.authType"
+                />
+            }
+            @case ('elasticsearch') {
+                <app-elasticsearch-settings-form
+                        [form]="settingsForm"
+                />
+            }
+        }
+    </div>
+
+    <div class="form__actions">
+        <p-button
+                (onClick)="saveDataSource()"
+                [disabled]="form.invalid"
+                class="form__submit"
+                label="Save"
+                severity="success"
+        />
+    </div>
+</form>

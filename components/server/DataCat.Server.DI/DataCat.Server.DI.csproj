@@ -7,10 +7,22 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\caching\DataCat.Caching.Redis\DataCat.Caching.Redis.csproj" />
+      <ProjectReference Include="..\DataCat.Server.Telemetry\DataCat.Server.Telemetry.csproj" />
+      <ProjectReference Include="..\logs\DataCat.Logs.ElasticSearch\DataCat.Logs.ElasticSearch.csproj" />
+      <ProjectReference Include="..\metrics\DataCat.Metrics.Prometheus\DataCat.Metrics.Prometheus.csproj" />
+      <ProjectReference Include="..\notifications\DataCat.Notifications.Webhook\DataCat.Notifications.Webhook.csproj" />
+      <ProjectReference Include="..\secrets\DataCat.Secrets.Vault\DataCat.Secrets.Vault.csproj" />
+      <ProjectReference Include="..\traces\DataCat.Traces.Jaeger\DataCat.Traces.Jaeger.csproj" />
+        
+      <ProjectReference Include="..\notifications\DataCat.Notifications.Email\DataCat.Notifications.Email.csproj" />
+      <ProjectReference Include="..\notifications\DataCat.Notifications.Telegram\DataCat.Notifications.Telegram.csproj" />
+        
+      <ProjectReference Include="..\storage\DataCat.Storage.Postgres\DataCat.Storage.Postgres.csproj" />
+        
       <ProjectReference Include="..\DataCat.Server.Application\DataCat.Server.Application.csproj" />
       <ProjectReference Include="..\DataCat.Server.Domain\DataCat.Server.Domain.csproj" />
       <ProjectReference Include="..\DataCat.Server.Infrastructure\DataCat.Server.Infrastructure.csproj" />
-      <ProjectReference Include="..\DataCat.Postgres\DataCat.Postgres.csproj" />
       <ProjectReference Include="..\DataCat.Server.Metrics\DataCat.Server.Metrics.csproj" />
     </ItemGroup>
 

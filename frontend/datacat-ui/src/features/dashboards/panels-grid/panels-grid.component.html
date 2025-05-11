@@ -1,0 +1,86 @@
+<div class="container">
+  <div class="container-header">
+    <div class="variables">
+      @for (variable of variables; track $index) {
+        <p-inputgroup>
+          <p-inputgroup-addon>
+            <p>{{ variable.placeholder }} = {{ variable.value }}</p>
+          </p-inputgroup-addon>
+          <p-inputgroup-addon>
+            <datacat-delete-variable-button
+              [variableId]="variable.id"
+              (onDelete)="refreshDashboardVariables()"
+            />
+          </p-inputgroup-addon>
+        </p-inputgroup>
+      }
+      <datacat-add-variable-button
+        [dashboardId]="_dashboardId"
+        (onAdd)="refreshDashboardVariables()"
+      />
+    </div>
+    <div class="container-header__end">
+      <!-- <p-datepicker
+        [style]="{ width: '23rem' }"
+        selectionMode="range"
+        [readonlyInput]="true"
+        [showTime]="true"
+      /> -->
+
+      <p-button
+        icon="pi pi-save"
+        label="Save"
+        severity="secondary"
+        [loading]="isSaving"
+        (onClick)="saveLayout()"
+      />
+
+      <datacat-create-panel-button
+        [dashboardId]="_dashboardId"
+        (onCreate)="refreshDashboard()"
+      />
+
+      <p-togglebutton
+        onIcon="pi pi-unlock"
+        offIcon="pi pi-lock"
+        onLabel="Edit"
+        offLabel="View"
+        (onChange)="toggleMode($event)"
+      />
+
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <p-button
+            icon="pi pi-sync"
+            label="Refresh"
+            severity="secondary"
+            [loading]="isBusy"
+            (onClick)="refreshDashboardsData()"
+          />
+        </p-inputgroup-addon>
+        <p-select
+          [options]="refreshRateOptions"
+          optionLabel="title"
+          optionValue="seconds"
+          [formControl]="refreshRateControl"
+        />
+      </p-inputgroup>
+    </div>
+  </div>
+  <div class="panels-grid">
+    @if (panels.length === 0) {
+      <p class="empty">You haven't created any panels yet!</p>
+    } @else {
+      <gridster
+        [options]="gridsterOptions"
+        [style]="{ background: 'transparent' }"
+      >
+        @for (item of gridsterItems; track $index) {
+          <gridster-item [item]="item">
+            <datacat-panel-in-grid [panelId]="item['panelId']" />
+          </gridster-item>
+        }
+      </gridster>
+    }
+  </div>
+</div>

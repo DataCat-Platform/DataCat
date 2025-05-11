@@ -1,0 +1,16 @@
+@if (groupId) {
+  <p-panel [style]="{ display: 'block', height: '100%' }">
+    <ng-template pTemplate="header">
+      Edit notification group {{ groupId }}
+    </ng-template>
+    <div class="edit-form">
+      <datacat-edit-notification-group-form [groupId]="groupId" />
+    </div>
+    <!-- <p-divider align="left"> Danger </p-divider>
+    <div class="delete-area">
+      <datacat-delete-notification-group-button [groupId]="groupId" />
+    </div> -->
+  </p-panel>
+} @else {
+  Loading
+}

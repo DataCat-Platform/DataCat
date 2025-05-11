@@ -1,0 +1,26 @@
+<p-panel>
+  <ng-template pTemplate="header">
+    {{ notificationGroup?.name }}
+  </ng-template>
+  <ng-template pTemplate="icons">
+    <div class="actions-container">
+      <p-button icon="pi pi-pencil" [text]="true" (onClick)="editNotificationGroup()" />
+    </div>
+  </ng-template>
+  <div class="channels-container">
+    @for (channel of notificationGroup?.notificationChannels; track $index) {
+      @switch (channel.driver) {
+        @case (NotificationChannelDriver.EMAIL) {
+          <datacat-email-channel [channel]="channel" />
+        }
+        @case (NotificationChannelDriver.TELEGRAM) {
+          <datacat-telegram-channel [channel]="channel" />
+        }
+        @case (NotificationChannelDriver.WEBHOOK) {
+          <datacat-webhook-channel [channel]="channel" />
+        }
+        @default {}
+      }
+    }
+  </div>
+</p-panel>

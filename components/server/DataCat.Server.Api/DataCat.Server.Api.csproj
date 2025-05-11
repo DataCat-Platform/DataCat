@@ -7,8 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
       <PackageReference Include="Grpc.AspNetCore" Version="2.67.0" />
       <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.12" />
+      <PackageReference Include="NSwag.AspNetCore" Version="14.3.0" />
     </ItemGroup>
     
     <ItemGroup>
@@ -16,8 +18,9 @@
     </ItemGroup>
     
     <ItemGroup>
+      <ProjectReference Include="..\aspire\DataCat.Aspire.ServiceDefaults\DataCat.Aspire.ServiceDefaults.csproj" />
+      <ProjectReference Include="..\auth\DataCat.Auth.Keycloak\DataCat.Auth.Keycloak.csproj" />
       <ProjectReference Include="..\DataCat.Server.DI\DataCat.Server.DI.csproj" />
-      <ProjectReference Include="..\DataCat.Server.HttpModels\DataCat.Server.HttpModels.csproj" />
       <ProjectReference Include="..\DataCat.Server.Metrics\DataCat.Server.Metrics.csproj" />
     </ItemGroup>
 

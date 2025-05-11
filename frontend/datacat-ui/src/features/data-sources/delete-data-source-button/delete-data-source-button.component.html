@@ -1,0 +1,25 @@
+<p-button (onClick)="showDeletionDialog()" [style]="{'margin-left.px': '15'}" label="Delete" severity="danger"/>
+<p-dialog
+        [(visible)]="isDeletionDialogVisible"
+        [closable]="false"
+        [modal]="true"
+        header="Delete data source?"
+>
+    <p>Are you sure you want to delete this data source?</p>
+    @if (isDeletionError) {
+        <p class="text-secondary error">Unable to delete data source</p>
+    }
+    <div class="actions-container">
+        <p-button
+                (onClick)="hideDeletionDialog()"
+                label="Cancel"
+                severity="secondary"
+        />
+        <p-button
+                (onClick)="deleteNotificationGroup()"
+                [loading]="isDeletionInitiated"
+                label="Delete"
+                severity="danger"
+        />
+    </div>
+</p-dialog>

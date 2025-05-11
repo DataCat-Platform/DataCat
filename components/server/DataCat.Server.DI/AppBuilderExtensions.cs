@@ -5,11 +5,9 @@ public static class AppBuilderExtensions
     public static async Task ApplyMigrations(
         this IApplicationBuilder app)
     {
-        var scope = app.ApplicationServices.CreateScope();
-        var services = scope.ServiceProvider;
+        using var scope = app.ApplicationServices.CreateScope();
 
-        var migrationFactory = services.GetRequiredService<IMigrationRunnerFactory>();
-        var runner = migrationFactory.CreateMigrationRunner();
-        await runner.ApplyMigrationsAsync();
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<PostgresSeedService>();
+        await dbInitializer.SeedAsync();
     }
 }

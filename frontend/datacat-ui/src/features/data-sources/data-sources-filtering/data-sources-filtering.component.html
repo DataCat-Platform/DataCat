@@ -1,0 +1,38 @@
+<p-panel header="Filters">
+    @if (isBusy) {
+        <p-progressBar mode="indeterminate" styleClass="flat-progress-bar"></p-progressBar>
+    } @else {
+        <form [formGroup]="form" class="box">
+            <div class="box__filters">
+                <div class="form__item">
+                    <p class="text-secondary">Name</p>
+                    <input formControlName="name" pInputText placeholder="Search by name"/>
+                </div>
+
+                <div class="form__item">
+                    <p class="text-secondary">Type</p>
+                    <p-select
+                            [options]="types"
+                            [showClear]="true"
+                            optionLabel="name"
+                            optionValue="name"
+                            emptyMessage="No types found"
+                            formControlName="type"
+                            placeholder="Select type"
+                    />
+                </div>
+
+                <div class="form__item">
+                    <p class="text-secondary">Purpose</p>
+                    <p-select
+                            [options]="purposes"
+                            [showClear]="true"
+                            emptyMessage="No purposes found"
+                            formControlName="purpose"
+                            placeholder="Select purpose"
+                    />
+                </div>
+            </div>
+        </form>
+    }
+</p-panel>

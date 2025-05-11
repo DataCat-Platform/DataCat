@@ -1,0 +1,56 @@
+<div class="logs-table-container">
+    <div class="table-scroll">
+        <p-table (onPage)="onPageChange($event)"
+                 [first]="(pagination.page - 1) * pagination.pageSize"
+                 [paginator]="true"
+                 [rows]="pagination.pageSize"
+                 [totalRecords]="pagination.totalCount"
+                 [value]="logs"
+                 scrollable="true"
+                 styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th (click)="onSort('timestamp')">
+                        Timestamp
+                        <i *ngIf="currentSortField === 'timestamp'" [class.pi-sort-alpha-up]="sortAscending"
+                           [class.pi-sort-amount-down]="!sortAscending"
+                           class="pi"></i>
+                    </th>
+                    <th (click)="onSort('severity')">
+                        Severity
+                        <i *ngIf="currentSortField === 'severity'" [class.pi-sort-alpha-down]="!sortAscending"
+                           [class.pi-sort-alpha-up]="sortAscending"
+                           class="pi"></i>
+                    </th>
+                    <th (click)="onSort('serviceName')">
+                        Service
+                        <i *ngIf="currentSortField === 'serviceName'" [class.pi-sort-alpha-down]="!sortAscending"
+                           [class.pi-sort-alpha-up]="sortAscending"
+                           class="pi"></i>
+                    </th>
+                    <th>Message</th>
+                    <th>Trace ID</th>
+                    <th>Details</th>
+                </tr>
+            </ng-template>
+            <ng-template let-log pTemplate="body">
+                <tr>
+                    <td>{{ log.timestamp | date : 'medium' }}</td>
+                    <td>
+                        <p-tag [severity]="getSeverityClass(log.severity)"
+                               [value]="log.severity"></p-tag>
+                    </td>
+                    <td>{{ log.serviceName }}</td>
+                    <td class="message-cell">{{ sanitizeMessage(log.message) }}</td>
+                    <td>{{ log.traceId }}</td>
+                    <td>
+                        <p-button
+                                (click)="showDetails(log.additionalFields)"
+                                class="p-button-rounded p-button-text"
+                                icon="pi pi-info-circle"></p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

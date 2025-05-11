@@ -1,0 +1,25 @@
+<p-panel [style]="{ height: '100%' }">
+  <ng-template pTemplate="header">
+    <div class="header">
+      <p>{{ panel?.title || 'Unnamed panel' }}</p>
+      <p-button
+        icon="pi pi-pencil"
+        [text]="true"
+        severity="secondary"
+        class="text-secondary"
+        (onClick)="editPanel()"
+      />
+    </div>
+  </ng-template>
+  <div class="container">
+    @if (isRefreshError) {
+      <p>Loading error</p>
+    } @else {
+      <datacat-panel-vizualization
+        [data]="data"
+        [visualizationType]="panel?.visualizationType"
+        [visualizationSettings]="panel?.visualizationSettings"
+      />
+    }
+  </div>
+</p-panel>

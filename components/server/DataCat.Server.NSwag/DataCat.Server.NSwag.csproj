@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="NSwag.MSBuild" Version="14.3.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DataCat.Server.Api\DataCat.Server.Api.csproj" />
+    </ItemGroup>
+
+    <Target Name="NSwag" BeforeTargets="Build">
+      <Exec Command="$(NSwagExe_Net80) run nswag.json" />
+    </Target>
+    
+</Project>
