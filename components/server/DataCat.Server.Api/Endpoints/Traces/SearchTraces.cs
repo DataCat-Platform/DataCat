@@ -7,8 +7,8 @@ public sealed record SearchTracesRequest(
     DateTime End,
     string? Operation = null,
     int? Limit = null,
-    TimeSpan? MinDuration = null,
-    TimeSpan? MaxDuration = null,
+    string? MinDuration = null,
+    string? MaxDuration = null,
     Dictionary<string, object>? Tags = null);
 
 public sealed class SearchTraces : ApiEndpointBase
