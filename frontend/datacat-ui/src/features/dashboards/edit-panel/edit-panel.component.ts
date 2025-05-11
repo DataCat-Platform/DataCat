@@ -14,7 +14,9 @@ import { DataSourceSelectComponent } from '../../../shared/ui/data-source-select
 import {
   DataSourceDriver,
   decodeLayout,
+  decodeVisualizationType,
   encodeVisualizationSettings,
+  encodeVisualizationType,
   Panel,
   VisualizationSettings,
   VisualizationType,
@@ -92,7 +94,7 @@ export class EditPanelComponent {
             connectionUrl: data.query?.dataSource?.connectionString || '',
           },
           layout: decodeLayout(data.layout),
-          visualizationType: data.typeName as VisualizationType,
+          visualizationType: decodeVisualizationType(data.typeName),
           visualizationSettings:
             data.styleConfiguration as VisualizationSettings,
         };
@@ -114,10 +116,10 @@ export class EditPanelComponent {
 
     const request: any = {
       title: this.editForm.get('title')?.value || '',
-      type: this.visualizationType,
+      type: encodeVisualizationType(this.visualizationType),
       rawQuery: this.editForm.get('query')?.value || '',
       dataSourceId: this.editForm.get('dataSourceId')?.value || '',
-      layout: '',
+      // layout: '',
       styleConfiguration: encodeVisualizationSettings(
         this.visualizationSettings,
       ),

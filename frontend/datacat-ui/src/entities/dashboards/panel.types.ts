@@ -93,3 +93,33 @@ export const encodeVisualizationSettings = (
 ): string => {
   return JSON.stringify(settings);
 };
+
+export const encodeVisualizationType = (
+  type: VisualizationType | undefined,
+): number => {
+  switch (type) {
+    case VisualizationType.LINE:
+      return 1;
+    case VisualizationType.BAR:
+      return 2;
+    case VisualizationType.PIE:
+      return 3;
+    default:
+      return 4;
+  }
+};
+
+export const decodeVisualizationType = (
+  type: string | undefined,
+): VisualizationType => {
+  switch (type) {
+    case 'Graph':
+      return VisualizationType.LINE;
+    case 'Table':
+      return VisualizationType.BAR;
+    case 'Pie Chart':
+      return VisualizationType.PIE;
+    default:
+      return VisualizationType.UNKNOWN;
+  }
+};

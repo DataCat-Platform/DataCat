@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, QueryList, ViewChildren } from '@angular/core';
 import {
   DashboardVariable,
   decodeLayout,
@@ -54,6 +54,9 @@ import { DatePickerModule } from 'primeng/datepicker';
   ],
 })
 export class PanelsGridComponent {
+  @ViewChildren(PanelInGridComponent)
+  public panelsComponents!: QueryList<PanelInGridComponent>;
+
   constructor(
     private apiService: ApiService,
     private loggerService: ToastLoggerService,
@@ -161,7 +164,11 @@ export class PanelsGridComponent {
   protected refreshDashboardsData() {
     this.isBusy = true;
 
-    timer(2000).subscribe(() => (this.isBusy = false));
+    this.panelsComponents.forEach((component) => {
+      component.refreshData();
+    });
+
+    timer(500).subscribe(() => (this.isBusy = false));
   }
 
   protected freezeGrid() {

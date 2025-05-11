@@ -1,7 +1,9 @@
-import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { VisualizationSettings, VisualizationType } from '../../../entities';
 import { ChartModule } from 'primeng/chart';
 import { BASIC_OPTIONS } from './consts';
+import { DataPoints } from '../../../entities/dashboards/data.types';
+import { ThemeProvider } from 'primeng/config';
 
 @Component({
   standalone: true,
@@ -24,7 +26,12 @@ export class PanelVisualizationComponent {
 
   @Input() public visualizationType?: VisualizationType;
 
-  @Input() public set data(data: any) {}
+  @Input() public set data(data: DataPoints) {
+    if (data) {
+      this.parseDataIntoChartjsData(data);
+    }
+  }
+
   @Input() public set visualizationSettings(
     settings: VisualizationSettings | undefined,
   ) {
@@ -45,13 +52,27 @@ export class PanelVisualizationComponent {
     chart?.update();
   }
 
+  protected parseDataIntoChartjsData(data: DataPoints) {
+    this.chartjsData = {
+      labels: data.map((d) => d.timestamp),
+      datasets: [
+        {
+          label: 'Label',
+          data: data.map((d) => d.value),
+        },
+      ],
+    };
+
+    this.chart?.update();
+  }
+
   protected chartjsData: any = {
-    labels: ['1', '2', '3'],
+    labels: ['1', '2', '3', '4', '5', '6'],
     datasets: [
       {
         order: 0,
         label: 'Label 1',
-        data: [1, 8, 3],
+        data: [1, 8, 3, 2, 5, 10],
         // borderColor: 'red',
         // backgroundColor: 'blue',
       },

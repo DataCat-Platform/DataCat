@@ -13,7 +13,8 @@ import { ToastLoggerService } from '../../../../shared/services/toast-logger.ser
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import * as urls from '../../../../shared/common/urls';
-import { DeletePanelButtonComponent } from '../../delete-panel';
+import { DataPoints } from '../../../../entities/dashboards/data.types';
+import { DatePipe } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -29,6 +30,8 @@ export class PanelInGridComponent {
     this._panelId = id;
     this.refresh();
   }
+
+  protected data: DataPoints = [];
 
   protected panel?: Panel;
 
@@ -74,5 +77,17 @@ export class PanelInGridComponent {
     if (this._panelId) {
       this.router.navigateByUrl(urls.panelEditUrl(this._panelId));
     }
+  }
+
+  public refreshData() {
+    const datepipe = new DatePipe('en-US');
+
+    this.data = [
+      ...this.data,
+      {
+        value: Math.random() * 10,
+        timestamp: datepipe.transform(Date.now(), 'dd.MM HH:mm:ss') || '',
+      },
+    ];
   }
 }

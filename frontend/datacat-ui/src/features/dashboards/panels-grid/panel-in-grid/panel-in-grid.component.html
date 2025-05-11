@@ -16,6 +16,7 @@
       <p>Loading error</p>
     } @else {
       <datacat-panel-vizualization
+        [data]="data"
         [visualizationType]="panel?.visualizationType"
         [visualizationSettings]="panel?.visualizationSettings"
       />
