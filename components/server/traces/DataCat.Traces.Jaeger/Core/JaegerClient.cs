@@ -44,8 +44,8 @@ public class JaegerClient : ITracesClient
         DateTime end, 
         string? operation = null,
         int? limit = null,
-        TimeSpan? minDuration = null,
-        TimeSpan? maxDuration = null,
+        string? minDuration = null,
+        string? maxDuration = null,
         Dictionary<string, object>? tags = null,
         CancellationToken token = default)
     {
@@ -66,19 +66,19 @@ public class JaegerClient : ITracesClient
             parameters["limit"] = limit.Value.ToString();
         }
 
-        if (minDuration.HasValue)
+        if (!string.IsNullOrWhiteSpace(minDuration))
         {
-            parameters["minDuration"] = ((long)minDuration.Value.TotalMilliseconds * 1000).ToString();
+            parameters["minDuration"] = minDuration;
         }
 
-        if (maxDuration.HasValue)
+        if (!string.IsNullOrWhiteSpace(maxDuration))
         {
-            parameters["maxDuration"] = ((long)maxDuration.Value.TotalMilliseconds * 1000).ToString();
+            parameters["maxDuration"] = maxDuration;
         }
 
         if (tags?.Count > 0)
         {
-            parameters["tags"] = Uri.EscapeDataString(JsonSerializer.Serialize(tags));
+            parameters["tags"] = JsonSerializer.Serialize(tags);
         }
 
         var response = await ExecuteRequest<JaegerTracesResponse>("/api/traces", parameters, token);
