@@ -9,19 +9,35 @@
   [loading]="isLoading"
   (onChange)="onSelect($event.value)"
   [(ngModel)]="selectedDataSource"
+  appendTo="body"
 >
   <ng-template pTemplate="item" let-dataSource>
-    <div>
+    <div class="option">
       <span class="text-secondary">
         @switch (dataSource.driver) {
           @case (DataSourceDriver.PROMETHEUS) {
-            P
+            <div [style]="{ width: '1.5rem', height: '1.5rem' }">
+              <img
+                src="/assets/icons/datasource/prometheus.png"
+                [style]="{ height: '100%' }"
+              />
+            </div>
           }
           @case (DataSourceDriver.ELASTIC_SEARCH) {
-            E
+            <div [style]="{ width: '1.5rem', height: '1.5rem' }">
+              <img
+                src="/assets/icons/datasource/elasticsearch.png"
+                [style]="{ height: '100%' }"
+              />
+            </div>
           }
           @case (DataSourceDriver.JAEGER) {
-            J
+            <div [style]="{ width: '1.5rem', height: '1.5rem' }">
+              <img
+                src="/assets/icons/datasource/jaeger.png"
+                [style]="{ height: '100%' }"
+              />
+            </div>
           }
         }
       </span>

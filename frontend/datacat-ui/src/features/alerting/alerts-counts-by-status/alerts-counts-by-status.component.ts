@@ -5,6 +5,7 @@ import { AlertStatus } from '../../../entities';
 import { TooltipModule } from 'primeng/tooltip';
 import { from } from 'rxjs';
 import { FAKE_ALERTS_COUNTS_BY_STATUS } from '../../../shared/mock/fakes';
+import { ApiService } from '../../../shared/services/datacat-generated-client';
 
 @Component({
   standalone: true,
@@ -16,18 +17,19 @@ import { FAKE_ALERTS_COUNTS_BY_STATUS } from '../../../shared/mock/fakes';
 export class AlertsCountsByStatusComponent implements OnInit {
   protected alertsCountsByStatus?: AlertsCountsByStatus;
 
+  constructor(private apiService: ApiService) {}
+
   ngOnInit() {
     this.loadAlertsCountsByStatus();
   }
 
   protected loadAlertsCountsByStatus() {
-    // TODO: add API call
-    from([FAKE_ALERTS_COUNTS_BY_STATUS]).subscribe({
-      next: (alertsCountsByStatus) => {
-        this.alertsCountsByStatus = alertsCountsByStatus;
-      },
-      error: () => {
-        // TODO
+    this.apiService.getApiV1AlertGetCounters().subscribe({
+      next: (data) => {
+        this.alertsCountsByStatus = new Map<AlertStatus, number>();
+        data.forEach((d) => {
+          this.alertsCountsByStatus?.set(d.status as AlertStatus, d.count || 0);
+        });
       },
     });
   }
