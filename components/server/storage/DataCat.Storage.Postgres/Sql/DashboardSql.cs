@@ -24,6 +24,7 @@ public static class DashboardSql
               panel.{Public.Panels.LayoutConfiguration}      {nameof(PanelSnapshot.LayoutConfiguration)},
               panel.{Public.Panels.DashboardId}              {nameof(PanelSnapshot.DashboardId)},
               panel.{Public.Panels.StylingConfiguration}     {nameof(PanelSnapshot.StyleConfiguration)},
+              panel.{Public.Panels.NamespaceId}              {nameof(PanelSnapshot.NamespaceId)},
               
               -- DataSources
               data_source.{Public.DataSources.Id}                     {nameof(DataSourceSnapshot.Id)},
@@ -72,6 +73,7 @@ public static class DashboardSql
               panel.{Public.Panels.LayoutConfiguration}          {nameof(PanelSnapshot.LayoutConfiguration)},
               panel.{Public.Panels.DashboardId}                  {nameof(PanelSnapshot.DashboardId)},
               panel.{Public.Panels.StylingConfiguration}         {nameof(PanelSnapshot.StyleConfiguration)},
+              panel.{Public.Panels.NamespaceId}                  {nameof(PanelSnapshot.NamespaceId)},
               
               -- DataSources
               data_source.{Public.DataSources.Id}                   {nameof(DataSourceSnapshot.Id)},

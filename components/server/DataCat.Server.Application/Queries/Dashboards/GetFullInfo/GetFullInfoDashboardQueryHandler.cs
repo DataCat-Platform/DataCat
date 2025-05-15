@@ -9,6 +9,6 @@ public sealed class GetFullInfoDashboardQueryHandler(
         var entity = await dashboardRepository.GetByIdAsync(request.DashboardId, token);
         return entity is null 
             ? Result.Fail<GetFullInfoDashboardResponse>(DashboardError.NotFound(request.DashboardId.ToString())) 
-            : Result<GetFullInfoDashboardResponse>.Success(entity.ToFullResponse());
+            : Result.Success(entity.ToFullResponse());
     }
 }
