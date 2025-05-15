@@ -122,6 +122,7 @@ public sealed class NotificationChannelGroupRepository(
 
                 return groupEntry;
             },
+            param: parameters,
             splitOn: $"{nameof(NotificationChannelSnapshot.Id)}, {nameof(NotificationDestinationSnapshot.Id)}",
             transaction: unitOfWork.Transaction);
 
