@@ -146,7 +146,7 @@ public sealed class DashboardRepository(
                 param: parameters,
                 transaction: UnitOfWork.Transaction);
 
-        var items = dashboardDictionary.Values.Select(x => x.RestoreFromSnapshot());
+        var items = dashboardDictionary.Values.Select(x => x.RestoreFromSnapshotWithoutPanels());
         return new Page<Dashboard>(items, totalCount, page, pageSize);
     }
 
