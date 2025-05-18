@@ -1,11 +1,13 @@
 .split-layout {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 40fr 60fr;
   gap: 2rem;
   max-height: 80vh;
   overflow: hidden;
 
   .details-content {
+    overflow-y: auto;
+    max-height: 80vh;
     padding: 1.5rem;
     background-color: var(--surface-ground);
 
