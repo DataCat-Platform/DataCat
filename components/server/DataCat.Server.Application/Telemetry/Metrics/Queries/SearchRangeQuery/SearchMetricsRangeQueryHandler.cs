@@ -3,6 +3,7 @@ namespace DataCat.Server.Application.Telemetry.Metrics.Queries.SearchRangeQuery;
 public class SearchMetricsRangeQueryHandler(
     IDataSourceRepository dataSourceRepository,
     DataSourceManager dataSourceManager,
+    NamespaceContext namespaceContext,
     IVariableService variableService) : IRequestHandler<SearchMetricsRangeQuery, Result<IEnumerable<TimeSeries>>>
 {
     public async Task<Result<IEnumerable<TimeSeries>>> Handle(SearchMetricsRangeQuery request, CancellationToken cancellationToken)
@@ -17,7 +18,7 @@ public class SearchMetricsRangeQueryHandler(
         
         var queryWithoutPlaceholders = await variableService.ResolveQueryVariablesAsync(
             request.Query,
-            request.NamespaceId,
+            namespaceId: Guid.Parse(namespaceContext.NamespaceId),
             request.DashboardId,
             cancellationToken); 
         

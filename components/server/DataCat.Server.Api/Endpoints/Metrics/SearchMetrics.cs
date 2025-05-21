@@ -3,7 +3,6 @@ namespace DataCat.Server.Api.Endpoints.Metrics;
 public sealed record SearchMetricsRequest(
     string DataSourceName,
     string Query,
-    Guid NamespaceId,
     Guid? DashboardId = null,
     DateTime? From = null,
     DateTime? To = null,
@@ -52,8 +51,7 @@ public class SearchMetrics : ApiEndpointBase
         return new SearchMetricsQuery(
             request.DataSourceName, 
             request.Query,
-            request.NamespaceId,
-            request.NamespaceId);
+            request.DashboardId);
     }
     
     private static SearchMetricsRangeQuery ToRangeQuery(SearchMetricsRequest request)
@@ -61,11 +59,10 @@ public class SearchMetrics : ApiEndpointBase
         return new SearchMetricsRangeQuery(
             request.DataSourceName, 
             request.Query,
-            request.NamespaceId,
-            request.NamespaceId,
             Start: request.From!.Value,
             End: request.To!.Value,
-            Step: request.Step!.Value);
+            Step: request.Step!.Value,
+            DashboardId: request.DashboardId);
     }
 }
 
