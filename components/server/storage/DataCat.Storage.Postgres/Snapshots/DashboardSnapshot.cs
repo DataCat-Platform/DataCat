@@ -44,4 +44,20 @@ public static class DashboardEntitySnapshotMapper
 
         return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSource));
     }
+    
+    public static Dashboard RestoreFromSnapshotWithoutPanels(this DashboardSnapshot snapshot)
+    {
+        var result = Dashboard.Create(
+            Guid.Parse(snapshot.Id),
+            snapshot.Name,
+            snapshot.Description,
+            [],
+            namespaceId: Guid.Parse(snapshot.NamespaceId),
+            snapshot.CreatedAt.ToUniversalTime(),
+            snapshot.UpdatedAt.ToUniversalTime(),
+            snapshot.Tags.ToList()
+        );
+
+        return result.IsSuccess ? result.Value : throw new DatabaseMappingException(typeof(DataSource));
+    }
 }

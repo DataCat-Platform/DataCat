@@ -32,7 +32,7 @@ public sealed class NotificationChannelGroupRepository(
                 {Public.NotificationChannelTable} notification_channel ON notification_channel.{Public.NotificationChannels.NotificationChannelGroupId} = notification_group.{Public.NotificationChannelGroups.Id}
             LEFT JOIN 
                 {Public.NotificationDestinationTable} notification_destination ON notification_channel.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationChannels.Id} 
-            WHERE notification_group.{Public.NotificationChannelGroups.Id} = @p_notification_channel_group_id AND notification_group.{Public.NotificationChannels.NamespaceId} = p_namespace_id
+            WHERE notification_group.{Public.NotificationChannelGroups.Id} = @p_notification_channel_group_id AND notification_group.{Public.NotificationChannels.NamespaceId} = @p_namespace_id
         """;
 
         var connection = await Factory.GetOrCreateConnectionAsync(token);
@@ -122,6 +122,7 @@ public sealed class NotificationChannelGroupRepository(
 
                 return groupEntry;
             },
+            param: parameters,
             splitOn: $"{nameof(NotificationChannelSnapshot.Id)}, {nameof(NotificationDestinationSnapshot.Id)}",
             transaction: unitOfWork.Transaction);
 
