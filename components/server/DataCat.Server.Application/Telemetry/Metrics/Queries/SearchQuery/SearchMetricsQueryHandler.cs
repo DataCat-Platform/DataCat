@@ -3,6 +3,7 @@ namespace DataCat.Server.Application.Telemetry.Metrics.Queries.SearchQuery;
 public sealed class SearchMetricsQueryHandler(
     IDataSourceRepository dataSourceRepository,
     DataSourceManager dataSourceManager,
+    NamespaceContext namespaceContext,
     IVariableService variableService) : IRequestHandler<SearchMetricsQuery, Result<IEnumerable<MetricPoint>>>
 {
     public async Task<Result<IEnumerable<MetricPoint>>> Handle(SearchMetricsQuery request, CancellationToken cancellationToken)
@@ -17,7 +18,7 @@ public sealed class SearchMetricsQueryHandler(
 
         var queryWithoutPlaceholders = await variableService.ResolveQueryVariablesAsync(
             request.Query,
-            request.NamespaceId,
+            namespaceId: Guid.Parse(namespaceContext.NamespaceId),
             request.DashboardId,
             cancellationToken); 
         
