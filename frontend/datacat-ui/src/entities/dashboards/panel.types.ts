@@ -1,5 +1,10 @@
 import { DataSource } from '../alerting';
 
+export type PanelType = {
+  id: number;
+  type: VisualizationType;
+};
+
 export enum VisualizationType {
   LINE = 'line',
   BAR = 'bar',

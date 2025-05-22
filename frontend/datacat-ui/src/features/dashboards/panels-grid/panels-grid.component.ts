@@ -5,6 +5,8 @@ import {
   encodeLayout,
   encodeVisualizationSettings,
   Panel,
+  PanelType,
+  VisualizationType,
 } from '../../../entities';
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
@@ -18,6 +20,7 @@ import {
   DisplayGrid,
   GridsterConfig,
   GridsterItem,
+  GridsterItemComponentInterface,
   GridsterModule,
   GridType,
 } from 'angular-gridster2';
@@ -73,6 +76,7 @@ export class PanelsGridComponent {
     this._dashboardId = id;
     this.refreshDashboard();
     this.refreshDashboardVariables();
+    this.refreshPanelTypes();
   }
 
   protected isSaving = false;
@@ -93,6 +97,8 @@ export class PanelsGridComponent {
 
   protected panels: Panel[] = [];
 
+  protected panelTypes: PanelType[] = [];
+
   protected gridsterItems: GridsterItem[] = [];
   protected gridsterOptions: GridsterConfig = {
     gridType: GridType.Fixed,
@@ -108,7 +114,24 @@ export class PanelsGridComponent {
       enabled: true,
     },
     enableBoundaryControl: true,
+    itemChangeCallback: this.handleGridsterItemChange.bind(this),
   };
+
+  protected refreshPanelTypes() {
+    this.apiService.getApiV1PanelTypes().subscribe({
+      next: (data) => {
+        this.panelTypes = data.map<PanelType>((d) => {
+          return {
+            id: d.id || 0,
+            type: d.name as VisualizationType,
+          };
+        });
+      },
+      error: (e) => {
+        this.loggerService.error(e);
+      },
+    });
+  }
 
   protected refreshDashboard() {
     if (!this._dashboardId) return;
@@ -131,6 +154,7 @@ export class PanelsGridComponent {
                 id: item.id || '',
                 title: item.title || '',
                 query: item.query || '',
+                visualizationType: item.panelType as VisualizationType,
                 layout: decodeLayout(item.layout),
               };
             }) || [];
@@ -209,25 +233,7 @@ export class PanelsGridComponent {
   protected saveLayout() {
     this.isSaving = true;
 
-    const observables = this.gridsterItems.map((item) => {
-      const panel = this.panels.filter((p) => p.id == item['panelId']).at(0);
-      const request: any = {
-        title: panel?.title,
-        type: panel?.visualizationType,
-        rawQuery: panel?.query,
-        dataSourceId: panel?.dataSource?.id,
-        styleConfiguration: encodeVisualizationSettings(
-          panel?.visualizationSettings,
-        ),
-        layout: encodeLayout({
-          x: item.x,
-          y: item.y,
-          cols: item.cols,
-          rows: item.rows,
-        }),
-      };
-      return this.apiService.putApiV1PanelUpdate(item['panelId'], request);
-    });
+    const observables = this.panelsComponents.map((pc) => pc.saveLayout());
 
     forkJoin(observables)
       .pipe(
@@ -242,6 +248,21 @@ export class PanelsGridComponent {
         error: () => {
           this.loggerService.error('Unable to save layout');
         },
+      });
+  }
+
+  protected handleGridsterItemChange(
+    item: GridsterItem,
+    component: GridsterItemComponentInterface,
+  ) {
+    const panelId = item['panelId'];
+    this.panelsComponents
+      .find((pc) => pc.panelId == panelId)
+      ?.updateLayout({
+        x: item.x,
+        y: item.y,
+        cols: item.cols,
+        rows: item.rows,
       });
   }
 }

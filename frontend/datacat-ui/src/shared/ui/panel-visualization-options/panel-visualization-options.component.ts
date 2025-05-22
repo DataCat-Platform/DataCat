@@ -66,9 +66,6 @@ export class PanelVisualizationOptionsComponent implements OnInit {
       this.updateOptionsForm();
       this.emit();
     });
-    this.optionsForm?.valueChanges.subscribe(() => {
-      this.emit();
-    });
   }
 
   ngOnInit() {
@@ -84,5 +81,8 @@ export class PanelVisualizationOptionsComponent implements OnInit {
 
   private updateOptionsForm() {
     this.optionsForm = createOptionsForm(this.visualizationType);
+    this.optionsForm.valueChanges.subscribe(() => {
+      this.emit();
+    });
   }
 }

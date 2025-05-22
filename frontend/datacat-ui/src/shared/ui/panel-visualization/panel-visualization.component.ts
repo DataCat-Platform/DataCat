@@ -3,7 +3,6 @@ import { VisualizationSettings, VisualizationType } from '../../../entities';
 import { ChartModule } from 'primeng/chart';
 import { BASIC_OPTIONS } from './consts';
 import { DataPoints } from '../../../entities/dashboards/data.types';
-import { ThemeProvider } from 'primeng/config';
 
 @Component({
   standalone: true,
@@ -20,8 +19,10 @@ export class PanelVisualizationComponent {
   protected chartRef: any;
 
   @ViewChild('chart') protected set chart(ref: any) {
-    this.chartRef = ref;
-    this.chartRef?.chart?.update();
+    if (ref) {
+      this.chartRef = ref;
+      this.chartRef?.chart?.update();
+    }
   }
 
   @Input() public visualizationType?: VisualizationType;
@@ -41,15 +42,13 @@ export class PanelVisualizationComponent {
   }
 
   protected parseSettingsIntoChartjsOptions(settings: VisualizationSettings) {
-    const chart: any = this.chartRef?.chart;
-
     this.chartjsOptions.plugins.legend.display = settings.legend?.enabled;
     this.chartjsOptions.plugins.legend.position = settings.legend?.position;
 
     this.chartjsOptions.plugins.title.display = settings.title?.enabled;
     this.chartjsOptions.plugins.title.text = settings.title?.text;
 
-    chart?.update();
+    this.chartRef?.chart?.update();
   }
 
   protected parseDataIntoChartjsData(data: DataPoints) {
@@ -63,19 +62,11 @@ export class PanelVisualizationComponent {
       ],
     };
 
-    this.chart?.update();
+    this.chartRef?.chart?.update();
   }
 
   protected chartjsData: any = {
-    labels: ['1', '2', '3', '4', '5', '6'],
-    datasets: [
-      {
-        order: 0,
-        label: 'Label 1',
-        data: [1, 8, 3, 2, 5, 10],
-        // borderColor: 'red',
-        // backgroundColor: 'blue',
-      },
-    ],
+    labels: [],
+    datasets: [],
   };
 }

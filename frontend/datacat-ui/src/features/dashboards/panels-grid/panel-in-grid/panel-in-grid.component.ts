@@ -5,6 +5,9 @@ import {
   DataSourceDriver,
   decodeLayout,
   decodeVisualizationSettings,
+  encodeLayout,
+  encodeVisualizationSettings,
+  Layout,
   Panel,
   VisualizationType,
 } from '../../../../entities';
@@ -15,6 +18,8 @@ import { Router } from '@angular/router';
 import * as urls from '../../../../shared/common/urls';
 import { DataPoints } from '../../../../entities/dashboards/data.types';
 import { DatePipe } from '@angular/common';
+import { Observable, of } from 'rxjs';
+import { GridsterItem } from 'angular-gridster2';
 
 @Component({
   standalone: true,
@@ -26,9 +31,13 @@ import { DatePipe } from '@angular/common';
 export class PanelInGridComponent {
   private _panelId?: string;
 
-  @Input() set panelId(id: string) {
+  @Input() set panelId(id: string | undefined) {
     this._panelId = id;
     this.refresh();
+  }
+
+  get panelId() {
+    return this._panelId;
   }
 
   protected data: DataPoints = [];
@@ -89,5 +98,28 @@ export class PanelInGridComponent {
         timestamp: datepipe.transform(Date.now(), 'dd.MM HH:mm:ss') || '',
       },
     ];
+  }
+
+  public saveLayout(): Observable<void> {
+    if (this.panel) {
+      const request = {
+        title: this.panel.title,
+        type: 1, // this.panel.visualizationType,
+        rawQuery: this.panel.query,
+        dataSourceId: this.panel.dataSource?.id,
+        layout: encodeLayout(this.panel.layout),
+        styleConfiguration: encodeVisualizationSettings(
+          this.panel.visualizationSettings,
+        ),
+      } as any;
+      return this.apiService.putApiV1PanelUpdate(this.panel.id, request);
+    }
+    return of(undefined);
+  }
+
+  public updateLayout(layout: Layout) {
+    if (this.panel) {
+      this.panel.layout = layout;
+    }
   }
 }

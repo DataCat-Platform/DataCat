@@ -25,6 +25,7 @@ import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { ButtonModule } from 'primeng/button';
 import { finalize } from 'rxjs';
+import { DataPoints } from '../../../entities/dashboards/data.types';
 
 @Component({
   standalone: true,
@@ -52,15 +53,20 @@ export class EditPanelComponent {
 
   protected panel?: Panel;
 
-  protected data: any = {
-    labels: ['1', '2', '3', '4', '5', '6', '7'],
-    datasets: [
-      {
-        label: 'First Dataset',
-        data: [65, 59, 80, 81, 56, 55, 40],
-      },
-    ],
-  };
+  protected data: DataPoints = [
+    {
+      timestamp: '1',
+      value: 0,
+    },
+    {
+      timestamp: '2',
+      value: 5,
+    },
+    {
+      timestamp: '3',
+      value: 3,
+    },
+  ];
   protected visualizationType?: VisualizationType;
   protected visualizationSettings?: VisualizationSettings;
 
