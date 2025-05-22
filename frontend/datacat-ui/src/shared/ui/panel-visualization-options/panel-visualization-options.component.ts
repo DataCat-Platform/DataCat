@@ -85,4 +85,12 @@ export class PanelVisualizationOptionsComponent implements OnInit {
       this.emit();
     });
   }
+
+  public setVisualizationSettings(
+    type: VisualizationType,
+    settings: VisualizationSettings,
+  ) {
+    this.visualizationTypeControl.setValue(type);
+    this.optionsForm.setValue(settings);
+  }
 }

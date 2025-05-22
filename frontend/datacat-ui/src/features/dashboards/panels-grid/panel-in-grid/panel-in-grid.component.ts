@@ -5,6 +5,7 @@ import {
   DataSourceDriver,
   decodeLayout,
   decodeVisualizationSettings,
+  decodeVisualizationType,
   encodeLayout,
   encodeVisualizationSettings,
   Layout,
@@ -72,7 +73,7 @@ export class PanelInGridComponent {
             connectionUrl: data.query?.dataSource?.connectionString || '',
           },
           layout: decodeLayout(data.layout),
-          visualizationType: VisualizationType.LINE,
+          visualizationType: decodeVisualizationType(data.typeName),
           visualizationSettings: decodeVisualizationSettings(
             data.styleConfiguration,
           ),

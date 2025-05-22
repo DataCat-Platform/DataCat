@@ -1,9 +1,13 @@
-import { Component, Input, QueryList, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import {
   DashboardVariable,
   decodeLayout,
-  encodeLayout,
-  encodeVisualizationSettings,
   Panel,
   PanelType,
   VisualizationType,
@@ -37,6 +41,7 @@ import {
   TimeRange,
   TimeRangeSelectComponent,
 } from '../../../shared/ui/time-range-select';
+import { STEP_OPTIONS } from '../../../shared/ui/time-range-select/time-range-select.consts';
 
 @Component({
   standalone: true,
@@ -61,22 +66,9 @@ import {
     TimeRangeSelectComponent,
   ],
 })
-export class PanelsGridComponent {
+export class PanelsGridComponent implements AfterViewInit {
   @ViewChildren(PanelInGridComponent)
   public panelsComponents!: QueryList<PanelInGridComponent>;
-
-  constructor(
-    private apiService: ApiService,
-    private loggerService: ToastLoggerService,
-  ) {
-    this.freezeGrid();
-    this.refreshRateControl.valueChanges.subscribe((seconds) =>
-      this.setRefreshRate(seconds),
-    );
-    this.timeRangeControl.valueChanges.subscribe((timeRange) => {
-      this.updateTimeRange(timeRange);
-    });
-  }
 
   protected _dashboardId?: string;
 
@@ -100,7 +92,15 @@ export class PanelsGridComponent {
   ];
   protected refreshRateControl = new FormControl<number | null>(null);
   protected refreshRateSubscription?: Subscription;
-  protected timeRangeControl = new FormControl<TimeRange | null>(null);
+  protected timeRangeControl = new FormControl<TimeRange>({
+    step: STEP_OPTIONS[0].value,
+    from: (() => {
+      const date = new Date();
+      date.setDate(date.getDate() - 1);
+      return date;
+    })(),
+    to: new Date(),
+  });
 
   protected variables: DashboardVariable[] = [];
 
@@ -125,6 +125,25 @@ export class PanelsGridComponent {
     enableBoundaryControl: true,
     itemChangeCallback: this.handleGridsterItemChange.bind(this),
   };
+
+  constructor(
+    private apiService: ApiService,
+    private loggerService: ToastLoggerService,
+  ) {
+    this.freezeGrid();
+    this.refreshRateControl.valueChanges.subscribe((seconds) =>
+      this.setRefreshRate(seconds),
+    );
+    this.timeRangeControl.valueChanges.subscribe((timeRange) => {
+      this.updateTimeRange(timeRange);
+    });
+  }
+
+  ngAfterViewInit() {
+    this.panelsComponents.changes.subscribe((pcs) =>
+      this.updateTimeRange(this.timeRangeControl.getRawValue()),
+    );
+  }
 
   protected refreshPanelTypes() {
     this.apiService.getApiV1PanelTypes().subscribe({

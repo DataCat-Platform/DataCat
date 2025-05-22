@@ -1,4 +1,10 @@
-import { afterNextRender, Component, Input } from '@angular/core';
+import {
+  afterNextRender,
+  AfterViewInit,
+  Component,
+  Input,
+  ViewChild,
+} from '@angular/core';
 import { PanelVisualizationComponent } from '../../../shared/ui/panel-visualization';
 import { PanelVisualizationOptionsComponent } from '../../../shared/ui/panel-visualization-options';
 import { PanelModule } from 'primeng/panel';
@@ -43,7 +49,7 @@ import { DataPoints } from '../../../entities/dashboards/data.types';
     ButtonModule,
   ],
 })
-export class EditPanelComponent {
+export class EditPanelComponent implements AfterViewInit {
   private _panelId?: string;
 
   @Input() public set panelId(id: string | undefined) {
@@ -51,22 +57,12 @@ export class EditPanelComponent {
     this.refresh();
   }
 
+  @ViewChild(PanelVisualizationOptionsComponent)
+  optionsComponent?: PanelVisualizationOptionsComponent;
+
   protected panel?: Panel;
 
-  protected data: DataPoints = [
-    {
-      timestamp: '1',
-      value: 0,
-    },
-    {
-      timestamp: '2',
-      value: 5,
-    },
-    {
-      timestamp: '3',
-      value: 3,
-    },
-  ];
+  protected data: DataPoints = [];
   protected visualizationType?: VisualizationType;
   protected visualizationSettings?: VisualizationSettings;
 
@@ -83,6 +79,15 @@ export class EditPanelComponent {
     private apiService: ApiService,
     private loggerService: ToastLoggerService,
   ) {}
+
+  ngAfterViewInit() {
+    if (this.panel) {
+      this.optionsComponent?.setVisualizationSettings(
+        this.panel.visualizationType!,
+        this.panel.visualizationSettings!,
+      );
+    }
+  }
 
   protected refresh() {
     if (!this._panelId) return;
@@ -101,9 +106,15 @@ export class EditPanelComponent {
           },
           layout: decodeLayout(data.layout),
           visualizationType: decodeVisualizationType(data.typeName),
-          visualizationSettings:
-            data.styleConfiguration as VisualizationSettings,
+          visualizationSettings: JSON.parse(
+            data.styleConfiguration!,
+          ) as VisualizationSettings,
         };
+
+        this.optionsComponent?.setVisualizationSettings(
+          this.panel.visualizationType!,
+          this.panel.visualizationSettings!,
+        );
 
         this.editForm.setValue({
           title: this.panel.title,

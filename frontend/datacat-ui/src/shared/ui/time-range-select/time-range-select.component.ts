@@ -32,9 +32,9 @@ export class TimeRangeSelectComponent implements ControlValueAccessor {
   private onTouched = () => {};
 
   protected formGroup = new FormGroup({
-    step: new FormControl<string>(this.stepOptions[0].value),
-    from: new FormControl<Date>(new Date()),
-    to: new FormControl<Date>(new Date()),
+    step: new FormControl<string | null>(null),
+    from: new FormControl<Date | null>(null),
+    to: new FormControl<Date | null>(null),
   });
 
   constructor() {
