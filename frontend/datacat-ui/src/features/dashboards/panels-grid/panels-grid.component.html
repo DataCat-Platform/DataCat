@@ -20,13 +20,6 @@
       />
     </div>
     <div class="container-header__end">
-      <!-- <p-datepicker
-        [style]="{ width: '23rem' }"
-        selectionMode="range"
-        [readonlyInput]="true"
-        [showTime]="true"
-      /> -->
-
       <p-button
         icon="pi pi-save"
         label="Save"
@@ -82,5 +75,8 @@
         }
       </gridster>
     }
+  </div>
+  <div class="container-footer">
+    <datacat-time-range-select [formControl]="timeRangeControl" />
   </div>
 </div>

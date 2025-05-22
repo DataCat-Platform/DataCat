@@ -16,10 +16,13 @@ import { ToastLoggerService } from '../../../../shared/services/toast-logger.ser
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import * as urls from '../../../../shared/common/urls';
-import { DataPoints } from '../../../../entities/dashboards/data.types';
+import {
+  DataPoint,
+  DataPoints,
+} from '../../../../entities/dashboards/data.types';
 import { DatePipe } from '@angular/common';
 import { Observable, of } from 'rxjs';
-import { GridsterItem } from 'angular-gridster2';
+import { TimeRange } from '../../../../shared/ui/time-range-select';
 
 @Component({
   standalone: true,
@@ -98,6 +101,40 @@ export class PanelInGridComponent {
         timestamp: datepipe.transform(Date.now(), 'dd.MM HH:mm:ss') || '',
       },
     ];
+  }
+
+  public refreshTimeRange(timeRange: TimeRange) {
+    if (this.panel && this.panel.dataSource) {
+      this.apiService
+        .getApiV1MetricsQueryRange(
+          this.panel.dataSource.name,
+          this.panel.query,
+          'undefined' as any,
+          null,
+          timeRange.from,
+          timeRange.to,
+          timeRange.step,
+        )
+        .subscribe({
+          next: (data) => {
+            if (data.length !== 0) {
+              const datepipe = new DatePipe('en-US');
+              this.data =
+                data[0].points?.map<DataPoint>((mp) => {
+                  return {
+                    value: mp.value || 0,
+                    timestamp: datepipe.transform(mp.timestamp) || '',
+                  };
+                }) || [];
+            } else {
+              this.data = [];
+            }
+          },
+          error: (e) => {
+            this.loggerService.error(e);
+          },
+        });
+    }
   }
 
   public saveLayout(): Observable<void> {

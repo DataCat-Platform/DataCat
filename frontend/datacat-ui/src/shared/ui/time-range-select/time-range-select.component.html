@@ -1,0 +1,31 @@
+<div class="container" [formGroup]="formGroup">
+  <div class="item">
+    <p>Step</p>
+    <p-select
+      [options]="stepOptions"
+      optionLabel="label"
+      optionValue="value"
+      formControlName="step"
+    />
+  </div>
+  <div class="item">
+    <p>From</p>
+    <p-datepicker
+      [showIcon]="true"
+      [readonlyInput]="true"
+      [showButtonBar]="true"
+      [showTime]="true"
+      formControlName="from"
+    />
+  </div>
+  <div class="item">
+    <p>To</p>
+    <p-datepicker
+      [showIcon]="true"
+      [readonlyInput]="true"
+      [showButtonBar]="true"
+      [showTime]="true"
+      formControlName="to"
+    />
+  </div>
+</div>

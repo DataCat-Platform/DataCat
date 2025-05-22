@@ -8,7 +8,7 @@
 .panels-grid {
   margin-top: var(--p-padding-md);
   display: block;
-  height: 600px;
+  height: 580px;
 }
 
 .container-header {
@@ -20,6 +20,12 @@
     gap: var(--p-padding-md);
     align-items: center;
   }
+}
+
+.container-footer {
+  display: flex;
+  justify-content: start;
+  gap: var(--p-padding-md);
 }
 
 gridster-item {

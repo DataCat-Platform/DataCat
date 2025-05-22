@@ -33,6 +33,10 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AddVariableButtonComponent } from '../add-variable';
 import { DeleteVariableButtonComponent } from '../delete-variable';
 import { DatePickerModule } from 'primeng/datepicker';
+import {
+  TimeRange,
+  TimeRangeSelectComponent,
+} from '../../../shared/ui/time-range-select';
 
 @Component({
   standalone: true,
@@ -54,6 +58,7 @@ import { DatePickerModule } from 'primeng/datepicker';
     AddVariableButtonComponent,
     DeleteVariableButtonComponent,
     DatePickerModule,
+    TimeRangeSelectComponent,
   ],
 })
 export class PanelsGridComponent {
@@ -68,6 +73,9 @@ export class PanelsGridComponent {
     this.refreshRateControl.valueChanges.subscribe((seconds) =>
       this.setRefreshRate(seconds),
     );
+    this.timeRangeControl.valueChanges.subscribe((timeRange) => {
+      this.updateTimeRange(timeRange);
+    });
   }
 
   protected _dashboardId?: string;
@@ -92,6 +100,7 @@ export class PanelsGridComponent {
   ];
   protected refreshRateControl = new FormControl<number | null>(null);
   protected refreshRateSubscription?: Subscription;
+  protected timeRangeControl = new FormControl<TimeRange | null>(null);
 
   protected variables: DashboardVariable[] = [];
 
@@ -264,5 +273,13 @@ export class PanelsGridComponent {
         cols: item.cols,
         rows: item.rows,
       });
+  }
+
+  protected updateTimeRange(timeRange: TimeRange | null) {
+    if (timeRange) {
+      this.panelsComponents.forEach((pc) => {
+        pc.refreshTimeRange(timeRange);
+      });
+    }
   }
 }
