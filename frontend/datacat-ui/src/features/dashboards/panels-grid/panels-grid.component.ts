@@ -93,10 +93,10 @@ export class PanelsGridComponent implements AfterViewInit {
   protected refreshRateControl = new FormControl<number | null>(null);
   protected refreshRateSubscription?: Subscription;
   protected timeRangeControl = new FormControl<TimeRange>({
-    step: STEP_OPTIONS[0].value,
+    step: '00:30:00',
     from: (() => {
       const date = new Date();
-      date.setDate(date.getDate() - 1);
+      date.setMinutes(date.getMinutes() - 360);
       return date;
     })(),
     to: new Date(),

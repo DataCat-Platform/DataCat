@@ -4,3 +4,7 @@ export type DataPoint = {
 };
 
 export type DataPoints = DataPoint[];
+
+// export type TimeSeries = {
+//   labels
+// }

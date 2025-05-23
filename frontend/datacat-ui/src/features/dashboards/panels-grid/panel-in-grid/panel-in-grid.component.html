@@ -2,18 +2,27 @@
   <ng-template pTemplate="header">
     <div class="header">
       <p>{{ panel?.title || 'Unnamed panel' }}</p>
-      <p-button
-        icon="pi pi-pencil"
-        [text]="true"
-        severity="secondary"
-        class="text-secondary"
-        (onClick)="editPanel()"
-      />
+      <div>
+        <p-button
+          icon="pi pi-eye"
+          [text]="true"
+          severity="secondary"
+          class="text-secondary"
+          (onClick)="showDialog()"
+        />
+        <p-button
+          icon="pi pi-pencil"
+          [text]="true"
+          severity="secondary"
+          class="text-secondary"
+          (onClick)="editPanel()"
+        />
+      </div>
     </div>
   </ng-template>
   <div class="container">
     @if (isRefreshError) {
-      <p>Loading error</p>
+      <p class="text-secondary">Loading error</p>
     } @else {
       <datacat-panel-vizualization
         [data]="data"
@@ -23,3 +32,23 @@
     }
   </div>
 </p-panel>
+
+<p-dialog
+  [modal]="true"
+  [(visible)]="isDialogShown"
+  appendTo="body"
+  [header]="panel?.title"
+>
+  <div class="dialog">
+    <div class="attr">
+      <p>Query</p>
+      <textarea pTextarea [disabled]="true">{{ panel?.query }}</textarea>
+    </div>
+    <p-divider></p-divider>
+    <datacat-panel-vizualization
+      [data]="data"
+      [visualizationType]="panel?.visualizationType"
+      [visualizationSettings]="panel?.visualizationSettings"
+    />
+  </div>
+</p-dialog>

@@ -9,8 +9,6 @@ export enum VisualizationType {
   LINE = 'line',
   BAR = 'bar',
   PIE = 'pie',
-  GAUGE = 'gauge',
-  TABLE = 'table',
   UNKNOWN = 'unknown',
 }
 
@@ -54,10 +52,6 @@ export type Panel = {
   layout: Layout;
   visualizationType?: VisualizationType;
   visualizationSettings?: VisualizationSettings;
-};
-
-export type LineStyle = {
-  lineWidth: number;
 };
 
 export const decodeLayout = (encoded: string | undefined): Layout => {

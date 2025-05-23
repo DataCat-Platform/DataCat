@@ -1,7 +1,20 @@
 <p-panel [style]="{ display: 'block', height: '100%' }">
   <ng-template pTemplate="header">
     <div class="header">
-      <p>Dashboard {{ dashboardId }}</p>
+      <div class="header__name">
+        <p>{{ dashboard?.name }}</p>
+        <i class="pi pi-info-circle text-secondary" [pTooltip]="dashboard?.description"></i>
+      </div>
+      <div>
+        <datacat-edit-dashboard-button
+          [dashboardId]="dashboardId"
+          (onEdit)="refresh()"
+        />
+        <datacat-delete-dashboard-button
+          [dashboardId]="dashboardId"
+          (onDelete)="showDashboardsList()"
+        />
+      </div>
     </div>
   </ng-template>
   <datacat-panels-grid [dashboardId]="dashboardId" />

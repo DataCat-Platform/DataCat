@@ -10,7 +10,6 @@ import {
   encodeVisualizationSettings,
   Layout,
   Panel,
-  VisualizationType,
 } from '../../../../entities';
 import { ApiService } from '../../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../../shared/services/toast-logger.service';
@@ -22,15 +21,25 @@ import {
   DataPoints,
 } from '../../../../entities/dashboards/data.types';
 import { DatePipe } from '@angular/common';
-import { Observable, of } from 'rxjs';
+import { Observable, of, timer } from 'rxjs';
 import { TimeRange } from '../../../../shared/ui/time-range-select';
+import { DialogModule } from 'primeng/dialog';
+import { TextareaModule } from 'primeng/textarea';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   standalone: true,
   selector: 'datacat-panel-in-grid',
   templateUrl: './panel-in-grid.component.html',
   styleUrl: './panel-in-grid.component.scss',
-  imports: [PanelModule, PanelVisualizationComponent, ButtonModule],
+  imports: [
+    PanelModule,
+    PanelVisualizationComponent,
+    ButtonModule,
+    DialogModule,
+    TextareaModule,
+    DividerModule,
+  ],
 })
 export class PanelInGridComponent {
   private _panelId?: string;
@@ -49,6 +58,10 @@ export class PanelInGridComponent {
   protected panel?: Panel;
 
   protected isRefreshError = false;
+
+  protected isDialogShown = false;
+
+  protected timeRange?: TimeRange;
 
   constructor(
     private router: Router,
@@ -78,6 +91,7 @@ export class PanelInGridComponent {
             data.styleConfiguration,
           ),
         };
+        this.refreshTimeRange(this.timeRange);
       },
       error: (e) => {
         this.loggerService.error(e);
@@ -104,8 +118,16 @@ export class PanelInGridComponent {
     ];
   }
 
-  public refreshTimeRange(timeRange: TimeRange) {
+  public refreshTimeRange(timeRange: TimeRange | undefined) {
+    if (timeRange) {
+      this.timeRange = timeRange;
+      this.loadTimeRangeData(timeRange);
+    }
+  }
+
+  protected loadTimeRangeData(timeRange: TimeRange) {
     if (this.panel && this.panel.dataSource) {
+      this.isRefreshError = false;
       this.apiService
         .getApiV1MetricsQueryRange(
           this.panel.dataSource.name,
@@ -119,7 +141,9 @@ export class PanelInGridComponent {
         .subscribe({
           next: (data) => {
             if (data.length !== 0) {
-              const datepipe = new DatePipe('en-US');
+              const datepipe = new DatePipe('en-US', undefined, {
+                dateFormat: 'M/d/yy, h:mm a',
+              });
               this.data =
                 data[0].points?.map<DataPoint>((mp) => {
                   return {
@@ -132,7 +156,7 @@ export class PanelInGridComponent {
             }
           },
           error: (e) => {
-            this.loggerService.error(e);
+            this.isRefreshError = true;
           },
         });
     }
@@ -159,5 +183,9 @@ export class PanelInGridComponent {
     if (this.panel) {
       this.panel.layout = layout;
     }
+  }
+
+  public showDialog() {
+    this.isDialogShown = true;
   }
 }

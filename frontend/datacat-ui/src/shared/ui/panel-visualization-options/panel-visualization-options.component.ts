@@ -12,6 +12,7 @@ import {
   TooltipOptionsComponent,
 } from './option-groups';
 import { TitleOptionsComponent } from './option-groups/title-options/title-options.component';
+import { DEFAULT_OPTIONS } from './consts';
 
 @Component({
   standalone: true,
@@ -91,6 +92,6 @@ export class PanelVisualizationOptionsComponent implements OnInit {
     settings: VisualizationSettings,
   ) {
     this.visualizationTypeControl.setValue(type);
-    this.optionsForm.setValue(settings);
+    this.optionsForm.setValue({ ...DEFAULT_OPTIONS, ...settings });
   }
 }

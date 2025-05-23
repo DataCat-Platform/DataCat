@@ -13,6 +13,9 @@ export const createOptionsForm = (
       enabled: new FormControl<boolean>(true),
       text: new FormControl<string>('a'),
     }),
+    tooltip: new FormGroup({
+      enabled: new FormControl<boolean>(true),
+    })
   });
 
   // switch (type) {
