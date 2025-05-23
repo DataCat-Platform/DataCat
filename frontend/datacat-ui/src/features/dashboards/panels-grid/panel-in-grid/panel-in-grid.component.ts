@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
 import * as urls from '../../../../shared/common/urls';
 import {
   DataPoint,
-  DataPoints,
+  TimeSeries,
 } from '../../../../entities/dashboards/data.types';
 import { DatePipe } from '@angular/common';
 import { Observable, of, timer } from 'rxjs';
@@ -53,7 +53,7 @@ export class PanelInGridComponent {
     return this._panelId;
   }
 
-  protected data: DataPoints = [];
+  protected data: TimeSeries[] = [];
 
   protected panel?: Panel;
 
@@ -107,15 +107,14 @@ export class PanelInGridComponent {
   }
 
   public refreshData() {
-    const datepipe = new DatePipe('en-US');
-
-    this.data = [
-      ...this.data,
-      {
-        value: Math.random() * 10,
-        timestamp: datepipe.transform(Date.now(), 'dd.MM HH:mm:ss') || '',
-      },
-    ];
+    // const datepipe = new DatePipe('en-US');
+    // this.data = [
+    //   ...this.data,
+    //   {
+    //     value: Math.random() * 10,
+    //     timestamp: datepipe.transform(Date.now(), 'dd.MM HH:mm:ss') || '',
+    //   },
+    // ];
   }
 
   public refreshTimeRange(timeRange: TimeRange | undefined) {
@@ -145,10 +144,17 @@ export class PanelInGridComponent {
                 dateFormat: 'M/d/yy, h:mm a',
               });
               this.data =
-                data[0].points?.map<DataPoint>((mp) => {
+                data.map<TimeSeries>((ts) => {
                   return {
-                    value: mp.value || 0,
-                    timestamp: datepipe.transform(mp.timestamp) || '',
+                    metric: ts.metricName,
+                    labels: ts.labels,
+                    dataPoints:
+                      ts.points?.map<DataPoint>((p) => {
+                        return {
+                          value: p.value!,
+                          timestamp: datepipe.transform(p.timestamp!) || '',
+                        };
+                      }) || [],
                   };
                 }) || [];
             } else {

@@ -3,8 +3,8 @@ export type DataPoint = {
   timestamp: string;
 };
 
-export type DataPoints = DataPoint[];
-
-// export type TimeSeries = {
-//   labels
-// }
+export type TimeSeries = {
+  metric?: string;
+  labels?: { [key: string]: string; };
+  dataPoints: DataPoint[];
+}

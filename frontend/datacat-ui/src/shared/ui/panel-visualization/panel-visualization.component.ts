@@ -2,7 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { VisualizationSettings, VisualizationType } from '../../../entities';
 import { ChartModule } from 'primeng/chart';
 import { BASIC_OPTIONS } from './consts';
-import { DataPoints } from '../../../entities/dashboards/data.types';
+import { TimeSeries } from '../../../entities/dashboards/data.types';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -33,7 +33,7 @@ export class PanelVisualizationComponent {
 
   @Input() public visualizationType?: VisualizationType;
 
-  @Input() public set data(data: DataPoints) {
+  @Input() public set data(data: TimeSeries[]) {
     if (data) {
       this.parseDataIntoChartjsData(data);
     }
@@ -59,15 +59,15 @@ export class PanelVisualizationComponent {
     this.chartRef?.chart?.update();
   }
 
-  protected parseDataIntoChartjsData(data: DataPoints) {
+  protected parseDataIntoChartjsData(data: TimeSeries[]) {
     this.chartjsData = {
-      labels: data.map((d) => d.timestamp),
-      datasets: [
-        {
-          label: 'Label',
-          data: data.map((d) => d.value),
-        },
-      ],
+      labels: data[0]?.dataPoints.map((d) => d.timestamp) || [],
+      datasets: data.map((ts) => {
+        return {
+          label: ts.metric,
+          data: ts.dataPoints.map((d) => d.value),
+        };
+      }),
     };
 
     this.chartRef?.chart?.update();

@@ -1,10 +1,4 @@
-import {
-  afterNextRender,
-  AfterViewInit,
-  Component,
-  Input,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { PanelVisualizationComponent } from '../../../shared/ui/panel-visualization';
 import { PanelVisualizationOptionsComponent } from '../../../shared/ui/panel-visualization-options';
 import { PanelModule } from 'primeng/panel';
@@ -31,7 +25,7 @@ import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { ButtonModule } from 'primeng/button';
 import { finalize } from 'rxjs';
-import { DataPoints } from '../../../entities/dashboards/data.types';
+import { TimeSeries } from '../../../entities/dashboards/data.types';
 
 @Component({
   standalone: true,
@@ -62,7 +56,7 @@ export class EditPanelComponent implements AfterViewInit {
 
   protected panel?: Panel;
 
-  protected data: DataPoints = [];
+  protected data: TimeSeries[] = [];
   protected visualizationType?: VisualizationType;
   protected visualizationSettings?: VisualizationSettings;
 
