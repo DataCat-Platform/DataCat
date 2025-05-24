@@ -10,6 +10,7 @@ import {
   Dashboard,
   DashboardVariable,
   decodeLayout,
+  Layout,
   mapGetPanelResponeToPanel,
   mapVariableResponseToDashboardVariable,
   Panel,
@@ -40,6 +41,7 @@ export class DashboardService {
     null,
   );
 
+  private _timeRange: TimeRange | null = null;
   private panels?: Panel[];
   private dashboard?: Dashboard;
 
@@ -61,7 +63,12 @@ export class DashboardService {
   }
 
   public set timeRange(tr: TimeRange) {
+    this._timeRange = tr;
     this.timeRangeSubject.next(tr);
+  }
+
+  public get timeRange(): TimeRange | null {
+    return this._timeRange;
   }
 
   public savePanelsLayout() {
@@ -177,5 +184,17 @@ export class DashboardService {
           this.logger.error('Cannot load dashboard');
         },
       });
+  }
+
+  public updatePanelLayout(panelId: string, layout: Layout) {
+    this.panels = this.panels?.map((p) => {
+      if (p.id == panelId) {
+        return {
+          ...p,
+          layout,
+        };
+      }
+      return p;
+    });
   }
 }

@@ -3,7 +3,7 @@ import { VisualizationSettings, VisualizationType } from '../../../entities';
 import { ChartModule } from 'primeng/chart';
 import { BASIC_OPTIONS } from './consts';
 import { TimeSeries } from '../../../entities/dashboards/data.types';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -33,7 +33,7 @@ export class PanelVisualizationComponent {
 
   @Input() public visualizationType?: VisualizationType;
 
-  @Input() public set data(data: TimeSeries[]) {
+  @Input() public set data(data: TimeSeries[] | null) {
     if (data) {
       this.parseDataIntoChartjsData(data);
     }
@@ -60,8 +60,13 @@ export class PanelVisualizationComponent {
   }
 
   protected parseDataIntoChartjsData(data: TimeSeries[]) {
+    const datePipe = new DatePipe('en-US', undefined, {
+      dateFormat: 'M/d/yy, h:mm a',
+    });
+
     this.chartjsData = {
-      labels: data[0]?.dataPoints.map((d) => d.timestamp) || [],
+      labels:
+        data[0]?.dataPoints.map((d) => datePipe.transform(d.timestamp)) || [],
       datasets: data.map((ts) => {
         return {
           label: ts.metric,

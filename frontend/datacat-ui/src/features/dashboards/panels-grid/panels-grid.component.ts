@@ -126,13 +126,6 @@ export class PanelsGridComponent {
     this.dashboardService.savePanelsLayout();
   }
 
-  protected refreshGridsterItems() {
-    this.gridsterItems =
-      this.panels?.map<GridsterItem>((panel) => {
-        return { ...panel.layout, panelId: panel.id };
-      }) || null;
-  }
-
   protected toggleMode(event: any) {
     if (event.checked) {
       this.unfreezeGrid();
@@ -141,10 +134,27 @@ export class PanelsGridComponent {
     }
   }
 
+  protected refreshGridsterItems() {
+    this.gridsterItems =
+      this.panels?.map<GridsterItem>((panel) => {
+        return { ...panel.layout, panelId: panel.id };
+      }) || null;
+  }
+
   protected handleGridsterItemChange(
     item: GridsterItem,
     component: GridsterItemComponentInterface,
   ) {
     const panelId = item['panelId'];
+    this.dashboardService.updatePanelLayout(panelId, {
+      x: item.x,
+      y: item.y,
+      cols: item.cols,
+      rows: item.rows,
+    });
+  }
+
+  protected getPanelById(id: string): Panel | undefined {
+    return this.panels?.find((p) => p.id == id);
   }
 }

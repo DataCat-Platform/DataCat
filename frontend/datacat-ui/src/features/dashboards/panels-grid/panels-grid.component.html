@@ -71,7 +71,7 @@
       >
         @for (item of gridsterItems; track $index) {
           <gridster-item [item]="item">
-            <datacat-panel-in-grid [panelId]="item['panelId']" />
+            <datacat-panel-in-grid [panel]="getPanelById(item['panelId'])" />
           </gridster-item>
         }
       </gridster>

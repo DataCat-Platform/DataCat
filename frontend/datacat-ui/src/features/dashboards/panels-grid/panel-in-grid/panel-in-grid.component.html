@@ -1,7 +1,7 @@
 <p-panel [style]="{ height: '100%' }">
   <ng-template pTemplate="header">
     <div class="header">
-      <p>{{ panel?.title || 'Unnamed panel' }}</p>
+      <p>{{ _panel?.title || 'Unnamed panel' }}</p>
       <div>
         <p-button
           icon="pi pi-eye"
@@ -21,13 +21,13 @@
     </div>
   </ng-template>
   <div class="container">
-    @if (isRefreshError) {
+    @if (isError) {
       <p class="text-secondary">Loading error</p>
     } @else {
       <datacat-panel-vizualization
         [data]="data"
-        [visualizationType]="panel?.visualizationType"
-        [visualizationSettings]="panel?.visualizationSettings"
+        [visualizationType]="_panel?.visualizationType"
+        [visualizationSettings]="_panel?.visualizationSettings"
       />
     }
   </div>
@@ -37,18 +37,18 @@
   [modal]="true"
   [(visible)]="isDialogShown"
   appendTo="body"
-  [header]="panel?.title"
+  [header]="_panel?.title"
 >
   <div class="dialog">
     <div class="attr">
       <p>Query</p>
-      <textarea pTextarea [disabled]="true">{{ panel?.query }}</textarea>
+      <textarea pTextarea [disabled]="true">{{ _panel?.query }}</textarea>
     </div>
     <p-divider></p-divider>
     <datacat-panel-vizualization
       [data]="data"
-      [visualizationType]="panel?.visualizationType"
-      [visualizationSettings]="panel?.visualizationSettings"
+      [visualizationType]="_panel?.visualizationType"
+      [visualizationSettings]="_panel?.visualizationSettings"
     />
   </div>
 </p-dialog>

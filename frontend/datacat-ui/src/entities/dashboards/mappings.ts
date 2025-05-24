@@ -11,10 +11,18 @@ import {
   VisualizationType,
 } from './panel.types';
 import { DashboardVariable } from './variables.types';
+import { z } from 'zod/v4';
+
+const LayoutShema = z.object({
+  x: z.number(),
+  y: z.number(),
+  cols: z.number(),
+  rows: z.number(),
+});
 
 const parseLayout = (s: string): Layout => {
   try {
-    return JSON.parse(s);
+    return LayoutShema.parse(JSON.parse(s));
   } catch {
     return {
       x: 0,
