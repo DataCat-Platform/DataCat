@@ -15,7 +15,7 @@
         </p-inputgroup>
       }
       <datacat-add-variable-button
-        [dashboardId]="_dashboardId"
+        [dashboardId]="dashboard?.id"
         (onAdd)="refreshDashboardVariables()"
       />
     </div>
@@ -24,13 +24,13 @@
         icon="pi pi-save"
         label="Save"
         severity="secondary"
-        [loading]="isSaving"
-        (onClick)="saveLayout()"
+        [loading]="isBusy"
+        (onClick)="savePanelsLayout()"
       />
 
       <datacat-create-panel-button
-        [dashboardId]="_dashboardId"
-        (onCreate)="refreshDashboard()"
+        [dashboardId]="dashboard?.id"
+        (onCreate)="refreshDashboardPanels()"
       />
 
       <p-togglebutton
@@ -48,7 +48,6 @@
             label="Refresh"
             severity="secondary"
             [loading]="isBusy"
-            (onClick)="refreshDashboardsData()"
           />
         </p-inputgroup-addon>
         <p-select
@@ -61,7 +60,9 @@
     </div>
   </div>
   <div class="panels-grid">
-    @if (panels.length === 0) {
+    @if (!panels) {
+      <p class="empty">...</p>
+    } @else if (panels.length === 0) {
       <p class="empty">You haven't created any panels yet!</p>
     } @else {
       <gridster

@@ -1,25 +1,16 @@
+import { Component } from '@angular/core';
 import {
-  AfterViewInit,
-  Component,
-  Input,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
-import {
+  Dashboard,
   DashboardVariable,
-  decodeLayout,
   Panel,
   PanelType,
-  VisualizationType,
 } from '../../../entities';
-import { ApiService } from '../../../shared/services/datacat-generated-client';
-import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { finalize, forkJoin, interval, Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 import {
   DisplayGrid,
   GridsterConfig,
@@ -32,16 +23,15 @@ import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
 import { PanelInGridComponent } from './panel-in-grid';
 import { CreatePanelButtonComponent } from './create-panel-button';
-import { RefreshRateOption } from '.';
+import { REFRESH_RATE_OPTIONS, RefreshRateOption } from '.';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AddVariableButtonComponent } from '../add-variable';
 import { DeleteVariableButtonComponent } from '../delete-variable';
 import { DatePickerModule } from 'primeng/datepicker';
-import {
-  TimeRange,
-  TimeRangeSelectComponent,
-} from '../../../shared/ui/time-range-select';
-import { STEP_OPTIONS } from '../../../shared/ui/time-range-select/time-range-select.consts';
+import { TimeRangeSelectComponent } from '../../../shared/ui/time-range-select';
+import { DashboardService } from './dashboard.service';
+import { DEFAULT_TIME_RANGE } from './panels-grid.consts';
+import { TimeRange } from '../../../entities/dashboards/etc.types';
 
 @Component({
   standalone: true,
@@ -66,49 +56,19 @@ import { STEP_OPTIONS } from '../../../shared/ui/time-range-select/time-range-se
     TimeRangeSelectComponent,
   ],
 })
-export class PanelsGridComponent implements AfterViewInit {
-  @ViewChildren(PanelInGridComponent)
-  public panelsComponents!: QueryList<PanelInGridComponent>;
-
-  protected _dashboardId?: string;
-
-  @Input() public set dashboardId(id: string) {
-    this._dashboardId = id;
-    this.refreshDashboard();
-    this.refreshDashboardVariables();
-    this.refreshPanelTypes();
-  }
-
-  protected isSaving = false;
-  protected isBusy = false;
-
-  protected refreshRateOptions: RefreshRateOption[] = [
-    { title: 'off', seconds: null },
-    { title: '10s', seconds: 10 },
-    { title: '30s', seconds: 30 },
-    { title: '1m', seconds: 60 },
-    { title: '10m', seconds: 600 },
-    { title: '1h', seconds: 3600 },
-  ];
+export class PanelsGridComponent {
+  protected refreshRateOptions: RefreshRateOption[] = REFRESH_RATE_OPTIONS;
   protected refreshRateControl = new FormControl<number | null>(null);
   protected refreshRateSubscription?: Subscription;
-  protected timeRangeControl = new FormControl<TimeRange>({
-    step: '00:30:00',
-    from: (() => {
-      const date = new Date();
-      date.setMinutes(date.getMinutes() - 360);
-      return date;
-    })(),
-    to: new Date(),
-  });
+  protected timeRangeControl = new FormControl<TimeRange>(DEFAULT_TIME_RANGE);
 
-  protected variables: DashboardVariable[] = [];
-
-  protected panels: Panel[] = [];
-
+  protected dashboard: Dashboard | null = null;
+  protected variables: DashboardVariable[] | null = null;
+  protected panels: Panel[] | null = null;
   protected panelTypes: PanelType[] = [];
+  protected isBusy = false;
 
-  protected gridsterItems: GridsterItem[] = [];
+  protected gridsterItems: GridsterItem[] | null = null;
   protected gridsterOptions: GridsterConfig = {
     gridType: GridType.Fixed,
     displayGrid: DisplayGrid.None,
@@ -126,101 +86,20 @@ export class PanelsGridComponent implements AfterViewInit {
     itemChangeCallback: this.handleGridsterItemChange.bind(this),
   };
 
-  constructor(
-    private apiService: ApiService,
-    private loggerService: ToastLoggerService,
-  ) {
+  constructor(private dashboardService: DashboardService) {
     this.freezeGrid();
-    this.refreshRateControl.valueChanges.subscribe((seconds) =>
-      this.setRefreshRate(seconds),
-    );
+    // this.refreshRateControl.valueChanges.subscribe((seconds) =>
+    //   this.setRefreshRate(seconds),
+    // );
     this.timeRangeControl.valueChanges.subscribe((timeRange) => {
-      this.updateTimeRange(timeRange);
+      this.dashboardService.timeRange = timeRange!;
     });
-  }
-
-  ngAfterViewInit() {
-    this.panelsComponents.changes.subscribe((pcs) =>
-      this.updateTimeRange(this.timeRangeControl.getRawValue()),
-    );
-  }
-
-  protected refreshPanelTypes() {
-    this.apiService.getApiV1PanelTypes().subscribe({
-      next: (data) => {
-        this.panelTypes = data.map<PanelType>((d) => {
-          return {
-            id: d.id || 0,
-            type: d.name as VisualizationType,
-          };
-        });
-      },
-      error: (e) => {
-        this.loggerService.error(e);
-      },
+    this.dashboardService.panels$.subscribe((v) => {
+      this.panels = v;
+      this.refreshGridsterItems();
     });
-  }
-
-  protected refreshDashboard() {
-    if (!this._dashboardId) return;
-
-    this.isBusy = true;
-    this.refreshRateControl.disable();
-    this.apiService
-      .getApiV1DashboardFull(this._dashboardId)
-      .pipe(
-        finalize(() => {
-          this.isBusy = false;
-          this.refreshRateControl.enable();
-        }),
-      )
-      .subscribe({
-        next: (data) => {
-          this.panels =
-            data.panels?.map<Panel>((item) => {
-              return {
-                id: item.id || '',
-                title: item.title || '',
-                query: item.query || '',
-                visualizationType: item.panelType as VisualizationType,
-                layout: decodeLayout(item.layout),
-              };
-            }) || [];
-          this.refreshGridsterItems();
-        },
-        error: (e) => {
-          this.loggerService.error(e);
-        },
-      });
-  }
-
-  protected refreshDashboardVariables() {
-    if (!this._dashboardId) return;
-
-    this.apiService.getApiV1VariablesDashboard(this._dashboardId).subscribe({
-      next: (data) => {
-        this.variables = data.map<DashboardVariable>((item) => {
-          return {
-            id: item.id || '',
-            placeholder: item.placeholder || '',
-            value: item.value || '',
-          };
-        });
-      },
-      error: (e) => {
-        this.loggerService.error(e);
-      },
-    });
-  }
-
-  protected refreshDashboardsData() {
-    this.isBusy = true;
-
-    this.panelsComponents.forEach((component) => {
-      component.refreshData();
-    });
-
-    timer(500).subscribe(() => (this.isBusy = false));
+    this.dashboardService.isBusy$.subscribe((v) => (this.isBusy = v));
+    this.dashboardService.dashboard$.subscribe((v) => (this.dashboard = v));
   }
 
   protected freezeGrid() {
@@ -235,10 +114,23 @@ export class PanelsGridComponent implements AfterViewInit {
     this.gridsterOptions.api?.optionsChanged!();
   }
 
+  protected refreshDashboardVariables() {
+    this.dashboardService.refreshDashboardVariables();
+  }
+
+  protected refreshDashboardPanels() {
+    this.dashboardService.refreshDashboardPanels();
+  }
+
+  protected savePanelsLayout() {
+    this.dashboardService.savePanelsLayout();
+  }
+
   protected refreshGridsterItems() {
-    this.gridsterItems = this.panels.map<GridsterItem>((panel) => {
-      return { ...panel.layout, panelId: panel.id };
-    });
+    this.gridsterItems =
+      this.panels?.map<GridsterItem>((panel) => {
+        return { ...panel.layout, panelId: panel.id };
+      }) || null;
   }
 
   protected toggleMode(event: any) {
@@ -249,56 +141,10 @@ export class PanelsGridComponent implements AfterViewInit {
     }
   }
 
-  protected setRefreshRate(seconds: number | null) {
-    this.refreshRateSubscription?.unsubscribe();
-    if (seconds) {
-      this.refreshRateSubscription = interval(seconds * 1000).subscribe(() => {
-        this.refreshDashboardsData();
-      });
-    }
-  }
-
-  protected saveLayout() {
-    this.isSaving = true;
-
-    const observables = this.panelsComponents.map((pc) => pc.saveLayout());
-
-    forkJoin(observables)
-      .pipe(
-        finalize(() => {
-          this.isSaving = false;
-        }),
-      )
-      .subscribe({
-        next: () => {
-          this.loggerService.success('Saved layout');
-        },
-        error: () => {
-          this.loggerService.error('Unable to save layout');
-        },
-      });
-  }
-
   protected handleGridsterItemChange(
     item: GridsterItem,
     component: GridsterItemComponentInterface,
   ) {
     const panelId = item['panelId'];
-    this.panelsComponents
-      .find((pc) => pc.panelId == panelId)
-      ?.updateLayout({
-        x: item.x,
-        y: item.y,
-        cols: item.cols,
-        rows: item.rows,
-      });
-  }
-
-  protected updateTimeRange(timeRange: TimeRange | null) {
-    if (timeRange) {
-      this.panelsComponents.forEach((pc) => {
-        pc.refreshTimeRange(timeRange);
-      });
-    }
   }
 }

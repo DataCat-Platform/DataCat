@@ -10,6 +10,7 @@ import { Dashboard } from '../../entities';
 import { ApiService } from '../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../shared/services/toast-logger.service';
 import { TooltipModule } from 'primeng/tooltip';
+import { DashboardService } from '../../features/dashboards/panels-grid/dashboard.service';
 
 @Component({
   standalone: true,
@@ -31,38 +32,21 @@ export class ViewDashboardComponent implements AfterContentInit {
   @ViewChild(EditDashboardButtonComponent)
   editDashboardButtonComponent?: EditDashboardButtonComponent;
 
-  protected dashboard?: Dashboard;
+  protected dashboard: Dashboard | null = null;
 
   constructor(
-    private apiService: ApiService,
-    private loggerService: ToastLoggerService,
+    private dashboardService: DashboardService,
     private router: Router,
-  ) {}
-
-  ngAfterContentInit() {
-    this.refresh();
+  ) {
+    this.dashboardService.dashboard$.subscribe((v) => (this.dashboard = v));
   }
 
-  protected refresh() {
-    this.apiService.getApiV1Dashboard(this.dashboardId).subscribe({
-      next: (data) => {
-        this.dashboard = {
-          id: data.id!,
-          name: data.name!,
-          description: data.description!,
-          panels: [],
-          createdAt: data.createdAt!,
-          lastUpdatedAt: data.updatedAt!,
-        };
-        this.editDashboardButtonComponent!.fillForm(
-          this.dashboard.name,
-          this.dashboard.description,
-        );
-      },
-      error: (e) => {
-        this.loggerService.error(e);
-      },
-    });
+  ngAfterContentInit() {
+    this.dashboardService.dashboardId = this.dashboardId;
+  }
+
+  protected refreshDashboardOnly() {
+    this.dashboardService.refreshDashboardOnly();
   }
 
   protected showDashboardsList() {

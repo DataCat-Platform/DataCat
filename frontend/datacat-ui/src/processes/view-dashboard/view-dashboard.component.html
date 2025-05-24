@@ -3,12 +3,15 @@
     <div class="header">
       <div class="header__name">
         <p>{{ dashboard?.name }}</p>
-        <i class="pi pi-info-circle text-secondary" [pTooltip]="dashboard?.description"></i>
+        <i
+          class="pi pi-info-circle text-secondary"
+          [pTooltip]="dashboard?.description"
+        ></i>
       </div>
       <div>
         <datacat-edit-dashboard-button
           [dashboardId]="dashboardId"
-          (onEdit)="refresh()"
+          (onEdit)="refreshDashboardOnly()"
         />
         <datacat-delete-dashboard-button
           [dashboardId]="dashboardId"
@@ -17,5 +20,5 @@
       </div>
     </div>
   </ng-template>
-  <datacat-panels-grid [dashboardId]="dashboardId" />
+  <datacat-panels-grid />
 </p-panel>
