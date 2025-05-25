@@ -15,29 +15,22 @@
         </p-inputgroup>
       }
       <datacat-add-variable-button
-        [dashboardId]="_dashboardId"
+        [dashboardId]="dashboard?.id"
         (onAdd)="refreshDashboardVariables()"
       />
     </div>
     <div class="container-header__end">
-      <!-- <p-datepicker
-        [style]="{ width: '23rem' }"
-        selectionMode="range"
-        [readonlyInput]="true"
-        [showTime]="true"
-      /> -->
-
       <p-button
         icon="pi pi-save"
         label="Save"
         severity="secondary"
-        [loading]="isSaving"
-        (onClick)="saveLayout()"
+        [loading]="isBusy"
+        (onClick)="savePanelsLayout()"
       />
 
       <datacat-create-panel-button
-        [dashboardId]="_dashboardId"
-        (onCreate)="refreshDashboard()"
+        [dashboardId]="dashboard?.id"
+        (onCreate)="refreshDashboardPanels()"
       />
 
       <p-togglebutton
@@ -55,7 +48,6 @@
             label="Refresh"
             severity="secondary"
             [loading]="isBusy"
-            (onClick)="refreshDashboardsData()"
           />
         </p-inputgroup-addon>
         <p-select
@@ -68,7 +60,9 @@
     </div>
   </div>
   <div class="panels-grid">
-    @if (panels.length === 0) {
+    @if (!panels) {
+      <p class="empty">...</p>
+    } @else if (panels.length === 0) {
       <p class="empty">You haven't created any panels yet!</p>
     } @else {
       <gridster
@@ -77,10 +71,13 @@
       >
         @for (item of gridsterItems; track $index) {
           <gridster-item [item]="item">
-            <datacat-panel-in-grid [panelId]="item['panelId']" />
+            <datacat-panel-in-grid [panel]="getPanelById(item['panelId'])" />
           </gridster-item>
         }
       </gridster>
     }
+  </div>
+  <div class="container-footer">
+    <datacat-time-range-select [formControl]="timeRangeControl" />
   </div>
 </div>

@@ -3,19 +3,18 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
-import { finalize } from 'rxjs';
 
 @Component({
   standalone: true,
-  selector: 'datacat-delete-variable-button',
-  templateUrl: './delete-variable-button.component.html',
-  styleUrl: './delete-variable-button.component.scss',
+  selector: 'datacat-delete-dashboard-button',
+  templateUrl: './delete-dashboard-button.component.html',
+  styleUrl: './delete-dashboard-button.component.scss',
   imports: [ButtonModule, DialogModule],
 })
-export class DeleteVariableButtonComponent {
+export class DeleteDashboardButtonComponent {
   @Output() onDelete = new EventEmitter<void>();
 
-  @Input() variableId?: string;
+  @Input() dashboardId?: string;
   protected isDeletionInitiated = false;
   protected isDeletionDialogVisible = false;
   protected isDeletionError = false;
@@ -34,27 +33,21 @@ export class DeleteVariableButtonComponent {
     this.isDeletionDialogVisible = false;
   }
 
-  protected deleteVariable() {
+  protected deleteDashboard() {
     this.isDeletionError = false;
     this.isDeletionInitiated = true;
-    if (this.variableId) {
-      this.apiService
-        .deleteApiV1VariableRemove(this.variableId)
-        .pipe(
-          finalize(() => {
-            this.isDeletionInitiated = false;
-          }),
-        )
-        .subscribe({
-          next: () => {
-            this.onDelete.emit();
-            this.hideDeletionDialog();
-          },
-          error: (e) => {
-            this.loggerService.error(e);
-            this.isDeletionError = true;
-          },
-        });
+    if (this.dashboardId) {
+      this.apiService.deleteApiV1DashboardRemove(this.dashboardId).subscribe({
+        next: () => {
+          this.loggerService.success('Deleted dashboard');
+          this.onDelete.emit();
+        },
+        error: (e) => {
+          this.loggerService.error(e);
+          this.isDeletionInitiated = false;
+          this.isDeletionError = true;
+        },
+      });
     }
   }
 }

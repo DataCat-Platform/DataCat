@@ -1,11 +1,14 @@
 import { DataSource } from '../alerting';
 
+export type PanelType = {
+  id: number;
+  type: VisualizationType;
+};
+
 export enum VisualizationType {
   LINE = 'line',
   BAR = 'bar',
   PIE = 'pie',
-  GAUGE = 'gauge',
-  TABLE = 'table',
   UNKNOWN = 'unknown',
 }
 
@@ -49,10 +52,6 @@ export type Panel = {
   layout: Layout;
   visualizationType?: VisualizationType;
   visualizationSettings?: VisualizationSettings;
-};
-
-export type LineStyle = {
-  lineWidth: number;
 };
 
 export const decodeLayout = (encoded: string | undefined): Layout => {
@@ -101,9 +100,9 @@ export const encodeVisualizationType = (
     case VisualizationType.LINE:
       return 1;
     case VisualizationType.BAR:
-      return 2;
-    case VisualizationType.PIE:
       return 3;
+    case VisualizationType.PIE:
+      return 2;
     default:
       return 4;
   }
@@ -113,11 +112,11 @@ export const decodeVisualizationType = (
   type: string | undefined,
 ): VisualizationType => {
   switch (type) {
-    case 'Graph':
+    case 'LineChart':
       return VisualizationType.LINE;
-    case 'Table':
+    case 'BarChart':
       return VisualizationType.BAR;
-    case 'Pie Chart':
+    case 'PieChart':
       return VisualizationType.PIE;
     default:
       return VisualizationType.UNKNOWN;

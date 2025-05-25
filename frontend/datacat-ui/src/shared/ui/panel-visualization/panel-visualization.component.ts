@@ -2,15 +2,15 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { VisualizationSettings, VisualizationType } from '../../../entities';
 import { ChartModule } from 'primeng/chart';
 import { BASIC_OPTIONS } from './consts';
-import { DataPoints } from '../../../entities/dashboards/data.types';
-import { ThemeProvider } from 'primeng/config';
+import { TimeSeries } from '../../../entities/dashboards/data.types';
+import { CommonModule, DatePipe } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'datacat-panel-vizualization',
   templateUrl: './panel-visualization.component.html',
   styleUrl: './panel-visualization.component.scss',
-  imports: [ChartModule],
+  imports: [ChartModule, CommonModule],
 })
 export class PanelVisualizationComponent {
   protected VisualizationType = VisualizationType;
@@ -19,14 +19,21 @@ export class PanelVisualizationComponent {
 
   protected chartRef: any;
 
+  protected chartjsData: any = {
+    labels: [],
+    datasets: [],
+  };
+
   @ViewChild('chart') protected set chart(ref: any) {
-    this.chartRef = ref;
-    this.chartRef?.chart?.update();
+    if (ref) {
+      this.chartRef = ref;
+      this.chartRef?.chart?.update();
+    }
   }
 
   @Input() public visualizationType?: VisualizationType;
 
-  @Input() public set data(data: DataPoints) {
+  @Input() public set data(data: TimeSeries[] | null) {
     if (data) {
       this.parseDataIntoChartjsData(data);
     }
@@ -41,41 +48,60 @@ export class PanelVisualizationComponent {
   }
 
   protected parseSettingsIntoChartjsOptions(settings: VisualizationSettings) {
-    const chart: any = this.chartRef?.chart;
-
     this.chartjsOptions.plugins.legend.display = settings.legend?.enabled;
     this.chartjsOptions.plugins.legend.position = settings.legend?.position;
 
     this.chartjsOptions.plugins.title.display = settings.title?.enabled;
     this.chartjsOptions.plugins.title.text = settings.title?.text;
 
-    chart?.update();
+    this.chartjsOptions.plugins.tooltip.enabled = settings.tooltip?.enabled;
+
+    this.chartRef?.chart?.update();
   }
 
-  protected parseDataIntoChartjsData(data: DataPoints) {
-    this.chartjsData = {
-      labels: data.map((d) => d.timestamp),
-      datasets: [
-        {
-          label: 'Label',
-          data: data.map((d) => d.value),
-        },
-      ],
-    };
+  protected parseDataIntoChartjsData(data: TimeSeries[]) {
+    const datePipe = new DatePipe('en-US', undefined, {
+      dateFormat: 'M/d/yy, h:mm a',
+    });
 
-    this.chart?.update();
+    switch (this.visualizationType) {
+      case VisualizationType.PIE: {
+        this.chartjsData = {
+          labels: data?.map((ts) => JSON.stringify(ts.labels)) || [],
+          datasets: [
+            {
+              label: null,
+              data: data?.map((ts) => ts.dataPoints[0].value) || [],
+            },
+          ],
+        };
+        break;
+      }
+      default: {
+        this.chartjsData = {
+          labels:
+            data[0]?.dataPoints.map((d) => datePipe.transform(d.timestamp)) ||
+            [],
+          datasets: data.map((ts) => {
+            return {
+              label: ts.metric + JSON.stringify(ts.labels),
+              data: ts.dataPoints.map((d) => d.value),
+            };
+          }),
+        };
+      }
+    }
+
+    this.chartRef?.chart?.update();
   }
 
-  protected chartjsData: any = {
-    labels: ['1', '2', '3', '4', '5', '6'],
-    datasets: [
-      {
-        order: 0,
-        label: 'Label 1',
-        data: [1, 8, 3, 2, 5, 10],
-        // borderColor: 'red',
-        // backgroundColor: 'blue',
-      },
-    ],
-  };
+  protected hasData(): boolean {
+    if (this.chartjsData.datasets.length === 0) return false;
+
+    for (const ds of this.chartjsData.datasets) {
+      if (ds.data.length !== 0) return true;
+    }
+
+    return false;
+  }
 }

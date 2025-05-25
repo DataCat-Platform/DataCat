@@ -17,6 +17,7 @@ import { convertToApiFilters } from '../../../entities/data-sources';
   standalone: true,
   selector: 'datacat-data-source-select',
   templateUrl: './data-source-select.component.html',
+  styleUrl: './data-source-select.component.scss',
   imports: [SelectModule, FormsModule],
   providers: [
     {

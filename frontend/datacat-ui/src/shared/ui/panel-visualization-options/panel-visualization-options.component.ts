@@ -12,6 +12,7 @@ import {
   TooltipOptionsComponent,
 } from './option-groups';
 import { TitleOptionsComponent } from './option-groups/title-options/title-options.component';
+import { DEFAULT_OPTIONS } from './consts';
 
 @Component({
   standalone: true,
@@ -66,9 +67,6 @@ export class PanelVisualizationOptionsComponent implements OnInit {
       this.updateOptionsForm();
       this.emit();
     });
-    this.optionsForm?.valueChanges.subscribe(() => {
-      this.emit();
-    });
   }
 
   ngOnInit() {
@@ -84,5 +82,16 @@ export class PanelVisualizationOptionsComponent implements OnInit {
 
   private updateOptionsForm() {
     this.optionsForm = createOptionsForm(this.visualizationType);
+    this.optionsForm.valueChanges.subscribe(() => {
+      this.emit();
+    });
+  }
+
+  public setVisualizationSettings(
+    type: VisualizationType,
+    settings: VisualizationSettings,
+  ) {
+    this.visualizationTypeControl.setValue(type);
+    this.optionsForm.setValue({ ...DEFAULT_OPTIONS, ...settings });
   }
 }

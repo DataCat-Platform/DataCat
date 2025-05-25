@@ -11,8 +11,24 @@
   margin-left: var(--p-padding-md);
   margin-right: var(--p-padding-md);
   margin-bottom: var(--p-padding-md);
+  text-align: center;
 }
 
 .p-panel-content {
   flex-grow: 1;
+}
+
+.dialog {
+  width: 800px;
+  height: 400px;
+}
+
+.attr {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-sm);
+
+  p {
+    color: var(--p-surface-400);
+  }
 }

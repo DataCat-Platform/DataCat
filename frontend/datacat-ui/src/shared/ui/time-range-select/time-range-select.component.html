@@ -1,0 +1,41 @@
+<p-button (onClick)="op.toggle($event)" severity="secondary">
+  <i class="pi pi-clock"></i>
+  <span class="date">{{ from | date: 'short' }}</span> to
+  <span class="date">{{ to | date: 'short' }}</span> with step
+  <span class="date">
+    {{ step }}
+  </span>
+</p-button>
+<p-popover #op>
+  <div class="container" [formGroup]="formGroup">
+    <div class="item">
+      <p>Step</p>
+      <p-select
+        [options]="stepOptions"
+        optionLabel="label"
+        optionValue="value"
+        formControlName="step"
+      />
+    </div>
+    <div class="item">
+      <p>From</p>
+      <p-datepicker
+        [showIcon]="true"
+        [readonlyInput]="true"
+        [showButtonBar]="true"
+        [showTime]="true"
+        formControlName="from"
+      />
+    </div>
+    <div class="item">
+      <p>To</p>
+      <p-datepicker
+        [showIcon]="true"
+        [readonlyInput]="true"
+        [showButtonBar]="true"
+        [showTime]="true"
+        formControlName="to"
+      />
+    </div>
+  </div>
+</p-popover>

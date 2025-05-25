@@ -1,93 +1,65 @@
 import { Component, Input } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { PanelVisualizationComponent } from '../../../../shared/ui/panel-visualization/panel-visualization.component';
-import {
-  DataSourceDriver,
-  decodeLayout,
-  decodeVisualizationSettings,
-  Panel,
-  VisualizationType,
-} from '../../../../entities';
-import { ApiService } from '../../../../shared/services/datacat-generated-client';
-import { ToastLoggerService } from '../../../../shared/services/toast-logger.service';
+import { Panel } from '../../../../entities';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import * as urls from '../../../../shared/common/urls';
-import { DataPoints } from '../../../../entities/dashboards/data.types';
-import { DatePipe } from '@angular/common';
+import { TimeSeries } from '../../../../entities/dashboards/data.types';
+import { DialogModule } from 'primeng/dialog';
+import { TextareaModule } from 'primeng/textarea';
+import { DividerModule } from 'primeng/divider';
+import { PanelDataService } from '../panel-data.service';
+import { DashboardService } from '../dashboard.service';
 
 @Component({
   standalone: true,
   selector: 'datacat-panel-in-grid',
   templateUrl: './panel-in-grid.component.html',
   styleUrl: './panel-in-grid.component.scss',
-  imports: [PanelModule, PanelVisualizationComponent, ButtonModule],
+  imports: [
+    PanelModule,
+    PanelVisualizationComponent,
+    ButtonModule,
+    DialogModule,
+    TextareaModule,
+    DividerModule,
+  ],
+  providers: [PanelDataService],
 })
 export class PanelInGridComponent {
-  private _panelId?: string;
-
-  @Input() set panelId(id: string) {
-    this._panelId = id;
-    this.refresh();
+  @Input() set panel(p: Panel | undefined) {
+    this._panel = p;
+    this.panelDataService.panel = p;
+    if (this.dashboardService.timeRange) {
+      this.panelDataService.loadTimeRange(this.dashboardService.timeRange);
+    }
   }
 
-  protected data: DataPoints = [];
-
-  protected panel?: Panel;
-
-  protected isRefreshError = false;
+  protected _panel?: Panel;
+  protected isError: boolean = false;
+  protected data: TimeSeries[] | null = null;
+  protected isDialogShown = false;
 
   constructor(
     private router: Router,
-    private apiService: ApiService,
-    private loggerService: ToastLoggerService,
-  ) {}
-
-  protected refresh() {
-    if (!this._panelId) return;
-
-    this.apiService.getApiV1Panel(this._panelId).subscribe({
-      next: (data) => {
-        this.isRefreshError = false;
-        this.panel = {
-          id: data.id || '',
-          title: data.title || '',
-          query: data.query?.query || '',
-          dataSource: {
-            id: data.query?.dataSource?.id || '',
-            name: data.query?.dataSource?.name || '',
-            driver: data.query?.dataSource?.type as DataSourceDriver,
-            connectionUrl: data.query?.dataSource?.connectionString || '',
-          },
-          layout: decodeLayout(data.layout),
-          visualizationType: VisualizationType.LINE,
-          visualizationSettings: decodeVisualizationSettings(
-            data.styleConfiguration,
-          ),
-        };
-      },
-      error: (e) => {
-        this.loggerService.error(e);
-        this.isRefreshError = true;
-      },
+    private panelDataService: PanelDataService,
+    private dashboardService: DashboardService,
+  ) {
+    this.panelDataService.data$.subscribe((v) => (this.data = v));
+    this.panelDataService.error$.subscribe((v) => (this.isError = v));
+    this.dashboardService.timeRange$.subscribe((tr) => {
+      if (tr) this.panelDataService.loadTimeRange(tr);
     });
   }
 
   protected editPanel() {
-    if (this._panelId) {
-      this.router.navigateByUrl(urls.panelEditUrl(this._panelId));
+    if (this._panel?.id) {
+      this.router.navigateByUrl(urls.panelEditUrl(this._panel?.id));
     }
   }
 
-  public refreshData() {
-    const datepipe = new DatePipe('en-US');
-
-    this.data = [
-      ...this.data,
-      {
-        value: Math.random() * 10,
-        timestamp: datepipe.transform(Date.now(), 'dd.MM HH:mm:ss') || '',
-      },
-    ];
+  public showDialog() {
+    this.isDialogShown = true;
   }
 }

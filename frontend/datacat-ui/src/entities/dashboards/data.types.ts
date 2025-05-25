@@ -1,6 +1,10 @@
 export type DataPoint = {
   value: number;
-  timestamp: string;
+  timestamp: Date;
 };
 
-export type DataPoints = DataPoint[];
+export type TimeSeries = {
+  metric?: string;
+  labels?: { [key: string]: string };
+  dataPoints: DataPoint[];
+};
