@@ -10,13 +10,14 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { TimeRange } from './time-range-select.types';
 import { SelectModule } from 'primeng/select';
 import { STEP_OPTIONS } from './time-range-select.consts';
+import { PopoverModule } from 'primeng/popover';
 
 @Component({
   standalone: true,
   selector: 'datacat-time-range-select',
   templateUrl: './time-range-select.component.html',
   styleUrl: './time-range-select.component.scss',
-  imports: [DatePickerModule, SelectModule, ReactiveFormsModule],
+  imports: [DatePickerModule, SelectModule, ReactiveFormsModule, PopoverModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

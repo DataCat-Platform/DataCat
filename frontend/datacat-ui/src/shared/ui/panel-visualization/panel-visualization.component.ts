@@ -64,16 +64,33 @@ export class PanelVisualizationComponent {
       dateFormat: 'M/d/yy, h:mm a',
     });
 
-    this.chartjsData = {
-      labels:
-        data[0]?.dataPoints.map((d) => datePipe.transform(d.timestamp)) || [],
-      datasets: data.map((ts) => {
-        return {
-          label: ts.metric + JSON.stringify(ts.labels),
-          data: ts.dataPoints.map((d) => d.value),
+    switch (this.visualizationType) {
+      case VisualizationType.PIE: {
+        this.chartjsData = {
+          labels: data?.map((ts) => JSON.stringify(ts.labels)) || [],
+          datasets: [
+            {
+              label: null,
+              data: data?.map((ts) => ts.dataPoints[0].value) || [],
+            },
+          ],
         };
-      }),
-    };
+        break;
+      }
+      default: {
+        this.chartjsData = {
+          labels:
+            data[0]?.dataPoints.map((d) => datePipe.transform(d.timestamp)) ||
+            [],
+          datasets: data.map((ts) => {
+            return {
+              label: ts.metric + JSON.stringify(ts.labels),
+              data: ts.dataPoints.map((d) => d.value),
+            };
+          }),
+        };
+      }
+    }
 
     this.chartRef?.chart?.update();
   }
