@@ -18,6 +18,7 @@ import {
   encodeVisualizationSettings,
   encodeVisualizationType,
   Panel,
+  serializeLayout,
   VisualizationSettings,
   VisualizationType,
 } from '../../../entities';
@@ -26,6 +27,9 @@ import { ToastLoggerService } from '../../../shared/services/toast-logger.servic
 import { ButtonModule } from 'primeng/button';
 import { finalize } from 'rxjs';
 import { TimeSeries } from '../../../entities/dashboards/data.types';
+import { PanelDataService } from '../panels-grid/panel-data.service';
+import { TimeRangeSelectComponent } from '../../../shared/ui/time-range-select/time-range-select.component';
+import { TimeRange } from '../../../entities/dashboards/etc.types';
 
 @Component({
   standalone: true,
@@ -41,7 +45,9 @@ import { TimeSeries } from '../../../entities/dashboards/data.types';
     TextareaModule,
     DataSourceSelectComponent,
     ButtonModule,
+    TimeRangeSelectComponent,
   ],
+  providers: [PanelDataService],
 })
 export class EditPanelComponent implements AfterViewInit {
   private _panelId?: string;
@@ -56,9 +62,19 @@ export class EditPanelComponent implements AfterViewInit {
 
   protected panel?: Panel;
 
-  protected data: TimeSeries[] = [];
+  protected data: TimeSeries[] | null = null;
   protected visualizationType?: VisualizationType;
   protected visualizationSettings?: VisualizationSettings;
+
+  protected timeRangeControl = new FormControl<TimeRange>({
+    step: '00:30:00',
+    from: (() => {
+      const date = new Date();
+      date.setMinutes(date.getMinutes() - 360);
+      return date;
+    })(),
+    to: new Date(),
+  });
 
   protected editForm = new FormGroup({
     title: new FormControl<string>('', Validators.required),
@@ -70,9 +86,29 @@ export class EditPanelComponent implements AfterViewInit {
   });
 
   constructor(
-    private apiService: ApiService,
-    private loggerService: ToastLoggerService,
-  ) {}
+    private api: ApiService,
+    private logger: ToastLoggerService,
+    private panelDataService: PanelDataService,
+  ) {
+    this.panelDataService.data$.subscribe((v) => (this.data = v));
+    this.timeRangeControl.valueChanges.subscribe((tr) => {
+      if (tr) this.panelDataService.loadTimeRange(tr);
+    });
+    this.editForm.get('dataSourceId')?.valueChanges.subscribe((id) => {
+      if (id && this.panel) {
+        this.panel.dataSource!.id = id;
+        this.panelDataService.panel = this.panel;
+        this.refreshPreview();
+      }
+    });
+    this.editForm.get('query')?.valueChanges.subscribe((q) => {
+      if (q && this.panel) {
+        this.panel.query = q;
+        this.panelDataService.panel = this.panel;
+        this.refreshPreview();
+      }
+    });
+  }
 
   ngAfterViewInit() {
     if (this.panel) {
@@ -86,7 +122,7 @@ export class EditPanelComponent implements AfterViewInit {
   protected refresh() {
     if (!this._panelId) return;
 
-    this.apiService.getApiV1Panel(this._panelId).subscribe({
+    this.api.getApiV1Panel(this._panelId).subscribe({
       next: (data) => {
         this.panel = {
           id: data.id || '',
@@ -104,6 +140,8 @@ export class EditPanelComponent implements AfterViewInit {
             data.styleConfiguration!,
           ) as VisualizationSettings,
         };
+        this.panelDataService.panel = this.panel;
+        this.refreshPreview();
 
         this.optionsComponent?.setVisualizationSettings(
           this.panel.visualizationType!,
@@ -116,36 +154,40 @@ export class EditPanelComponent implements AfterViewInit {
           query: this.panel.query,
         });
       },
-      error: (e) => {
-        this.loggerService.error(e);
+      error: () => {
+        this.logger.error('Cannot load panel data');
       },
     });
   }
 
+  protected refreshPreview() {
+    this.panelDataService.loadTimeRange(this.timeRangeControl.getRawValue()!);
+  }
+
   protected saveChanges() {
-    if (!this._panelId) return;
+    if (!this.panel) return;
 
     const request: any = {
       title: this.editForm.get('title')?.value || '',
       type: encodeVisualizationType(this.visualizationType),
       rawQuery: this.editForm.get('query')?.value || '',
       dataSourceId: this.editForm.get('dataSourceId')?.value || '',
-      // layout: '',
+      layout: serializeLayout(this.panel.layout),
       styleConfiguration: encodeVisualizationSettings(
         this.visualizationSettings,
       ),
     };
 
     this.editForm.disable();
-    this.apiService
-      .putApiV1PanelUpdate(this._panelId, request)
+    this.api
+      .putApiV1PanelUpdate(this.panel.id, request)
       .pipe(finalize(() => this.editForm.enable()))
       .subscribe({
         next: () => {
-          this.loggerService.success('Saved');
+          this.logger.success('Saved');
         },
-        error: (e) => {
-          this.loggerService.error(e);
+        error: () => {
+          this.logger.error('Cannot save');
         },
       });
   }

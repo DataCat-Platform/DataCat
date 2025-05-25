@@ -11,7 +11,6 @@ import { TextareaModule } from 'primeng/textarea';
 import { DividerModule } from 'primeng/divider';
 import { PanelDataService } from '../panel-data.service';
 import { DashboardService } from '../dashboard.service';
-import { ThemeProvider } from 'primeng/config';
 
 @Component({
   standalone: true,
@@ -26,14 +25,13 @@ import { ThemeProvider } from 'primeng/config';
     TextareaModule,
     DividerModule,
   ],
+  providers: [PanelDataService],
 })
 export class PanelInGridComponent {
   @Input() set panel(p: Panel | undefined) {
     this._panel = p;
     this.panelDataService.panel = p;
-    console.log('wtf');
     if (this.dashboardService.timeRange) {
-      console.log('ww');
       this.panelDataService.loadTimeRange(this.dashboardService.timeRange);
     }
   }

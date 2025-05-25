@@ -47,7 +47,6 @@ export class DeleteVariableButtonComponent {
         )
         .subscribe({
           next: () => {
-            this.loggerService.success('Deleted variable');
             this.onDelete.emit();
             this.hideDeletionDialog();
           },

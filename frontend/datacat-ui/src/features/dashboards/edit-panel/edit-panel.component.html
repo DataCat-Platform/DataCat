@@ -10,6 +10,7 @@
       </div>
     </p-panel>
     <form class="form" [formGroup]="editForm">
+      <datacat-time-range-select [formControl]="timeRangeControl" />
       <div class="attr">
         <p>Title</p>
         <input pInputText placeholder="Title" formControlName="title" />

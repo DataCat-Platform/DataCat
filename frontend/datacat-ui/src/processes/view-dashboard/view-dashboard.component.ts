@@ -25,6 +25,7 @@ import { DashboardService } from '../../features/dashboards/panels-grid/dashboar
     EditDashboardButtonComponent,
     TooltipModule,
   ],
+  providers: [DashboardService],
 })
 export class ViewDashboardComponent implements AfterContentInit {
   @Input() protected dashboardId: string = '';

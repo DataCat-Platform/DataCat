@@ -100,6 +100,8 @@ export class PanelsGridComponent {
     });
     this.dashboardService.isBusy$.subscribe((v) => (this.isBusy = v));
     this.dashboardService.dashboard$.subscribe((v) => (this.dashboard = v));
+    this.dashboardService.variables$.subscribe((v) => (this.variables = v));
+    this.dashboardService.timeRange = this.timeRangeControl.getRawValue()!;
   }
 
   protected freezeGrid() {

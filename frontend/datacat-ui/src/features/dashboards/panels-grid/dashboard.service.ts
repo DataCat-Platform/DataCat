@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  BehaviorSubject,
-  finalize,
-  forkJoin,
-  Observable,
-  ObservableLike,
-} from 'rxjs';
+import { BehaviorSubject, filter, finalize, forkJoin, Observable } from 'rxjs';
 import {
   Dashboard,
   DashboardVariable,
@@ -28,7 +22,7 @@ import { ToastLoggerService } from '../../../shared/services/toast-logger.servic
 export class DashboardService {
   public dashboard$: Observable<Dashboard | null>;
   public timeRange$: Observable<TimeRange | null>;
-  public refreshCall$: Observable<void>;
+  // public refresh$: Observable<Date>;
   public panels$: Observable<Panel[] | null>;
   public isBusy$: Observable<boolean>;
   public variables$: Observable<DashboardVariable[] | null>;
@@ -40,6 +34,7 @@ export class DashboardService {
   private variablesSubject = new BehaviorSubject<DashboardVariable[] | null>(
     null,
   );
+  private refreshSubject = new BehaviorSubject<Date | null>(null);
 
   private _timeRange: TimeRange | null = null;
   private panels?: Panel[];
@@ -51,7 +46,9 @@ export class DashboardService {
   ) {
     this.dashboard$ = this.dashboardSubject.asObservable();
     this.timeRange$ = this.timeRangeSubject.asObservable();
-    this.refreshCall$ = {} as any;
+    // this.refresh$ = this.refreshSubject
+    //   .asObservable()
+    //   .pipe(filter<Date | null, Date>((v) => v is Date));
     this.panels$ = this.panelsSubject.asObservable();
     this.isBusy$ = this.isBusySubject.asObservable();
     this.variables$ = this.variablesSubject.asObservable();
@@ -60,6 +57,7 @@ export class DashboardService {
   public set dashboardId(id: string) {
     if (this.dashboard?.id === id) return;
     this.refreshDashboardPanelsById(id);
+    this.refreshDashboardVariablesById(id);
   }
 
   public set timeRange(tr: TimeRange) {
@@ -98,8 +96,11 @@ export class DashboardService {
 
   public refreshDashboardVariables() {
     if (!this.dashboard) return;
+    this.refreshDashboardVariablesById(this.dashboard.id);
+  }
 
-    this.api.getApiV1VariablesDashboard(this.dashboard.id).subscribe({
+  public refreshDashboardVariablesById(id: string): void {
+    this.api.getApiV1VariablesDashboard(id).subscribe({
       next: (data) => {
         const variables = data.map(mapVariableResponseToDashboardVariable);
         this.variablesSubject.next(variables);
@@ -170,15 +171,21 @@ export class DashboardService {
           this.dashboardSubject.next(this.dashboard!);
 
           const requests = panels.map((p) => this.api.getApiV1Panel(p.id));
-          forkJoin(requests).subscribe({
-            next: (data) => {
-              this.panels = data.map<Panel>(mapGetPanelResponeToPanel);
-              this.panelsSubject.next(this.panels);
-            },
-            error: () => {
-              this.logger.error('Cannot load panel data');
-            },
-          });
+
+          if (requests.length == 0) {
+            this.panels = [];
+            this.panelsSubject.next([]);
+          } else {
+            forkJoin(requests).subscribe({
+              next: (data) => {
+                this.panels = data.map<Panel>(mapGetPanelResponeToPanel);
+                this.panelsSubject.next(this.panels);
+              },
+              error: () => {
+                this.logger.error('Cannot load panel data');
+              },
+            });
+          }
         },
         error: () => {
           this.logger.error('Cannot load dashboard');
@@ -196,5 +203,9 @@ export class DashboardService {
       }
       return p;
     });
+  }
+
+  public requestRefresh(date: Date) {
+    this.refreshSubject.next(date);
   }
 }

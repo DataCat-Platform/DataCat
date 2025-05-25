@@ -30,8 +30,6 @@ export class PanelDataService {
   public loadTimeRange(tr: TimeRange): void {
     if (!this._panel) return;
 
-    console.log(tr, this._panel.query, this._panel.dataSource!.name);
-
     this.errorSubject.next(false);
     this.api
       .getApiV1MetricsQueryRange(
@@ -45,7 +43,6 @@ export class PanelDataService {
       )
       .subscribe({
         next: (data) => {
-          console.log(data);
           if (data.length !== 0) {
             this.data =
               data.map<TimeSeries>((ts) => {

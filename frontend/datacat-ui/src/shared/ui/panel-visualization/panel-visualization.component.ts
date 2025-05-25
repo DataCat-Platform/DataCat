@@ -69,7 +69,7 @@ export class PanelVisualizationComponent {
         data[0]?.dataPoints.map((d) => datePipe.transform(d.timestamp)) || [],
       datasets: data.map((ts) => {
         return {
-          label: ts.metric,
+          label: ts.metric + JSON.stringify(ts.labels),
           data: ts.dataPoints.map((d) => d.value),
         };
       }),

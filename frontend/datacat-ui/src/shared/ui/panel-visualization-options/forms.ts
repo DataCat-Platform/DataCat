@@ -6,16 +6,16 @@ export const createOptionsForm = (
 ): FormGroup<any> => {
   return new FormGroup({
     legend: new FormGroup({
-      enabled: new FormControl<boolean>(false),
+      enabled: new FormControl<boolean>(true),
       position: new FormControl<Position>('top'),
     }),
     title: new FormGroup({
-      enabled: new FormControl<boolean>(true),
-      text: new FormControl<string>('a'),
+      enabled: new FormControl<boolean>(false),
+      text: new FormControl<string>(''),
     }),
     tooltip: new FormGroup({
       enabled: new FormControl<boolean>(true),
-    })
+    }),
   });
 
   // switch (type) {
