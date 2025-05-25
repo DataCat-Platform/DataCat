@@ -11,13 +11,22 @@ import { TimeRange } from './time-range-select.types';
 import { SelectModule } from 'primeng/select';
 import { STEP_OPTIONS } from './time-range-select.consts';
 import { PopoverModule } from 'primeng/popover';
+import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'datacat-time-range-select',
   templateUrl: './time-range-select.component.html',
   styleUrl: './time-range-select.component.scss',
-  imports: [DatePickerModule, SelectModule, ReactiveFormsModule, PopoverModule],
+  imports: [
+    DatePickerModule,
+    SelectModule,
+    ReactiveFormsModule,
+    PopoverModule,
+    ButtonModule,
+    CommonModule,
+  ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -37,6 +46,18 @@ export class TimeRangeSelectComponent implements ControlValueAccessor {
     from: new FormControl<Date | null>(null),
     to: new FormControl<Date | null>(null),
   });
+
+  public get step(): string {
+    return this.formGroup.get('step')?.value!;
+  }
+
+  public get from(): Date {
+    return this.formGroup.get('from')?.value!;
+  }
+
+  public get to(): Date {
+    return this.formGroup.get('to')?.value!;
+  }
 
   constructor() {
     this.formGroup.valueChanges.subscribe(() => this.notifyTouchedAndChanged());
