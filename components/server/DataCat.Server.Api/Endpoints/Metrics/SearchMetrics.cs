@@ -59,8 +59,8 @@ public class SearchMetrics : ApiEndpointBase
         return new SearchMetricsRangeQuery(
             request.DataSourceName, 
             request.Query,
-            Start: request.From!.Value,
-            End: request.To!.Value,
+            Start: request.From!.Value.ToUniversalTime(),
+            End: request.To!.Value.ToUniversalTime(),
             Step: request.Step!.Value,
             DashboardId: request.DashboardId);
     }
