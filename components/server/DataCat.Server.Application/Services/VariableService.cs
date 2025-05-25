@@ -38,6 +38,6 @@ public sealed partial class VariableService(
         });
     }
 
-    [GeneratedRegex(@"\{\s*\.(\w+)\s*\}", RegexOptions.Compiled)]
+    [GeneratedRegex(@"\$\{\s*(\w+)\s*\}", RegexOptions.Compiled)]
     private static partial Regex PlaceholderRegex();
 }
