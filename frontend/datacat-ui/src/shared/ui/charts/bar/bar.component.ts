@@ -76,6 +76,29 @@ export class BarChartComponent {
           enabled: barStyle.tooltip.enabled,
         },
       },
+      scales: {
+        x: {
+          type: 'time',
+          min: barStyle.axis.xAxisMin,
+          max: barStyle.axis.xAxisMax,
+          title: {
+            display: barStyle.axis.xAxisTitle != undefined,
+            text: barStyle.axis.xAxisTitle,
+          },
+        },
+        y: {
+          min: barStyle.axis.yAxisMin,
+          max: barStyle.axis.yAxisMax,
+          title: {
+            display: barStyle.axis.yAxisTitle != undefined,
+            text: barStyle.axis.yAxisTitle,
+          },
+        },
+      },
     };
+  }
+
+  protected hasData(): boolean {
+    return this.chartjsData.datasets.length !== 0;
   }
 }

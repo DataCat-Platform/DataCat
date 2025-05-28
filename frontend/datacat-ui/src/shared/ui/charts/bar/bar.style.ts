@@ -28,12 +28,12 @@ export const BarStyleScheme = z.object({
     }),
   axis: z
     .object({
-      xAxisTitle: z.string().default('Date').optional(),
-      xAxisMin: z.date().optional(),
-      xAxisMax: z.date().optional(),
-      yAxisTitle: z.string().default('Value').optional(),
-      yAxisMin: z.number().optional(),
-      yAxisMax: z.number().optional(),
+      xAxisTitle: z.string().default('Date').nullish(),
+      xAxisMin: z.date().nullish(),
+      xAxisMax: z.date().nullish(),
+      yAxisTitle: z.string().default('Value').nullish(),
+      yAxisMin: z.number().nullish(),
+      yAxisMax: z.number().nullish(),
     })
     .default({}),
 });

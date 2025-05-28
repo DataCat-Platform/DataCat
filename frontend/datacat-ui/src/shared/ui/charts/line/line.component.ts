@@ -4,6 +4,8 @@ import { TimeSeries } from '../chart.types';
 import { ChartModule, UIChart } from 'primeng/chart';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ChartService } from '../chart.service';
+import 'luxon';
+import 'chartjs-adapter-luxon';
 
 @Component({
   standalone: true,
@@ -33,7 +35,6 @@ export class LineChartComponent {
 
   private updateStyle(style: any) {
     const parseResult = LineStyleScheme.safeParse(style);
-    console.log(parseResult);
     if (parseResult.success) {
       this.chartjsOptions = this.getChartjsOptionsFromLineStyle(
         parseResult.data,
@@ -97,5 +98,9 @@ export class LineChartComponent {
         },
       },
     };
+  }
+
+  protected hasData(): boolean {
+    return this.chartjsData.datasets.length !== 0;
   }
 }

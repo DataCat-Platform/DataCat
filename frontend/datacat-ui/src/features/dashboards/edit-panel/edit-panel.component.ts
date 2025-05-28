@@ -51,16 +51,13 @@ import { ChartOptionsComponent } from '../../../shared/ui/charts/options/options
   ],
   providers: [ChartService],
 })
-export class EditPanelComponent implements AfterViewInit {
+export class EditPanelComponent {
   private _panelId?: string;
 
   @Input() public set panelId(id: string | undefined) {
     this._panelId = id;
     this.refresh();
   }
-
-  @ViewChild(PanelVisualizationOptionsComponent)
-  optionsComponent?: PanelVisualizationOptionsComponent;
 
   protected panel?: Panel;
 
@@ -120,15 +117,6 @@ export class EditPanelComponent implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    if (this.panel) {
-      this.optionsComponent?.setVisualizationSettings(
-        this.panel.visualizationType!,
-        this.panel.visualizationSettings!,
-      );
-    }
-  }
-
   protected refresh() {
     if (!this._panelId) return;
 
@@ -155,11 +143,6 @@ export class EditPanelComponent implements AfterViewInit {
         this.chartService.setDataSourceName(this.panel.dataSource!.name);
         this.chartService.updateStyle(this.panel.visualizationSettings);
         this.refreshPreview();
-
-        this.optionsComponent?.setVisualizationSettings(
-          this.panel.visualizationType!,
-          this.panel.visualizationSettings!,
-        );
 
         this.editForm.setValue({
           title: this.panel.title,
@@ -189,13 +172,11 @@ export class EditPanelComponent implements AfterViewInit {
 
     const request: any = {
       title: this.editForm.get('title')?.value || '',
-      type: encodeVisualizationType(this.visualizationType),
+      type: encodeVisualizationType(this.chartService.type),
       rawQuery: this.editForm.get('query')?.value || '',
       dataSourceId: this.editForm.get('dataSourceId')?.value || '',
       layout: serializeLayout(this.panel.layout),
-      styleConfiguration: encodeVisualizationSettings(
-        this.visualizationSettings,
-      ),
+      styleConfiguration: encodeVisualizationSettings(this.chartService.style),
     };
 
     this.editForm.disable();

@@ -1,6 +1,8 @@
 <div [style]="{ resize: 'both', overflow: 'auto' }">
   @if (isError) {
     <p>Error</p>
+  } @else if (!hasData()) {
+    <p>No data</p>
   } @else {
     <p-chart type="bar" [options]="chartjsOptions" [data]="chartjsData" />
   }

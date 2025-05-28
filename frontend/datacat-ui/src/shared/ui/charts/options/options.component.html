@@ -34,8 +34,22 @@
             </p-accordion-content>
           </p-accordion-panel>
         }
-        @case (VisualizationType.BAR) {}
-        @case (VisualizationType.PIE) {}
+        @case (VisualizationType.BAR) {
+          <p-accordion-panel value="3">
+            <p-accordion-header>Axes</p-accordion-header>
+            <p-accordion-content>
+              <datacat-axis-options />
+            </p-accordion-content>
+          </p-accordion-panel>
+        }
+        @case (VisualizationType.PIE) {
+          <p-accordion-panel value="3">
+            <p-accordion-header>Aggregate</p-accordion-header>
+            <p-accordion-content>
+              <datacat-aggregate-options />
+            </p-accordion-content>
+          </p-accordion-panel>
+        }
         @default {}
       }
     </p-accordion>

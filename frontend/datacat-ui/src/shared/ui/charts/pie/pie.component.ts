@@ -44,9 +44,23 @@ export class PieChartComponent {
   private updateData(data: TimeSeries[]): void {
     this.chartjsData = {
       labels: data.map((ts) => JSON.stringify(ts.labels)) || [],
-      datasets: {
-        data: data.map((ts) => ts.points[0].value) || [],
-      },
+      datasets: [
+        {
+          data:
+            data.map((ts) => {
+              return (
+                ts.points.reduce(
+                  (prev, curr) => {
+                    return {
+                      value: prev.value + curr.value,
+                    };
+                  },
+                  { value: 0 },
+                ).value / ts.points.length
+              );
+            }) || [],
+        },
+      ],
     };
     this.chart?.chart?.update();
   }
@@ -69,5 +83,9 @@ export class PieChartComponent {
         },
       },
     };
+  }
+
+  protected hasData(): boolean {
+    return this.chartjsData.datasets.length !== 0;
   }
 }

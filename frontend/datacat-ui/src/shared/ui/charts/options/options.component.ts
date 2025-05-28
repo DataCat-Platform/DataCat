@@ -9,6 +9,7 @@ import { LegendOptionsComponent } from './legend/legend-options.component';
 import { TitleOptionsComponent } from './title/title-options.component';
 import { TooltipOptionsComponent } from './tooltip/tooltip-options.component';
 import { AxisOptionsComponent } from './axis/axis-options.component';
+import { AggregateOptionsComponent } from './aggregate/aggregate-options.component';
 
 @Component({
   standalone: true,
@@ -24,6 +25,7 @@ import { AxisOptionsComponent } from './axis/axis-options.component';
     TitleOptionsComponent,
     TooltipOptionsComponent,
     AxisOptionsComponent,
+    AggregateOptionsComponent,
   ],
 })
 export class ChartOptionsComponent {
