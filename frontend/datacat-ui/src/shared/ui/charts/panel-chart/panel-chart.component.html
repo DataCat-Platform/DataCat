@@ -1,9 +1,17 @@
 @if (loading) {
-  <p-progress-spinner />
+  <div>
+    <p-progress-spinner />
+  </div>
 } @else {
   @switch (type) {
     @case (VisualizationType.LINE) {
       <datacat-line-chart />
+    }
+    @case (VisualizationType.BAR) {
+      <datacat-bar-chart />
+    }
+    @case (VisualizationType.PIE) {
+      <datacat-pie-chart />
     }
     @default {
       <datacat-unsupported-chart />

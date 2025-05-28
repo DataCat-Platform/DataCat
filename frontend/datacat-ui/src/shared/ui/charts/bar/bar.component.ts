@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { LineStyle, LineStyleScheme } from './line.style';
+import { BarStyle, BarStyleScheme } from './bar.style';
 import { TimeSeries } from '../chart.types';
 import { ChartModule, UIChart } from 'primeng/chart';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -7,12 +7,12 @@ import { ChartService } from '../chart.service';
 
 @Component({
   standalone: true,
-  selector: 'datacat-line-chart',
-  templateUrl: 'line.component.html',
-  styleUrl: 'line.component.scss',
+  selector: 'datacat-bar-chart',
+  templateUrl: 'bar.component.html',
+  styleUrl: 'bar.component.scss',
   imports: [ChartModule, ProgressSpinnerModule],
 })
-export class LineChartComponent {
+export class BarChartComponent {
   @ViewChild(UIChart) chart?: UIChart;
 
   protected isError: boolean = false;
@@ -32,10 +32,9 @@ export class LineChartComponent {
   }
 
   private updateStyle(style: any) {
-    const parseResult = LineStyleScheme.safeParse(style);
-    console.log(parseResult);
+    const parseResult = BarStyleScheme.safeParse(style);
     if (parseResult.success) {
-      this.chartjsOptions = this.getChartjsOptionsFromLineStyle(
+      this.chartjsOptions = this.getChartjsOptionsFromBarStyle(
         parseResult.data,
       );
       this.chart?.chart?.update();
@@ -60,40 +59,21 @@ export class LineChartComponent {
     this.chart?.chart?.update();
   }
 
-  private getChartjsOptionsFromLineStyle(lineStyle: LineStyle): any {
+  private getChartjsOptionsFromBarStyle(barStyle: BarStyle): any {
     return {
       animation: false,
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          display: lineStyle.legend.enabled,
-          position: lineStyle.legend.position,
+          display: barStyle.legend.enabled,
+          position: barStyle.legend.position,
         },
         title: {
-          display: lineStyle.title.enabled,
-          text: lineStyle.title.text,
+          display: barStyle.title.enabled,
+          text: barStyle.title.text,
         },
         tooltip: {
-          enabled: lineStyle.tooltip.enabled,
-        },
-      },
-      scales: {
-        x: {
-          type: 'time',
-          min: lineStyle.axis.xAxisMin,
-          max: lineStyle.axis.xAxisMax,
-          title: {
-            display: lineStyle.axis.xAxisTitle != undefined,
-            text: lineStyle.axis.xAxisTitle,
-          },
-        },
-        y: {
-          min: lineStyle.axis.yAxisMin,
-          max: lineStyle.axis.yAxisMax,
-          title: {
-            display: lineStyle.axis.yAxisTitle != undefined,
-            text: lineStyle.axis.yAxisTitle,
-          },
+          enabled: barStyle.tooltip.enabled,
         },
       },
     };

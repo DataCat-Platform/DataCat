@@ -24,13 +24,14 @@ import {
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { ButtonModule } from 'primeng/button';
-import { finalize } from 'rxjs';
+import { finalize, timer } from 'rxjs';
 import { TimeSeries } from '../../../entities/dashboards/data.types';
 import { PanelDataService } from '../panels-grid/panel-data.service';
 import { TimeRangeSelectComponent } from '../../../shared/ui/time-range-select/time-range-select.component';
 import { TimeRange } from '../../../entities/dashboards/etc.types';
 import { PanelChartComponent } from '../../../shared/ui/charts/panel-chart/panel-chart.component';
 import { ChartService } from '../../../shared/ui/charts/chart.service';
+import { ChartOptionsComponent } from '../../../shared/ui/charts/options/options.component';
 
 @Component({
   standalone: true,
@@ -38,7 +39,6 @@ import { ChartService } from '../../../shared/ui/charts/chart.service';
   templateUrl: './edit-panel.component.html',
   styleUrl: './edit-panel.component.scss',
   imports: [
-    PanelVisualizationOptionsComponent,
     PanelModule,
     ReactiveFormsModule,
     InputTextModule,
@@ -47,6 +47,7 @@ import { ChartService } from '../../../shared/ui/charts/chart.service';
     ButtonModule,
     TimeRangeSelectComponent,
     PanelChartComponent,
+    ChartOptionsComponent,
   ],
   providers: [ChartService],
 })
@@ -95,15 +96,17 @@ export class EditPanelComponent implements AfterViewInit {
     private api: ApiService,
     private logger: ToastLoggerService,
     private panelDataService: PanelDataService,
+    private chartService: ChartService,
   ) {
     this.panelDataService.data$.subscribe((v) => (this.data = v));
     this.timeRangeControl.valueChanges.subscribe((tr) => {
-      if (tr) this.panelDataService.loadTimeRange(tr);
+      this.refreshPreview();
     });
     this.editForm.get('dataSourceId')?.valueChanges.subscribe((id) => {
       if (id && this.panel) {
         this.panel.dataSource!.id = id;
         this.panelDataService.panel = this.panel;
+        this.chartService.setDataSourceName(this.panel.dataSource!.name);
         this.refreshPreview();
       }
     });
@@ -111,6 +114,7 @@ export class EditPanelComponent implements AfterViewInit {
       if (q && this.panel) {
         this.panel.query = q;
         this.panelDataService.panel = this.panel;
+        this.chartService.setQuery(this.panel.query);
         this.refreshPreview();
       }
     });
@@ -147,6 +151,9 @@ export class EditPanelComponent implements AfterViewInit {
           ) as VisualizationSettings,
         };
         this.panelDataService.panel = this.panel;
+        this.chartService.setQuery(this.panel.query);
+        this.chartService.setDataSourceName(this.panel.dataSource!.name);
+        this.chartService.updateStyle(this.panel.visualizationSettings);
         this.refreshPreview();
 
         this.optionsComponent?.setVisualizationSettings(
@@ -168,6 +175,13 @@ export class EditPanelComponent implements AfterViewInit {
 
   protected refreshPreview() {
     this.panelDataService.loadTimeRange(this.timeRangeControl.getRawValue()!);
+
+    const timeRange = this.timeRangeControl.getRawValue()!;
+    this.chartService.loadTimeRange(
+      timeRange.from,
+      timeRange.to,
+      timeRange.step,
+    );
   }
 
   protected saveChanges() {

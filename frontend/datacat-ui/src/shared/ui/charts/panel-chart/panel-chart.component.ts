@@ -1,17 +1,22 @@
-import { Component, Host, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { VisualizationType } from '../../../../entities';
 import { LineChartComponent } from '../line/line.component';
 import { UnsupportedChartComponent } from '../unsupported/unsupported.component';
 import { ChartService } from '../chart.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { BarChartComponent } from '../bar/bar.component';
+import { PieChartComponent } from '../pie/pie.component';
 
 @Component({
   standalone: true,
   selector: 'datacat-panel-chart',
   templateUrl: 'panel-chart.component.html',
+  styleUrl: 'panel-chart.component.scss',
   imports: [
     ProgressSpinnerModule,
     LineChartComponent,
+    BarChartComponent,
+    PieChartComponent,
     UnsupportedChartComponent,
   ],
 })

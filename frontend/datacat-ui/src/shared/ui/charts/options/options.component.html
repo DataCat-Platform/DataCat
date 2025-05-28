@@ -1,0 +1,43 @@
+<p-panel header="Visualization Options">
+  <div class="attr pad-lr">
+    <p>Visualization</p>
+    <p-select [options]="selectableTypes" [formControl]="typeControl" />
+  </div>
+  <div class="options">
+    <p-accordion [value]="[]">
+      <p-accordion-panel value="0">
+        <p-accordion-header>Title</p-accordion-header>
+        <p-accordion-content>
+          <datacat-title-options />
+        </p-accordion-content>
+      </p-accordion-panel>
+      <p-accordion-panel value="1">
+        <p-accordion-header>Legend</p-accordion-header>
+        <p-accordion-content>
+          <datacat-legend-options />
+        </p-accordion-content>
+      </p-accordion-panel>
+      <p-accordion-panel value="2">
+        <p-accordion-header>Tooltip</p-accordion-header>
+        <p-accordion-content>
+          <datacat-tooltip-options />
+        </p-accordion-content>
+      </p-accordion-panel>
+
+      <!-- Type-dependent options -->
+      @switch (type) {
+        @case (VisualizationType.LINE) {
+          <p-accordion-panel value="3">
+            <p-accordion-header>Axes</p-accordion-header>
+            <p-accordion-content>
+              <datacat-axis-options />
+            </p-accordion-content>
+          </p-accordion-panel>
+        }
+        @case (VisualizationType.BAR) {}
+        @case (VisualizationType.PIE) {}
+        @default {}
+      }
+    </p-accordion>
+  </div>
+</p-panel>

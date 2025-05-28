@@ -1,0 +1,14 @@
+<form [formGroup]="form">
+  <div>
+    <p>X axis</p>
+    <input pInputText formControlName="xAxisTitle" placeholder="Title" />
+    <p-date-picker formControlName="xAxisMin" placeholder="Min date" />
+    <p-date-picker formControlName="xAxisMax" placeholder="Max date" />
+  </div>
+  <div>
+    <p>Y axis</p>
+    <input pInputText formControlName="yAxisTitle" placeholder="Title" />
+    <p-input-number formControlName="yAxisMin" placeholder="Min value" />
+    <p-input-number formControlName="yAxisMax" placeholder="Max value" />
+  </div>
+</form>

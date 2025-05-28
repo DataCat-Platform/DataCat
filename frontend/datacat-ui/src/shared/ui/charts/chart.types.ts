@@ -1,11 +1,11 @@
 export type TimeSeries = {
   name: string;
-  labels: string[];
+  labels: { [key: string]: string };
   points: DataPoint[];
 };
 
 export type DataPoint = {
   value: number;
   timestamp: Date;
-  labels: string[];
+  labels: { [key: string]: string };
 };

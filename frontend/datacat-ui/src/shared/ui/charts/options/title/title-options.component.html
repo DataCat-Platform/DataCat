@@ -1,0 +1,10 @@
+<form [formGroup]="form">
+  <div>
+    <p>Enabled</p>
+    <p-check-box formControlName="enabled" [binary]="true" />
+  </div>
+  <div>
+    <p>Text</p>
+    <input pInputText formControlName="text" />
+  </div>
+</form>

@@ -1,33 +1,33 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CheckboxModule } from 'primeng/checkbox';
-import { SelectModule } from 'primeng/select';
 import { ChartService } from '../../chart.service';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   standalone: true,
-  selector: 'datacat-legend-options',
-  templateUrl: 'legend-options.component.html',
+  selector: 'datacat-title-options',
+  templateUrl: 'title-options.component.html',
   styleUrl: '../options.style.scss',
-  imports: [ReactiveFormsModule, CheckboxModule, SelectModule],
+  imports: [ReactiveFormsModule, CheckboxModule, InputTextModule],
 })
-export class LegendOptionsComponent {
+export class TitleOptionsComponent {
   protected form = new FormGroup({
     enabled: new FormControl<boolean>(true),
-    position: new FormControl<'top' | 'bottom' | 'left' | 'right'>('top'),
+    text: new FormControl<string>(''),
   });
 
   constructor(private chartService: ChartService) {
     this.form.valueChanges.subscribe((options) =>
       this.chartService.updateStyle({
-        legend: {
+        title: {
           ...options,
         },
       }),
     );
     this.chartService.style$.subscribe((style) => {
-      if (style.legend) {
-        this.form.setValue(style.legend, { emitEvent: false });
+      if (style.title) {
+        this.form.setValue(style.title, { emitEvent: false });
       }
     });
   }
