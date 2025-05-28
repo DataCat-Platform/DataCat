@@ -14,8 +14,13 @@ export const DEFAULT_TIME_RANGE: TimeRange = {
   step: '00:30:00',
   from: (() => {
     const date = new Date();
-    date.setMinutes(date.getMinutes() - 360);
+    date.setTime(date.getTime() - 4 * 60 * 60 * 1000);
+    date.setMilliseconds(0);
     return date;
   })(),
-  to: new Date(),
+  to: (() => {
+    const date = new Date();
+    date.setMilliseconds(0);
+    return date;
+  })(),
 };

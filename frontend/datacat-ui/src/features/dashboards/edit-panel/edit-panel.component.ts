@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { PanelVisualizationComponent } from '../../../shared/ui/panel-visualization';
 import { PanelVisualizationOptionsComponent } from '../../../shared/ui/panel-visualization-options';
 import { PanelModule } from 'primeng/panel';
 import {
@@ -30,6 +29,8 @@ import { TimeSeries } from '../../../entities/dashboards/data.types';
 import { PanelDataService } from '../panels-grid/panel-data.service';
 import { TimeRangeSelectComponent } from '../../../shared/ui/time-range-select/time-range-select.component';
 import { TimeRange } from '../../../entities/dashboards/etc.types';
+import { PanelChartComponent } from '../../../shared/ui/charts/panel-chart/panel-chart.component';
+import { ChartService } from '../../../shared/ui/charts/chart.service';
 
 @Component({
   standalone: true,
@@ -37,7 +38,6 @@ import { TimeRange } from '../../../entities/dashboards/etc.types';
   templateUrl: './edit-panel.component.html',
   styleUrl: './edit-panel.component.scss',
   imports: [
-    PanelVisualizationComponent,
     PanelVisualizationOptionsComponent,
     PanelModule,
     ReactiveFormsModule,
@@ -46,8 +46,9 @@ import { TimeRange } from '../../../entities/dashboards/etc.types';
     DataSourceSelectComponent,
     ButtonModule,
     TimeRangeSelectComponent,
+    PanelChartComponent,
   ],
-  providers: [PanelDataService],
+  providers: [ChartService],
 })
 export class EditPanelComponent implements AfterViewInit {
   private _panelId?: string;
@@ -70,10 +71,15 @@ export class EditPanelComponent implements AfterViewInit {
     step: '00:30:00',
     from: (() => {
       const date = new Date();
-      date.setMinutes(date.getMinutes() - 360);
+      date.setTime(date.getTime() - 4 * 60 * 60 * 1000);
+      date.setMilliseconds(0);
       return date;
     })(),
-    to: new Date(),
+    to: (() => {
+      const date = new Date();
+      date.setMilliseconds(0);
+      return date;
+    })(),
   });
 
   protected editForm = new FormGroup({

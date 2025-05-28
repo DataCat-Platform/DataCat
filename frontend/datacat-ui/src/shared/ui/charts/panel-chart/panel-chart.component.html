@@ -1,0 +1,12 @@
+@if (loading) {
+  <p-progress-spinner />
+} @else {
+  @switch (type) {
+    @case (VisualizationType.LINE) {
+      <datacat-line-chart />
+    }
+    @default {
+      <datacat-unsupported-chart />
+    }
+  }
+}

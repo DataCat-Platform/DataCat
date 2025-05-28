@@ -56,6 +56,24 @@ export class PanelVisualizationComponent {
 
     this.chartjsOptions.plugins.tooltip.enabled = settings.tooltip?.enabled;
 
+    switch (this.visualizationType) {
+      case VisualizationType.LINE: {
+        this.chartjsOptions = {
+          ...this.chartjsOptions,
+          x: {
+            type: 'time',
+            time: {
+              unit: 'day',
+            },
+            title: {
+              display: true,
+              text: 'Date',
+            },
+          },
+        };
+      }
+    }
+
     this.chartRef?.chart?.update();
   }
 

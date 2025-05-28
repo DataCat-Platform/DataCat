@@ -1,0 +1,13 @@
+<form [formGroup]="form">
+  <div>
+    <p>Enabled</p>
+    <p-check-box formControlName="enabled" [binary]="true" />
+  </div>
+  <div>
+    <p>Position</p>
+    <p-select
+      formControlName="position"
+      [options]="['top', 'bottom', 'left', 'right']"
+    />
+  </div>
+</form>
