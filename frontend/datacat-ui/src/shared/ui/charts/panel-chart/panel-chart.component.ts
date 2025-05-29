@@ -21,7 +21,7 @@ import { PieChartComponent } from '../pie/pie.component';
   ],
 })
 export class PanelChartComponent {
-  @Input() public loading: boolean = false;
+  protected loading: boolean = false;
 
   protected type?: VisualizationType;
   protected VisualizationType = VisualizationType;
@@ -29,6 +29,9 @@ export class PanelChartComponent {
   constructor(private chartService: ChartService) {
     this.chartService.type$.subscribe((type) => {
       this.type = type;
+    });
+    this.chartService.isLoading$.subscribe((isLoading) => {
+      this.loading = isLoading;
     });
   }
 }

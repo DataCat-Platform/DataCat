@@ -24,11 +24,7 @@
     @if (isError) {
       <p class="text-secondary">Loading error</p>
     } @else {
-      <datacat-panel-vizualization
-        [data]="data"
-        [visualizationType]="_panel?.visualizationType"
-        [visualizationSettings]="_panel?.visualizationSettings"
-      />
+      <datacat-panel-chart />
     }
   </div>
 </p-panel>
@@ -45,10 +41,6 @@
       <textarea pTextarea [disabled]="true">{{ _panel?.query }}</textarea>
     </div>
     <p-divider></p-divider>
-    <datacat-panel-vizualization
-      [data]="data"
-      [visualizationType]="_panel?.visualizationType"
-      [visualizationSettings]="_panel?.visualizationSettings"
-    />
+    <datacat-panel-chart />
   </div>
 </p-dialog>

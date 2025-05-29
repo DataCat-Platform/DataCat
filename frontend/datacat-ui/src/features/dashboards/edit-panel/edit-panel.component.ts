@@ -92,17 +92,14 @@ export class EditPanelComponent {
   constructor(
     private api: ApiService,
     private logger: ToastLoggerService,
-    private panelDataService: PanelDataService,
     private chartService: ChartService,
   ) {
-    this.panelDataService.data$.subscribe((v) => (this.data = v));
     this.timeRangeControl.valueChanges.subscribe((tr) => {
       this.refreshPreview();
     });
     this.editForm.get('dataSourceId')?.valueChanges.subscribe((id) => {
       if (id && this.panel) {
         this.panel.dataSource!.id = id;
-        this.panelDataService.panel = this.panel;
         this.chartService.setDataSourceName(this.panel.dataSource!.name);
         this.refreshPreview();
       }
@@ -110,7 +107,6 @@ export class EditPanelComponent {
     this.editForm.get('query')?.valueChanges.subscribe((q) => {
       if (q && this.panel) {
         this.panel.query = q;
-        this.panelDataService.panel = this.panel;
         this.chartService.setQuery(this.panel.query);
         this.refreshPreview();
       }
@@ -138,7 +134,6 @@ export class EditPanelComponent {
             data.styleConfiguration!,
           ) as VisualizationSettings,
         };
-        this.panelDataService.panel = this.panel;
         this.chartService.setQuery(this.panel.query);
         this.chartService.setDataSourceName(this.panel.dataSource!.name);
         this.chartService.updateStyle(this.panel.visualizationSettings);
@@ -157,8 +152,6 @@ export class EditPanelComponent {
   }
 
   protected refreshPreview() {
-    this.panelDataService.loadTimeRange(this.timeRangeControl.getRawValue()!);
-
     const timeRange = this.timeRangeControl.getRawValue()!;
     this.chartService.loadTimeRange(
       timeRange.from,

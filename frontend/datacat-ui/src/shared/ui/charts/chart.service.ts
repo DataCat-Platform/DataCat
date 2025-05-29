@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, finalize, Observable, Subscription } from 'rxjs';
 import { DataPoint, TimeSeries } from './chart.types';
 import { ApiService } from '../../services/datacat-generated-client';
 import { VisualizationType } from '../../../entities';
@@ -13,6 +13,7 @@ export class ChartService {
   public readonly data$: Observable<TimeSeries[]>;
   public readonly style$: Observable<any>;
   public readonly error$: Observable<boolean>;
+  public readonly isLoading$: Observable<boolean>;
 
   public query?: string;
   public dataSourceName?: string;
@@ -23,6 +24,7 @@ export class ChartService {
   private dataSubject = new BehaviorSubject<any>([]);
   private styleSubject = new BehaviorSubject<any>({});
   private errorSubject = new BehaviorSubject<boolean>(false);
+  private isLoadingSubject = new BehaviorSubject<boolean>(false);
 
   public get type(): VisualizationType {
     return this.typeSubject.value;
@@ -43,6 +45,7 @@ export class ChartService {
     this.data$ = this.dataSubject.asObservable();
     this.style$ = this.styleSubject.asObservable();
     this.error$ = this.errorSubject.asObservable();
+    this.isLoading$ = this.isLoadingSubject.asObservable();
   }
 
   public setType(type: VisualizationType): void {
@@ -69,6 +72,7 @@ export class ChartService {
 
     this.loadTimeRangeSubscription?.unsubscribe();
     this.errorSubject.next(false);
+    this.isLoadingSubject.next(true);
     this.loadTimeRangeSubscription = this.api
       .getApiV1MetricsQueryRange(
         this.dataSourceName,
@@ -79,6 +83,7 @@ export class ChartService {
         to,
         step,
       )
+      .pipe(finalize(() => this.isLoadingSubject.next(false)))
       .subscribe({
         next: (data) => {
           const timeSeries =

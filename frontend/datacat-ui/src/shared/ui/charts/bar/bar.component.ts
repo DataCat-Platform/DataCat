@@ -46,7 +46,7 @@ export class BarChartComponent {
       labels: [],
       datasets: data.map((ts) => {
         return {
-          label: ts.name + JSON.stringify(ts.labels),
+          label: JSON.stringify(ts.labels),
           data: ts.points.map((pt) => {
             return {
               x: pt.timestamp.toISOString(),
