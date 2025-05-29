@@ -1,5 +1,4 @@
 .details-content {
-  padding: 1.5rem;
   background-color: var(--surface-ground);
 
   .no-data {
@@ -12,9 +11,8 @@
   .detail-row {
     display: grid;
     grid-template-columns: 250px 1fr;
-    align-items: start;
+    align-items: center;
     gap: 1rem;
-    padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--surface-border);
     position: relative;
     overflow: hidden;
@@ -28,27 +26,20 @@
       width: 150%;
       height: 100%;
       background: linear-gradient(
-                      90deg,
-                      transparent,
-                      rgba(255, 255, 255, 0.05),
-                      transparent
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.05),
+        transparent
       );
       animation: shine 1s forwards;
     }
 
     .field-name {
       font-weight: 600;
-      color: var(--text-color);
+      color: var(--p-surface-400);
       display: flex;
       align-items: center;
       gap: 0.5rem;
-
-      .dot {
-        width: 8px;
-        height: 8px;
-        background-color: var(--primary-color);
-        border-radius: 50%;
-      }
     }
 
     .field-value {

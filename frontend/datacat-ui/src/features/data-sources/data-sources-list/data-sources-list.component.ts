@@ -13,7 +13,6 @@ import {
 import { LazyLoadEvent } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
-import { Tooltip } from 'primeng/tooltip';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { Tag } from 'primeng/tag';
 import { capitalizeFirstLetter } from '../../../shared/utils/capitalizeFirstLetter';
@@ -22,7 +21,7 @@ import * as urls from '../../../shared/common/urls';
 @Component({
   selector: 'app-data-sources-list',
   standalone: true,
-  imports: [TableModule, Button, Tooltip, Tag],
+  imports: [TableModule, Button, Tag],
   templateUrl: './data-sources-list.component.html',
   styleUrl: './data-sources-list.component.scss',
 })

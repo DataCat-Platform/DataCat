@@ -1,21 +1,18 @@
 .filter-container {
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-
   .filter-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    gap: var(--p-padding-md);
 
     .p-field {
       flex: 1 1 200px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--p-padding-sm);
 
       label {
         display: block;
-        margin-bottom: 0.25rem;
-        font-weight: 600;
+        color: var(--p-surface-400);
       }
     }
   }
@@ -60,11 +57,6 @@
     }
   }
 
-  .filter-actions {
-    margin-top: 1rem;
-    text-align: right;
-  }
-
   .uniform-height {
     height: 2.5rem;
 
@@ -86,7 +78,9 @@
     }
   }
 
-  input, p-dropdown, p-calendar {
+  input,
+  p-dropdown,
+  p-calendar {
     width: 100%;
   }
 }
