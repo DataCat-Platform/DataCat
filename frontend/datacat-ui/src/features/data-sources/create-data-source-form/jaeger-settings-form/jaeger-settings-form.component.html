@@ -1,33 +1,34 @@
 <div [formGroup]="form" class="settings-group">
+  <div class="form__item">
+    <p class="text-secondary">Server URL</p>
+    <input formControlName="serverUrl" pInputText />
+  </div>
+
+  <div class="form__item">
+    <p class="text-secondary">Authentication Type</p>
+    <p-select
+      (onChange)="onAuthTypeChange()"
+      [options]="authTypes"
+      formControlName="authType"
+      appendTo="body"
+    />
+  </div>
+
+  @if (authType === 'Basic') {
     <div class="form__item">
-        <p class="text-secondary">Server URL</p>
-        <input formControlName="serverUrl" pInputText/>
+      <p class="text-secondary">Username</p>
+      <input pInputText formControlName="username" />
     </div>
-
     <div class="form__item">
-        <p class="text-secondary">Authentication Type</p>
-        <p-select
-                (onChange)="onAuthTypeChange()"
-                [options]="authTypes"
-                formControlName="authType"
-        />
+      <p class="text-secondary">Password</p>
+      <input pInputText type="password" formControlName="password" />
     </div>
+  }
 
-    @if (authType === 'Basic') {
-        <div class="form__item">
-            <p class="text-secondary">Username</p>
-            <input pInputText formControlName="username"/>
-        </div>
-        <div class="form__item">
-            <p class="text-secondary">Password</p>
-            <input pInputText type="password" formControlName="password"/>
-        </div>
-    }
-
-    @if (authType === 'Bearer') {
-        <div class="form__item">
-            <p class="text-secondary">Auth Token</p>
-            <input pInputText formControlName="authToken"/>
-        </div>
-    }
+  @if (authType === 'Bearer') {
+    <div class="form__item">
+      <p class="text-secondary">Auth Token</p>
+      <input pInputText formControlName="authToken" />
+    </div>
+  }
 </div>

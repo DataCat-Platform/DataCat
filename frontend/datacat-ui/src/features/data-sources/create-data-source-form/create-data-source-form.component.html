@@ -1,60 +1,69 @@
 <form [formGroup]="form" class="form">
-    <div class="form__item">
+  <div class="h">
+    <div class="v">
+      <div class="form__item">
         <p class="form__label">Name</p>
-        <input class="form__input" formControlName="name" pInputText/>
-    </div>
-
-    <div class="form__item">
-        <p class="form__label">Data Source Type</p>
-        <p-select
-                [options]="dataSourceTypes"
-                appendTo="body"
-                class="form__input"
-                formControlName="dataSourceType"
-                optionLabel="name"
-                optionValue="name"
+        <input
+          class="form__input"
+          formControlName="name"
+          pInputText
+          placeholder="Enter data source name"
         />
-    </div>
-
-    <div class="form__item">
+      </div>
+      <div class="form__item">
         <p class="form__label">Purpose</p>
         <p-select
-                [options]="dataSourcePurposes"
-                appendTo="body"
-                class="form__input"
-                formControlName="purpose"
+          [options]="dataSourcePurposes"
+          appendTo="body"
+          class="form__input"
+          formControlName="purpose"
         />
+      </div>
+      <div class="form__item">
+        <p class="form__label">Data Source Type</p>
+        <p-select
+          [options]="dataSourceTypes"
+          appendTo="body"
+          class="form__input"
+          formControlName="dataSourceType"
+          optionLabel="name"
+          optionValue="name"
+        />
+      </div>
     </div>
-
-    <div class="form__settings">
-        @switch (form.value.dataSourceType) {
+    <div>
+      <p-panel header="Data source settings">
+        <div class="form__settings">
+          @switch (form.value.dataSourceType) {
             @case ('prometheus') {
-                <app-prometheus-settings-form
-                        [form]="form.controls.settings"
-                        [authType]="settingsForm.value?.authType"
-                />
+              <app-prometheus-settings-form
+                [form]="form.controls.settings"
+                [authType]="settingsForm.value?.authType"
+              />
             }
             @case ('jaeger') {
-                <app-jaeger-settings-form
-                        [form]="form.controls.settings"
-                        [authType]="settingsForm.value?.authType"
-                />
+              <app-jaeger-settings-form
+                [form]="form.controls.settings"
+                [authType]="settingsForm.value?.authType"
+              />
             }
             @case ('elasticsearch') {
-                <app-elasticsearch-settings-form
-                        [form]="form.controls.settings"
-                />
+              <app-elasticsearch-settings-form
+                [form]="form.controls.settings"
+              />
             }
-        }
+          }
+        </div>
+      </p-panel>
     </div>
+  </div>
 
-    <div class="form__actions">
-        <p-button
-                (onClick)="saveDataSource()"
-                [disabled]="form.invalid"
-                class="form__submit"
-                label="Save"
-                severity="success"
-        />
-    </div>
+  <div class="form__actions">
+    <p-button
+      (onClick)="saveDataSource()"
+      [disabled]="form.invalid"
+      class="form__submit"
+      label="Save"
+    />
+  </div>
 </form>

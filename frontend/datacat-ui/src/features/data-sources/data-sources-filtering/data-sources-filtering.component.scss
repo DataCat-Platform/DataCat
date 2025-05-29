@@ -1,13 +1,13 @@
 .box {
-  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  padding: var(--p-padding-md);
+  padding-top: 0;
 
   &__filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: var(--p-padding-md);
   }
 }
 
@@ -16,11 +16,10 @@
   flex-direction: column;
   flex: 1 1 200px;
   min-width: 200px;
+  gap: var(--p-padding-sm);
 
-  p.text-secondary {
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #6c757d;
+  p {
+    color: var(--p-surface-400);
   }
 
   input,
@@ -46,15 +45,6 @@
 
 .box__filters {
   .p-inputtext {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
     height: calc(2.25rem + 2px);
-  }
-
-  .p-dropdown {
-    .p-dropdown-label {
-      padding-top: 0.75rem;
-      padding-bottom: 0.75rem;
-    }
   }
 }
