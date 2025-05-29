@@ -4,6 +4,7 @@ import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { DialogModule } from 'primeng/dialog';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -76,6 +77,34 @@ export class CreateAlertButtonComponent {
     tags: new FormControl<string[]>([]),
   });
 
+  protected get descriptionControl(): AbstractControl {
+    return this.creationForm.get('description')!;
+  }
+
+  protected get templateControl(): AbstractControl {
+    return this.creationForm.get('template')!;
+  }
+
+  protected get queryControl(): AbstractControl {
+    return this.creationForm.get('query')!;
+  }
+
+  protected get dataSourceIdControl(): AbstractControl {
+    return this.creationForm.get('dataSourceId')!;
+  }
+
+  protected get notificationGroupNameControl(): AbstractControl {
+    return this.creationForm.get('notificationGroupName')!;
+  }
+
+  protected get notificationTriggerPeriodControl(): AbstractControl {
+    return this.creationForm.get('notificationTriggerPeriod')!;
+  }
+
+  protected get executionIntervalControl(): AbstractControl {
+    return this.creationForm.get('executionInterval')!;
+  }
+
   protected get creationFormTags(): string[] {
     return this.creationForm.get('tags')?.value || [];
   }
@@ -122,10 +151,12 @@ export class CreateAlertButtonComponent {
       tags: rawForm.tags,
     };
 
+    this.creationForm.disable();
     this.apiService
       .postApiV1AlertAdd(request)
       .pipe(
         finalize(() => {
+          this.creationForm.enable();
           this.isCreationInitiated = false;
         }),
       )

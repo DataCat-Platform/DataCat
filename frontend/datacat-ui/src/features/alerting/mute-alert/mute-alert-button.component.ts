@@ -5,18 +5,28 @@ import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputMaskModule } from 'primeng/inputmask';
+import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   standalone: true,
   selector: './datacat-mute-alert-button',
   templateUrl: './mute-alert-button.component.html',
   styleUrl: './mute-alert-button.component.scss',
-  imports: [ButtonModule, ReactiveFormsModule, InputMaskModule],
+  imports: [
+    ButtonModule,
+    ReactiveFormsModule,
+    InputMaskModule,
+    DialogModule,
+    TooltipModule,
+  ],
 })
 export class MuteAlertButtonComponent {
   @Input({ required: true }) alertId?: string;
 
   protected isMuteInitiated = false;
+
+  protected isDialogVisible = false;
 
   protected nextExecutionTimeControl = new FormControl<string>('', [
     Validators.required,

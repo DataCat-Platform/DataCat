@@ -1,69 +1,72 @@
 <form class="creation-form" [formGroup]="editForm">
-  <div class="creation-form__item">
-    <p>Description</p>
-    <textarea
-      pInputText
-      cols="40"
-      rows="3"
-      placeholder="Description"
-      formControlName="description"
-    >
-    </textarea>
-  </div>
-  <div class="creation-form__item">
-    <p>Query</p>
-    <textarea
-      pInputText
-      cols="40"
-      rows="3"
-      placeholder="Query"
-      formControlName="query"
-    ></textarea>
-  </div>
-  <div class="creation-form__item">
-    <p>Notification Template</p>
-    <textarea
-      pInputText
-      cols="40"
-      rows="3"
-      placeholder="Template"
-      formControlName="template"
-    ></textarea>
-  </div>
-  <div class="creation-form__items">
-    <div class="creation-form__item">
-      <p>Execution interval</p>
-      <p-inputmask
-        mask="99:99:99"
-        placeholder="01:00:00"
-        formControlName="executionInterval"
-      />
+  <div class="h">
+    <div class="v">
+      <div class="creation-form__item">
+        <p>Description</p>
+        <textarea
+          pInputText
+          cols="40"
+          rows="3"
+          placeholder="Description"
+          formControlName="description"
+        >
+        </textarea>
+      </div>
+      <div class="creation-form__item">
+        <p>Query</p>
+        <textarea
+          pInputText
+          cols="40"
+          rows="3"
+          placeholder="Query"
+          formControlName="query"
+        ></textarea>
+      </div>
+      <div class="creation-form__item">
+        <p>Notification Template</p>
+        <textarea
+          pInputText
+          cols="40"
+          rows="3"
+          placeholder="Template"
+          formControlName="template"
+        ></textarea>
+      </div>
     </div>
-    <div class="creation-form__item">
-      <p>Notification Trigger Period</p>
-      <p-inputmask
-        mask="99:99:99"
-        placeholder="01:00:00"
-        formControlName="notificationTriggerPeriod"
-      />
+    <div class="v">
+      <div class="creation-form__item">
+        <p>Execution interval</p>
+        <p-inputmask
+          mask="99:99:99"
+          placeholder="01:00:00"
+          formControlName="executionInterval"
+        />
+      </div>
+      <div class="creation-form__item">
+        <p>Notification Trigger Period</p>
+        <p-inputmask
+          mask="99:99:99"
+          placeholder="01:00:00"
+          formControlName="notificationTriggerPeriod"
+        />
+      </div>
+      <div class="creation-form__item">
+        <p>Data Source</p>
+        <datacat-data-source-select
+          [filter]="{ purpose: 'metrics' }"
+          formControlName="dataSourceId"
+        />
+      </div>
+      <div class="creation-form__item">
+        <p>Notification Group</p>
+        <datacat-notification-group-select
+          formControlName="notificationGroupName"
+          optionValue="name"
+        />
+      </div>
     </div>
   </div>
-  <div class="creation-form__items">
-    <div class="creation-form__item">
-      <p>Data Source</p>
-      <datacat-data-source-select
-        [filter]="{ purpose: 'metrics' }"
-        formControlName="dataSourceId"
-      />
-    </div>
-    <div class="creation-form__item">
-      <p>Notification Group</p>
-      <datacat-notification-group-select
-        formControlName="notificationGroupName"
-        optionValue="name"
-      />
-    </div>
-  </div>
+
   <div class="creation-form__item">
     <p>Tags</p>
     <p-inputgroup>
@@ -88,12 +91,35 @@
       />
     }
   </div>
+  <div class="validations">
+    @if (descriptionControl.invalid) {
+      <p>* Description is required</p>
+    }
+    @if (queryControl.invalid) {
+      <p>* Query is required</p>
+    }
+    @if (templateControl.invalid) {
+      <p>* Notification temlplate is required</p>
+    }
+    @if (executionIntervalControl.invalid) {
+      <p>* Execution interval is required</p>
+    }
+    @if (notificationTriggerPeriodControl.invalid) {
+      <p>* Notification trigger period is required</p>
+    }
+    @if (dataSourceIdControl.invalid) {
+      <p>* Data source is required</p>
+    }
+    @if (notificationGroupNameControl.invalid) {
+      <p>* Notification group is required</p>
+    }
+  </div>
   <div class="creation-form__footer">
     <p-button
       label="Save"
-      severity="secondary"
       (onClick)="saveAlert()"
       [loading]="isSavingInitiated"
+      [disabled]="editForm.invalid"
     />
   </div>
 </form>

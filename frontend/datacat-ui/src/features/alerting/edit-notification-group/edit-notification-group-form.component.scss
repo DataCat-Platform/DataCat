@@ -47,8 +47,16 @@
 .channel-attributes {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--p-padding-md);
+  gap: var(--p-padding-lg);
   align-items: center;
+  padding: var(--p-padding-md);
+  padding-top: 0;
+
+  div {
+    p {
+      color: var(--p-surface-400);
+    }
+  }
 }
 
 p-card p {
@@ -58,22 +66,14 @@ p-card p {
 .card-header {
   display: flex;
   gap: var(--p-padding-md);
-  margin-left: var(--p-padding-md);
-  margin-right: var(--p-padding-md);
-  margin-top: var(--p-padding-md);
   align-items: center;
+  width: 100%;
   justify-content: space-between;
 
   &__driver {
     display: flex;
     flex-direction: row;
     gap: var(--p-padding-sm);
-    align-items: center;
-  }
-
-  &__actions {
-    display: flex;
-    gap: var(--p-padding-md);
     align-items: center;
   }
 }

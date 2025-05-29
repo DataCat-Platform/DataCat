@@ -1,5 +1,22 @@
 .form {
   display: flex;
+  flex-direction: column;
   gap: var(--p-padding-md);
   align-items: center;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-sm);
+
+  p {
+    color: var(--p-surface-400);
+  }
+}
+
+.footer {
+  display: flex;
+  width: 100%;
+  justify-content: end;
 }

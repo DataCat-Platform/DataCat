@@ -2,10 +2,9 @@
   margin: var(--p-padding-md);
 }
 
-.actions {
+.header {
+  width: 100%;
   display: flex;
-  flex-direction: row;
-  gap: var(--p-padding-md);
-  margin-left: var(--p-padding-md);
-  margin-right: var(--p-padding-md);
+  justify-content: space-between;
+  align-items: center;
 }

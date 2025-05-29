@@ -4,6 +4,7 @@ import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { DialogModule } from 'primeng/dialog';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
@@ -82,6 +83,34 @@ export class EditAlertFormComponent {
     tags: new FormControl<string[]>([]),
   });
 
+  protected get descriptionControl(): AbstractControl {
+    return this.editForm.get('description')!;
+  }
+
+  protected get templateControl(): AbstractControl {
+    return this.editForm.get('template')!;
+  }
+
+  protected get queryControl(): AbstractControl {
+    return this.editForm.get('query')!;
+  }
+
+  protected get dataSourceIdControl(): AbstractControl {
+    return this.editForm.get('dataSourceId')!;
+  }
+
+  protected get notificationGroupNameControl(): AbstractControl {
+    return this.editForm.get('notificationGroupName')!;
+  }
+
+  protected get notificationTriggerPeriodControl(): AbstractControl {
+    return this.editForm.get('notificationTriggerPeriod')!;
+  }
+
+  protected get executionIntervalControl(): AbstractControl {
+    return this.editForm.get('executionInterval')!;
+  }
+
   protected get editFormTags(): string[] {
     return this.editForm.get('tags')?.value || [];
   }
@@ -143,7 +172,7 @@ export class EditAlertFormComponent {
     this.editForm.markAllAsTouched();
     this.editForm.updateValueAndValidity();
 
-    if (this.editForm.invalid) {
+    if (this.editForm.invalid || !this._alertId) {
       return;
     }
 
@@ -162,7 +191,7 @@ export class EditAlertFormComponent {
     };
 
     this.apiService
-      .postApiV1AlertAdd(request)
+      .putApiV1AlertUpdate(this._alertId, request)
       .pipe(
         finalize(() => {
           this.isSavingInitiated = false;
