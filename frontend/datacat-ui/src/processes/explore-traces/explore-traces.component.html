@@ -1,32 +1,35 @@
-<p-panel [style]="{ display: 'block', height: '100%' }" header="Traces Explorer">
-    <div class="traces-explorer-layout">
-        <div class="left-panel">
-            <div class="description-container">
-                <p class="text-secondary">Explore and analyze system traces in real-time</p>
-            </div>
-
-            <div class="slot">
-                <app-traces-data-source-selector
-                        (selectedDataSourceChange)="onDataSourceChange($event)"
-                        [(selectedDataSource)]="currentFilter.dataSourceName">
-                </app-traces-data-source-selector>
-
-                <app-traces-filter
-                        (filterChange)="onFilterChange($event)"
-                        [currentFilter]="currentFilter">
-                </app-traces-filter>
-            </div>
+<p-panel
+  [style]="{ display: 'block', height: '100%' }"
+  header="Traces Explorer"
+>
+  <p class="description-container text-secondary">
+    Explore and analyze system traces in real-time
+  </p>
+  <div class="traces-explorer-layout">
+    <p-panel header="Filters">
+      <div class="slot h">
+        <app-traces-data-source-selector
+          (selectedDataSourceChange)="onDataSourceChange($event)"
+          [(selectedDataSource)]="currentFilter.dataSourceName"
+        />
+        <app-traces-filter
+          (filterChange)="onFilterChange($event)"
+          [currentFilter]="currentFilter"
+        />
+      </div>
+    </p-panel>
+    <p-panel header="Result">
+      @if (isLoading) {
+        <div class="spinner-overlay">
+          <p-progressSpinner styleClass="custom-spinner"></p-progressSpinner>
+          <p class="spinner-text">Loading traces...</p>
         </div>
-
-        <div class="right-panel">
-            @if (isLoading) {
-                <div class="spinner-overlay">
-                    <p-progressSpinner styleClass="custom-spinner"></p-progressSpinner>
-                    <p class="spinner-text">Loading traces...</p>
-                </div>
-            } @else {
-                <app-traces-list [dataSourceName]="currentFilter.dataSourceName!" [traces]="traces"></app-traces-list>
-            }
-        </div>
-    </div>
+      } @else {
+        <app-traces-list
+          [dataSourceName]="currentFilter.dataSourceName!"
+          [traces]="traces"
+        ></app-traces-list>
+      }
+    </p-panel>
+  </div>
 </p-panel>

@@ -2,8 +2,8 @@
   display: grid;
   grid-template-columns: 300px 1fr 120px;
   width: 100%;
-  font-family: sans-serif;
   overflow-x: auto;
+  border-bottom: 1px solid var(--p-surface-600);
 }
 
 .header-row {
@@ -14,15 +14,14 @@
     top: 0;
     z-index: 2;
     padding: 1rem 0.75rem;
-    font-weight: 600;
-    border-bottom: 2px solid #ccc;
-    border-top: 2px solid #ccc;
+    border-bottom: 1px solid var(--p-surface-600);
+    border-top: 1px solid var(--p-surface-600);
   }
 
   .service-header,
   .timeline-header,
   .actions-header {
-    border-right: 1px solid #ccc;
+    border-right: 1px solid var(--p-surface-600);
   }
 
   .service-header,
@@ -30,7 +29,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
   }
 
   .actions-header {
@@ -48,8 +46,8 @@
   > div {
     display: flex;
     align-items: center;
-    padding: 0.75rem;
-    border-bottom: 1px solid #e5e5e5;
+    padding-left: var(--p-padding-md);
+    padding-right: var(--p-padding-md);
   }
 
   &:hover {
@@ -58,7 +56,16 @@
 
   .service-cell,
   .timeline-cell {
-    border-right: 1px solid #e5e5e5;
+    border-right: 1px solid var(--p-surface-600);
+  }
+
+  .service-cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--p-padding-xs);
+    align-items: start;
+    padding-top: var(--p-padding-sm);
+    padding-bottom: var(--p-padding-sm);
   }
 
   .actions-cell {
@@ -105,19 +112,11 @@
 
 .time-marker {
   position: absolute;
-  font-size: 0.75em;
   white-space: nowrap;
 }
 
-.service-name {
-  font-weight: bold;
-  font-size: 1em;
-}
-
 .operation-name {
-  font-size: 0.5em;
-  margin-left: 5px;
-  color: gray;
+  color: var(--p-surface-400);
 }
 
 .actions-cell {
