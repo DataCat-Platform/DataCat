@@ -1,9 +1,13 @@
 <p-panel [style]="{ display: 'block', height: '100%' }">
-  <ng-template pTemplate="header"> Edit alert </ng-template>
-  <div class="actions">
-    <datacat-delete-alert-button [alertId]="alertId" />
-    <datacat-mute-alert-button [alertId]="alertId" />
-  </div>
+  <ng-template pTemplate="header">
+    <div class="header">
+      <p>Edit alert</p>
+      <div>
+        <datacat-mute-alert-button [alertId]="alertId" />
+        <datacat-delete-alert-button [alertId]="alertId" />
+      </div>
+    </div>
+  </ng-template>
   <div class="edit-alert-form-box">
     <datacat-edit-alert-form [alertId]="alertId" />
   </div>

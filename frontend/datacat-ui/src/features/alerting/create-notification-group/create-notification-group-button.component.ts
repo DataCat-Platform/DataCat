@@ -5,7 +5,12 @@ import * as urls from '../../../shared/common/urls';
 import { finalize, timer } from 'rxjs';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import {
   ApiService,
   IAddNotificationChannelGroupRequest,
@@ -29,7 +34,7 @@ export class CreateNotificationGroupButtonComponent {
   protected isCreationInitiated = false;
   protected isDialogVisible = false;
 
-  protected groupName = new FormControl<string>('');
+  protected groupName = new FormControl<string>('', Validators.required);
 
   constructor(
     private router: Router,
@@ -54,7 +59,6 @@ export class CreateNotificationGroupButtonComponent {
       .subscribe({
         next: (groupId: string) => {
           this.router.navigateByUrl(urls.notificationGroupEditUrl(groupId));
-          this.loggerService.success('Successfully created notification group');
         },
         error: (e) => {
           this.loggerService.error(e);

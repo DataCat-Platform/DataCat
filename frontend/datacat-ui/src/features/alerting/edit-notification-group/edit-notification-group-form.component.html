@@ -25,11 +25,7 @@
       </div>
       <div class="attributes-box__channels">
         <p class="text-secondary">Channels</p>
-        <p-button
-          label="Add channel"
-          severity="secondary"
-          (onClick)="showChannelCreationDialog()"
-        />
+        <p-button label="Add channel" (onClick)="showChannelCreationDialog()" />
         @if (notificationChannels.length === 0) {
           <p-tag value="No channels yet" severity="info" />
         } @else {
@@ -37,27 +33,25 @@
             @for (channel of notificationChannels; track $index) {
               @switch (channel.driver) {
                 @case (NotificationChannelDriver.EMAIL) {
-                  <p-card>
+                  <p-panel>
                     <ng-template pTemplate="header">
                       <div class="card-header">
                         <div class="card-header__driver">
                           <i class="pi pi-envelope text-secondary"></i>
                           <p>Email</p>
                         </div>
-                        <div class="card-header__actions">
+                        <div>
                           <p-button
                             icon="pi pi-pencil"
                             (onClick)="editChannel(channel)"
-                            variant="outlined"
                             severity="secondary"
-                            label="Edit"
+                            [text]="true"
                           />
                           <p-button
                             icon="pi pi-trash"
                             (onClick)="deleteChannel(channel)"
-                            variant="outlined"
                             severity="secondary"
-                            label="Delete"
+                            [text]="true"
                           />
                         </div>
                       </div>
@@ -65,65 +59,53 @@
                     <div class="channel-attributes">
                       <div>
                         <p>Destination Address</p>
-                        <input
-                          pInputText
-                          [value]="
+                        <span>
+                          {{
                             asEmailSettings(channel.settings).DestinationEmail
-                          "
-                          [disabled]="true"
-                        />
+                          }}
+                        </span>
                       </div>
                       <div>
                         <p>Password Path</p>
-                        <input
-                          pInputText
-                          [value]="
-                            asEmailSettings(channel.settings).PasswordPath
-                          "
-                          [disabled]="true"
-                        />
+                        <span>
+                          {{ asEmailSettings(channel.settings).PasswordPath }}
+                        </span>
                       </div>
                       <div>
                         <p>Port</p>
-                        <input
-                          pInputText
-                          [value]="asEmailSettings(channel.settings).Port"
-                          [disabled]="true"
-                        />
+                        <span>{{
+                          asEmailSettings(channel.settings).Port
+                        }}</span>
                       </div>
                       <div>
                         <p>SMTP Server</p>
-                        <input
-                          pInputText
-                          [value]="asEmailSettings(channel.settings).SmtpServer"
-                          [disabled]="true"
-                        />
+                        <span>{{
+                          asEmailSettings(channel.settings).SmtpServer
+                        }}</span>
                       </div>
                     </div>
-                  </p-card>
+                  </p-panel>
                 }
                 @case (NotificationChannelDriver.TELEGRAM) {
-                  <p-card>
+                  <p-panel>
                     <ng-template pTemplate="header">
                       <div class="card-header">
                         <div class="card-header__driver">
                           <i class="pi pi-telegram text-secondary"></i>
                           <p>Telegram</p>
                         </div>
-                        <div class="card-header__actions">
+                        <div>
                           <p-button
                             icon="pi pi-pencil"
                             (onClick)="editChannel(channel)"
-                            variant="outlined"
                             severity="secondary"
-                            label="Edit"
+                            [text]="true"
                           />
                           <p-button
                             icon="pi pi-trash"
                             (onClick)="deleteChannel(channel)"
-                            variant="outlined"
                             severity="secondary"
-                            label="Delete"
+                            [text]="true"
                           />
                         </div>
                       </div>
@@ -131,48 +113,39 @@
                     <div class="channel-attributes">
                       <div>
                         <p>Chat ID</p>
-                        <input
-                          pInputText
-                          [value]="asTelegramSettings(channel.settings).ChatId"
-                          [disabled]="true"
-                        />
+                        <span>
+                          {{ asTelegramSettings(channel.settings).ChatId }}
+                        </span>
                       </div>
                       <div>
                         <p>Telegram Token Path</p>
-                        <input
-                          pInputText
-                          [value]="
-                            asTelegramSettings(channel.settings)
-                              .TelegramTokenPath
-                          "
-                          [disabled]="true"
-                        />
+                        <span>{{
+                          asTelegramSettings(channel.settings).TelegramTokenPath
+                        }}</span>
                       </div>
                     </div>
-                  </p-card>
+                  </p-panel>
                 }
                 @case (NotificationChannelDriver.WEBHOOK) {
-                  <p-card>
+                  <p-panel>
                     <ng-template pTemplate="header">
                       <div class="card-header">
                         <div class="card-header__driver">
                           <i class="pi pi-link text-secondary"></i>
                           <p>Webhook</p>
                         </div>
-                        <div class="card-header__actions">
+                        <div>
                           <p-button
                             icon="pi pi-pencil"
                             (onClick)="editChannel(channel)"
-                            variant="outlined"
                             severity="secondary"
-                            label="Edit"
+                            [text]="true"
                           />
                           <p-button
                             icon="pi pi-trash"
                             (onClick)="deleteChannel(channel)"
-                            variant="outlined"
                             severity="secondary"
-                            label="Delete"
+                            [text]="true"
                           />
                         </div>
                       </div>
@@ -180,14 +153,12 @@
                     <div class="channel-attributes">
                       <div>
                         <p>URL</p>
-                        <input
-                          pInputText
-                          [value]="asWebhookSettings(channel.settings).Url"
-                          [disabled]="true"
-                        />
+                        <span>{{
+                          asWebhookSettings(channel.settings).Url
+                        }}</span>
                       </div>
                     </div>
-                  </p-card>
+                  </p-panel>
                 }
               }
             }
@@ -251,7 +222,11 @@
         label="Cancel"
         (onClick)="hideChannelCreationDialog()"
       />
-      <p-button label="Add" (onClick)="addChannel()" />
+      <p-button
+        label="Add"
+        (onClick)="addChannel()"
+        [disabled]="addChannelForm.invalid"
+      />
     </div>
   </form>
 </p-dialog>
@@ -293,6 +268,10 @@
         <input pInputText formControlName="Url" placeholder="Url" />
       }
     }
-    <p-button label="Save" (onClick)="saveEditedChannel()" />
+    <p-button
+      label="Save"
+      (onClick)="saveEditedChannel()"
+      [disabled]="editChannelForm.invalid"
+    />
   </form>
 </p-dialog>

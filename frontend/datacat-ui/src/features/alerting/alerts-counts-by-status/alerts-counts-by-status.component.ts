@@ -3,8 +3,7 @@ import { AlertsCountsByStatus } from './alerts-counts-by-status.types';
 import { TagModule } from 'primeng/tag';
 import { AlertStatus } from '../../../entities';
 import { TooltipModule } from 'primeng/tooltip';
-import { from } from 'rxjs';
-import { FAKE_ALERTS_COUNTS_BY_STATUS } from '../../../shared/mock/fakes';
+import { interval } from 'rxjs';
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 
 @Component({
@@ -21,6 +20,7 @@ export class AlertsCountsByStatusComponent implements OnInit {
 
   ngOnInit() {
     this.loadAlertsCountsByStatus();
+    interval(10000).subscribe(() => this.loadAlertsCountsByStatus());
   }
 
   protected loadAlertsCountsByStatus() {

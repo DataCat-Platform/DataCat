@@ -1,5 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import {
@@ -25,6 +30,7 @@ import { DialogModule } from 'primeng/dialog';
 import { finalize } from 'rxjs';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   standalone: true,
@@ -42,6 +48,7 @@ import { CardModule } from 'primeng/card';
     DialogModule,
     InputNumberModule,
     CardModule,
+    PanelModule,
   ],
 })
 export class EditNotificationGroupFormComponent {
@@ -118,10 +125,10 @@ export class EditNotificationGroupFormComponent {
         this.addChannelForm.setControl(
           'settings',
           new FormGroup({
-            DestinationEmail: new FormControl<string>(''),
-            SmtpServer: new FormControl<string>(''),
-            Port: new FormControl<number>(80),
-            PasswordPath: new FormControl<string>(''),
+            DestinationEmail: new FormControl<string>('', Validators.required),
+            SmtpServer: new FormControl<string>('', Validators.required),
+            Port: new FormControl<number>(80, Validators.required),
+            PasswordPath: new FormControl<string>('', Validators.required),
           }),
         );
         break;
@@ -130,8 +137,8 @@ export class EditNotificationGroupFormComponent {
         this.addChannelForm.setControl(
           'settings',
           new FormGroup({
-            TelegramTokenPath: new FormControl<string>(''),
-            PasswordPath: new FormControl<string>(''),
+            TelegramTokenPath: new FormControl<string>('', Validators.required),
+            ChatId: new FormControl<string>('', Validators.required),
           }),
         );
         break;
@@ -140,7 +147,7 @@ export class EditNotificationGroupFormComponent {
         this.addChannelForm.setControl(
           'settings',
           new FormGroup({
-            Url: new FormControl<string>(''),
+            Url: new FormControl<string>('', Validators.required),
           }),
         );
         break;
@@ -187,7 +194,6 @@ export class EditNotificationGroupFormComponent {
       )
       .subscribe({
         next: () => {
-          this.loggerService.success('Added channel');
           this.isChannelCreationDialogVisible = false;
           this.refresh();
         },
@@ -202,10 +208,19 @@ export class EditNotificationGroupFormComponent {
       case NotificationChannelDriver.EMAIL: {
         const settings = channel.settings as EmailSettings;
         this.editChannelForm = new FormGroup({
-          DestinationEmail: new FormControl<string>(settings.DestinationEmail),
-          SmtpServer: new FormControl<string>(settings.SmtpServer),
-          Port: new FormControl<number>(settings.Port),
-          PasswordPath: new FormControl<string>(settings.PasswordPath),
+          DestinationEmail: new FormControl<string>(
+            settings.DestinationEmail,
+            Validators.required,
+          ),
+          SmtpServer: new FormControl<string>(
+            settings.SmtpServer,
+            Validators.required,
+          ),
+          Port: new FormControl<number>(settings.Port, Validators.required),
+          PasswordPath: new FormControl<string>(
+            settings.PasswordPath,
+            Validators.required,
+          ),
         });
         break;
       }
@@ -214,15 +229,16 @@ export class EditNotificationGroupFormComponent {
         this.editChannelForm = new FormGroup({
           TelegramTokenPath: new FormControl<string>(
             settings.TelegramTokenPath,
+            Validators.required,
           ),
-          ChatId: new FormControl<string>(settings.ChatId),
+          ChatId: new FormControl<string>(settings.ChatId, Validators.required),
         });
         break;
       }
       case NotificationChannelDriver.WEBHOOK: {
         const settings = channel.settings as WebhookSettings;
         this.editChannelForm = new FormGroup({
-          Url: new FormControl<string>(settings.Url),
+          Url: new FormControl<string>(settings.Url, Validators.required),
         });
         break;
       }

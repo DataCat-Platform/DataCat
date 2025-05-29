@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
-import { Alert, AlertStatus, DataSource } from '../../../entities';
+import { Alert, AlertStatus } from '../../../entities';
 import { TagModule } from 'primeng/tag';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -26,7 +26,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { DataSourceSelectComponent } from '../../../shared/ui/data-source-select/data-source-select.component';
 import * as urls from '../../../shared/common/urls';
-import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   standalone: true,

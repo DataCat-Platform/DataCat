@@ -40,7 +40,6 @@ export class DeleteAlertButtonComponent {
     if (this.alertId) {
       this.apiService.deleteApiV1AlertRemove(this.alertId).subscribe({
         next: () => {
-          this.loggerService.success('Deleted alert');
           this.router.navigateByUrl(urls.ALERTS_EXPLORER_URL);
         },
         error: (e) => {

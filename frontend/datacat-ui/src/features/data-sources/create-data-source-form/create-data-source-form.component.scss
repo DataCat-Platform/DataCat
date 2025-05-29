@@ -1,22 +1,17 @@
 .form {
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--p-padding-md);
+  align-items: start;
 
   &__item {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--p-padding-sm);
   }
 
   &__label {
-    font-size: 14px;
-    color: #6b7280;
-    font-weight: 500;
-    margin: 0;
+    color: var(--p-surface-400);
   }
 
   &__input {
@@ -24,14 +19,30 @@
   }
 
   &__settings {
-    padding-top: 16px;
+    padding: var(--p-padding-md);
+    padding-top: 0;
   }
 
   &__actions {
-    padding-top: 24px;
+    width: 100%;
+    display: flex;
+    justify-content: end;
   }
 
   &__submit {
     width: 100%;
+    display: flex;
+    justify-content: end;
   }
+}
+
+.h {
+  display: flex;
+  gap: var(--p-padding-lg);
+}
+
+.v {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-md);
 }

@@ -26,6 +26,7 @@
         [loading]="isCreationInitiated"
         label="Create"
         (onClick)="createNotificationGroup()"
+        [disabled]="groupName.invalid"
       />
     </div>
   </form>

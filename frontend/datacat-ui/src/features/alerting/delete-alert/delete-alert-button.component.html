@@ -1,4 +1,9 @@
-<p-button label="Delete" severity="danger" (onClick)="showDeletionDialog()" />
+<p-button
+  icon="pi pi-trash"
+  severity="secondary"
+  [text]="true"
+  (onClick)="showDeletionDialog()"
+/>
 <p-dialog
   header="Delete alert?"
   [(visible)]="isDeletionDialogVisible"
