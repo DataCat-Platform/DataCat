@@ -80,7 +80,7 @@ public sealed class AlertChecker(
         {
             await foreach (var alert in alertChannel.Reader.ReadAllAsync(stoppingToken))
             {
-                logger.LogInformation("[{Job}] Alert: {Alert} was read from the channel", nameof(AlertNotifier), alert.Id);
+                logger.LogInformation("[{Job}] Alert: {Alert} was read from the channel", nameof(AlertChecker), alert.Id);
                 await alertRepository.UpdateAsync(alert, stoppingToken);
             }
 
