@@ -2,11 +2,7 @@
   <div class="preview">
     <p-panel header="Preview">
       <div class="visualization">
-        <datacat-panel-vizualization
-          [data]="data"
-          [visualizationType]="visualizationType"
-          [visualizationSettings]="visualizationSettings"
-        />
+        <datacat-panel-chart />
       </div>
     </p-panel>
     <form class="form" [formGroup]="editForm">
@@ -40,9 +36,5 @@
       />
     </form>
   </div>
-  <datacat-panel-visualization-options
-    (onOptionsChange)="
-      visualizationType = $event[0]; visualizationSettings = $event[1]
-    "
-  />
+  <datacat-chart-options />
 </div>

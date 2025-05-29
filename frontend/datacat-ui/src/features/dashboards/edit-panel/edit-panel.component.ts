@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { PanelVisualizationComponent } from '../../../shared/ui/panel-visualization';
 import { PanelVisualizationOptionsComponent } from '../../../shared/ui/panel-visualization-options';
 import { PanelModule } from 'primeng/panel';
 import {
@@ -25,11 +24,14 @@ import {
 import { ApiService } from '../../../shared/services/datacat-generated-client';
 import { ToastLoggerService } from '../../../shared/services/toast-logger.service';
 import { ButtonModule } from 'primeng/button';
-import { finalize } from 'rxjs';
+import { finalize, timer } from 'rxjs';
 import { TimeSeries } from '../../../entities/dashboards/data.types';
 import { PanelDataService } from '../panels-grid/panel-data.service';
 import { TimeRangeSelectComponent } from '../../../shared/ui/time-range-select/time-range-select.component';
 import { TimeRange } from '../../../entities/dashboards/etc.types';
+import { PanelChartComponent } from '../../../shared/ui/charts/panel-chart/panel-chart.component';
+import { ChartService } from '../../../shared/ui/charts/chart.service';
+import { ChartOptionsComponent } from '../../../shared/ui/charts/options/options.component';
 
 @Component({
   standalone: true,
@@ -37,8 +39,6 @@ import { TimeRange } from '../../../entities/dashboards/etc.types';
   templateUrl: './edit-panel.component.html',
   styleUrl: './edit-panel.component.scss',
   imports: [
-    PanelVisualizationComponent,
-    PanelVisualizationOptionsComponent,
     PanelModule,
     ReactiveFormsModule,
     InputTextModule,
@@ -46,19 +46,18 @@ import { TimeRange } from '../../../entities/dashboards/etc.types';
     DataSourceSelectComponent,
     ButtonModule,
     TimeRangeSelectComponent,
+    PanelChartComponent,
+    ChartOptionsComponent,
   ],
-  providers: [PanelDataService],
+  providers: [ChartService],
 })
-export class EditPanelComponent implements AfterViewInit {
+export class EditPanelComponent {
   private _panelId?: string;
 
   @Input() public set panelId(id: string | undefined) {
     this._panelId = id;
     this.refresh();
   }
-
-  @ViewChild(PanelVisualizationOptionsComponent)
-  optionsComponent?: PanelVisualizationOptionsComponent;
 
   protected panel?: Panel;
 
@@ -70,10 +69,15 @@ export class EditPanelComponent implements AfterViewInit {
     step: '00:30:00',
     from: (() => {
       const date = new Date();
-      date.setMinutes(date.getMinutes() - 360);
+      date.setTime(date.getTime() - 4 * 60 * 60 * 1000);
+      date.setMilliseconds(0);
       return date;
     })(),
-    to: new Date(),
+    to: (() => {
+      const date = new Date();
+      date.setMilliseconds(0);
+      return date;
+    })(),
   });
 
   protected editForm = new FormGroup({
@@ -88,35 +92,25 @@ export class EditPanelComponent implements AfterViewInit {
   constructor(
     private api: ApiService,
     private logger: ToastLoggerService,
-    private panelDataService: PanelDataService,
+    private chartService: ChartService,
   ) {
-    this.panelDataService.data$.subscribe((v) => (this.data = v));
     this.timeRangeControl.valueChanges.subscribe((tr) => {
-      if (tr) this.panelDataService.loadTimeRange(tr);
+      this.refreshPreview();
     });
     this.editForm.get('dataSourceId')?.valueChanges.subscribe((id) => {
       if (id && this.panel) {
         this.panel.dataSource!.id = id;
-        this.panelDataService.panel = this.panel;
+        this.chartService.setDataSourceName(this.panel.dataSource!.name);
         this.refreshPreview();
       }
     });
     this.editForm.get('query')?.valueChanges.subscribe((q) => {
       if (q && this.panel) {
         this.panel.query = q;
-        this.panelDataService.panel = this.panel;
+        this.chartService.setQuery(this.panel.query);
         this.refreshPreview();
       }
     });
-  }
-
-  ngAfterViewInit() {
-    if (this.panel) {
-      this.optionsComponent?.setVisualizationSettings(
-        this.panel.visualizationType!,
-        this.panel.visualizationSettings!,
-      );
-    }
   }
 
   protected refresh() {
@@ -140,13 +134,11 @@ export class EditPanelComponent implements AfterViewInit {
             data.styleConfiguration!,
           ) as VisualizationSettings,
         };
-        this.panelDataService.panel = this.panel;
+        this.chartService.setType(this.panel.visualizationType!);
+        this.chartService.setQuery(this.panel.query);
+        this.chartService.setDataSourceName(this.panel.dataSource!.name);
+        this.chartService.updateStyle(this.panel.visualizationSettings);
         this.refreshPreview();
-
-        this.optionsComponent?.setVisualizationSettings(
-          this.panel.visualizationType!,
-          this.panel.visualizationSettings!,
-        );
 
         this.editForm.setValue({
           title: this.panel.title,
@@ -161,7 +153,12 @@ export class EditPanelComponent implements AfterViewInit {
   }
 
   protected refreshPreview() {
-    this.panelDataService.loadTimeRange(this.timeRangeControl.getRawValue()!);
+    const timeRange = this.timeRangeControl.getRawValue()!;
+    this.chartService.loadTimeRange(
+      timeRange.from,
+      timeRange.to,
+      timeRange.step,
+    );
   }
 
   protected saveChanges() {
@@ -169,13 +166,11 @@ export class EditPanelComponent implements AfterViewInit {
 
     const request: any = {
       title: this.editForm.get('title')?.value || '',
-      type: encodeVisualizationType(this.visualizationType),
+      type: encodeVisualizationType(this.chartService.type),
       rawQuery: this.editForm.get('query')?.value || '',
       dataSourceId: this.editForm.get('dataSourceId')?.value || '',
       layout: serializeLayout(this.panel.layout),
-      styleConfiguration: encodeVisualizationSettings(
-        this.visualizationSettings,
-      ),
+      styleConfiguration: encodeVisualizationSettings(this.chartService.style),
     };
 
     this.editForm.disable();

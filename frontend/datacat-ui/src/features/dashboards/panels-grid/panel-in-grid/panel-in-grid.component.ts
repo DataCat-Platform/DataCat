@@ -1,16 +1,16 @@
 import { Component, Input } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
-import { PanelVisualizationComponent } from '../../../../shared/ui/panel-visualization/panel-visualization.component';
 import { Panel } from '../../../../entities';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import * as urls from '../../../../shared/common/urls';
-import { TimeSeries } from '../../../../entities/dashboards/data.types';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { DividerModule } from 'primeng/divider';
-import { PanelDataService } from '../panel-data.service';
 import { DashboardService } from '../dashboard.service';
+import { PanelChartComponent } from '../../../../shared/ui/charts/panel-chart/panel-chart.component';
+import { ChartService } from '../../../../shared/ui/charts/chart.service';
+import { TimeSeries } from '../../../../shared/ui/charts/chart.types';
 
 @Component({
   standalone: true,
@@ -19,20 +19,26 @@ import { DashboardService } from '../dashboard.service';
   styleUrl: './panel-in-grid.component.scss',
   imports: [
     PanelModule,
-    PanelVisualizationComponent,
+    PanelChartComponent,
     ButtonModule,
     DialogModule,
     TextareaModule,
     DividerModule,
   ],
-  providers: [PanelDataService],
+  providers: [ChartService],
 })
 export class PanelInGridComponent {
   @Input() set panel(p: Panel | undefined) {
     this._panel = p;
-    this.panelDataService.panel = p;
+    if (p) {
+      this.chartService.setType(p.visualizationType!);
+      this.chartService.setQuery(p.query);
+      this.chartService.setDataSourceName(p.dataSource!.name);
+      this.chartService.updateStyle(p.visualizationSettings);
+    }
     if (this.dashboardService.timeRange) {
-      this.panelDataService.loadTimeRange(this.dashboardService.timeRange);
+      const tr = this.dashboardService.timeRange;
+      this.chartService.loadTimeRange(tr.from, tr.to, tr.step);
     }
   }
 
@@ -43,13 +49,13 @@ export class PanelInGridComponent {
 
   constructor(
     private router: Router,
-    private panelDataService: PanelDataService,
     private dashboardService: DashboardService,
+    private chartService: ChartService,
   ) {
-    this.panelDataService.data$.subscribe((v) => (this.data = v));
-    this.panelDataService.error$.subscribe((v) => (this.isError = v));
+    this.chartService.data$.subscribe((v) => (this.data = v));
+    this.chartService.error$.subscribe((v) => (this.isError = v));
     this.dashboardService.timeRange$.subscribe((tr) => {
-      if (tr) this.panelDataService.loadTimeRange(tr);
+      if (tr) this.chartService.loadTimeRange(tr.from, tr.to, tr.step);
     });
   }
 

@@ -82,6 +82,7 @@ export class PanelsGridComponent {
     resizable: {
       enabled: true,
     },
+    outerMargin: false,
     enableBoundaryControl: true,
     itemChangeCallback: this.handleGridsterItemChange.bind(this),
   };

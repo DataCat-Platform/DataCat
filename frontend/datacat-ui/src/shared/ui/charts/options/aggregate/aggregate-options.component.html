@@ -1,0 +1,10 @@
+<form [formGroup]="form">
+  <div>
+    <p>Aggregate function</p>
+    <p-select
+      formControlName="function"
+      [options]="['AVG', 'MIN', 'MAX']"
+      appendTo="body"
+    />
+  </div>
+</form>

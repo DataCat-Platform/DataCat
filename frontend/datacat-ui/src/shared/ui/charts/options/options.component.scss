@@ -1,0 +1,31 @@
+.sub {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-md);
+}
+
+.attr {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-padding-xs);
+}
+
+.attr p {
+  color: var(--p-surface-400);
+}
+
+.pad-lr {
+  padding-left: var(--p-padding-md);
+  padding-right: var(--p-padding-md);
+}
+
+.pad-tb {
+  padding-top: var(--p-padding-md);
+  padding-bottom: var(--p-padding-md);
+}
+
+.options {
+  margin-bottom: -1px;
+  overflow: hidden;
+  border-radius: var(--p-panel-border-radius);
+}
