@@ -26,6 +26,13 @@ export const PieStyleScheme = z.object({
     .default({
       enabled: true,
     }),
+  aggregate: z
+    .object({
+      function: z.string().default('AVG'),
+    })
+    .default({
+      function: 'AVG',
+    }),
 });
 
 export type PieStyle = z.infer<typeof PieStyleScheme>;

@@ -48,7 +48,10 @@ export class LineChartComponent {
       labels: [],
       datasets: data.map((ts) => {
         return {
-          label: JSON.stringify(ts.labels),
+          label: (() => {
+            const { __name__, ...labels } = ts.labels;
+            return JSON.stringify(labels);
+          })(),
           data: ts.points.map((pt) => {
             return {
               x: pt.timestamp.toISOString(),

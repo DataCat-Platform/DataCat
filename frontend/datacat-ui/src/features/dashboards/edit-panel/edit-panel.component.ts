@@ -134,6 +134,7 @@ export class EditPanelComponent {
             data.styleConfiguration!,
           ) as VisualizationSettings,
         };
+        this.chartService.setType(this.panel.visualizationType!);
         this.chartService.setQuery(this.panel.query);
         this.chartService.setDataSourceName(this.panel.dataSource!.name);
         this.chartService.updateStyle(this.panel.visualizationSettings);
