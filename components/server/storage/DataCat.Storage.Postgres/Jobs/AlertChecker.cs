@@ -19,7 +19,7 @@ public sealed class AlertChecker(
         await unitOfWork.StartTransactionAsync(stoppingToken);
         
         // TODO: Change hardcoded top argument
-        const int limit = 5;
+        const int limit = 15;
         var alerts = await alertMonitorService.GetAlertsToCheckAsync(limit, stoppingToken);
         var alertChannel = Channel.CreateBounded<Alert>(new BoundedChannelOptions(limit)
         {

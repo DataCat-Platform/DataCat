@@ -20,7 +20,7 @@ public sealed class AlertNotifier(
     {
         await unitOfWork.StartTransactionAsync(stoppingToken);
         
-        const int limit = 5;
+        const int limit = 15;
         var triggeredAlerts = await alertMonitorService.GetTriggeredAlertsAsync(limit, stoppingToken);
         var alertChannel = Channel.CreateBounded<Alert>(new BoundedChannelOptions(limit)
         {
