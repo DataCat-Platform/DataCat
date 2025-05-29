@@ -59,7 +59,7 @@ public class PostgresAlertMonitorService(
            JOIN
                {Public.NotificationDestinationTable} notification_destination ON notification_channel.{Public.NotificationChannels.DestinationId} = notification_destination.{Public.NotificationDestination.Id}
            WHERE
-               alert.{Public.Alerts.NextExecution} < NOW()
+               alert.{Public.Alerts.NextExecution} < NOW() AND alert.{Public.Alerts.Status} != '{AlertStatus.Fire.Name}'
            ORDER BY
                alert.{Public.Alerts.NextExecution}
            LIMIT @p_limit
